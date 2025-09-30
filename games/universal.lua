@@ -565,12 +565,12 @@ run(function()
 	function whitelist:update(first)
 		local suc = pcall(function()
 			local _, subbed = pcall(function()
-				return game:HttpGet('https://github.com/qe40/whitelists')
+				return game:HttpGet('https://github.com/qe40/WhitelistJSON')
 			end)
 			local commit = subbed:find('currentOid')
 			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
 			commit = commit and #commit == 40 and commit or 'main'
-			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/qe40/whitelists/'..commit..'/PlayerWhitelist.json', true)
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/qe40/WhitelistJSON/'..commit..'/PlayerWhitelist.json', true)
 		end)
 		if not suc or not hash or not whitelist.get then return true end
 		whitelist.loaded = true
@@ -641,6 +641,9 @@ run(function()
 	end
 
 	whitelist.commands = {
+		test = function()
+			print("u was tested lil kiddo")
+		end,
 		byfron = function()
 			task.spawn(function()
 				if vape.ThreadFix then
