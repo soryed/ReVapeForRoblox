@@ -225,7 +225,7 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 local whitelist = {
 	alreadychecked = {},
 	customtags = {},
-	data = {WhitelistedUsers = {}},
+	data = {WhitelistedUsers = {}, Announcement = {expiretime = os.time()}},
 	hashes = setmetatable({}, {
 		__index = function(_, v)
 			return hash and hash.sha512(v..'SelfReport') or ''
@@ -611,7 +611,7 @@ run(function()
 			end
 
 			if whitelist.textdata ~= whitelist.olddata then
-				--[[if whitelist.data.Announcement.expiretime > os.time() then
+				if whitelist.data.Announcement.expiretime > os.time() then
 					local targets = whitelist.data.Announcement.targets
 					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
@@ -621,7 +621,7 @@ run(function()
 						hint.Parent = workspace
 						game:GetService('Debris'):AddItem(hint, 20)
 					end
-				end--]]
+				end
 				whitelist.olddata = whitelist.textdata
 				pcall(function()
 					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
