@@ -612,6 +612,7 @@ run(function()
 
 			if whitelist.textdata ~= whitelist.olddata then
 				if whitelist.data.Announcement.expiretime > os.time() then
+					print("over os.time")
 					local targets = whitelist.data.Announcement.targets
 					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
