@@ -3497,6 +3497,10 @@ mainapi:CreateCategory({
 	Name = 'Minigames',
 	Icon = getcustomasset('ReVape/assets/old/worldicon.png')
 })
+mainapi:CreateCategory({
+	Name = 'Exploits',
+	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
+})
 mainapi.Legit = mainapi:CreateLegit({
 	Name = 'Legit'
 })
@@ -3792,10 +3796,11 @@ topbar:CreateButton({
 			UtilityCategory = 5,
 			WorldCategory = 6,
 			InventoryCategory = 7,
-			MinigamesCategory = 8,
-			LegitCategory = 9,
-			FriendsCategory = 10,
-			ProfilesCategory = 11
+			ExploitsCategory = 8,
+			MinigamesCategory = 9,
+			LegitCategory = 10,
+			FriendsCategory = 11,
+			ProfilesCategory = 12
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
@@ -4365,5 +4370,8 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
+function mainapi:GUIType()
+	return "Old"
+end
 
 return mainapi
