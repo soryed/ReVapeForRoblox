@@ -618,5 +618,8 @@ mainapi:Clean(inputService.InputBegan:Connect(function(inputObj)
 		end
 	end
 end))
-
+function mainapi:GUIType()
+	return "wurst"
+end
+	
 return mainapi
