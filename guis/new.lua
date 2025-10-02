@@ -7012,5 +7012,7 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
-
+function mainapi:GUIType()
+	return "NEW"
+end
 return mainapi
