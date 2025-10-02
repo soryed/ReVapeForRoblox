@@ -3415,4 +3415,8 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
+function mainapi:GUIType()
+	return "RISE"
+end
+
 return mainapi
