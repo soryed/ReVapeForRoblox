@@ -2678,6 +2678,11 @@ mainapi:CreateCategory({
 	RealName = 'Legit',
 	RiseIcon = 'f'
 })
+mainapi:CreateCategory({
+	Name = 'Exploits',
+	RealName = 'Exploits',
+	RiseIcon = 'f'
+})							
 mainapi.Categories.Minigames = mainapi.Categories.Utility
 mainapi.Categories.Inventory = mainapi.Categories.Utility
 
