@@ -216,3 +216,245 @@ run(function()
 		end	
 	})
 end)
+
+run(function()
+	local Users = {
+	KnownUsers = {
+			Chase = {
+				22808138, 4782733628,7447190808, 3196162848
+			},
+			Orion = {
+				547598710,5728889572,4652232128,7043591647,7209929547,7043958628,7418525152,3774791573,8606089749
+			},
+			LisNix = {
+			162442297,702354331,9350301723
+			},
+			Nwr = {
+				307212658,5097000699,4923561416
+			},
+			Gorilla = {
+				514679433,2431747703,4531785383
+			},
+			Typhoon = {
+				2428373515,7659437319
+			},
+			Erin = {
+				2465133159,
+			},
+			Ghost = {
+				7558211130,1708400489
+			},
+			Sponge = {
+				376388734,5157136850
+			},
+			Gora = {
+				589533315,567497793
+			},
+			Apple = {
+				334013471,145981200,4721068661,8006518573,3547758846,7155624750,7468661659
+			},
+			Dom = {
+				239431610,2621170992
+			},
+			Kevin = {
+				575474067,4785639950,8735055832
+			},
+			Vic = {
+				839818760,1524739259
+			},
+	},
+	UnknownUsers = {
+		7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827, 2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767, 7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313,	
+	}
+}
+													
+    local ACMOD
+	local Side
+	local Specific
+	local IncludeOffline
+	local IncludeStudio
+    ACMOD = vape.Categories.Exploits:CreateModule({
+		Name = 'Anti-Cheat Mods',
+		Tooltip = "Fetches all ac mods users(including unknown's)",
+        Function = function()
+			vape:CreateNotification('Loading...', "Currently fetching mods", 3)
+task.wait(4)
+	    local HttpService = game:GetService("HttpService")
+		
+		local Offline, InGame, Online, Studio = 0, 0, 0, 0
+		local url = "https://presence.roproxy.com/v1/presence/users"
+		local headers = {
+		    ["Content-Type"] = "application/json"
+		}						
+		local data = {userIds = {}}
+		
+		if Side.Value == "Known" then
+		    if Specific.Value == "All" then
+		        for _, numbers in pairs(Users.KnownUsers) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end
+			elseif Specific.Value == "Chase" then
+		        for _, numbers in pairs(Users.KnownUsers.Chase) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Orion" then
+		        for _, numbers in pairs(Users.KnownUsers.Orion) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Lisnix" then
+		        for _, numbers in pairs(Users.KnownUsers.LisNix) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Nwr" then
+		        for _, numbers in pairs(Users.KnownUsers.Nwr) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Gorilla" then
+		        for _, numbers in pairs(Users.KnownUsers.Gorilla) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Typhoon" then
+		        for _, numbers in pairs(Users.KnownUsers.Typhoon) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Vic" then
+		        for _, numbers in pairs(Users.KnownUsers.Vic) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Erin" then
+		        for _, numbers in pairs(Users.KnownUsers.Erin) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Gora" then
+		        for _, numbers in pairs(Users.KnownUsers.Gora) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Ghost" then
+		        for _, numbers in pairs(Users.KnownUsers.Ghost) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Sponge" then
+		        for _, numbers in pairs(Users.KnownUsers.Sponge) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Apple" then
+		        for _, numbers in pairs(Users.KnownUsers.Apple) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Dom" then
+		        for _, numbers in pairs(Users.KnownUsers.Dom) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+			elseif Specific.Value == "Kevin" then
+		        for _, numbers in pairs(Users.KnownUsers.Kevin) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+		    end
+		elseif Side.Value == "Unknown" then
+		        for _, numbers in pairs(Users.UnknownUsers) do
+		            for _, num in ipairs(numbers) do
+		                table.insert(data.userIds, num)
+		            end
+		        end	
+		end
+		
+		local jsonData = HttpService:JSONEncode(data)
+		
+		local response
+		local success, err = pcall(function()
+		    response = HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson)
+		end)
+		
+		if success then
+		    local result = HttpService:JSONDecode(response)
+		
+		    for _, user in pairs(result) do
+		        if user.userPresenceType == "Offline" then
+		            Offline = Offline + 1
+					if IncludeOffline.Value == true										
+						vape:CreateNotification('Offline Mod detected!', game:GetService("Players"):GetNameFromUserIdAsync(user.userId), 5,"alert")
+					end
+		        end
+									
+		        elseif user.userPresenceType == "InGame" then
+		            InGame = InGame + 1
+					vape:CreateNotification('InGame Mods detected!', game:GetService("Players"):GetNameFromUserIdAsync(user.userId), 15,"warning")
+		        elseif user.userPresenceType == "Online" then
+		            Online = Online + 1
+					vape:CreateNotification('Online Mods detected!', game:GetService("Players"):GetNameFromUserIdAsync(user.userId), 15,"warning")
+		        elseif user.userPresenceType == "Studio" then
+		            Studio = Studio + 1
+				if IncludeStudio.Value == true										
+						vape:CreateNotification('Studio Mods detected!', game:GetService("Players"):GetNameFromUserIdAsync(user.userId), 5,"warning")
+					end
+		        end
+		    end		
+			task.wait(5)	
+			if InGame >= 2 then
+				vape:CreateNotification('Mutiple mods Ingame!', "They are over ["..Status.."], mods ingame", 45)
+			end
+			if Online >= 2 then
+				vape:CreateNotification('Mutiple mods Online!', "They are over ["..Status.."], mods Online", 45)
+			end
+			if InGame == 0 then
+			    vape:CreateNotification('No mods Ingame!', "There are ["..InGame.."] mods ingame", 45)
+			end
+			
+			if Online == 0 then
+			    vape:CreateNotification('No mods Online!', "There are ["..Online.."] mods online", 45)
+			end
+		else
+			vape:CreateNotification('Failed!', "failed to get presence data: "..err, 15,"alert")
+		end
+    })
+	Side = ACMOD:CreateDropdown({
+		Name = "Verison",
+		List = {'Known','Unknown'}
+	})
+	Specific = ACMOD:CreateDropdown({
+		Name = "Specific",
+		Tooltip = 'This will fetech a specific user (mains, and their alts)',
+		List = {'Chase','Orion','Lisnix', 'Nwr', 'Gorilla', 'Typhon', 'Vic', 'Erin', 'Ghost', 'Sponge', 'Apple', 'Dom','Gora', 'Kevin','All'}
+	})
+	IncludeStudio:CreateToggle({
+	Name = "Include Studio",
+	Tooltip = "Include when a mod is in studio",
+	Default = false
+})
+	IncludeOffline:CreateToggle({
+	Name = "Include Offline",
+	Tooltip = "Include when a mod is offline",
+	Default = false
+})
+
+end)		
