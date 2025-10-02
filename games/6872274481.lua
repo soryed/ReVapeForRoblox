@@ -8946,3 +8946,17 @@ task.wait(4)
 })
 
 end)		
+
+run(function()
+	local Header = "Small Update!"
+	local Verison = "0.1.2"
+	local notes = "A small update, upped KA attack range. I have also made three more functions in exploits 'Anti-Cheat Mods, Patch Notes, and Switch Gui'. Anti-Cheat mods detect all known and unknown mods, patch notes is this. And lastly switch gui this will switch ur type of gui, you are using '"..vape:GUIType().."'!"
+	local time = 30
+	local patchnotes = vape.Categories.Exploits:CreateModule({
+		Name = "Patch Notes",
+		Tooltip = "This shows off the updates logs",
+		Function = function()
+			vape:CreateNotification(Header.."|"..Verison,notes,time)
+		end		
+	})
+end)
