@@ -21,7 +21,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ToggleNotifications = {Enabled = true},
 	ThreadFix = setthreadidentity and true or false,
-	Version = '0.0.1',
+	Version = '6.1.30',
 	Windows = {}
 }
 
@@ -244,7 +244,7 @@ local function downloadFile(path, func)
 	if not isfile(path) then
 		createDownloader(path)
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -2678,11 +2678,6 @@ mainapi:CreateCategory({
 	RealName = 'Legit',
 	RiseIcon = 'f'
 })
-mainapi:CreateCategory({
-	Name = 'Exploits',
-	RealName = 'Exploits',
-	RiseIcon = 'f'
-})							
 mainapi.Categories.Minigames = mainapi.Categories.Utility
 mainapi.Categories.Inventory = mainapi.Categories.Utility
 
@@ -2850,7 +2845,7 @@ mainapi.Categories.Main:CreateDropdown({
 			if shared.VapeDeveloper then
 				loadstring(readfile('ReVape/loader.lua'), 'loader')()
 			else
-				loadstring(game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 			end
 		end
 	end
@@ -2878,7 +2873,7 @@ mainapi.Categories.Main:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end
 })
@@ -3419,9 +3414,5 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
-
-function mainapi:GUIType()
-	return "RISE"
-end
 
 return mainapi
