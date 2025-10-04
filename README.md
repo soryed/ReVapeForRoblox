@@ -22,7 +22,7 @@ AND THEN RECONNECT THE SCRIPT!
 1. Inject ur executor
 2. Execute this script provided
 ```
-loadstring(game:HttpGet("https://raw.githubusercontent.com/qe40/ReVapeForRoblox/main/NewMainScript.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))()
 ```
 
 # Developers & Credits
