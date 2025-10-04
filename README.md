@@ -1,3 +1,5 @@
+# MY GITHUB ACCOUNT WAS BEAMED!! I HAD TO FORK IT, I AM STILL @ye40 ON DISCORD HIT A DM FOR PROOF 
+
 # ReVAPEV4
 a remaster of vape v4
 
@@ -18,7 +20,11 @@ AND THEN RECONNECT THE SCRIPT!
 # A WORK IN PROGRES
 # Usage
 1. Inject ur executor
-2. Execute this script provided loadstring(game:HttpGet("https://raw.githubusercontent.com/qe40/ReVapeForRoblox/main/NewMainScript.lua", true))()
+2. Execute this script provided
+```
+loadstring(game:HttpGet("https://raw.githubusercontent.com/qe40/ReVapeForRoblox/main/NewMainScript.lua", true))()
+```
+
 # Developers & Credits
 qe40 - Owner/Creater of this project
 
@@ -31,3 +37,4 @@ rce-incorporated - Luau bytecode disassembly with modifications
 Egor Skriptunoff, boatbomber, and howmanysmall - HashLibrary for Luau
 
 Vernumerator - Projectile prediction for Roblox
+
