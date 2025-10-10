@@ -3803,9 +3803,12 @@ topbar:CreateButton({
 			WorldCategory = 6,
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
-			LegitCategory = 9,
-			FriendsCategory = 10,
-			ProfilesCategory = 11
+			ExploitsCategory = 9,
+			TrollCategory = 10,
+
+			LegitCategory = 11,
+			FriendsCategory = 12,
+			ProfilesCategory = 13
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
