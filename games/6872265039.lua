@@ -123,9 +123,9 @@ run(function()
 		Tooltip = 'Automatically opens lucky crates, piston inspired!'
 	})
 end)
-
 run(function()	
-	NM = vape.Categories.Exploits:CreateModule({
+
+	NM = vape.Categories.Minigames:CreateModule({
 		Name = 'Nightmare Emote',
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
@@ -196,8 +196,10 @@ run(function()
 	})
 end)
 
+
+
 run(function()
-	GetExecutor = vape.Categories.Exploits:CreateModule({
+	GetExecutor = vape.Categories.Minigames:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -218,6 +220,7 @@ run(function()
 end)
 
 run(function()
+
     local Users = {
         KnownUsers = {
             Chase = {22808138, 4782733628, 7447190808, 3196162848},
@@ -241,14 +244,13 @@ run(function()
             7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
         }
     }
-
     local ACMOD
     local Side
     local Specific
     local IncludeOffline
     local IncludeStudio
 
-    ACMOD = vape.Categories.Exploits:CreateModule({
+    ACMOD = vape.Categories.Minigames:CreateModule({
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
@@ -335,14 +337,12 @@ run(function()
     Side = ACMOD:CreateDropdown({
         Name = "Version",
         List = {'Known', 'Unknown'},
-        Default = 'Known'
     })
 
     Specific = ACMOD:CreateDropdown({
         Name = "Specific",
         Tooltip = 'Fetch a specific user (mains and alts)',
         List = {'All', 'Chase', 'Orion', 'LisNix', 'Nwr', 'Gorilla', 'Typhoon', 'Vic', 'Erin', 'Ghost', 'Sponge', 'Apple', 'Dom', 'Gora', 'Kevin'},
-        Default = 'All'
     })
 
     IncludeStudio = ACMOD:CreateToggle({
@@ -357,18 +357,390 @@ run(function()
         Default = false
     })
 end)
-			
+		
 
 run(function()
 	local Header = "Small Update!"
-	local Verison = "0.1.2"
-	local notes = "A small update, upped KA attack range. I have also made three more functions in exploits 'Anti-Cheat Mods, Patch Notes, and Switch Gui'. Anti-Cheat mods detect all known and unknown mods, patch notes is this!"
-	local time = 30
-	local patchnotes = vape.Categories.Exploits:CreateModule({
+	local Verison = "0.1.3"
+	local notes = "A small update, upped KA attack range. I have also made three more functions in Minigames 'Anti-Cheat Mods, Patch Notes, and Switch Gui'. Anti-Cheat mods detect all known and unknown mods, patch notes is this, and i have also created switching ur verison of gui!"
+	local time = 45
+	local patchnotes = vape.Categories.Minigames:CreateModule({
 		Name = "Patch Notes",
 		Tooltip = "This shows off the updates logs",
 		Function = function()
 			vape:CreateNotification(Header.."|"..Verison,notes,time)
 		end		
 	})
+end)
+
+run(function()
+    local Users = {
+            22808138, 4782733628, 7447190808, 3196162848,
+            547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749,
+            162442297, 702354331, 9350301723,
+            307212658, 5097000699, 4923561416,
+           514679433, 2431747703, 4531785383,
+            2428373515, 7659437319,
+           2465133159,
+            7558211130, 1708400489,
+            376388734, 5157136850,
+           589533315, 567497793,
+            334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659,
+           239431610, 2621170992,
+            575474067, 4785639950, 8735055832,
+            839818760, 1524739259,
+            7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
+            2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
+            7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
+    }
+    local NSD
+    local Party
+    local IncludeSpecs
+    local CreateLogsOfMODS    
+
+
+	local function checkFriends(list)
+		for _, v in list do
+			if joined[v] then
+				return joined[v]
+			end
+		end
+		return nil
+	end
+
+	local function staffFunction(plr, checktype)
+		if not vape.Loaded then
+			repeat task.wait() until vape.Loaded
+		end
+	
+		notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, 'alert')
+		whitelist.customtags[plr.Name] = {{text = 'GAME STAFF', color = Color3.new(1, 0, 0)}}
+	
+		if Party.Enabled and not checktype:find('clan') then
+			bedwars.PartyController:leaveParty()
+		end
+		if CreateLogsOfMODS.Enabled then
+ 		     local Format
+		    if checktype == 'impossible_join' then
+		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[IMPOSSIBLE JOIN]"
+		end    
+		    if checktype == 'detected_mod_join' then
+		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[KNOWN MOD JOIN]"
+		end    
+
+		    if not isfile('newvape/profiles/logs.txt') then
+			writefile('newvape/profiles/logs.txt', Format)
+		    else
+			writefile('newvape/profiles/logs.txt', Format)
+		    end 
+		end
+	end	
+	local function checkJoin(plr, connection)
+		if not plr:GetAttribute('Team') and plr:GetAttribute('Spectator') and not bedwars.Store:getState().Game.customMatch then
+			connection:Disconnect()
+			local tab, pages = {}, playersService:GetFriendsAsync(plr.UserId)
+			for _ = 1, 4 do
+				for _, v in pages:GetCurrentPage() do
+					table.insert(tab, v.Id)
+				end
+				if pages.IsFinished then break end
+				pages:AdvanceToNextPageAsync()
+			end
+	
+			for i, v in Users do
+			    
+			end
+
+			local friend = checkFriends(tab)
+			if not friend then
+				staffFunction(plr, 'impossible_join')
+				return true
+			elseif Users[plr.UserId] then
+			    staffFunction(plr, 'detected_mod_join')
+			    return true
+			else
+				notif('StaffDetector', string.format('Spectator %s joined from %s', plr.Name, friend), 20, 'warning')
+		if CreateLogsOfMODS.Enabled then
+		    local Format = "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[SPECTATOR JOIN]"
+
+		    if not isfile('newvape/profiles/logs.txt') then
+			writefile('newvape/profiles/logs.txt', Format)
+		    else
+			writefile('newvape/profiles/logs.txt', Format)
+		    end 
+		end
+			end
+		end
+	end
+	
+	local function playerAdded(plr)
+		joined[plr.UserId] = plr.Name
+		if plr == lplr then return end
+	
+
+			local connection
+			connection = plr:GetAttributeChangedSignal('Spectator'):Connect(function()
+			    if IncludeSpecs.Enabled then
+				checkJoin(plr, connection)
+			    end
+			end)
+			StaffDetector:Clean(connection)
+			if checkJoin(plr, connection) then
+				return
+			end
+	
+	
+	end
+
+    NSD = vape.Categories.Utility:CreateModule({
+		Name = 'StaffDetectorV2',
+		Function = function(callback)
+			if callback then
+				StaffDetector:Clean(playersService.PlayerAdded:Connect(playerAdded))
+				for _, v in playersService:GetPlayers() do
+					task.spawn(playerAdded, v)
+				end
+			else
+				table.clear(joined)
+			end
+		end,
+		Tooltip = 'A Newer verison of Staff-Detector'
+	})
+
+    Party = NSD:CreateToggle({
+	Name = 'Leave party',
+	Default = true,
+   })
+    IncludeSpecs = NSD:CreateToggle({
+	Name = 'Include Spectators',
+        Tooltip = 'NOTE: Anti-Cheat mods could create new alts, ill say to keep this on to get the new username. BUT THIS CAN DO FALSE DETECTIONS!!',
+	Default = true,
+   })
+    CreateLogsOfMODS = NSD:CreateToggle({
+	Name = 'Logs',
+	Default = false,
+	Tooltip = 'all this does is keep track of every mod/spectators has joined you with a date'
+   })
+end)
+
+
+--[[
+
+run(function()
+	local method
+	FTLMFAO = vape.Categories.Minigames:CreateModule({
+		Name = "FTLMAO",
+		Function = function(callback)
+			if callback then
+			    if method.Value == 'RemoteEvents' then
+				for i, v in game:GetDescendants() do
+					if v:IsA('RemoteEvent') or v:IsA('UnreliableRemoteEvent') then
+					while FTLMFAO.Enabled do
+						v:FireServer()					 
+						task.wait()
+					end
+				   end
+				end
+			   end
+if method.Value == 'RemoteFunctions' then
+				for i, v in game:GetDescendants()do
+					if v:IsA('RemoteFunction') then
+					while FTLMFAO.Enabled do
+						v:InvokeServer()					 
+						task.wait()
+					end
+				   end
+				end
+			   end
+if method.Value == 'BindableEvents' then
+				for i, v in game:GetDescendants()do
+					if v:IsA('BindableEvent')  then
+					while FTLMFAO.Enabled do
+						v:Fire()					 
+						task.wait()
+					end
+				   end
+				end
+			   end
+
+			end
+if method.Value == 'BindableFunctions' then
+				for i, v in game:GetDescendants()do
+					if  v:IsA('BindableFunction') then
+					while FTLMFAO.Enabled do
+						v:Invoke()					 
+						task.wait()
+					end
+				   end
+				end
+			   end
+
+			end
+
+		end	
+	})
+	method = FTLMFAO:CreateDrowndrop({
+	   Name = 'Method',
+	   List = {'RemoteEvents','RemoteFunctions','BindableEvents','BindableFunctions'}
+	})
+end)
+
+]]--
+
+run(function()
+    local TAG
+    local CustomTAG
+    local R, G, B
+    local Org = ""
+    local OrgText = ""
+    local player = game:GetService('Players').LocalPlayer
+    if not player.Tags['0'] then
+	notif('Failed', "Couldn't find the folder 'TAGS' to change ur tag", 20, 'alert')
+
+    end
+	local function Color3ToHex(r,g,b)
+		return string.lower(string.format("#%02X%02X%02X", r , g , b))
+	end
+
+    Org = player.Tags['0'].Value
+    OrgText =  player.Tags['0']:GetAttribute('Text')
+    CustomTAG = vape.Categories.Minigames:CreateModule({
+        Name = 'CustomTag',
+        Function = function(callback)
+            if callback then
+                player.Tags['0'].Value = "<font color='rgb("..R.Value..","..G.Value..","..B.Value..")'>["..TAG.Value.."]</font>"
+		 player.Tags['0']:SetAttribute('Text',TAG.Value)
+				 player:SetAttribute('ClanTag',TAG.Value)
+local player = game.Players.LocalPlayer
+
+local function Color3ToHex(color)
+	return string.format("#%02X%02X%02X", color.R * 255, color.G * 255, color.B * 255)
+end
+
+player.PlayerGui.ChildAdded:Connect(function(child)
+	if child.Name == "TabListScreenGui" and child:IsA("ScreenGui") then
+		task.spawn(function()
+			while CustomTAG.Enabled do
+				for _, v in ipairs(child:GetDescendants()) do
+					if v:IsA("TextLabel") then
+						local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+							and player.Name
+							or player.DisplayName
+						
+						if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+							v.Text = string.format(
+								'<font transparency="0.3" color="%s">[%s]</font> %s',
+								Color3ToHex(Color3.fromRGB(R.Value, G.Value, B.Value)),
+								TAG.Value,
+								nameToFind
+							)
+						end
+					end
+				end
+				task.wait()
+			end
+
+			for _, v in ipairs(child:GetDescendants()) do
+				if v:IsA("TextLabel") then
+					local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+						and player.Name
+						or player.DisplayName
+					
+					if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+						v.Text = string.format(
+							'<font transparency="0.3" color="%s">[%s]</font> %s',
+							Color3ToHex(Color3.fromRGB(255, 255, 255)),
+							 player.Tags['0']:GetAttribute('Text'),
+							nameToFind
+						)
+					end
+				end
+			end
+		end)
+	end
+end)
+
+            else
+                player.Tags['0'].Value = Org
+		 player.Tags['0']:SetAttribute('Text',OrgText)
+player:SetAttribute('ClanTag',OrgText)
+            end
+        end,
+        Tooltip = 'Client-Sided visual custom clan tag on-chat'
+    })
+
+    TAG = CustomTAG:CreateTextBox({
+        Name = 'Tag Text',
+        Placeholder = '',
+	Function = function()
+	    CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+
+   R = CustomTAG:CreateSlider({
+        Name = 'R',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+     G = CustomTAG:CreateSlider({
+        Name = 'G',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+	    CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+   B =  CustomTAG:CreateSlider({
+        Name = 'B',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+	   CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+end)
+
+run(function()
+  local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+    local PlayerLevel
+	local level 
+  
+
+PlayerLevel = vape.Categories.Minigames:CreateModule({
+        Name = 'SetPlayerLevel',
+	Tooltip = "Sets your player level to 100 (client sided)",
+        Function = function(callback)
+
+
+				notif("SetPlayerLevel", "This is client sided (only u will see the new level)", 3,"warning")
+				game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
+	end
+})
+
+level = PlayerLevel:CreateSlider({
+        Name = 'Player Level',
+        Min = 1,
+        Max = 1000,
+        Default = 100,
+	Function = function(val)
+	    player:SetAttribute("PlayerLevel", val)
+	end
+    })
+
+
 end)
