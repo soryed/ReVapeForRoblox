@@ -21,7 +21,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ToggleNotifications = {Enabled = true},
 	ThreadFix = setthreadidentity and true or false,
-	Version = '6.1.30',
+	Version = '0.0.1',
 	Windows = {}
 }
 
@@ -123,6 +123,7 @@ local getcustomassets = {
 	['ReVape/assets/rise/slice.png'] = 'rbxasset://risesix/slice.png',
 	['ReVape/assets/rise/blur.png'] = 'rbxasset://risesix/blur.png',
 	['ReVape/assets/new/blur.png'] = 'rbxassetid://14898786664',
+	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
 }
 
 local isfile = isfile or function(file)
@@ -2671,6 +2672,16 @@ mainapi:CreateCategory({
 mainapi:CreateCategory({
 	Name = 'Exploit',
 	RealName = 'World',
+	RiseIcon = 'a'
+})
+	mainapi:CreateCategory({
+	Name = 'Exploits',
+	RealName = 'Exploits',
+	RiseIcon = 'a'
+})
+mainapi:CreateCategory({
+	Name = 'Troll',
+	RealName = 'Troll',
 	RiseIcon = 'a'
 })
 mainapi:CreateCategory({
