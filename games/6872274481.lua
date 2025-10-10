@@ -8451,7 +8451,7 @@ end)
 
 run(function()	
 
-	NM = vape.Categories.Minigames:CreateModule({
+	NM = vape.Categories.Troll:CreateModule({
 		Name = 'Nightmare Emote',
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
@@ -8525,7 +8525,7 @@ end)
 
 run(function()
 	local GetHost = {}
-	GetHost = vape.Categories.Minigames:CreateModule({
+	GetHost = vape.Categories.Troll:CreateModule({
 		Name = "GetHost",
 		Tooltip = "this module is only for show. None of the settings will work.",
 		Function = function(callback) 
@@ -8539,7 +8539,7 @@ run(function()
 end)
 
 run(function()
-	GetExecutor = vape.Categories.Minigames:CreateModule({
+	GetExecutor = vape.Categories.Render:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -8706,7 +8706,7 @@ run(function()
     local ClientCrasher
     local Method
 
-    ClientCrasher = vape.Categories.Minigames:CreateModule({
+    ClientCrasher = vape.Categories.Exploits:CreateModule({
         Name = 'Client Crasher',
         Function = function(callback)
             if callback then
@@ -9067,7 +9067,7 @@ run(function()
     local IncludeOffline
     local IncludeStudio
 
-    ACMOD = vape.Categories.Minigames:CreateModule({
+    ACMOD = vape.Categories.Exploits:CreateModule({
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
@@ -9422,7 +9422,7 @@ run(function()
 
     Org = player.Tags['0'].Value
     OrgText =  player.Tags['0']:GetAttribute('Text')
-    CustomTAG = vape.Categories.Minigames:CreateModule({
+    CustomTAG = vape.Categories.Troll:CreateModule({
         Name = 'CustomTag',
         Function = function(callback)
             if callback then
@@ -9539,7 +9539,7 @@ local player = Players.LocalPlayer
 	local level 
   
 
-PlayerLevel = vape.Categories.Minigames:CreateModule({
+PlayerLevel = vape.Categories.Exploits:CreateModule({
         Name = 'SetPlayerLevel',
 	Tooltip = "Sets your player level to 100 (client sided)",
         Function = function(callback)
@@ -9780,7 +9780,7 @@ end
 	end
 
 
-	KitRender = vape.Categories.Minigames:CreateModule({
+	KitRender = vape.Categories.Troll:CreateModule({
 		Name = "KitRender",
 		Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked) only WILL NOT WORK ON STREAMERMODES",
 		Function = function(callback)
