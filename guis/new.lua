@@ -121,7 +121,8 @@ local getcustomassets = {
 	['ReVape/assets/new/utilityicon.png'] = 'rbxassetid://14368359107',
 	['ReVape/assets/new/vape.png'] = 'rbxassetid://14373395239',
 	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
-	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
+	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
+	['ReVape/assets/new/troll.png'] = 'rbxassetid://14368361552',
 }
 
 local isfile = isfile or function(file)
@@ -5801,6 +5802,10 @@ mainapi:CreateCategory({
 	Name = 'Exploits',
 	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
 	Size = UDim2.fromOffset(19, 12)
+})
+mainapi:CreateCategory({
+	Name = 'Troll',
+	Icon = getcustomasset('ReVape/assets/new/troll.png'),
 })
 mainapi.Categories.Main:CreateDivider('misc')
 
