@@ -6097,8 +6097,9 @@ guipane:CreateButton({
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
 			ExploitsCategory = 9,
-			FriendsCategory = 10,
-			ProfilesCategory = 11
+			TrollCategory = 10,									
+			FriendsCategory = 11,
+			ProfilesCategory = 12
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
