@@ -4157,6 +4157,13 @@ run(function()
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
+		nazar = function()
+		    repeat
+			game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
+
+			task.wait()
+		    until not AutoKit.Enabled
+		end,
 		void_dragon = function()
 			local oldflap = bedwars.VoidDragonController.flapWings
 			local flapped
@@ -4242,7 +4249,41 @@ run(function()
 	
 				task.wait(0.1)
 			until not AutoKit.Enabled
-		end
+		end,
+		drill = function()
+			local db = true
+
+			while db do
+  			  local drills = {}
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj.Name == "Drill" then
+            table.insert(drills, obj)
+        end
+    end
+
+    if #drills == 0 then
+        vape:CreateNotification('No Drills founded!','All current drills were destoryed or not founded',5)
+    end
+
+    for _, drill in ipairs(drills) do
+        local args = {
+            [1] = {
+                ["drill"] = drill
+            }
+        }
+
+        game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.ExtractFromDrill:FireServer(unpack(args))
+    end
+
+	if not  AutoKit.Enabled then
+	    db = false
+	    break
+	end
+
+    task.wait()
+
+end
+		end,
 	}
 	
 	AutoKit = vape.Categories.Utility:CreateModule({
@@ -5061,7 +5102,7 @@ run(function()
 	})
 	Mode = StaffDetector:CreateDropdown({
 		Name = 'Mode',
-		List = {'Uninject', 'Profile', 'Requeue', 'AutoConfig', 'Notify'},
+		List = {'Notify', 'Profile', 'Requeue', 'AutoConfig', 'Uninject'},
 		Function = function(val)
 			if Profile.Object then
 				Profile.Object.Visible = val == 'Profile'
@@ -5070,7 +5111,7 @@ run(function()
 	})
 	Clans = StaffDetector:CreateToggle({
 		Name = 'Blacklist clans',
-		Default = true
+		Default = false
 	})
 	Party = StaffDetector:CreateToggle({
 		Name = 'Leave party'
@@ -5097,7 +5138,7 @@ end)
 run(function()
 	TrapDisabler = vape.Categories.Utility:CreateModule({
 		Name = 'TrapDisabler',
-		Tooltip = 'Disables Snap Traps'
+		Tooltip = 'Disables Snap Traps - NOTE THIS DOESNT WORK ANYMORE'
 	})
 end)
 	
@@ -8410,7 +8451,7 @@ end)
 
 run(function()	
 
-	NM = vape.Categories.Exploits:CreateModule({
+	NM = vape.Categories.Minigames:CreateModule({
 		Name = 'Nightmare Emote',
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
@@ -8484,7 +8525,7 @@ end)
 
 run(function()
 	local GetHost = {}
-	GetHost = vape.Categories.Exploits:CreateModule({
+	GetHost = vape.Categories.Minigames:CreateModule({
 		Name = "GetHost",
 		Tooltip = "this module is only for show. None of the settings will work.",
 		Function = function(callback) 
@@ -8498,7 +8539,7 @@ run(function()
 end)
 
 run(function()
-	GetExecutor = vape.Categories.Exploits:CreateModule({
+	GetExecutor = vape.Categories.Minigames:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -8665,7 +8706,7 @@ run(function()
     local ClientCrasher
     local Method
 
-    ClientCrasher = vape.Categories.Exploits:CreateModule({
+    ClientCrasher = vape.Categories.Minigames:CreateModule({
         Name = 'Client Crasher',
         Function = function(callback)
             if callback then
@@ -8705,6 +8746,7 @@ run(function()
     })
 end) 
 
+--[[
 run(function()
     local Users = {
         KnownUsers = {
@@ -8736,7 +8778,7 @@ run(function()
     local IncludeOffline
     local IncludeStudio
 
-    ACMOD = vape.Categories.Exploits:CreateModule({
+    ACMOD = vape.Categories.Minigames:CreateModule({
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
@@ -8823,14 +8865,12 @@ run(function()
     Side = ACMOD:CreateDropdown({
         Name = "Version",
         List = {'Known', 'Unknown'},
-        Default = 'Known'
     })
 
     Specific = ACMOD:CreateDropdown({
         Name = "Specific",
         Tooltip = 'Fetch a specific user (mains and alts)',
         List = {'All', 'Chase', 'Orion', 'LisNix', 'Nwr', 'Gorilla', 'Typhoon', 'Vic', 'Erin', 'Ghost', 'Sponge', 'Apple', 'Dom', 'Gora', 'Kevin'},
-        Default = 'All'
     })
 
     IncludeStudio = ACMOD:CreateToggle({
@@ -8846,17 +8886,560 @@ run(function()
     })
 end)
 		
+run(function()
+    local Users = {
+            22808138, 4782733628, 7447190808, 3196162848,
+            547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749,
+            162442297, 702354331, 9350301723,
+            307212658, 5097000699, 4923561416,
+           514679433, 2431747703, 4531785383,
+            2428373515, 7659437319,
+           2465133159,
+            7558211130, 1708400489,
+            376388734, 5157136850,
+           589533315, 567497793,
+            334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659,
+           239431610, 2621170992,
+            575474067, 4785639950, 8735055832,
+            839818760, 1524739259,
+            7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
+            2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
+            7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
+    }
+    local StaffDetector
+    local Party
+    local IncludeSpecs
+    local CreateLogsOfMODS    
+
+
+	local function checkFriends(list)
+		for _, v in list do
+			if joined[v] then
+				return joined[v]
+			end
+		end
+		return nil
+	end
+
+	local function staffFunction(plr, checktype, checktypee)
+		if not vape.Loaded then
+			repeat task.wait() until vape.Loaded
+		end
+	
+		notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
+		whitelist.customtags[plr.Name] = {{text = 'GAME STAFF', color = Color3.new(1, 0, 0)}}
+	
+		if Party.Enabled and not checktype:find('clan') then
+			bedwars.PartyController:leaveParty()
+		end
+		if CreateLogsOfMODS.Enabled then
+ 		     local Format
+		    if checktype == 'impossible_join' then
+		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[IMPOSSIBLE JOIN]"
+		end    
+		    if checktype == 'detected_mod_join' then
+		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[KNOWN MOD JOIN]"
+		end    
+
+		    if not isfile('ReVape/profiles/logs.txt') then
+			writefile('ReVape/profiles/logs.txt', Format)
+		    else
+			writefile('ReVape/profiles/logs.txt', Format)
+		    end 
+		end
+	end	
+	local function checkJoin(plr, connection)
+		if not plr:GetAttribute('Team') and plr:GetAttribute('Spectator') and not bedwars.Store:getState().Game.customMatch then
+			connection:Disconnect()
+			local tab, pages = {}, playersService:GetFriendsAsync(plr.UserId)
+			for _ = 1, 4 do
+				for _, v in pages:GetCurrentPage() do
+					table.insert(tab, v.Id)
+				end
+				if pages.IsFinished then break end
+				pages:AdvanceToNextPageAsync()
+			end
+	
+			local friend = checkFriends(tab)
+			if not friend then
+				staffFunction(plr, 'impossible_join','warning')
+				return true
+			elseif Users[plr.UserId] then
+			    staffFunction(plr, 'detected_mod_join','alert')
+			    return true
+			else
+			    if IncludeSpecs.Enabled then
+
+				notif('StaffDetector', string.format('Spectator %s joined from %s', plr.Name, friend), 20, 'warning')
+		if CreateLogsOfMODS.Enabled then
+		    local Format = "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[SPECTATOR JOIN]"
+
+		    if not isfile('ReVape/profiles/logs.txt') then
+			writefile('ReVape/profiles/logs.txt', Format)
+		    else
+			writefile('ReVape/profiles/logs.txt', Format)
+		    end 
+		end
+			end
+		end
+end
+	end
+	
+	local function playerAdded(plr)
+		joined[plr.UserId] = plr.Name
+		if plr == lplr then return end
+	
+
+			local connection
+			connection = plr:GetAttributeChangedSignal('Spectator'):Connect(function()
+				checkJoin(plr, connection)
+			    
+			end)
+			StaffDetector:Clean(connection)
+			if checkJoin(plr, connection) then
+				return
+			end
+	
+	
+	end
+
+    StaffDetector = vape.Categories.Utility:CreateModule({
+		Name = 'StaffDetectorV2',
+		Function = function(callback)
+			if callback then
+				StaffDetector:Clean(playersService.PlayerAdded:Connect(playerAdded))
+				for _, v in playersService:GetPlayers() do
+					task.spawn(playerAdded, v)
+				end
+			else
+				table.clear(joined)
+			end
+		end,
+		Tooltip = 'A Newer verison of Staff-Detector'
+	})
+
+    Party = StaffDetector:CreateToggle({
+	Name = 'Leave party',
+	Default = true,
+   })
+    IncludeSpecs = StaffDetector:CreateToggle({
+	Name = 'Include Spectators',
+        Tooltip = 'NOTE: Anti-Cheat mods could create new alts, ill say to keep this on to get the new username. BUT THIS CAN DO FALSE DETECTIONS!!',
+	Default = true,
+   })
+    CreateLogsOfMODS = StaffDetector:CreateToggle({
+	Name = 'Logs',
+	Default = false,
+	Tooltip = 'all this does is keep track of every mod/spectators has joined you with a date'
+   })
+end)
+--]]
+
 
 run(function()
-	local Header = "Small Update!"
-	local Verison = "0.1.2"
-	local notes = "A small update, upped KA attack range. I have also made three more functions in exploits 'Anti-Cheat Mods, Patch Notes, and Switch Gui'. Anti-Cheat mods detect all known and unknown mods, patch notes is this!"
-	local time = 30
-	local patchnotes = vape.Categories.Exploits:CreateModule({
-		Name = "Patch Notes",
-		Tooltip = "This shows off the updates logs",
-		Function = function()
-			vape:CreateNotification(Header.."|"..Verison,notes,time)
-		end		
+    local TAG
+    local CustomTAG
+    local R, G, B
+    local Org = ""
+    local OrgText = ""
+    local player = game:GetService('Players').LocalPlayer
+    if not player.Tags['0'] then
+	notif('Failed', "Couldn't find the folder 'TAGS' to change ur tag", 20, 'alert')
+
+    end
+	local function Color3ToHex(r,g,b)
+		return string.lower(string.format("#%02X%02X%02X", r , g , b))
+	end
+
+    Org = player.Tags['0'].Value
+    OrgText =  player.Tags['0']:GetAttribute('Text')
+    CustomTAG = vape.Categories.Minigames:CreateModule({
+        Name = 'CustomTag',
+        Function = function(callback)
+            if callback then
+                player.Tags['0'].Value = "<font color='rgb("..R.Value..","..G.Value..","..B.Value..")'>["..TAG.Value.."]</font>"
+		 player.Tags['0']:SetAttribute('Text',TAG.Value)
+				 player:SetAttribute('ClanTag',TAG.Value)
+local player = game.Players.LocalPlayer
+
+local function Color3ToHex(color)
+	return string.format("#%02X%02X%02X", color.R * 255, color.G * 255, color.B * 255)
+end
+
+player.PlayerGui.ChildAdded:Connect(function(child)
+	if child.Name == "TabListScreenGui" and child:IsA("ScreenGui") then
+		task.spawn(function()
+			while CustomTAG.Enabled do
+				for _, v in ipairs(child:GetDescendants()) do
+					if v:IsA("TextLabel") then
+						local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+							and player.Name
+							or player.DisplayName
+						
+						if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+							v.Text = string.format(
+								'<font transparency="0.3" color="%s">[%s]</font> %s',
+								Color3ToHex(Color3.fromRGB(R.Value, G.Value, B.Value)),
+								TAG.Value,
+								nameToFind
+							)
+						end
+					end
+				end
+				task.wait()
+			end
+
+			for _, v in ipairs(child:GetDescendants()) do
+				if v:IsA("TextLabel") then
+					local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+						and player.Name
+						or player.DisplayName
+					
+					if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+						v.Text = string.format(
+							'<font transparency="0.3" color="%s">[%s]</font> %s',
+							Color3ToHex(Color3.fromRGB(255, 255, 255)),
+							 player.Tags['0']:GetAttribute('Text'),
+							nameToFind
+						)
+					end
+				end
+			end
+		end)
+	end
+end)
+
+            else
+                player.Tags['0'].Value = Org
+		 player.Tags['0']:SetAttribute('Text',OrgText)
+player:SetAttribute('ClanTag',OrgText)
+            end
+        end,
+        Tooltip = 'Client-Sided visual custom clan tag on-chat'
+    })
+
+    TAG = CustomTAG:CreateTextBox({
+        Name = 'Tag Text',
+        Placeholder = '',
+	Function = function()
+	    CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+
+   R = CustomTAG:CreateSlider({
+        Name = 'R',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+     G = CustomTAG:CreateSlider({
+        Name = 'G',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+	    CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+   B =  CustomTAG:CreateSlider({
+        Name = 'B',
+        Min = 0,
+        Max = 255,
+        Default = 255,
+	Function = function()
+	   CustomTAG:Toggle()
+task.wait()
+CustomTAG:Toggle()
+	end
+    })
+end)
+
+run(function()
+  local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+    local PlayerLevel
+	local level 
+  
+
+PlayerLevel = vape.Categories.Minigames:CreateModule({
+        Name = 'SetPlayerLevel',
+	Tooltip = "Sets your player level to 100 (client sided)",
+        Function = function(callback)
+
+
+				notif("SetPlayerLevel", "This is client sided (only u will see the new level)", 3,"warning")
+				game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
+	end
+})
+
+level = PlayerLevel:CreateSlider({
+        Name = 'Player Level',
+        Min = 1,
+        Max = 1000,
+        Default = 100,
+	Function = function(val)
+	    player:SetAttribute("PlayerLevel", val)
+	end
+    })
+
+
+end)
+
+run(function()
+    local KitRender
+  local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+local ids = {
+    ['none'] = "rbxassetid://16493320215",
+    ["random"] = "rbxassetid://79773209697352",
+    ["cowgirl"] = "rbxassetid://9155462968",
+    ["davey"] = "rbxassetid://9155464612",
+    ["warlock"] = "rbxassetid://15186338366",
+    ["ember"] = "rbxassetid://9630017904",
+    ["black_market_trader"] = "rbxassetid://9630017904",
+    ["yeti"] = "rbxassetid://9166205917",
+    ["scarab"] = "rbxassetid://137137517627492",
+    ["defender"] = "rbxassetid://131690429591874",
+    ["cactus"] = "rbxassetid://104436517801089",
+    ["oasis"] = "rbxassetid://120283205213823",
+    ["berserker"] = "rbxassetid://90258047545241",
+    ["sword_shield"] = "rbxassetid://131690429591874",
+    ["airbender"] = "rbxassetid://74712750354593",
+    ["gun_blade"] = "rbxassetid://138231219644853",
+    ["frost_hammer_kit"] = "rbxassetid://11838567073",
+    ["spider_queen"] = "rbxassetid://95237509752482",
+    ["archer"] = "rbxassetid://9224796984",
+    ["axolotl"] = "rbxassetid://9155466713",
+    ["baker"] = "rbxassetid://9155463919",
+    ["barbarian"] = "rbxassetid://9166207628",
+    ["builder"] = "rbxassetid://9155463708",
+    ["necromancer"] = "rbxassetid://11343458097",
+    ["cyber"] = "rbxassetid://9507126891",
+    ["sorcerer"] = "rbxassetid://97940108361528",
+    ["bigman"] = "rbxassetid://9155467211",
+    ["spirit_assassin"] = "rbxassetid://10406002412",
+    ["farmer_cletus"] = "rbxassetid://9155466936",
+    ["ice_queen"] = "rbxassetid://9155466204",
+    ["grim_reaper"] = "rbxassetid://9155467410",
+    ["spirit_gardener"] = "rbxassetid://132108376114488",
+    ["hannah"] = "rbxassetid://10726577232",
+    ["shielder"] = "rbxassetid://9155464114",
+    ["summoner"] = "rbxassetid://18922378956",
+    ["glacial_skater"] = "rbxassetid://84628060516931",
+    ["dragon_sword"] = "rbxassetid://16215630104",
+    ["lumen"] = "rbxassetid://9630018371",
+    ["flower_bee"] = "rbxassetid://101569742252812",
+    ["jellyfish"] = "rbxassetid://18129974852",
+    ["melody"] = "rbxassetid://9155464915",
+    ["mimic"] = "rbxassetid://14783283296",
+    ["miner"] = "rbxassetid://9166208461",
+    ["nazar"] = "rbxassetid://18926951849",
+    ["seahorse"] = "rbxassetid://11902552560",
+    ["elk_master"] = "rbxassetid://15714972287",
+    ["rebellion_leader"] = "rbxassetid://18926409564",
+    ["void_hunter"] = "rbxassetid://122370766273698",
+    ["taliyah"] = "rbxassetid://13989437601",
+    ["angel"] = "rbxassetid://9166208240",
+    ["harpoon"] = "rbxassetid://18250634847",
+    ["void_walker"] = "rbxassetid://78915127961078",
+    ["spirit_summoner"] = "rbxassetid://95760990786863",
+    ["triple_shot"] = "rbxassetid://9166208149",
+    ["void_knight"] = "rbxassetid://73636326782144",
+    ["regent"] = "rbxassetid://9166208904",
+    ["vulcan"] = "rbxassetid://9155465543",
+    ["owl"] = "rbxassetid://12509401147",
+    ["dasher"] = "rbxassetid://9155467645",
+    ["disruptor"] = "rbxassetid://11596993583",
+    ["wizard"] = "rbxassetid://13353923546",
+    ["aery"] = "rbxassetid://9155463221",
+    ["agni"] = "rbxassetid://17024640133",
+    ["alchemist"] = "rbxassetid://9155462512",
+    ["spearman"] = "rbxassetid://9166207341",
+    ["beekeeper"] = "rbxassetid://9312831285",
+    ["falconer"] = "rbxassetid://17022941869",
+    ["bounty_hunter"] = "rbxassetid://9166208649",
+    ["blood_assassin"] = "rbxassetid://12520290159",
+    ["battery"] = "rbxassetid://10159166528",
+    ["steam_engineer"] = "rbxassetid://15380413567",
+    ["vesta"] = "rbxassetid://9568930198",
+    ["beast"] = "rbxassetid://9155465124",
+    ["dino_tamer"] = "rbxassetid://9872357009",
+    ["drill"] = "rbxassetid://12955100280",
+    ["elektra"] = "rbxassetid://13841413050",
+    ["fisherman"] = "rbxassetid://9166208359",
+    ["queen_bee"] = "rbxassetid://12671498918",
+    ["card"] = "rbxassetid://13841410580",
+    ["frosty"] = "rbxassetid://9166208762",
+    ["gingerbread_man"] = "rbxassetid://9155464364",
+    ["ghost_catcher"] = "rbxassetid://9224802656",
+    ["tinker"] = "rbxassetid://17025762404",
+    ["ignis"] = "rbxassetid://13835258938",
+    ["oil_man"] = "rbxassetid://9166206259",
+    ["jade"] = "rbxassetid://9166306816",
+    ["dragon_slayer"] = "rbxassetid://10982192175",
+    ["paladin"] = "rbxassetid://11202785737",
+    ["pinata"] = "rbxassetid://10011261147",
+    ["merchant"] = "rbxassetid://9872356790",
+    ["metal_detector"] = "rbxassetid://9378298061",
+    ["slime_tamer"] = "rbxassetid://15379766168",
+    ["nyoka"] = "rbxassetid://17022941410",
+    ["midnight"] = "rbxassetid://9155462763",
+    ["pyro"] = "rbxassetid://9155464770",
+    ["raven"] = "rbxassetid://9166206554",
+    ["santa"] = "rbxassetid://9166206101",
+    ["sheep_herder"] = "rbxassetid://9155465730",
+    ["smoke"] = "rbxassetid://9155462247",
+    ["spirit_catcher"] = "rbxassetid://9166207943",
+    ["star_collector"] = "rbxassetid://9872356516",
+    ["styx"] = "rbxassetid://17014536631",
+    ["block_kicker"] = "rbxassetid://15382536098",
+    ["trapper"] = "rbxassetid://9166206875",
+    ["hatter"] = "rbxassetid://12509388633",
+    ["ninja"] = "rbxassetid://15517037848",
+    ["jailor"] = "rbxassetid://11664116980",
+    ["warrior"] = "rbxassetid://9166207008",
+    ["mage"] = "rbxassetid://10982191792",
+    ["void_dragon"] = "rbxassetid://10982192753",
+    ["cat"] = "rbxassetid://15350740470",
+    ["wind_walker"] = "rbxassetid://9872355499",
+
+}
+
+
+local function createkitrender(plr)
+	local icon = Instance.new("ImageLabel")
+	icon.Name = "ReVapeKitRender"
+	icon.AnchorPoint = Vector2.new(1, 0.5)
+	icon.BackgroundTransparency = 1
+	icon.Position = UDim2.new(1.05, 0, 0.5, 0)
+	icon.Size = UDim2.new(1.5, 0, 1.5, 0)
+	icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
+	icon.ImageTransparency = 0.4
+	icon.ScaleType = Enum.ScaleType.Crop
+
+	local uar = Instance.new("UIAspectRatioConstraint")
+	uar.AspectRatio = 1
+	uar.AspectType = Enum.AspectType.FitWithinMaxSize
+	uar.DominantAxis = Enum.DominantAxis.Width
+	uar.Parent = icon
+
+	icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or ids["none"]
+	return icon
+end
+	local function createkitrender(plr)
+		local icon = Instance.new("ImageLabel")
+		icon.Name = "ReVapeKitRender"
+		icon.AnchorPoint = Vector2.new(1, 0.5)
+		icon.BackgroundTransparency = 1
+		icon.Position = UDim2.new(1.05, 0, 0.5, 0)
+		icon.Size = UDim2.new(1.5, 0, 1.5, 0)
+		icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
+		icon.ImageTransparency = 0.4
+		icon.ScaleType = Enum.ScaleType.Crop
+
+		local uar = Instance.new("UIAspectRatioConstraint")
+		uar.AspectRatio = 1
+		uar.AspectType = Enum.AspectType.FitWithinMaxSize
+		uar.DominantAxis = Enum.DominantAxis.Width
+		uar.Parent = icon
+
+		icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or ids["none"]
+		return icon
+	end
+
+	local function removeallkitrenders()
+		for _, v in ipairs(PlayerGui:GetDescendants()) do
+			if v:IsA("ImageLabel") and v.Name == "ReVapeKitRender" then
+				v:Destroy() 
+			end
+		end
+	end
+
+	local function refreshicon(icon, plr)
+		icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or ids["none"]
+	end
+
+	local function handlePlayerLabel(label)
+		if not (label:IsA("TextLabel") and label.Name == "PlayerName") then
+			return
+		end
+
+		local oppplayer = Players:FindFirstChild(label.Text)
+		if not oppplayer then
+			for _, plr in ipairs(Players:GetPlayers()) do
+				if plr.DisplayName == label.Text then
+					oppplayer = plr
+					break
+				end
+			end
+		end
+		if not oppplayer then
+			return
+		end
+
+		local container = label.Parent
+		for _ = 1, 3 do
+			if container and container.Parent then
+				container = container.Parent
+			end
+		end
+
+		if container and container:IsA("Frame") then
+			if container.Name ~= oppplayer.Name then
+				container.Name = oppplayer.Name
+			end
+
+			local card = container:FindFirstChild("1") and container["1"]:FindFirstChild("MatchDraftPlayerCard")
+			if card and not card:FindFirstChild("ReVapeKitRender") then
+				local icon = createkitrender(oppplayer)
+				icon.Parent = card
+
+				oppplayer:GetAttributeChangedSignal("PlayingAsKits"):Connect(function()
+					refreshicon(icon, oppplayer)
+				end)
+			end
+		end
+	end
+
+
+	KitRender = vape.Categories.Minigames:CreateModule({
+		Name = "KitRender",
+		Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked) only WILL NOT WORK ON STREAMERMODES",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+					local team2 = PlayerGui:WaitForChild("MatchDraftApp")
+						:WaitForChild("DraftAppBackground")
+						:WaitForChild("BodyContainer")
+						:WaitForChild("Team2Column")
+
+					for _, child in ipairs(team2:GetDescendants()) do
+						if KitRender.Enabled then
+							handlePlayerLabel(child)
+						end
+					end
+
+					team2.DescendantAdded:Connect(function(child)
+						if KitRender.Enabled then
+							handlePlayerLabel(child)
+						end
+					end)
+				end)
+			else
+				removeallkitrenders()
+			end
+		end
 	})
 end)
+
