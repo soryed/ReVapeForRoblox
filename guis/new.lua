@@ -5806,6 +5806,7 @@ mainapi:CreateCategory({
 mainapi:CreateCategory({
 	Name = 'Troll',
 	Icon = getcustomasset('ReVape/assets/new/troll.png'),
+	Size = UDim2.fromOffset(19, 12)
 })
 mainapi.Categories.Main:CreateDivider('misc')
 
