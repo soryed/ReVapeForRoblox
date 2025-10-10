@@ -219,373 +219,6 @@ run(function()
 	})
 end)
 
-run(function()
-
-    local Users = {
-        KnownUsers = {
-            Chase = {22808138, 4782733628, 7447190808, 3196162848},
-            Orion = {547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749},
-            LisNix = {162442297, 702354331, 9350301723},
-            Nwr = {307212658, 5097000699, 4923561416},
-            Gorilla = {514679433, 2431747703, 4531785383},
-            Typhoon = {2428373515, 7659437319},
-            Erin = {2465133159},
-            Ghost = {7558211130, 1708400489},
-            Sponge = {376388734, 5157136850},
-            Gora = {589533315, 567497793},
-            Apple = {334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659},
-            Dom = {239431610, 2621170992},
-            Kevin = {575474067, 4785639950, 8735055832},
-            Vic = {839818760, 1524739259},
-        },
-        UnknownUsers = {
-            7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
-            2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
-            7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
-        }
-    }
-    local ACMOD
-    local Side
-    local Specific
-    local IncludeOffline
-    local IncludeStudio
-
-    ACMOD = vape.Categories.Minigames:CreateModule({
-        Name = 'Anti-Cheat Mods',
-        Tooltip = "Fetches all AC mod users (including unknowns)",
-        Function = function()
-            vape:CreateNotification('Loading...', "Currently fetching mods", 3)
-            task.wait(4)
-
-            local HttpService = game:GetService("HttpService")
-            local Players = game:GetService("Players")
-
-            local Offline, InGame, Online, Studio = 0, 0, 0, 0
-            local url = "https://presence.roproxy.com/v1/presence/users"
-            local headers = {["Content-Type"] = "application/json"}
-            local data = {userIds = {}}
-
-            if Side.Value == "Known" then
-                if Specific.Value == "All" then
-                    for _, numbers in pairs(Users.KnownUsers) do
-                        for _, num in ipairs(numbers) do
-                            table.insert(data.userIds, num)
-                        end
-                    end
-                elseif Users.KnownUsers[Specific.Value] then
-                    for _, num in ipairs(Users.KnownUsers[Specific.Value]) do
-                        table.insert(data.userIds, num)
-                    end
-                end
-            elseif Side.Value == "Unknown" then
-                for _, num in ipairs(Users.UnknownUsers) do
-                    table.insert(data.userIds, num)
-                end
-            end
-
-            local jsonData = HttpService:JSONEncode(data)
-            local response
-            local success, err = pcall(function()
-                response = HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson)
-            end)
-
-            if success then
-                local result = HttpService:JSONDecode(response)
-                if result.userPresences then
-                    for _, user in pairs(result.userPresences) do
-                        local username = Players:GetNameFromUserIdAsync(user.userId)
-                        if user.userPresenceType == 0 then
-                            Offline += 1
-                            if IncludeOffline.Value then
-                                vape:CreateNotification('Offline Mod detected!', username, 5, "alert")
-                            end
-                        elseif user.userPresenceType == 1 then 
-                            Online += 1
-                            vape:CreateNotification('Online Mod detected!', username, 15, "warning")
-                        elseif user.userPresenceType == 2 then 
-                            InGame += 1
-                            vape:CreateNotification('InGame Mod detected!', username, 15, "warning")
-                        elseif user.userPresenceType == 3 then 
-                            Studio += 1
-                            if IncludeStudio.Value then
-                                vape:CreateNotification('Studio Mod detected!', username, 5, "warning")
-                            end
-                        end
-                    end
-                end
-
-                local Status = InGame + Online
-
-                task.wait(5)
-                if InGame >= 2 then
-                    vape:CreateNotification('Multiple Mods In-Game!', "There are [" .. InGame .. "] mods in game", 45)
-                elseif InGame == 0 then
-                    vape:CreateNotification('No Mods In-Game!', "There are none in-game", 45)
-                end
-
-                if Online >= 2 then
-                    vape:CreateNotification('Multiple Mods Online!', "There are [" .. Online .. "] mods online", 45)
-                elseif Online == 0 then
-                    vape:CreateNotification('No Mods Online!', "There are none online", 45)
-                end
-            else
-                vape:CreateNotification('Failed!', "Failed to get presence data: " .. tostring(err), 15, "alert")
-            end
-        end
-    })
-
-    Side = ACMOD:CreateDropdown({
-        Name = "Version",
-        List = {'Known', 'Unknown'},
-    })
-
-    Specific = ACMOD:CreateDropdown({
-        Name = "Specific",
-        Tooltip = 'Fetch a specific user (mains and alts)',
-        List = {'All', 'Chase', 'Orion', 'LisNix', 'Nwr', 'Gorilla', 'Typhoon', 'Vic', 'Erin', 'Ghost', 'Sponge', 'Apple', 'Dom', 'Gora', 'Kevin'},
-    })
-
-    IncludeStudio = ACMOD:CreateToggle({
-        Name = "Include Studio",
-        Tooltip = "Include when a mod is in studio",
-        Default = false
-    })
-
-    IncludeOffline = ACMOD:CreateToggle({
-        Name = "Include Offline",
-        Tooltip = "Include when a mod is offline",
-        Default = false
-    })
-end)
-		
-
-run(function()
-	local Header = "Small Update!"
-	local Verison = "0.1.3"
-	local notes = "A small update, upped KA attack range. I have also made three more functions in Minigames 'Anti-Cheat Mods, Patch Notes, and Switch Gui'. Anti-Cheat mods detect all known and unknown mods, patch notes is this, and i have also created switching ur verison of gui!"
-	local time = 45
-	local patchnotes = vape.Categories.Minigames:CreateModule({
-		Name = "Patch Notes",
-		Tooltip = "This shows off the updates logs",
-		Function = function()
-			vape:CreateNotification(Header.."|"..Verison,notes,time)
-		end		
-	})
-end)
-
-run(function()
-    local Users = {
-            22808138, 4782733628, 7447190808, 3196162848,
-            547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749,
-            162442297, 702354331, 9350301723,
-            307212658, 5097000699, 4923561416,
-           514679433, 2431747703, 4531785383,
-            2428373515, 7659437319,
-           2465133159,
-            7558211130, 1708400489,
-            376388734, 5157136850,
-           589533315, 567497793,
-            334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659,
-           239431610, 2621170992,
-            575474067, 4785639950, 8735055832,
-            839818760, 1524739259,
-            7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
-            2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
-            7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
-    }
-    local NSD
-    local Party
-    local IncludeSpecs
-    local CreateLogsOfMODS    
-
-
-	local function checkFriends(list)
-		for _, v in list do
-			if joined[v] then
-				return joined[v]
-			end
-		end
-		return nil
-	end
-
-	local function staffFunction(plr, checktype)
-		if not vape.Loaded then
-			repeat task.wait() until vape.Loaded
-		end
-	
-		notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, 'alert')
-		whitelist.customtags[plr.Name] = {{text = 'GAME STAFF', color = Color3.new(1, 0, 0)}}
-	
-		if Party.Enabled and not checktype:find('clan') then
-			bedwars.PartyController:leaveParty()
-		end
-		if CreateLogsOfMODS.Enabled then
- 		     local Format
-		    if checktype == 'impossible_join' then
-		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[IMPOSSIBLE JOIN]"
-		end    
-		    if checktype == 'detected_mod_join' then
-		Format	= "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[KNOWN MOD JOIN]"
-		end    
-
-		    if not isfile('newvape/profiles/logs.txt') then
-			writefile('newvape/profiles/logs.txt', Format)
-		    else
-			writefile('newvape/profiles/logs.txt', Format)
-		    end 
-		end
-	end	
-	local function checkJoin(plr, connection)
-		if not plr:GetAttribute('Team') and plr:GetAttribute('Spectator') and not bedwars.Store:getState().Game.customMatch then
-			connection:Disconnect()
-			local tab, pages = {}, playersService:GetFriendsAsync(plr.UserId)
-			for _ = 1, 4 do
-				for _, v in pages:GetCurrentPage() do
-					table.insert(tab, v.Id)
-				end
-				if pages.IsFinished then break end
-				pages:AdvanceToNextPageAsync()
-			end
-	
-			for i, v in Users do
-			    
-			end
-
-			local friend = checkFriends(tab)
-			if not friend then
-				staffFunction(plr, 'impossible_join')
-				return true
-			elseif Users[plr.UserId] then
-			    staffFunction(plr, 'detected_mod_join')
-			    return true
-			else
-				notif('StaffDetector', string.format('Spectator %s joined from %s', plr.Name, friend), 20, 'warning')
-		if CreateLogsOfMODS.Enabled then
-		    local Format = "[USERNAME]:"..plr.Name.."|".."[USERID]:"..plr.UserId.."|".."[DATE]:"..tostring(DateTime:now()).."|".."[TYPE]:".."[SPECTATOR JOIN]"
-
-		    if not isfile('newvape/profiles/logs.txt') then
-			writefile('newvape/profiles/logs.txt', Format)
-		    else
-			writefile('newvape/profiles/logs.txt', Format)
-		    end 
-		end
-			end
-		end
-	end
-	
-	local function playerAdded(plr)
-		joined[plr.UserId] = plr.Name
-		if plr == lplr then return end
-	
-
-			local connection
-			connection = plr:GetAttributeChangedSignal('Spectator'):Connect(function()
-			    if IncludeSpecs.Enabled then
-				checkJoin(plr, connection)
-			    end
-			end)
-			StaffDetector:Clean(connection)
-			if checkJoin(plr, connection) then
-				return
-			end
-	
-	
-	end
-
-    NSD = vape.Categories.Utility:CreateModule({
-		Name = 'StaffDetectorV2',
-		Function = function(callback)
-			if callback then
-				StaffDetector:Clean(playersService.PlayerAdded:Connect(playerAdded))
-				for _, v in playersService:GetPlayers() do
-					task.spawn(playerAdded, v)
-				end
-			else
-				table.clear(joined)
-			end
-		end,
-		Tooltip = 'A Newer verison of Staff-Detector'
-	})
-
-    Party = NSD:CreateToggle({
-	Name = 'Leave party',
-	Default = true,
-   })
-    IncludeSpecs = NSD:CreateToggle({
-	Name = 'Include Spectators',
-        Tooltip = 'NOTE: Anti-Cheat mods could create new alts, ill say to keep this on to get the new username. BUT THIS CAN DO FALSE DETECTIONS!!',
-	Default = true,
-   })
-    CreateLogsOfMODS = NSD:CreateToggle({
-	Name = 'Logs',
-	Default = false,
-	Tooltip = 'all this does is keep track of every mod/spectators has joined you with a date'
-   })
-end)
-
-
---[[
-
-run(function()
-	local method
-	FTLMFAO = vape.Categories.Minigames:CreateModule({
-		Name = "FTLMAO",
-		Function = function(callback)
-			if callback then
-			    if method.Value == 'RemoteEvents' then
-				for i, v in game:GetDescendants() do
-					if v:IsA('RemoteEvent') or v:IsA('UnreliableRemoteEvent') then
-					while FTLMFAO.Enabled do
-						v:FireServer()					 
-						task.wait()
-					end
-				   end
-				end
-			   end
-if method.Value == 'RemoteFunctions' then
-				for i, v in game:GetDescendants()do
-					if v:IsA('RemoteFunction') then
-					while FTLMFAO.Enabled do
-						v:InvokeServer()					 
-						task.wait()
-					end
-				   end
-				end
-			   end
-if method.Value == 'BindableEvents' then
-				for i, v in game:GetDescendants()do
-					if v:IsA('BindableEvent')  then
-					while FTLMFAO.Enabled do
-						v:Fire()					 
-						task.wait()
-					end
-				   end
-				end
-			   end
-
-			end
-if method.Value == 'BindableFunctions' then
-				for i, v in game:GetDescendants()do
-					if  v:IsA('BindableFunction') then
-					while FTLMFAO.Enabled do
-						v:Invoke()					 
-						task.wait()
-					end
-				   end
-				end
-			   end
-
-			end
-
-		end	
-	})
-	method = FTLMFAO:CreateDrowndrop({
-	   Name = 'Method',
-	   List = {'RemoteEvents','RemoteFunctions','BindableEvents','BindableFunctions'}
-	})
-end)
-
-]]--
 
 run(function()
     local TAG
@@ -743,4 +376,373 @@ level = PlayerLevel:CreateSlider({
     })
 
 
+end)
+
+run(function()
+    local Users = {
+        KnownUsers = {
+            Chase = {22808138, 4782733628, 7447190808, 3196162848},
+            Orion = {547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749},
+            LisNix = {162442297, 702354331, 9350301723},
+            Nwr = {307212658, 5097000699, 4923561416},
+            Gorilla = {514679433, 2431747703, 4531785383},
+            Typhoon = {2428373515, 7659437319},
+            Erin = {2465133159},
+            Ghost = {7558211130, 1708400489},
+            Sponge = {376388734, 5157136850},
+            Gora = {589533315, 567497793},
+            Apple = {334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659},
+            Dom = {239431610, 2621170992},
+            Kevin = {575474067, 4785639950, 8735055832},
+            Vic = {839818760, 1524739259},
+        },
+        UnknownUsers = {
+            7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
+            2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
+            7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
+        }
+    }
+
+    local ACMOD
+    local Side
+    local Specific
+    local IncludeOffline
+    local IncludeStudio
+
+    ACMOD = vape.Categories.Minigames:CreateModule({
+        Name = 'Anti-Cheat Mods',
+        Tooltip = "Fetches all AC mod users (including unknowns)",
+        Function = function()
+            vape:CreateNotification('Loading...', "Currently fetching mods", 3)
+            task.wait(4)
+
+            local HttpService = game:GetService("HttpService")
+            local Players = game:GetService("Players")
+
+            local Offline, InGame, Online, Studio = 0, 0, 0, 0
+            local url = "https://presence.roproxy.com/v1/presence/users"
+            local data = {userIds = {}}
+
+            if Side and Side.Value == "Known" then
+                if Specific and Specific.Value == "All" then
+                    for _, numbers in pairs(Users.KnownUsers) do
+                        for _, num in ipairs(numbers) do
+                            table.insert(data.userIds, num)
+                        end
+                    end
+                elseif Specific and Users.KnownUsers[Specific.Value] then
+                    for _, num in ipairs(Users.KnownUsers[Specific.Value]) do
+                        table.insert(data.userIds, num)
+                    end
+                end
+            elseif Side and Side.Value == "Unknown" then
+                for _, num in ipairs(Users.UnknownUsers) do
+                    table.insert(data.userIds, num)
+                end
+            end
+
+            if #data.userIds == 0 then
+                vape:CreateNotification('No Users Selected', "Pick a Side/Specific to fetch", 5, "alert")
+                return
+            end
+
+            local jsonData = HttpService:JSONEncode(data)
+            local response
+            local success, err = pcall(function()
+                response = HttpService:PostAsync(url, jsonData, Enum.HttpContentType.ApplicationJson)
+            end)
+
+            if success and response then
+                local okDecode, result = pcall(function()
+                    return HttpService:JSONDecode(response)
+                end)
+
+                if not okDecode or not result then
+                    vape:CreateNotification('Failed!', "Failed to decode presence JSON", 15, "alert")
+                    return
+                end
+
+                if result.userPresences then
+                    for _, user in pairs(result.userPresences) do
+                        local username = tostring(user.userId)
+                        local okName, nameOrErr = pcall(function()
+                            return Players:GetNameFromUserIdAsync(user.userId)
+                        end)
+                        if okName and nameOrErr then
+                            username = nameOrErr
+                        end
+
+                        if user.userPresenceType == 0 then
+                            Offline = Offline + 1
+                            if IncludeOffline and IncludeOffline.Value then
+                                vape:CreateNotification('Offline Mod detected!', username, 5, "alert")
+                            end
+                        elseif user.userPresenceType == 1 then 
+                            Online = Online + 1
+                            vape:CreateNotification('Online Mod detected!', username, 15, "warning")
+                        elseif user.userPresenceType == 2 then 
+                            InGame = InGame + 1
+                            vape:CreateNotification('InGame Mod detected!', username, 15, "warning")
+                        elseif user.userPresenceType == 3 then 
+                            Studio = Studio + 1
+                            if IncludeStudio and IncludeStudio.Value then
+                                vape:CreateNotification('Studio Mod detected!', username, 5, "warning")
+                            end
+                        end
+                    end
+                end
+
+                task.wait(5)
+                if InGame >= 2 then
+                    vape:CreateNotification('Multiple Mods In-Game!', "There are [" .. InGame .. "] mods in game", 45)
+                elseif InGame == 0 then
+                    vape:CreateNotification('No Mods In-Game!', "There are none in-game", 45)
+                end
+
+                if Online >= 2 then
+                    vape:CreateNotification('Multiple Mods Online!', "There are [" .. Online .. "] mods online", 45)
+                elseif Online == 0 then
+                    vape:CreateNotification('No Mods Online!', "There are none online", 45)
+                end
+            else
+                vape:CreateNotification('Failed!', "Failed to get presence data: " .. tostring(err), 15, "alert")
+            end
+        end
+    })
+
+    Side = ACMOD:CreateDropdown({
+        Name = "Version",
+        List = {'Known', 'Unknown'},
+    })
+
+    Specific = ACMOD:CreateDropdown({
+        Name = "Specific",
+        Tooltip = 'Fetch a specific user (mains and alts)',
+        List = {'All', 'Chase', 'Orion', 'LisNix', 'Nwr', 'Gorilla', 'Typhoon', 'Vic', 'Erin', 'Ghost', 'Sponge', 'Apple', 'Dom', 'Gora', 'Kevin'},
+    })
+
+    IncludeStudio = ACMOD:CreateToggle({
+        Name = "Include Studio",
+        Tooltip = "Include when a mod is in studio",
+        Default = false
+    })
+
+    IncludeOffline = ACMOD:CreateToggle({
+        Name = "Include Offline",
+        Tooltip = "Include when a mod is offline",
+        Default = false
+    })
+end)
+
+run(function()
+    local UsersList = {
+        22808138, 4782733628, 7447190808, 3196162848,
+        547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749,
+        162442297, 702354331, 9350301723,
+        307212658, 5097000699, 4923561416,
+        514679433, 2431747703, 4531785383,
+        2428373515, 7659437319,
+        2465133159,
+        7558211130, 1708400489,
+        376388734, 5157136850,
+        589533315, 567497793,
+        334013471, 145981200, 4721068661, 8006518573, 3547758846, 7155624750, 7468661659,
+        239431610, 2621170992,
+        575474067, 4785639950, 8735055832,
+        839818760, 1524739259,
+        7547477786, 7574577126, 5816563976, 240526951, 7587479685, 7876617827,
+        2568824396, 7604102307, 7901878324, 5087196317, 7187604802, 7495829767,
+        7718511355, 7928472983, 7922414080, 7758683476, 4079687909, 1160595313
+    }
+
+    local UsersSet = {}
+    for _, id in ipairs(UsersList) do
+        UsersSet[id] = true
+    end
+
+    local playersService = game:GetService("Players")
+    local lplr = playersService.LocalPlayer
+    local joined = {} 
+
+    local StaffDetector
+    local Party
+    local IncludeSpecs
+    local CreateLogsOfMODS
+
+    local function notif(title, body, duration, typ)
+        if vape and vape.CreateNotification then
+            vape:CreateNotification(title, body, duration or 5, typ)
+        else
+            print(("NOTIF [%s] %s"):format(title, body))
+        end
+    end
+
+    local function checkFriends(list)
+        for _, v in ipairs(list) do
+            local id = v
+            if type(v) == "table" and v.Id then id = v.Id end
+            if joined[id] then
+                return joined[id]
+            end
+        end
+        return nil
+    end
+
+    local function staffFunction(plr, checktype, checktypee)
+        if not vape or not vape.Loaded then
+            repeat task.wait() until vape and vape.Loaded
+        end
+
+        notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
+
+        if whitelist and whitelist.customtags then
+            whitelist.customtags[plr.Name] = {{text = 'GAME STAFF', color = Color3.new(1, 0, 0)}}
+        end
+
+        if Party and Party.Enabled and not tostring(checktype):find('clan') then
+            if bedwars and bedwars.PartyController and bedwars.PartyController.leaveParty then
+                pcall(function() bedwars.PartyController:leaveParty() end)
+            end
+        end
+
+        if CreateLogsOfMODS and CreateLogsOfMODS.Enabled then
+            local Format
+				local date = DateTime.now():ToLocalTime():ToTable()
+				local dateString = string.format("%02d/%02d/%04d %02d:%02d:%02d", 
+				    date.month, date.day, date.year, date.hour, date.min, date.sec
+				)
+				
+				if checktype == "impossible_join" then
+				    Format = "[USERNAME]:"..plr.Name.."|"..
+				             "[USERID]:"..plr.UserId.."|"..
+				             "[DATE]:"..dateString.."|"..
+				             "[TYPE]:[IMPOSSIBLE JOIN]\n"
+				
+				elseif checktype == "detected_mod_join" then
+				    Format = "[USERNAME]:"..plr.Name.."|"..
+				             "[USERID]:"..plr.UserId.."|"..
+				             "[DATE]:"..dateString.."|"..
+				             "[TYPE]:[KNOWN MOD JOIN]\n"
+				
+				elseif checktype == "SPECTATOR JOIN" then
+				    Format = "[USERNAME]:"..plr.Name.."|"..
+				             "[USERID]:"..plr.UserId.."|"..
+				             "[DATE]:"..dateString.."|"..
+				             "[TYPE]:[SPECTATOR JOIN]\n"
+				end
+            if Format then
+                if not isfile('ReVape/profiles/logs.txt') then
+                    writefile('ReVape/profiles/logs.txt', Format)
+                else
+                    local prev = readfile('ReVape/profiles/logs.txt')
+                    writefile('ReVape/profiles/logs.txt', prev .. Format)
+                end
+            end
+        end
+    end
+
+    local function checkJoin(plr, connection)
+        if not plr or not plr.UserId then return false end
+
+        local spectatorAttr = plr:GetAttribute('Spectator')
+        local teamAttr = plr:GetAttribute('Team')
+        local isCustomMatch = false
+        if bedwars and bedwars.Store and bedwars.Store.getState then
+            local ok, state = pcall(bedwars.Store.getState, bedwars.Store)
+            if ok and state and state.Game and state.Game.customMatch then
+                isCustomMatch = true
+            end
+        end
+
+        if (not teamAttr) and spectatorAttr and not isCustomMatch then
+            if connection then connection:Disconnect() end
+
+            local tab = {}
+            local success, pages = pcall(function()
+                return playersService:GetFriendsAsync(plr.UserId)
+            end)
+
+            if not success or not pages then
+                staffFunction(plr, 'impossible_join','warning')
+                return true
+            end
+
+            for _ = 1, 4 do
+                local currentPage = pages:GetCurrentPage()
+                for _, v in ipairs(currentPage) do
+                    table.insert(tab, v.Id or v.id or v.Id)
+                end
+                if pages.IsFinished then break end
+                pages:AdvanceToNextPageAsync()
+            end
+
+            local friend = checkFriends(tab)
+            if not friend then
+                staffFunction(plr, 'impossible_join','warning')
+                return true
+            elseif UsersSet[plr.UserId] then
+                staffFunction(plr, 'detected_mod_join','alert')
+                return true
+            else
+                if IncludeSpecs and IncludeSpecs.Enabled then
+                    notif('StaffDetector', string.format('Spectator %s joined from %s', plr.Name, tostring(friend)), 20, 'warning')
+                    if CreateLogsOfMODS and CreateLogsOfMODS.Enabled then
+                        staffFunction(plr, 'SPECTATOR JOIN', 'info')
+                    end
+                end
+            end
+        end
+
+        return false
+    end
+
+    local function playerAdded(plr)
+        if not plr then return end
+        joined[plr.UserId] = plr.Name
+        if plr == lplr then return end
+
+        local connection
+        connection = plr:GetAttributeChangedSignal('Spectator'):Connect(function()
+            checkJoin(plr, connection)
+        end)
+        if StaffDetector and StaffDetector.Clean then
+            StaffDetector:Clean(connection)
+        end
+
+        if checkJoin(plr, connection) then
+            return
+        end
+    end
+
+    StaffDetector = vape.Categories.Utility:CreateModule({
+        Name = 'StaffDetectorV2',
+        Function = function(callback)
+            if callback then
+                if playersService and playersService.PlayerAdded then
+                    StaffDetector:Clean(playersService.PlayerAdded:Connect(playerAdded))
+                end
+                for _, v in ipairs(playersService:GetPlayers()) do
+                    task.spawn(playerAdded, v)
+                end
+            else
+                table.clear(joined)
+            end
+        end,
+        Tooltip = 'A Newer verison of Staff-Detector'
+    })
+
+    Party = StaffDetector:CreateToggle({
+        Name = 'Leave party',
+        Default = true,
+    })
+    IncludeSpecs = StaffDetector:CreateToggle({
+        Name = 'Include Spectators',
+        Tooltip = 'NOTE: Anti-Cheat mods could create new alts, ill say to keep this on to get the new username. BUT THIS CAN DO FALSE DETECTIONS!!',
+        Default = true,
+    })
+    CreateLogsOfMODS = StaffDetector:CreateToggle({
+        Name = 'Logs',
+        Default = false,
+        Tooltip = 'all this does is keep track of every mod/spectators has joined you with a date'
+    })
 end)
