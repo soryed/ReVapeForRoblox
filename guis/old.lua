@@ -20,7 +20,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ToggleNotifications = {},
 	ThreadFix = setthreadidentity and true or false,
-	Version = '4.04',
+	Version = '0.1',
 	Windows = {}
 }
 
@@ -77,7 +77,8 @@ local getcustomassets = {
 	['ReVape/assets/old/textvape.png'] = 'rbxasset://textvape.png',
 	['ReVape/assets/old/utilityicon.png'] = 'rbxasset://utilityicon.png',
 	['ReVape/assets/old/vape.png'] = 'rbxassetid://14373395239',
-	['ReVape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png'
+	['ReVape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png',
+	['ReVape/assets/old/troll.png'] = 'rbxassetid://133697448446510',
 }
 
 local isfile = isfile or function(file)
@@ -3496,6 +3497,15 @@ mainapi:CreateCategory({
 mainapi:CreateCategory({
 	Name = 'Minigames',
 	Icon = getcustomasset('ReVape/assets/old/worldicon.png')
+})
+mainapi:CreateCategory({
+	Name = 'Exploits',
+	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
+	WindowSize = 166
+})
+mainapi:CreateCategory({
+	Name = 'Troll',
+	Icon = getcustomasset('ReVape/assets/new/troll.png'),
 })
 mainapi.Legit = mainapi:CreateLegit({
 	Name = 'Legit'
