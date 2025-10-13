@@ -9922,3 +9922,136 @@ run(function()
 		end,
 	}) 
 end)
+run(function()
+    local InfernalKill = {Enabled = false}
+    InfernalKill = vape.Categories.Exploits:CreateModule({
+        ["Name"] = "ember insta kill",
+        ["Function"] = function(callback)
+            if callback then
+                repeat
+                    wait()
+                    local tmp = getItem("infernal_saber")
+                    if tmp then
+                        local lplr = game:GetService("Players").LocalPlayer
+                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
+                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                                local root = plr.Character.HumanoidRootPart
+                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
+                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
+                                        weapon = tmp.tool;
+                                        player = plr;
+                                        chargeTime = 0.9;
+                                    })
+                                end
+                            end
+                        end
+                    end
+                until not InfernalKill["Enabled"]
+            end
+        end,
+        ["Tooltip"] = "insta kill"
+    })
+end)
+
+run(function()
+	local Shaders = {Enabled = false}
+
+    local Shaders = vape.Categories.Render:CreateModule({
+        Name = "Shaders",
+        Function = function(call)
+            if call then
+                local VaporwaveSky = Lighting:FindFirstChild("VaporwaveSky") or Instance.new("Sky")
+                VaporwaveSky.Name = "VaporwaveSky"
+                VaporwaveSky.SkyboxBk = "rbxassetid://159454299"
+                VaporwaveSky.SkyboxDn = "rbxassetid://159454296"
+                VaporwaveSky.SkyboxFt = "rbxassetid://159454293"
+                VaporwaveSky.SkyboxLf = "rbxassetid://159454286"
+                VaporwaveSky.SkyboxRt = "rbxassetid://159454300"
+                VaporwaveSky.SkyboxUp = "rbxassetid://159454288"
+                VaporwaveSky.StarCount = 200
+                VaporwaveSky.SunAngularSize = 10
+                VaporwaveSky.MoonAngularSize = 9
+                VaporwaveSky.CelestialBodiesShown = true
+                VaporwaveSky.Parent = Lighting
+
+                local Bloom = Lighting:FindFirstChild("VaporwaveBloom") or Instance.new("BloomEffect")
+                Bloom.Name = "VaporwaveBloom"
+                Bloom.Enabled = true
+                Bloom.Intensity = 0.35
+                Bloom.Threshold = 0.2
+                Bloom.Size = 56
+                Bloom.Parent = Lighting
+
+                local Color = Lighting:FindFirstChild("VaporwaveColor") or Instance.new("ColorCorrectionEffect")
+                Color.Name = "VaporwaveColor"
+                Color.Enabled = true
+                Color.Brightness = 0.05
+                Color.Contrast = 0.25
+                Color.Saturation = 0.5
+                Color.TintColor = Color3.fromRGB(220, 160, 255)
+                Color.Parent = Lighting
+
+                local Atmosphere = Lighting:FindFirstChild("VaporwaveAtmosphere") or Instance.new("Atmosphere")
+                Atmosphere.Name = "VaporwaveAtmosphere"
+                Atmosphere.Density = 0.25
+                Atmosphere.Offset = 0.15
+                Atmosphere.Glare = 1.2
+                Atmosphere.Haze = 1
+                Atmosphere.Color = Color3.fromRGB(180, 140, 255)
+                Atmosphere.Decay = Color3.fromRGB(220, 120, 200)
+                Atmosphere.Parent = Lighting
+            else
+                local sky = Lighting:FindFirstChild("VaporwaveSky")
+                if sky then sky:Destroy() end
+                local bloom = Lighting:FindFirstChild("VaporwaveBloom")
+                if bloom then bloom.Enabled = false end
+                local color = Lighting:FindFirstChild("VaporwaveColor")
+                if color then color.Enabled = false end
+                local atmosphere = Lighting:FindFirstChild("VaporwaveAtmosphere")
+                if atmosphere then atmosphere:Destroy() end
+            end
+        end,
+        Tooltip = "Shaders"
+    })
+end)
+
+run(function()
+    local KrystalXploit = {Enabled = false}
+
+    KrystalXploit = vape.Categories.Exploits:CreateModule({
+        Name = "KrystalExploit",
+        Function = function(call)
+            if call then
+                task.spawn(function()
+                    repeat
+                        MomentumUpdate:FireServer({momentumValue = 9e9})
+                        task.wait()
+                    until not KrystalXploit.Enabled
+                end)
+            end
+        end,
+        Tooltip = "Lets you go more speed with krystal"
+    })
+end)
+
+run(function()
+	local ItemlessLongjump = {Enabled = false}
+
+	ItemlessLongjump = vape.Categories.Blatant:CreateModule({
+		Name = "ItemlessLongjump",
+		Function = function(call)
+			ItemlessLongjump.Enabled = call
+			if call then
+				lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 100, 0)
+				task.wait(0.3)
+				for i = 1, 4 do
+					task.wait(0.4)
+					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 75, 0)
+				end
+			else
+				workspace.Gravity = 192.6
+			end
+		end,
+		Tooltip = "Lets you do a longjump without any items/kits"
+	})
+end)
