@@ -8857,7 +8857,7 @@ run(function()
                     vape:CreateNotification('No Mods Online!', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('Failed!', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('Vape', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9116,7 +9116,7 @@ run(function()
                 end)
 
                 if not okDecode or not result then
-                    vape:CreateNotification('Failed!', "Failed to decode presence JSON", 15, "alert")
+                    vape:CreateNotification('Vape', "Failed to decode presence JSON", 15, "alert")
                     return
                 end
 
@@ -9163,7 +9163,7 @@ run(function()
                     vape:CreateNotification('No Mods Online!', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('Failed!', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('Vape', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9732,13 +9732,13 @@ run(function()
 	local player = game:GetService('Players').LocalPlayer
 
 	if not player:FindFirstChild("Tags") then
-		notif("Failed", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
+		notif("Vape", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
 		return
 	end
 
 	local tagObj = player.Tags:FindFirstChild("0")
 	if not tagObj then
-		notif("Failed", "Couldn't find any tag inside 'Tags'", 20, "alert")
+		notif("Vape", "Couldn't find any tag inside 'Tags'", 20, "alert")
 		return 	end
 
 	local function Color3ToHex(r, g, b)
@@ -9785,7 +9785,7 @@ run(function()
 										end
 									end
 								end
-								task.wait()
+								task.wait(0.01)
 							end
 
 							for _, v in ipairs(child:GetDescendants()) do
