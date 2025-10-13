@@ -9866,13 +9866,13 @@ end)
 
 
 run(function() 
-	local TPExploit
-	TPExploit = vape.Categories.AltFarm:CreateModule({
-		Name = "EmptyGameTP",
-		Tooltip = 'Teleports you to a empty game',
+	local MatchHistory
+	MatchHistory = vape.Categories.AltFarm:CreateModule({
+		Name = "MatchHistory",
+		Tooltip = 'Resets ur history',
 		Function = function(callback)
 			if callback then 
-				TPExploit:Toggle()
+				MatchHistory:Toggle()
 				local TeleportService = game:GetService("TeleportService")
 				local data = TeleportService:GetLocalPlayerTeleportData()
 				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data)
