@@ -5812,7 +5812,7 @@ mainapi:CreateCategory({
 mainapi:CreateCategory({
 	Name = 'AltFarm',
 	Icon = getcustomasset('ReVape/assets/new/af.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Size = UDim2.fromOffset(420, 420)
 })
 mainapi.Categories.Main:CreateDivider('misc')
 
