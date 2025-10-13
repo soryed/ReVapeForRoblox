@@ -10017,7 +10017,7 @@ end)
 
 run(function()
     local KrystalXploit = {Enabled = false}
-
+	local MomentumUpdate = replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate
     KrystalXploit = vape.Categories.Exploits:CreateModule({
         Name = "KrystalExploit",
         Function = function(call)
