@@ -9678,7 +9678,7 @@ run(function()
     })
 end)
 
-rrun(function()
+run(function()
 
     local aim = 0.05
     local tnt = 0.0345
