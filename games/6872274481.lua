@@ -9678,51 +9678,68 @@ run(function()
     })
 end)
 
-run(function()
+rrun(function()
 
-local aim = 0.05
-local tnt = .0345
-local aunchself = 0.35
-local defaultaim = 0.4
-local defaulttnt = 0.2
-local defaultself = 0.4
+    local aim = 0.05
+    local tnt = 0.0345
+    local aunchself = 0.35
 
+    local defaultaim = 0.4
+    local defaulttnt = 0.2
+    local defaultself = 0.4
 
-	BetterDavey = vape.Categories.Exploits:CreateModule({
-		Name = "BetterDavey",
-		Tooltip = 'makes ur cannon faster lol',
-		Function = function(callback)
-			if callback then
-		              workspace.Map.Worlds.tr_Range.Blocks.ChildAdded:Connect(function(child)
-    if child:IsA("BasePart") and child.Name == "cannon" and BetterDavey.Enabled then
-        local AimPrompt = child:WaitForChild("AimPrompt")
-        local FirePrompt = child:WaitForChild("FirePrompt")
-        local LaunchSelfPrompt = child:WaitForChild("LaunchSelfPrompt")
+    local function getWorldFolder()
+        local Map = workspace:WaitForChild("Map", 10)
+        local Worlds = Map:WaitForChild("Worlds", 10)
+        if not Worlds then return nil end
 
-        AimPrompt.HoldDuration = aim
-        FirePrompt.HoldDuration = tnt
-        LaunchSelfPrompt.HoldDuration = aunchself
-
+        return Worlds:GetChildren()[1] 
     end
-end)
-			else
-				for i, v in workspace.Map.Worlds.tr_Range.Blocks:GetChildren() do 
-				if v:IsA("BasePart") and v.Name == "cannon" then
-					    local child = v
-						        local AimPrompt = child:WaitForChild("AimPrompt")
-       							 local FirePrompt = child:WaitForChild("FirePrompt")
-        						local LaunchSelfPrompt = child:WaitForChild("LaunchSelfPrompt")
 
-        AimPrompt.HoldDuration = defaultaim
-        FirePrompt.HoldDuration = defaulttnt
-        LaunchSelfPrompt.HoldDuration = defaultself
-					end
- 			   end
-			end
-		end
-	})
-end)
+    local function setCannonSpeeds(blocksFolder, aimDur, tntDur, selfDur)
+        for _, v in ipairs(blocksFolder:GetChildren()) do 
+            if v:IsA("BasePart") and v.Name == "cannon" then
+                local AimPrompt = v:FindFirstChild("AimPrompt")
+                local FirePrompt = v:FindFirstChild("FirePrompt")
+                local LaunchSelfPrompt = v:FindFirstChild("LaunchSelfPrompt")
+                if AimPrompt and FirePrompt and LaunchSelfPrompt then
+                    AimPrompt.HoldDuration = aimDur
+                    FirePrompt.HoldDuration = tntDur
+                    LaunchSelfPrompt.HoldDuration = selfDur
+                end
+            end
+        end
+    end
 
+    BetterDavey = vape.Categories.Exploits:CreateModule({
+        Name = "BetterDavey",
+        Tooltip = "makes your cannon faster lol",
+        Function = function(callback)
+            local worldFolder = getWorldFolder()
+            if not worldFolder then return end
+            local blocks = worldFolder:WaitForChild("Blocks")
+
+            if callback then
+                setCannonSpeeds(blocks, aim, tnt, aunchself)
+
+                blocks.ChildAdded:Connect(function(child)
+                    if child:IsA("BasePart") and child.Name == "cannon" and BetterDavey.Enabled then
+                        local AimPrompt = child:WaitForChild("AimPrompt")
+                        local FirePrompt = child:WaitForChild("FirePrompt")
+                        local LaunchSelfPrompt = child:WaitForChild("LaunchSelfPrompt")
+
+                        AimPrompt.HoldDuration = aim
+                        FirePrompt.HoldDuration = tnt
+                        LaunchSelfPrompt.HoldDuration = aunchself
+                    end
+                end)
+            else
+                setCannonSpeeds(blocks, defaultaim, defaulttnt, defaultself)
+            end
+        end
+    })
+
+end)
 run(function()
 	local TAG
 	local CustomTAG
