@@ -9252,7 +9252,9 @@ local function staffFunction(plr, checktype, checktypee)
         repeat task.wait() until vape and vape.Loaded
     end
 if checktype == "spectator_join" then
+	print(IdentifyMod.Enabled)
 	if 	IdentifyMod.Enabled then 
+																																																																																					print("on")
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
 		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
 		end
@@ -9301,7 +9303,10 @@ end
 		end	
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
+print(IdentifyMod.Enabled)
 	if 	IdentifyMod.Enabled then 
+																																																																																																																																																																										print("on")
+
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
 		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
 		end
