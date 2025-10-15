@@ -23,7 +23,7 @@ local contextActionService = cloneref(game:GetService('ContextActionService'))
 local guiService = cloneref(game:GetService('GuiService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
-
+local IE = identifyexecutor() or "NIL"
 local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
@@ -8539,9 +8539,9 @@ run(function()
 end)
 
 run(function()
-	GetExecutor = vape.Categories.Render:CreateModule({
-		Name = "GetExecutor",
-		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
+	GetExecuter = vape.Categories.Render:CreateModule({
+		Name = "GetExecuter",
+		Tooltip = "gets ur current executer(USED FOR DEBUGGING)",
 		Function = function(callback)
 			if callback then
 				task.spawn(function()
@@ -9942,7 +9942,7 @@ end)
 run(function()
     local InfernalKill = {Enabled = false}
     InfernalKill = vape.Categories.Exploits:CreateModule({
-        ["Name"] = "ember insta kill",
+        ["Name"] = "EmberExploit",
         ["Function"] = function(callback)
             if callback then
                 repeat
@@ -10070,5 +10070,43 @@ run(function()
 			end
 		end,
 		Tooltip = "Lets you do a longjump without any items/kits"
+	})
+end)
+
+run(function()
+	local enabled
+	local Desync
+														
+	Desync = vape.Categories.Exploits:CreateModule({
+		Name = "Desync",
+		Function = function()
+		if not setfflag then vape:CreateNotification("Vape", "Your executer '"..IE.." does not support 'setfflag''") return end
+	    if not enabled.Value then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
+		setfflag("FFlagDebugGraphicsPreferD3D11","True")
+		setfflag("FLogNetwork","7")
+		setfflag("FFlagHandleAltEnterFullscreenManually","False")
+		setfflag("DFFlagPlayerHumanoidPropertyUpdateRestrict","False")
+		setfflag("DFIntDebugDefaultTargetWorldStepsPerFrame","-2147483648")
+		setfflag("DFIntDebugSendDistInSteps","-2147483648")
+		setfflag("DFIntMaxMissedWorldStepsRemembered","-2147483648")
+		setfflag("DFIntWorldStepMax","-2147483648")
+					else
+								setfflag("FFlagDebugGraphicsPreferD3D11","False")
+		setfflag("FLogNetwork","1")
+		setfflag("FFlagHandleAltEnterFullscreenManually","True")
+		setfflag("DFFlagPlayerHumanoidPropertyUpdateRestrict","True")
+		setfflag("DFIntDebugDefaultTargetWorldStepsPerFrame","60")
+		setfflag("DFIntDebugSendDistInSteps","30")
+		setfflag("DFIntMaxMissedWorldStepsRemembered","30")
+		setfflag("DFIntWorldStepMax","30")
+		end,
+		Tooltip = "Note this will ban you for client modifications.",
+		Enabled = false
+	})
+
+	enabled = Desync:CreateToggle({
+        Name = 'Enabled',
+        Default = false,
+        Tooltip = 'Enables so you can use desync fflag method'
 	})
 end)
