@@ -9252,7 +9252,53 @@ local function staffFunction(plr, checktype, checktypee)
         repeat task.wait() until vape and vape.Loaded
     end
 if checktype == "spectator_join" then
-
+	if 	IdentifyMod.Enabled then 
+		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
+		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
+		end
+	if plr.UserId == 547598710 or  plr.UserId == 5728889572 or  plr.UserId == 4652232128 or  plr.UserId == 7043591647  or  plr.UserId == 7209929547 or  plr.UserId == 7043958628 or  plr.UserId == 7418525152 or  plr.UserId == 3774791573 or  plr.UserId == 8606089749 then
+	vape:CreateNotification('Vape', "Orion Has joined!","alert", 15)
+	end
+	if plr.UserId == 162442297 or  plr.UserId == 702354331 or  plr.UserId == 9350301723  then
+	vape:CreateNotification('Vape', "Lisnix Has joined!","alert", 15)
+	end
+	if plr.UserId == 307212658 or  plr.UserId == 5097000699 or  plr.UserId == 4923561416 then
+	vape:CreateNotification('Vape', "Nwr Has joined!","alert", 15)
+	end
+	if plr.UserId == 514679433 or  plr.UserId == 2431747703 or  plr.UserId == 4531785383 then
+	vape:CreateNotification('Vape', "Gorilla Has joined!","alert", 15)
+	end
+	if plr.UserId == 2428373515 or  plr.UserId == 7659437319 then
+	vape:CreateNotification('Vape', "Typhoon Has joined!","alert", 15)
+	end
+	if plr.UserId == 2465133159 then
+	vape:CreateNotification('Vape', "Erin Has joined!","alert", 15)
+	end
+	if plr.UserId == 7558211130 or  plr.UserId == 1708400489 or  plr.UserId == 9554637663 then
+	vape:CreateNotification('Vape', "Ghost Has joined!","alert", 15)
+	end
+	if plr.UserId == 376388734 or  plr.UserId == 5157136850 then
+	vape:CreateNotification('Vape', "Sponge Has joined!","alert", 15)
+	end
+	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
+	vape:CreateNotification('Vape', "Gora Has joined!","alert", 15)
+	end
+	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 then
+	vape:CreateNotification('Vape', "Apple Has joined!","alert", 15)
+	end
+	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
+	vape:CreateNotification('Vape', "Dom Has joined!","alert", 15)
+	end
+	if plr.UserId == 575474067 or  plr.UserId == 4785639950 or  plr.UserId == 8735055832 then
+	vape:CreateNotification('Vape', "Kevin Has joined!","alert", 15)
+	end
+	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
+	vape:CreateNotification('Vape', "Vic Has joined!","alert", 15)
+	end
+if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
+	vape:CreateNotification('Vape', "Soryed Has joined!","alert", 15)
+end
+			
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
 	if 	IdentifyMod.Enabled then 
