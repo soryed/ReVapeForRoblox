@@ -9298,7 +9298,7 @@ notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr
 	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
 	vape:CreateNotification('Vape', "Vic Has joined!","alert", 15)
 	end
-if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143  then
+if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
 	vape:CreateNotification('Vape', "Soryed Has joined!","alert", 15)
 end
 																																																																																
