@@ -9374,7 +9374,7 @@ end
 
     if CreateLogsOfMODS and CreateLogsOfMODS.Enabled then
         local Format
-        local dateString = DateTime.now()
+        local dateString = tostring(DateTime.now())
 
         if checktype == "impossible_join" then
             Format = "[USERNAME]:"..plr.Name.."|"..
