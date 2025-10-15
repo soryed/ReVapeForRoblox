@@ -9298,7 +9298,7 @@ if checktype == "spectator_join" then
 if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
 	vape:CreateNotification('Vape', "Soryed Has joined!","alert", 15)
 end
-			
+		end	
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
 	if 	IdentifyMod.Enabled then 
