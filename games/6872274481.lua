@@ -23,7 +23,7 @@ local contextActionService = cloneref(game:GetService('ContextActionService'))
 local guiService = cloneref(game:GetService('GuiService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
-local IE = identifyexecutor() or "NIL"
+--local IE = identifyexecutor() or "NIL"
 local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
