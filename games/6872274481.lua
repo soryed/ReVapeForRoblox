@@ -10181,7 +10181,7 @@ run(function()
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
 		Function = function()
-		if not setfflag() then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
+		--if not setfflag() then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
 	    if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
