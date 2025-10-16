@@ -9252,9 +9252,7 @@ local function staffFunction(plr, checktype, checktypee)
         repeat task.wait() until vape and vape.Loaded
     end
 if checktype == "spectator_join" then
-	print(IdentifyMod.Enabled)
 	if 	IdentifyMod.Enabled then 
-																																																																																					print("on")
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
 		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
 		end
@@ -9303,10 +9301,7 @@ end
 		end	
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
-print(IdentifyMod.Enabled)
 	if 	IdentifyMod.Enabled then 
-																																																																																																																																																																										print("on")
-
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
 		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
 		end
@@ -9689,7 +9684,7 @@ run(function()
         uar.AspectType = Enum.AspectType.FitWithinMaxSize
         uar.DominantAxis = Enum.DominantAxis.Width
         uar.Parent = icon
-        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or ids["none"]
+        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or  ids[plr:GetAttribute("PlayingAsKit")] or ids["none"]
         return icon
     end
 
@@ -9702,7 +9697,7 @@ run(function()
     end
 
     local function refreshicon(icon, plr)
-        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or ids["none"]
+        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or  ids[plr:GetAttribute("PlayingAsKit") or ids["none"]
     end
 
     local function findPlayer(label, container)
@@ -9819,6 +9814,7 @@ run(function()
         Name = "BetterDavey",
         Tooltip = "makes your cannon faster lol",
         Function = function(callback)
+			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then return end
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
@@ -10177,7 +10173,7 @@ run(function()
 		Tooltip = "Lets you do a longjump without any items/kits"
 	})
 end)
---[[
+
 run(function()
 	local enabled
 	local Desync
@@ -10185,8 +10181,8 @@ run(function()
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
 		Function = function(callback)
-		if not setfflag then vape:CreateNotification("Vape", "Your executer '"..IE.." does not support 'setfflag''") return end
-	    if not enabled.Value then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
+		if not setfflag then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
+	    if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
 		setfflag("FFlagHandleAltEnterFullscreenManually","False")
@@ -10196,7 +10192,7 @@ run(function()
 		setfflag("DFIntMaxMissedWorldStepsRemembered","-2147483648")
 		setfflag("DFIntWorldStepMax","-2147483648")
 					else
-								setfflag("FFlagDebugGraphicsPreferD3D11","False")
+		setfflag("FFlagDebugGraphicsPreferD3D11","False")
 		setfflag("FLogNetwork","1")
 		setfflag("FFlagHandleAltEnterFullscreenManually","True")
 		setfflag("DFFlagPlayerHumanoidPropertyUpdateRestrict","True")
@@ -10215,7 +10211,7 @@ run(function()
 	})
 end)
 
---[[run(function()
+run(function()
 		local KnitInit, Knit
 		repeat
 			KnitInit, Knit = pcall(function()
@@ -10245,7 +10241,8 @@ end)
 			cacheDirty = true,
 			disable_disguises = false,
 			disguises = {},
-			teamData = {}
+			teamData = {},
+			moduleInstance = nil
 		}
 
 		AC_MOD_View.controller = Knit.Controllers.PermissionController
@@ -10506,8 +10503,8 @@ end)
 			self:toggleDisableDisguises()
 		end
 
-		AC_MOD_View = vape.Categories.Troll:CreateModule({
-			Name = "AC MOD View",
+		AC_MOD_View.moduleInstance = vape.Categories.Troll:CreateModule({
+			Name = "ACMOD View",
 			Function = function(call)
 				if call then
 					AC_MOD_View:init()
@@ -10517,7 +10514,7 @@ end)
 			end
 		})
 
-		AC_MOD_View.disableDisguisesToggle = AC_MOD_View:CreateToggle({
+		AC_MOD_View.disableDisguisesToggle = AC_MOD_View.moduleInstance:CreateToggle({
 			Name = "Remove Disguises",
 			Function = function(call)
 				AC_MOD_View.disable_disguises = call
@@ -10525,4 +10522,4 @@ end)
 			end,
 			Default = true
 		})
-	end)--]]
+	end)
