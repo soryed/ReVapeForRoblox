@@ -10227,7 +10227,7 @@ run(function()
 			Friends = {}, 
 			parties = {}, 
 			teamMap = {}, 
-			display = {},S
+			display = {},
 			isRefreshing = false,
 			cacheDirty = true,
 			disable_disguises = false,
