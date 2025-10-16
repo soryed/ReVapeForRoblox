@@ -9697,7 +9697,7 @@ run(function()
     end
 
     local function refreshicon(icon, plr)
-        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or  ids[plr:GetAttribute("PlayingAsKit") or ids["none"]
+        icon.Image = ids[plr:GetAttribute("PlayingAsKits")] or  ids[plr:GetAttribute("PlayingAsKit")] or ids["none"]
     end
 
     local function findPlayer(label, container)
