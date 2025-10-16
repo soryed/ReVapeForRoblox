@@ -10180,8 +10180,8 @@ run(function()
 														
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
-		Function = function(callback)
-		if not setfflag then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
+		Function = function()
+		if not setfflag() then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
 	    if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
@@ -10191,15 +10191,6 @@ run(function()
 		setfflag("DFIntDebugSendDistInSteps","-2147483648")
 		setfflag("DFIntMaxMissedWorldStepsRemembered","-2147483648")
 		setfflag("DFIntWorldStepMax","-2147483648")
-					else
-		setfflag("FFlagDebugGraphicsPreferD3D11","False")
-		setfflag("FLogNetwork","1")
-		setfflag("FFlagHandleAltEnterFullscreenManually","True")
-		setfflag("DFFlagPlayerHumanoidPropertyUpdateRestrict","True")
-		setfflag("DFIntDebugDefaultTargetWorldStepsPerFrame","60")
-		setfflag("DFIntDebugSendDistInSteps","30")
-		setfflag("DFIntMaxMissedWorldStepsRemembered","30")
-		setfflag("DFIntWorldStepMax","30")
 		end,
 		Tooltip = "Note this will ban you for client modifications.",
 	})
