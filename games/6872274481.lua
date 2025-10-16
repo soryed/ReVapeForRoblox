@@ -9786,7 +9786,7 @@ run(function()
 
     local aim = 0.2
     local tnt = 0.0345
-    local aunchself = 0.3
+    local aunchself = 0.4
 
     local defaultaim = 0.4
     local defaulttnt = 0.2
