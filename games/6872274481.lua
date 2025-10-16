@@ -9785,7 +9785,7 @@ end)
 run(function()
 
     local aim = 0.2
-    local tnt = 0.0345
+    local tnt = 0.0045
     local aunchself = 0.4
 
     local defaultaim = 0.4
@@ -9835,6 +9835,19 @@ run(function()
                         AimPrompt.HoldDuration = aim
                         FirePrompt.HoldDuration = tnt
                         LaunchSelfPrompt.HoldDuration = aunchself
+
+				local old = bedwars.CannonHandController.launchSelf
+					bedwars.CannonHandController.launchSelf = function(...)
+				local res = {old(...)}
+				local self, block = ...
+	
+				if block:GetAttribute('PlacedByUserId') == lplr.UserId and (block.Position - entitylib.character.RootPart.Position).Magnitude < 30 then
+					task.spawn(bedwars.breakBlock, block, false, nil, true)
+					task.spawn(bedwars.breakBlock, block, false, nil, true)
+
+				end
+	
+				return unpack(res)
                     end
                 end)
             else
