@@ -10236,13 +10236,13 @@ run(function()
 			Friends = {}, 
 			parties = {}, 
 			teamMap = {}, 
-			display = {},
+			display = {},S
 			isRefreshing = false,
 			cacheDirty = true,
 			disable_disguises = false,
 			disguises = {},
 			teamData = {},
-			moduleInstance = nil
+			moduleInstance = {}
 		}
 
 		AC_MOD_View.controller = Knit.Controllers.PermissionController
