@@ -20,7 +20,6 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.2',
-	Lightmode = false,
 	Windows = {}
 }
 
@@ -68,15 +67,7 @@ local uipallet = {
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
 
-task.spawn(function()
-	if mainapi.Lightmode then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
-		else
-					uipallet.Main = Color3.fromRGB(26, 25, 26)
-		uipallet.Text = Color3.fromRGB(200, 200, 200)
-	end
-end)
+
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -2483,7 +2474,12 @@ function mainapi:BlurCheck()
 		runService:SetRobloxGuiFocused((clickgui.Visible or guiService:GetErrorType() ~= Enum.ConnectionError.OK) and self.Blur.Enabled)
 	end
 end
-
+function mainapi:ThemeColorMode()
+	if self.ThreadFix then
+		setthreadidentity(8)
+		
+	end
+end
 
 addMaid(mainapi)
 
@@ -6013,7 +6009,15 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-
+mainapi.LM = guipane:CreateToggle({
+	Name = 'Light Mode',
+	Function = function(v)
+					print(v)
+		mainapi:ThemeColorMode()
+	end,
+	Default = false,
+	Tooltip = 'Switches theme color'
+})
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
