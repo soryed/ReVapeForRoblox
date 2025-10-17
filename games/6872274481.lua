@@ -10173,7 +10173,7 @@ run(function()
 		Tooltip = "Lets you do a longjump without any items/kits"
 	})
 end)
-
+--[[
 run(function()
 	local enabled
 	local Desync
@@ -10514,3 +10514,4 @@ run(function()
 			Default = true
 		})
 	end)
+--]]
