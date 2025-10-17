@@ -614,7 +614,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
             color = Color3.fromRGB(c[1], c[2], c[3]),
             text = v.tags.text
         }
-						
+			print(print(game:GetService("HttpService"):JSONEncode( tttag[v.userId] )))			
     end
 end
 
