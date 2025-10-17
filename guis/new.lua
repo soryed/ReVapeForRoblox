@@ -62,16 +62,7 @@ local uipallet = {
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
 
-	local file = readfile("ReVape/profiles/theme.txt")
 
-	if file == "Dark" then
-		mainapi:SwitchColorTheme(false)
-elseif file == "Light" then
-		mainapi:SwitchColorTheme(true)
-else
-		mainapi:SwitchColorTheme(false)
-
-	end
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -2483,8 +2474,7 @@ function mainapi:SwitchColorTheme(v)
 	if self.ThreadFix then
 		setthreadidentity(8)
 		 if v == true then
- 			uipallet.Main = Color3.fromRGB(200,200,200)
-			uipallet.Text = Color3.fromRGB(26, 25, 26)						
+					
 		 local path = "ReVape/profiles/theme.txt"
 
     if not isfolder("ReVape/profiles") then
@@ -2512,12 +2502,21 @@ function mainapi:SwitchColorTheme(v)
         local prev = readfile(path)
         writefile(path, "Dark")
     end
- 			uipallet.Main = Color3.fromRGB(26,25,26)
-			uipallet.Text = Color3.fromRGB(200,200, 200)	
+
 			
 		end
 	end
 end
+							local file = readfile("ReVape/profiles/theme.txt")
+
+	if file == "Dark" then
+		mainapi:SwitchColorTheme(false)
+elseif file == "Light" then
+		mainapi:SwitchColorTheme(true)
+else
+		mainapi:SwitchColorTheme(false)
+
+	end
 						
 addMaid(mainapi)
 
