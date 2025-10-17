@@ -2501,13 +2501,9 @@ function mainapi:ThemeColorMode()
 	end
 
 	
-	shared.vapereload = true
-	if shared.VapeDeveloper then
-		loadstring(readfile('ReVape/loader.lua'), 'loader')()
-	else
-		loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..
-			readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
-	end
+	mainapi:CreateNotification("Vape","Please reinject to get ur new theme!",2)
+							task.wait(.5)
+	mainapi:Uninject()
 	
 end
 addMaid(mainapi)
