@@ -10070,6 +10070,7 @@ run(function()
         ["Tooltip"] = "insta kill"
     })
 end)
+--[[
 
 run(function()
 	local Shaders = {Enabled = false}
@@ -10133,6 +10134,7 @@ run(function()
     })
 end)
 
+--]]
 run(function()
     local KrystalXploit = {Enabled = false}
 	local MomentumUpdate = replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate
