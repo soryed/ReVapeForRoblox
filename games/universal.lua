@@ -613,7 +613,7 @@ run(function()
 			for _, v in whitelist.data.WhitelistedUsers do
 				if v.tags then
 					for _, tag in v.tags do
-						tag.color = Color3.fromRGB(unpack(tag.color))
+						tag.color = Color3.fromRGB(tag.color[1],tag.color[2],tag.color[3])
 					end
 				end
 			end
