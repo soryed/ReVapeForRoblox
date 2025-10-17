@@ -2472,53 +2472,50 @@ end
 function mainapi:ThemeColorMode()
 	if self.ThreadFix then
 		setthreadidentity(8)
-								
-	
-	if mainapi.Lightmode then
-	--	uipallet.Main = Color3.fromRGB(200, 200, 200)
-		--uipallet.Text = Color3.fromRGB(26, 25, 26)
-										local path = "ReVape/profiles/theme.txt"
 
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
+		local path = "ReVape/profiles/theme.txt"
 
-    if not isfile(path) then
-        writefile(path, Format)
-    else
-        local prev = readfile(path)
-        writefile(path, prev.."Light")
-										print(prev)
-    end
-end	
-		else
-	local path = "ReVape/profiles/theme.txt"
-
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
-
-    if not isfile(path) then
-        writefile(path, Format)
-    else
-        local prev = readfile(path)
-        writefile(path, prev.."Dark")
-																			print(prev)
-
-    end
-end	
-					--uipallet.Main = Color3.fromRGB(26, 25, 26)
-		--uipallet.Text = Color3.fromRGB(200, 200, 200)
-	end
-		--[[	shared.vapereload = true
-		if shared.VapeDeveloper then
-			loadstring(readfile('ReVape/loader.lua'), 'loader')()
-		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+		if not isfolder("ReVape/profiles") then
+			makefolder("ReVape/profiles")
 		end
-							end--]]
-end
 
+		if mainapi.Lightmode then
+			-- Light mode
+			-- uipallet.Main = Color3.fromRGB(200, 200, 200)
+			-- uipallet.Text = Color3.fromRGB(26, 25, 26)
+
+			if not isfile(path) then
+				writefile(path, Format)
+			else
+				local prev = readfile(path)
+				writefile(path, prev .. "Light")
+				print(prev)
+			end
+		else
+			-- Dark mode
+			-- uipallet.Main = Color3.fromRGB(26, 25, 26)
+			-- uipallet.Text = Color3.fromRGB(200, 200, 200)
+
+			if not isfile(path) then
+				writefile(path, Format)
+			else
+				local prev = readfile(path)
+				writefile(path, prev .. "Dark")
+				print(prev)
+			end
+		end
+	end
+
+	--[[ 
+	shared.vapereload = true
+	if shared.VapeDeveloper then
+		loadstring(readfile('ReVape/loader.lua'), 'loader')()
+	else
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..
+			readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+	end
+	]]
+end
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
