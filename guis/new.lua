@@ -7082,7 +7082,6 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
-task.spawn(function()
 	local file = readfile("ReVape/profiles/theme.txt")
 
 	if file == "Dark" then
@@ -7093,6 +7092,5 @@ else
 		mainapi:SwitchColorTheme(false)
 
 	end
-end)
 
 return mainapi
