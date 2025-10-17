@@ -20,7 +20,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.2',
-	Lightmode = true,
+	Lightmode = false,
 	Windows = {}
 }
 
