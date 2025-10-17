@@ -438,7 +438,7 @@ run(function()
 	function whitelist:getplayer(arg)
 		if arg == 'default' and self.localprio == 0 then return true end
 		if arg == 'private' and self.localprio == 1 then return true end
-		if arg == 'owner' and self.localprio == 2 then return true end
+		if arg == 'owner' and self.localprio == 2 then print("got owner") return true end
 		if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
 		return false
 	end
@@ -622,6 +622,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     if v.tags and v.tags.color then
         local c = v.tags.color
         v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
+						print("got tag colors")
     end
 end
 
