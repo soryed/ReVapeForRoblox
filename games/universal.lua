@@ -618,7 +618,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-TextChatService.OnIncomingMessage = function(message: TextChatMessage)
+game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if message.TextSource then
         local userId = message.TextSource.UserId
         local tagInfo = WhitelistTags[userId]
