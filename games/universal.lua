@@ -226,22 +226,22 @@ local whitelist = {
 	alreadychecked = {},
 	customtags = {},
 	data = {
-	WhitelistedUsers = {    
+WhitelistedUsers = {    
 	["1393811419585183774"] = {
-      ["hash"] = "892860bb1dde9a593287d5e6406573f90c82e8b736e5ca034372669255d241e9cda0e4330a25ebae7389f37590c0592cf1536ad910c422b9933c42067d13320a",
-      ["attackable"] = false,
-      ["level"] = 2,
-      ["tags"]= 
-        {
-          ["text"] = "REVAPE OWNER",
-          ["color"] = {
-            [1] = 78,
-             [2] = 200,
-             [3] = 54
-					}
-        }
-      ]
-    },},
+		["hash"] = "892860bb1dde9a593287d5e6406573f90c82e8b736e5ca034372669255d241e9cda0e4330a25ebae7389f37590c0592cf1536ad910c422b9933c42067d13320a",
+		["attackable"] = false,
+		["level"] = 2,
+		["tags"] = {
+			["text"] = "REVAPE OWNER",
+			["color"] = {
+				[1] = 78,
+				[2] = 200,
+				[3] = 54
+			}
+		}
+	}
+},
+
 	Announcement = {
 		expiretime = 1719510977.4331613,
 		targets = 2529295875,
