@@ -50,12 +50,13 @@ local tween = {
 	tweens = {},
 	tweenstwo = {}
 }
+
+
+
+
 local uipallet = {
---	Main = Color3.fromRGB(26, 25, 26),
-	--Text = Color3.fromRGB(200, 200, 200),
-	--Main = Color3.fromRGB(247, 245, 247),
-	Main = Color3.fromRGB(200, 200, 200),
-	Text = Color3.fromRGB(26, 25, 26),
+	Main = Color3.fromRGB(26, 25, 26),
+	Text = Color3.fromRGB(200, 200, 200),
 	Font = Font.fromEnum(Enum.Font.Arial),
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
@@ -2467,6 +2468,18 @@ function mainapi:BlurCheck()
 	end
 end
 
+function mainapi:ChangeColorTheme(v)
+	if self.ThreadFix then
+		if v == true then
+			uipallet.Main = Color3.fromRGB(245, 245, 245)
+uipallet.Text = Color3.fromRGB(26, 25, 26)
+								else
+									uipallet.Main = Color3.fromRGB(26, 25, 25)
+uipallet.Text = Color3.fromRGB(200, 200, 200)
+		end
+		
+	end
+end
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -5994,6 +6007,14 @@ mainapi.Blur = guipane:CreateToggle({
 	end,
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
+})
+mainapi.LightMode = guipane:CreateToggle({
+	Name = 'Light Mode',
+	Function = function(val)
+		mainapi:ChangeColorTheme(val)
+	end,
+	Default = true,
+	Tooltip = 'Switches sides lol'
 })
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
