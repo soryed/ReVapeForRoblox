@@ -608,15 +608,20 @@ end
 			whitelist.localprio = whitelist:get(lplr)
 
 for _, v in pairs(whitelist.data.WhitelistedUsers) do
-    if v.tags and v.tags.color and v.tags.text then
-        local c = v.tags.color
-        v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
-        tttag[v.userId] = {
-            color = Color3.fromRGB(c[1], c[2], c[3]),
-            text = v.tags.text,
-        }
+    if v.tags then
+        for _, tag in ipairs(v.tags) do
+            if tag.color and tag.text then
+                local c = tag.color
+                tag.color = Color3.fromRGB(c[1], c[2], c[3])
+                tttag[v.userId] = {
+                    color = Color3.fromRGB(c[1], c[2], c[3]),
+                    text = tag.text,
+                }
+            end
+        end
     end
 end
+
 				
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then return nil end
