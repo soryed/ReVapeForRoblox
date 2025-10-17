@@ -638,7 +638,7 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
         )
         return props
     end
-
+print("niled")
     return nil
 end
 
