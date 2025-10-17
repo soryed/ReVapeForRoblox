@@ -2470,42 +2470,7 @@ function mainapi:BlurCheck()
 		runService:SetRobloxGuiFocused((clickgui.Visible or guiService:GetErrorType() ~= Enum.ConnectionError.OK) and self.Blur.Enabled)
 	end
 end
-function mainapi:ThemeColorMode()
-	if self.ThreadFix then
-		setthreadidentity(8)
 
-		local path = "ReVape/profiles/theme.txt"
-
-		if not isfolder("ReVape/profiles") then
-			makefolder("ReVape/profiles")
-		end
-
-		if mainapi.Lightmode then
-
-
-			if not isfile(path) then
-				writefile(path, "Light")
-			else
-				local prev = readfile(path)
-				writefile(path, "Light")
-			end
-		else
-
-			if not isfile(path) then
-				writefile(path, "Dark")
-			else
-				local prev = readfile(path)
-				writefile(path, "Dark")
-			end
-		end
-	end
-
-	
-	mainapi:CreateNotification("Vape","Please reinject to get ur new theme!",2)
-							task.wait(.5)
-	mainapi:Uninject()
-	
-end
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -6034,21 +5999,7 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-mainapi.LM = guipane:CreateToggle({
-	Name = 'Light Mode',
-	Function = function(v)
-						if v == "true" or v == true then 
-									mainapi.Lightmode = true
-						else
-																mainapi.Lightmode = false
 
-
-						end
-		mainapi:ThemeColorMode()
-	end,
-	Default = false,
-	Tooltip = 'Switches theme color'
-})
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
@@ -7085,22 +7036,5 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 end))
 
 
-task.spawn(function()
-	local data
-
-	if isfile("ReVape/profiles/theme.txt") then
-		data = readfile("ReVape/profiles/theme.txt")
-	else
-		data = nil
-	end
-
-	if data == nil or data == "" or data == "Dark" then
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-		uipallet.Text = Color3.fromRGB(200, 200, 200)
-	elseif data == "Light" then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
-	end
-end)
 
 return mainapi
