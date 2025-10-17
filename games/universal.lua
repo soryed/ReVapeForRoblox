@@ -227,7 +227,7 @@ local whitelist = {
     customtags = {},
     data = {
         WhitelistedUsers = {
-            ["1393811419585183774"] = {
+            ["7756737656"] = {
                 hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
                 attackable = false,
                 level = 2,
@@ -241,7 +241,7 @@ local whitelist = {
         },
 
         WhitelistTags = {
-            ["1393811419585183774"] = {
+            ["7756737656"] = {
                 {
                     text = "REVAPE OWNER",
                     color = {78, 200, 54},
@@ -421,6 +421,7 @@ local plrstr = self.hashes[key]
 
 for _, v in self.data.WhitelistedUsers do
     if v.hash == plrstr then
+
         return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
     end
 end
@@ -580,6 +581,7 @@ end
 	end
 
     function whitelist:update(first)
+			local tttag = {}
 		local suc = pcall(function()
 			local _, subbed = pcall(function()
 				return game:HttpGet('https://github.com/soryed/WhitelistJSON')
@@ -605,10 +607,33 @@ end
 			whitelist.localprio = whitelist:get(lplr)
 
 for _, v in pairs(whitelist.data.WhitelistedUsers) do
-    if v.tags and v.tags.color then
+    if v.tags and v.tags.color and v.tags.text then
         local c = v.tags.color
         v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
+        tttag[v.userId] = {
+            color = Color3.fromRGB(c[1], c[2], c[3]),
+            text = v.tags.text
+        }
+						
     end
+end
+
+TextChatService.OnIncomingMessage = function(message: TextChatMessage)
+    if message.TextSource then
+        local userId = message.TextSource.UserId
+        local tagInfo = WhitelistTags[userId]
+
+        if tagInfo then
+            local props = Instance.new("TextChatMessageProperties")
+            local r, g, b = tagInfo.color.R * 255, tagInfo.color.G * 255, tagInfo.color.B * 255
+            props.PrefixText = string.format(
+                "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
+                r, g, b, tagInfo.text, message.PrefixText or ""
+            )
+            return props
+        end
+    end
+    return nil
 end
 
 
