@@ -618,23 +618,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
-    if message.TextSource then
-        local userId = message.TextSource.UserId
-        local tagInfo = WhitelistTags[userId]
 
-        if tagInfo then
-            local props = Instance.new("TextChatMessageProperties")
-            local r, g, b = tagInfo.color.R * 255, tagInfo.color.G * 255, tagInfo.color.B * 255
-            props.PrefixText = string.format(
-                "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
-                r, g, b, tagInfo.text, message.PrefixText or ""
-            )
-            return props
-        end
-    end
-    return nil
-end
 
 
 			if not whitelist.connection then
