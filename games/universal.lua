@@ -49,7 +49,7 @@ local textChatService = cloneref(game:GetService('TextChatService'))
 local contextService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 
-local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('Camera')
@@ -408,6 +408,7 @@ run(function()
 	function whitelist:getplayer(arg)
 		if arg == 'default' and self.localprio == 0 then return true end
 		if arg == 'private' and self.localprio == 1 then return true end
+		if arg == 'owner' and self.localprio == 2 then return true end
 		if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
 		return false
 	end
@@ -430,22 +431,22 @@ run(function()
 					local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
 					local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
 					if newchannel then
-						newchannel:SendAsync('helloimusinginhaler')
+						newchannel:SendAsync('helloimusingrehaler')
 					end
 					textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
 				elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusinginhaler', 'All')
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
 				end
 			end
 		end
 	end
 
 	function whitelist:process(msg, plr)
-		if plr == lplr and msg == 'helloimusinginhaler' then return true end
+		if plr == lplr and msg == 'helloimusingrehaler' then return true end
 
-		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
+		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
 			self.said[plr.Name] = true
-			notif('Vape', plr.Name..' is using vape!', 60)
+			notif('Vape', plr.Name..' is using revape!', 60)
 			self.customtags[plr.Name] = {{
 				text = 'VAPE USER',
 				color = Color3.new(1, 1, 0)
@@ -554,7 +555,7 @@ run(function()
 			local bubblechat = exp:WaitForChild('bubbleChat', 5)
 			if bubblechat then
 				vape:Clean(bubblechat.DescendantAdded:Connect(function(newbubble)
-					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusinginhaler') then
+					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusingrehaler') then
 						newbubble.Parent.Parent.Visible = false
 					end
 				end))
