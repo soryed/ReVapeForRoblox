@@ -417,31 +417,25 @@ run(function()
         print("[Whitelist Debug] "..point..(extra and ": "..tostring(extra) or ""))
     end
 
-function whitelist:get(plr)
-    -- Debug start
-    debugLog("Getting whitelist info for player", plr.Name)
+		
+	function whitelist:get(plr)
+		local plrstr = self.hashes[plr.Name..plr.UserId]
 
-    -- Loop through all whitelisted users in JSON
-    for _, v in pairs(self.data.WhitelistedUsers) do
-        -- Compare by UserId and optionally Name
-        if tonumber(v.UserId) == plr.UserId and (not v.Name or v.Name == plr.Name) then
-            debugLog("Player matched whitelist", plr.Name)
+		local key = plr.Name..plr.UserId
+local plrstr = self.hashes[key]
+print("DEBUG: Key =", key)
+print("DEBUG: plrstr =", plrstr)
 
-            -- Ensure tags are valid Color3 objects
-            if v.tags and v.tags.color then
-                local c = v.tags.color
-                if type(c) == "table" and #c == 3 then
-                    v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
-                end
-            end
-
-            return v.level or 0, v.attackable or (whitelist.localprio >= (v.level or 0)), v.tags
-        end
+for _, v in self.data.WhitelistedUsers do
+    print("DEBUG: Checking v.hash =", v.hash)
+    if v.hash == plrstr then
+        print("DEBUG: Player matched whitelist!")
+        return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
     end
-
-    debugLog("Player not whitelisted", plr.Name)
-    return 0, true
 end
+		return 0, true
+	end
+
     function whitelist:isingame()
         debugLog("Checking if any whitelisted player is in game")
         for _, v in playersService:GetPlayers() do
