@@ -19,10 +19,11 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.2',
+	Version = '0.3',
 	Lightmode = false,
 	Windows = {}
 }
+																																																								
 
 local cloneref = cloneref or function(obj)
 	return obj
@@ -2480,28 +2481,21 @@ function mainapi:ThemeColorMode()
 		end
 
 		if mainapi.Lightmode then
-			-- Light mode
-			-- uipallet.Main = Color3.fromRGB(200, 200, 200)
-			-- uipallet.Text = Color3.fromRGB(26, 25, 26)
+
 
 			if not isfile(path) then
 				writefile(path, "Light")
 			else
 				local prev = readfile(path)
-				writefile(path, prev .. "Light")
-			--	print(prev)
+				writefile(path, "Light")
 			end
 		else
-			-- Dark mode
-			-- uipallet.Main = Color3.fromRGB(26, 25, 26)
-			-- uipallet.Text = Color3.fromRGB(200, 200, 200)
 
 			if not isfile(path) then
 				writefile(path, "Dark")
 			else
 				local prev = readfile(path)
-				writefile(path, prev .. "Dark")
-				--print(prev)
+				writefile(path, "Dark")
 			end
 		end
 	end
@@ -7093,5 +7087,20 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
+
+
+task.spawn(function()
+local data = readfile("ReVape/profiles/theme.txt")
+     if data == "Dark" or data == nil or data == "" then
+		 uipallet.Main = Color3.fromRGB(26, 25, 26)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+		elseif data == "Light" then
+			uipallet.Main = Color3.fromRGB(200, 200, 200)
+		 uipallet.Text = Color3.fromRGB(26, 25, 26)	
+		end
+	end				
+
+
+end)
 
 return mainapi
