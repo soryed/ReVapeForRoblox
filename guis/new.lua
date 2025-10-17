@@ -2485,7 +2485,7 @@ function mainapi:ThemeColorMode()
 			-- uipallet.Text = Color3.fromRGB(26, 25, 26)
 
 			if not isfile(path) then
-				writefile(path, Format)
+				writefile(path, "Light")
 			else
 				local prev = readfile(path)
 				writefile(path, prev .. "Light")
@@ -2497,7 +2497,7 @@ function mainapi:ThemeColorMode()
 			-- uipallet.Text = Color3.fromRGB(200, 200, 200)
 
 			if not isfile(path) then
-				writefile(path, Format)
+				writefile(path, "Dark")
 			else
 				local prev = readfile(path)
 				writefile(path, prev .. "Dark")
