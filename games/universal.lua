@@ -241,6 +241,15 @@ WhitelistedUsers = {
 		}
 	}
 },
+		WhitelistTags = {
+["1393811419585183774"] = {
+    {
+        text = "REVAPE OWNER",
+        color = {78, 200, 54}
+    }
+}
+			
+		},
 	Announcement = {
 		expiretime = 1719510977.4331613,
 		targets = 2529295875,
