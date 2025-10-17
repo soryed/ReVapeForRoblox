@@ -228,6 +228,7 @@ local whitelist = {
     data = {
         WhitelistedUsers = {
             ["7756737656"] = {
+				userId = 7756737656,
                 hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
                 attackable = false,
                 level = 2,
@@ -612,14 +613,34 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
         v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
         tttag[v.userId] = {
             color = Color3.fromRGB(c[1], c[2], c[3]),
-            text = v.tags.text
+            text = v.tags.text,
         }
-			print(print(game:GetService("HttpService"):JSONEncode( tttag[v.userId] )))			
     end
 end
+				
+game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
+    if not message.TextSource then return nil end
 
+    local userId = message.TextSource.UserId
+    local whitelistData = tttag[userId] 
+    if whitelistData then
+        local color = whitelistData.color
+        local tagText = whitelistData.text
 
+        local props = Instance.new("TextChatMessageProperties")
+        props.PrefixText = string.format(
+            "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
+            math.floor(color.R * 255),
+            math.floor(color.G * 255),
+            math.floor(color.B * 255),
+            tagText,
+            message.PrefixText or ""
+        )
+        return props
+    end
 
+    return nil
+end
 
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
