@@ -6047,7 +6047,7 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
-		mainapi.Lightmode
+		mainapi.Lightmode = v
 		mainapi:ThemeColorMode()
 	end,
 	Default = false,
