@@ -20,6 +20,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.2',
+	Lightmode
 	Windows = {}
 }
 
@@ -52,12 +53,6 @@ local tween = {
 }
 
 
---LIGHT MODE
---uipallet.Main = Color3.fromRGB(200, 200, 200)
---uipallet.Text = Color3.fromRGB(26, 25, 26)
--- DARK MODE
---	Main = Color3.fromRGB(26, 25, 26)
---Text = Color3.fromRGB(200, 200, 200)
 
 local uipallet = {
 	Main = Color3.fromRGB(26, 25, 26),
@@ -2477,7 +2472,15 @@ end
 function mainapi:ThemeColorMode()
 	if self.ThreadFix then
 		setthreadidentity(8)
-		
+		--[[
+	if mainapi.Lightmode then
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+		else
+					uipallet.Main = Color3.fromRGB(26, 25, 26)
+		uipallet.Text = Color3.fromRGB(200, 200, 200)
+	end
+								--]]
 	end
 end
 
