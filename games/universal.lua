@@ -232,9 +232,10 @@ WhitelistedUsers = {
 		["attackable"] = false,
 		["level"] = 2,
 	["tags"] = {
-    ["text"] = "REVAPE OWNER",
-    ["color"] = {78, 200, 54}
-
+    {
+        ["text"] = "REVAPE OWNER",
+        ["color"] = {78, 200, 54}
+    }
 }
 },
 		WhitelistTags = {
