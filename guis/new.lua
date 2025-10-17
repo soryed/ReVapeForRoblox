@@ -2500,7 +2500,7 @@ function mainapi:ThemeColorMode()
 		end
 	end
 
-	--[[ 
+	
 	shared.vapereload = true
 	if shared.VapeDeveloper then
 		loadstring(readfile('ReVape/loader.lua'), 'loader')()
@@ -2508,7 +2508,7 @@ function mainapi:ThemeColorMode()
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..
 			readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 	end
-	]]
+	
 end
 addMaid(mainapi)
 
