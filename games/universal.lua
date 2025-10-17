@@ -241,7 +241,6 @@ WhitelistedUsers = {
 		}
 	}
 },
-
 	Announcement = {
 		expiretime = 1719510977.4331613,
 		targets = 2529295875,
@@ -610,13 +609,14 @@ run(function()
 			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
 			whitelist.localprio = whitelist:get(lplr)
 
-			for _, v in whitelist.data.WhitelistedUsers do
-				if v.tags then
-					for _, tag in v.tags do
-						tag.color = Color3.fromRGB(tag.color[1],tag.color[2],tag.color[3])
-					end
-				end
-			end
+		for _, v in pairs(whitelist.data.WhitelistedUsers) do
+	if v.tags then
+		for _, tag in pairs(v.tags) do
+			tag.color = Color3.fromRGB(tag.color[1], tag.color[2], tag.color[3])
+		end
+	end
+end
+
 
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
