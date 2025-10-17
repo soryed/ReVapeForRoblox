@@ -20,7 +20,6 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.3',
-	Lightmode = false,
 	Windows = {}
 }
 																																																								
@@ -2471,6 +2470,46 @@ function mainapi:BlurCheck()
 	end
 end
 
+function mainapi:SwitchColorTheme(v)
+	if self.ThreadFix then
+		setthreadidentity(8)
+		 if v == true then
+ 			uipallet.Main = Color3.fromRGB(200,200,200)
+			uipallet.Text = Color3.fromRGB(26, 25, 26)						
+		 local path = "ReVape/profiles/theme.txt"
+
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, "Light")
+    else
+        local prev = readfile(path)
+        writefile(path, "Light")
+    end
+
+		elseif v == false then
+
+											 local path = "ReVape/profiles/theme.txt"
+
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, "Dark")
+    else
+        local prev = readfile(path)
+        writefile(path, "Dark")
+    end
+ 			uipallet.Main = Color3.fromRGB(26,25,26)
+			uipallet.Text = Color3.fromRGB(200,200, 200)	
+			
+		end
+	end
+end
+						
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -5999,6 +6038,14 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
+mainapi.LM = guipane:CreateToggle({
+	Name = 'Light Mode',
+	Function = function(v)
+		mainapi:SwitchColorTheme(v)
+	end,
+	Default = true,
+	Tooltip = 'Switches ur theme'
+})
 
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
@@ -7035,6 +7082,17 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
+task.spawn(function()
+	local file = readfile("ReVape/profiles/theme.txt")
 
+	if file == "Dark" then
+		mainapi:SwitchColorTheme(false)
+elseif file == "Light" then
+		mainapi:SwitchColorTheme(true)
+else
+		mainapi:SwitchColorTheme(false)
+
+	end
+end)
 
 return mainapi
