@@ -609,12 +609,11 @@ run(function()
 			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
 			whitelist.localprio = whitelist:get(lplr)
 
-		for _, v in pairs(whitelist.data.WhitelistedUsers) do
-	if v.tags then
-		for _, tag in pairs(v.tags) do
-			tag.color = Color3.fromRGB(tag.color[1], tag.color[2], tag.color[3])
-		end
-	end
+for _, v in pairs(whitelist.data.WhitelistedUsers) do
+    if v.tags and v.tags.color then
+        local c = v.tags.color
+        v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
+    end
 end
 
 
