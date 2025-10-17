@@ -2470,53 +2470,6 @@ function mainapi:BlurCheck()
 	end
 end
 
-function mainapi:SwitchColorTheme(v)
-	if self.ThreadFix then
-		setthreadidentity(8)
-		 if v == true then
-					
-		 local path = "ReVape/profiles/theme.txt"
-
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
-
-    if not isfile(path) then
-        writefile(path, "Light")
-    else
-        local prev = readfile(path)
-        writefile(path, "Light")
-    end
-
-		elseif v == false then
-
-											 local path = "ReVape/profiles/theme.txt"
-
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
-
-    if not isfile(path) then
-        writefile(path, "Dark")
-    else
-        local prev = readfile(path)
-        writefile(path, "Dark")
-    end
-
-			
-		end
-	end
-end
-							local file = readfile("ReVape/profiles/theme.txt")
-
-	if file == "Dark" then
-		mainapi:SwitchColorTheme(false)
-elseif file == "Light" then
-		mainapi:SwitchColorTheme(true)
-else
-		mainapi:SwitchColorTheme(false)
-
-	end
 						
 addMaid(mainapi)
 
@@ -6046,14 +5999,7 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-mainapi.LM = guipane:CreateToggle({
-	Name = 'Light Mode',
-	Function = function(v)
-		mainapi:SwitchColorTheme(v)
-	end,
-	Default = true,
-	Tooltip = 'Switches ur theme'
-})
+
 
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
