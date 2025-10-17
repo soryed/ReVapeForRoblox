@@ -233,12 +233,12 @@ local whitelist = {
       ["level"] = 2,
       ["tags"]= 
         {
-          "text": "REVAPE OWNER",
-          "color": [
-            78,
-            200,
-            54
-          ]
+          ["text"] = "REVAPE OWNER",
+          ["color"] = {
+            [1] = 78,
+             [2] = 200,
+             [3] = 54
+					}
         }
       ]
     },},
