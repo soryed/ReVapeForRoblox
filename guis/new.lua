@@ -2489,7 +2489,7 @@ function mainapi:ThemeColorMode()
 			else
 				local prev = readfile(path)
 				writefile(path, prev .. "Light")
-				print(prev)
+			--	print(prev)
 			end
 		else
 			-- Dark mode
@@ -2501,7 +2501,7 @@ function mainapi:ThemeColorMode()
 			else
 				local prev = readfile(path)
 				writefile(path, prev .. "Dark")
-				print(prev)
+				--print(prev)
 			end
 		end
 	end
@@ -6047,7 +6047,13 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
-		mainapi.Lightmode = v
+						if v == "true" or v == true then 
+									mainapi.Lightmode = true
+						else
+																mainapi.Lightmode = false
+
+
+						end
 		mainapi:ThemeColorMode()
 	end,
 	Default = false,
