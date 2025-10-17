@@ -225,7 +225,14 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 local whitelist = {
 	alreadychecked = {},
 	customtags = {},
-	data = {WhitelistedUsers = {}},
+	data = data = {
+	WhitelistedUsers = {},
+	Announcement = {
+		expiretime = 1719510977.4331613,
+		targets = 2529295875,
+		text = "hello there :)"
+	}
+},
 	hashes = setmetatable({}, {
 		__index = function(_, v)
 			return hash and hash.sha512(v..'SelfReport') or ''
