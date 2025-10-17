@@ -62,7 +62,16 @@ local uipallet = {
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
 
+	local file = readfile("ReVape/profiles/theme.txt")
 
+	if file == "Dark" then
+		mainapi:SwitchColorTheme(false)
+elseif file == "Light" then
+		mainapi:SwitchColorTheme(true)
+else
+		mainapi:SwitchColorTheme(false)
+
+	end
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -7082,15 +7091,6 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
-	local file = readfile("ReVape/profiles/theme.txt")
 
-	if file == "Dark" then
-		mainapi:SwitchColorTheme(false)
-elseif file == "Light" then
-		mainapi:SwitchColorTheme(true)
-else
-		mainapi:SwitchColorTheme(false)
-
-	end
 
 return mainapi
