@@ -2472,16 +2472,51 @@ end
 function mainapi:ThemeColorMode()
 	if self.ThreadFix then
 		setthreadidentity(8)
-		--[[
+								
+	
 	if mainapi.Lightmode then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
+	--	uipallet.Main = Color3.fromRGB(200, 200, 200)
+		--uipallet.Text = Color3.fromRGB(26, 25, 26)
+										local path = "ReVape/profiles/theme.txt"
+
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, Format)
+    else
+        local prev = readfile(path)
+        writefile(path, prev.."Light")
+										print(prev)
+    end
+end	
 		else
-					uipallet.Main = Color3.fromRGB(26, 25, 26)
-		uipallet.Text = Color3.fromRGB(200, 200, 200)
+	local path = "ReVape/profiles/theme.txt"
+
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, Format)
+    else
+        local prev = readfile(path)
+        writefile(path, prev.."Dark")
+																			print(prev)
+
+    end
+end	
+					--uipallet.Main = Color3.fromRGB(26, 25, 26)
+		--uipallet.Text = Color3.fromRGB(200, 200, 200)
 	end
-								--]]
-	end
+		--[[	shared.vapereload = true
+		if shared.VapeDeveloper then
+			loadstring(readfile('ReVape/loader.lua'), 'loader')()
+		else
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+		end
+							end--]]
 end
 
 addMaid(mainapi)
@@ -6015,7 +6050,7 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
-					print(v)
+		mainapi.Lightmode
 		mainapi:ThemeColorMode()
 	end,
 	Default = false,
