@@ -20,6 +20,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.2',
+	Lightmode = true,
 	Windows = {}
 }
 
@@ -52,7 +53,12 @@ local tween = {
 }
 
 
-
+--LIGHT MODE
+--uipallet.Main = Color3.fromRGB(200, 200, 200)
+--uipallet.Text = Color3.fromRGB(26, 25, 26)
+-- DARK MODE
+--	Main = Color3.fromRGB(26, 25, 26)
+--Text = Color3.fromRGB(200, 200, 200)
 
 local uipallet = {
 	Main = Color3.fromRGB(26, 25, 26),
@@ -61,6 +67,16 @@ local uipallet = {
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
+
+task.spawn(function()
+	if mainapi.Lightmode then
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+		else
+					uipallet.Main = Color3.fromRGB(26, 25, 26)
+		uipallet.Text = Color3.fromRGB(200, 200, 200)
+	end
+end)
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -2468,18 +2484,7 @@ function mainapi:BlurCheck()
 	end
 end
 
-function mainapi:ChangeColorTheme(v)
-	if self.ThreadFix then
-		if v == true then
-			uipallet.Main = Color3.fromRGB(245, 245, 245)
-uipallet.Text = Color3.fromRGB(26, 25, 26)
-								else
-									uipallet.Main = Color3.fromRGB(26, 25, 25)
-uipallet.Text = Color3.fromRGB(200, 200, 200)
-		end
-		
-	end
-end
+
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -6008,14 +6013,7 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-mainapi.LightMode = guipane:CreateToggle({
-	Name = 'Light Mode',
-	Function = function(val)
-		mainapi:ChangeColorTheme(val)
-	end,
-	Default = true,
-	Tooltip = 'Switches sides lol'
-})
+
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
