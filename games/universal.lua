@@ -231,15 +231,11 @@ WhitelistedUsers = {
 		["hash"] = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
 		["attackable"] = false,
 		["level"] = 2,
-		["tags"] = {
-			["text"] = "REVAPE OWNER",
-			["color"] = {
-				[1] = 78,
-				[2] = 200,
-				[3] = 54
-			}
-		}
-	}
+	["tags"] = {
+    ["text"] = "REVAPE OWNER",
+    ["color"] = {78, 200, 54}
+
+}
 },
 		WhitelistTags = {
 ["1393811419585183774"] = {
@@ -412,24 +408,14 @@ end)
 
 
 run(function()
-    -- Debug helper
-    local function debugLog(point, extra)
-        print("[Whitelist Debug] "..point..(extra and ": "..tostring(extra) or ""))
-    end
-
 		
 	function whitelist:get(plr)
-		local plrstr = self.hashes[plr.Name..plr.UserId]
-
 		local key = plr.Name..plr.UserId
 local plrstr = self.hashes[key]
-print("DEBUG: Key =", key)
-print("DEBUG: plrstr =", plrstr)
+
 
 for _, v in self.data.WhitelistedUsers do
-    print("DEBUG: Checking v.hash =", v.hash)
     if v.hash == plrstr then
-        print("DEBUG: Player matched whitelist!")
         return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
     end
 end
@@ -437,41 +423,38 @@ end
 	end
 
     function whitelist:isingame()
-        debugLog("Checking if any whitelisted player is in game")
         for _, v in playersService:GetPlayers() do
             if self:get(v) ~= 0 then
-                debugLog("Whitelisted player found in game", v.Name)
                 return true
             end
         end
         return false
     end
 
-    function whitelist:tag(plr, rich)
-        local plrtag, newtag = select(3, self:get(plr)) or self.customtags[plr.Name] or {}, ''
-        if not plrtag then return '' end
-        for _, v in plrtag do
-            newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' or '['..removeTags(v.text)..']')..' '
-        end
-        return newtag
+function whitelist:tag(plr, rich)
+    local plrtag, newtag = select(3, self:get(plr)) or self.customtags[plr.Name] or {}, ''
+    if not plrtag then return '' end
+    for _, v in plrtag do
+        newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' 
+                          or '['..removeTags(v.text)..']')..' '
     end
+    return newtag
+end
 
     function whitelist:getplayer(arg)
         if arg == 'default' and self.localprio == 0 then return true end
         if arg == 'private' and self.localprio == 1 then return true end
-        if arg == 'owner' and self.localprio == 2 then print("got owner") return true end
+        if arg == 'owner' and self.localprio == 2 then return true end
         if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
         return false
     end
 
     local olduninject
     function whitelist:playeradded(v, joined)
-        debugLog("Player added event", v.Name)
         if self:get(v) ~= 0 then
             if self.alreadychecked[v.UserId] then return end
             self.alreadychecked[v.UserId] = true
             self:hook()
-            debugLog("Hooked player", v.Name)
 
             if self.localprio == 0 then
                 olduninject = vape.Uninject
@@ -483,13 +466,11 @@ end
                     task.wait(10)
                 end
 
-                -- New Roblox TextChatService support
                 if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
                     local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
                     local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
                     if newchannel then
                         newchannel:SendAsync('helloimusingrehaler')
-                        debugLog("Sent whisper to player", v.Name)
                     end
                     textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
                 elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
@@ -513,11 +494,9 @@ end
             if newent then
                 entitylib.Events.EntityUpdated:Fire(newent)
             end
-            debugLog("Detected revape user", plr.Name)
             return true
         end
 
-        -- Command processing
         if self.localprio < self:get(plr) or plr == lplr then
             local args = msg:split(' ')
             table.remove(args, 1)
@@ -525,7 +504,6 @@ end
                 table.remove(args, 1)
                 for cmd, func in self.commands do
                     if msg:sub(1, cmd:len() + 1):lower() == ';'..cmd:lower() then
-                        debugLog("Executing command", cmd)
                         func(args, plr)
                         return true
                     end
@@ -542,7 +520,6 @@ end
         if sub then
             if not skip and self:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
                 obj.Visible = false
-                debugLog("Processed and hid chat for", plr.Name)
             end
         end
     end
@@ -550,7 +527,6 @@ end
     function whitelist:hook()
         if self.hooked then return end
         self.hooked = true
-        debugLog("Hooking chat system")
 
         local exp = coreGui:FindFirstChild('ExperienceChat')
         if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
@@ -598,7 +574,6 @@ end
 		end
 	end
 
-    -- Add a debug point after updating
     function whitelist:update(first)
 		local suc = pcall(function()
 			local _, subbed = pcall(function()
@@ -628,7 +603,6 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     if v.tags and v.tags.color then
         local c = v.tags.color
         v.tags.color = Color3.fromRGB(c[1], c[2], c[3])
-						print("got tag colors")
     end
 end
 
