@@ -225,7 +225,7 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 local whitelist = {
 	alreadychecked = {},
 	customtags = {},
-	data = data = {
+	data = {
 	WhitelistedUsers = {},
 	Announcement = {
 		expiretime = 1719510977.4331613,
