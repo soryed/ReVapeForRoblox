@@ -7090,17 +7090,21 @@ end))
 
 
 task.spawn(function()
-local data = readfile("ReVape/profiles/theme.txt")
-     if data == "Dark" or data == nil or data == "" then
-		 uipallet.Main = Color3.fromRGB(26, 25, 26)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-		elseif data == "Light" then
-			uipallet.Main = Color3.fromRGB(200, 200, 200)
-		 uipallet.Text = Color3.fromRGB(26, 25, 26)	
-		end
-	end				
+	local data
 
+	if isfile("ReVape/profiles/theme.txt") then
+		data = readfile("ReVape/profiles/theme.txt")
+	else
+		data = nil
+	end
 
+	if data == nil or data == "" or data == "Dark" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+		uipallet.Text = Color3.fromRGB(200, 200, 200)
+	elseif data == "Light" then
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+	end
 end)
 
 return mainapi
