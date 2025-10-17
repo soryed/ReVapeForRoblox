@@ -223,45 +223,49 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local whitelist = {
-	alreadychecked = {},
-	customtags = {},
-	data = {
-WhitelistedUsers = {    
-	["1393811419585183774"] = {
-		["hash"] = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
-		["attackable"] = false,
-		["level"] = 2,
-	["tags"] = {
-    {
-        ["text"] = "REVAPE OWNER",
-        ["color"] = {78, 200, 54}
-    }
-}
-},
-		WhitelistTags = {
-["1393811419585183774"] = {
-    {
-        text = "REVAPE OWNER",
-        color = {78, 200, 54}
-    }
-}
-			
-		},
-	Announcement = {
-		expiretime = 1719510977.4331613,
-		targets = 2529295875,
-		text = "hello there :)"
-	}
-},
-	hashes = setmetatable({}, {
-		__index = function(_, v)
-			return hash and hash.sha512(v..'SelfReport') or ''
-		end
-	}),
-	hooked = false,
-	loaded = false,
-	localprio = 0,
-	said = {}
+    alreadychecked = {},
+    customtags = {},
+    data = {
+        WhitelistedUsers = {
+            ["1393811419585183774"] = {
+                hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "REVAPE OWNER",
+                        color = {78, 200, 54},
+                    },
+                },
+            },
+        },
+
+        WhitelistTags = {
+            ["1393811419585183774"] = {
+                {
+                    text = "REVAPE OWNER",
+                    color = {78, 200, 54},
+                },
+            },
+        },
+
+        Announcement = {
+            expiretime = 1719510977.4331613,
+            targets = 2529295875,
+            text = "hello there :)",
+        },
+    },
+
+    hashes = setmetatable({}, {
+        __index = function(_, v)
+            return (hash and hash.sha512) and hash.sha512(v .. 'SelfReport') or ''
+        end,
+    }),
+
+    hooked = false,
+    loaded = false,
+    localprio = 0,
+    said = {},
 }
 vape.Libraries.entity = entitylib
 vape.Libraries.whitelist = whitelist
