@@ -622,7 +622,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-local function OIM(message: TextChatMessage)
+local function OIM(message)
  if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
@@ -646,7 +646,7 @@ local function OIM(message: TextChatMessage)
 				end
 
 task.wait(0.05)			
-				self.chatConnection = TextChatService.OnIncomingMessage:Connect(onIncomingMessage)
+				self.chatConnection = TextChatService.OnIncomingMessage:Connect(OIM)
   vape.Uninject = function()
 					self.chatConnection:Disconnect()
 				end
