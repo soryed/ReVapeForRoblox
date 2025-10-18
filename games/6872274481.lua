@@ -10175,16 +10175,15 @@ run(function()
 		Tooltip = "Lets you do a longjump without any items/kits"
 	})
 end)
---[[
+
 run(function()
 	local enabled
 	local Desync
-														
+		
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
 		Function = function()
-		--if not setfflag() then vape:CreateNotification("Vape", "Your executer '"..identifyexecutor().." does not support 'setfflag''") return end
-	    if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module") return end
+			if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module",5,"warning") return end
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
 		setfflag("FFlagHandleAltEnterFullscreenManually","False")
@@ -10196,7 +10195,6 @@ run(function()
 		end,
 		Tooltip = "Note this will ban you for client modifications.",
 	})
-
 	enabled = Desync:CreateToggle({
         Name = 'Enabled',
         Default = false,
@@ -10204,6 +10202,7 @@ run(function()
 	})
 end)
 
+--[[
 run(function()
 		local KnitInit, Knit
 		repeat
