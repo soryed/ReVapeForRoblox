@@ -622,8 +622,10 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-local function OIM(message)
- if not message.TextSource then return nil end
+
+task.wait(0.05)			
+			game:GetService("TextChatService").OnIncomingMessage:Connect(function(message)
+					 if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
     local whitelistData = self.customtags[userId] 
@@ -643,11 +645,7 @@ local function OIM(message)
         return props
     end
     return nil
-				end
-
-task.wait(0.05)			
-				shared.chatConnection = game:GetService("TextChatService").OnIncomingMessage:Connect(OIM)
-
+					end)
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
 					whitelist:playeradded(v, true)
