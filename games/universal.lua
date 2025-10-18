@@ -267,6 +267,7 @@ local whitelist = {
     loaded = false,
     localprio = 0,
     said = {},
+	chatConnection = nil,
 }
 vape.Libraries.entity = entitylib
 vape.Libraries.whitelist = whitelist
@@ -621,9 +622,8 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-task.wait(0.05)			
-game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
-    if not message.TextSource then return nil end
+local function OIM(message: TextChatMessage)
+ if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
     local whitelistData = self.customtags[userId] 
@@ -643,8 +643,13 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
         return props
     end
     return nil
-end
+				end
 
+task.wait(0.05)			
+				self.chatConnection = TextChatService.OnIncomingMessage:Connect(onIncomingMessage)
+  vape.Uninject = function()
+					self.chatConnection:Disconnect()
+				end
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
 					whitelist:playeradded(v, true)
@@ -655,10 +660,8 @@ end
 			for _, v in playersService:GetPlayers() do
 				whitelist:playeradded(v)
 			end
+			game:GetService("Players").PlayerAdded:Connect(whitelist:playeradded)
 
-			if entitylib.Running and vape.Loaded then
-				entitylib.refresh()
-			end
 
 			if whitelist.textdata ~= whitelist.olddata then
 				if whitelist.data.Announcement.expiretime > os.time() then
