@@ -643,7 +643,6 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
         )
         return props
     end
-print("niled")
     return nil
 end
 
@@ -656,8 +655,12 @@ end
 
 			for _, v in playersService:GetPlayers() do
 				whitelist:playeradded(v)
+					print(v)
 			end
-
+playersService.PlayerAdded:Connect(function(v)
+				whitelist:playeradded(v)
+					print(v)
+					end)
 			if entitylib.Running and vape.Loaded then
 				entitylib.refresh()
 			end
