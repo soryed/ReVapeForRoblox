@@ -5633,11 +5633,15 @@ function mainapi:Uninject()
 			v.Button:Toggle()
 		end
 	end
+if mainapi.Connections then
 	for _, v in mainapi.Connections do
-		pcall(function()
-			v:Disconnect()
-		end)
+		if v and typeof(v.Disconnect) == "function" then
+			pcall(function()
+				v:Disconnect()
+			end)
+		end
 	end
+end
 	if mainapi.ThreadFix then
 		setthreadidentity(8)
 		clickgui.Visible = false
