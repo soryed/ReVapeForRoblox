@@ -5647,6 +5647,7 @@ function mainapi:Uninject()
 	end
 	mainapi.gui:ClearAllChildren()
 	mainapi.gui:Destroy()
+shared.chatConnection:Disconnect()
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
 	shared.vape = nil
