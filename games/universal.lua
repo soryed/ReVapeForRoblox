@@ -646,7 +646,7 @@ local function OIM(message)
 				end
 
 task.wait(0.05)			
-				shared.chatConnection = TextChatService.OnIncomingMessage:Connect(OIM)
+				shared.chatConnection = game:GetService("TextChatService").OnIncomingMessage:Connect(OIM)
 
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
