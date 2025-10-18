@@ -22,6 +22,7 @@ local mainapi = {
 	Version = '0.3',
 	Windows = {}
 }
+shared.chatConnection = nil
 local cloneref = cloneref or function(obj)
 	return obj
 end
