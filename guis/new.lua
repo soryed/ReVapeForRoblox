@@ -23,7 +23,6 @@ local mainapi = {
 	Windows = {}
 }
 																																																								
-shared.chatConnection = nil
 local cloneref = cloneref or function(obj)
 	return obj
 end
@@ -5647,11 +5646,7 @@ function mainapi:Uninject()
 	end
 	mainapi.gui:ClearAllChildren()
 	mainapi.gui:Destroy()
-if shared.chatConnection  then
-shared.chatConnection:Disconnect()
-else
 
-end
 
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
