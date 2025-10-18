@@ -20,6 +20,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.3',
+	LightMode = true,
 	Windows = {}
 }
 																																																								
@@ -61,9 +62,18 @@ local uipallet = {
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
+task.spawn(function()
+	if mainapi.LightMode == true then
+			uipallet.Main = Color3.fromRGB(200, 200, 200)
+			uipallet.Text = Color3.fromRGB(26, 25, 26)
 
+	
+		else
+						uipallet.Main = Color3.fromRGB(26, 25, 26)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
 
-
+		end
+end)
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
 	['ReVape/assets/new/alert.png'] = 'rbxassetid://14368301329',
