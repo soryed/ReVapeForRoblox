@@ -22,6 +22,7 @@ local mainapi = {
 	Version = '0.3',
 	Windows = {}
 }
+
 local cloneref = cloneref or function(obj)
 	return obj
 end
@@ -49,9 +50,6 @@ local tween = {
 	tweens = {},
 	tweenstwo = {}
 }
-
-
-
 local uipallet = {
 	Main = Color3.fromRGB(26, 25, 26),
 	Text = Color3.fromRGB(200, 200, 200),
@@ -59,8 +57,6 @@ local uipallet = {
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
-
-
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -125,9 +121,7 @@ local getcustomassets = {
 	['ReVape/assets/new/utilityicon.png'] = 'rbxassetid://14368359107',
 	['ReVape/assets/new/vape.png'] = 'rbxassetid://14373395239',
 	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
-	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
-	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
-	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
+	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
 }
 
 local isfile = isfile or function(file)
@@ -2468,7 +2462,6 @@ function mainapi:BlurCheck()
 	end
 end
 
-						
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -5633,15 +5626,11 @@ function mainapi:Uninject()
 			v.Button:Toggle()
 		end
 	end
-if mainapi.Connections then
 	for _, v in mainapi.Connections do
-		if v and typeof(v.Disconnect) == "function" then
-			pcall(function()
-				v:Disconnect()
-			end)
-		end
+		pcall(function()
+			v:Disconnect()
+		end)
 	end
-end
 	if mainapi.ThreadFix then
 		setthreadidentity(8)
 		clickgui.Visible = false
@@ -5649,8 +5638,6 @@ end
 	end
 	mainapi.gui:ClearAllChildren()
 	mainapi.gui:Destroy()
-
-
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
 	shared.vape = nil
@@ -5664,7 +5651,6 @@ gui.DisplayOrder = 9999999
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 gui.IgnoreGuiInset = true
 gui.OnTopOfCoreBlur = true
-
 if mainapi.ThreadFix then
 	gui.Parent = cloneref(game:GetService('CoreGui'))--(gethui and gethui()) or cloneref(game:GetService('CoreGui'))
 else
@@ -5810,21 +5796,6 @@ mainapi:CreateCategory({
 	Name = 'Minigames',
 	Icon = getcustomasset('ReVape/assets/new/miniicon.png'),
 	Size = UDim2.fromOffset(19, 12)
-})
-mainapi:CreateCategory({
-	Name = 'Exploits',
-	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
-	Size = UDim2.fromOffset(19, 12)
-})
-mainapi:CreateCategory({
-	Name = 'Troll',
-	Icon = getcustomasset('ReVape/assets/new/troll.png'),
-	Size = UDim2.fromOffset(19, 12)
-})
-mainapi:CreateCategory({
-	Name = 'AltFarm',
-	Icon = getcustomasset('ReVape/assets/new/af.png'),
-	Size = UDim2.fromOffset(20, 20)
 })
 mainapi.Categories.Main:CreateDivider('misc')
 
@@ -6004,8 +5975,6 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-
-
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
@@ -6117,11 +6086,8 @@ guipane:CreateButton({
 			WorldCategory = 6,
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
-			ExploitsCategory = 9,
-			TrollCategory = 10,			
-			AltFarmCategory = 11,	
-			FriendsCategory = 12,
-			ProfilesCategory = 13
+			FriendsCategory = 9,
+			ProfilesCategory = 10
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
@@ -7040,7 +7006,5 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
-
-
 
 return mainapi
