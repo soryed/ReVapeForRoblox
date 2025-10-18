@@ -655,10 +655,8 @@ task.wait(0.05)
 
 			for _, v in playersService:GetPlayers() do
 				whitelist:playeradded(v)
+					print(v)
 			end
-			game:GetService("Players").PlayerAdded:Connect(function(v)
-whitelist:playeradded(v)
-					end)
 
 
 			if whitelist.textdata ~= whitelist.olddata then
