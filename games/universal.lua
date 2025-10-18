@@ -477,20 +477,20 @@ end
                     local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
                     local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
                     if newchannel then
-                        newchannel:SendAsync('helloimusingrehaler')
+                        newchannel:SendAsync('helloimusinginhaler')
                     end
                     textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
                 elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
-                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
+                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusinginhaler', 'All')
                 end
             end
         end
     end
 
     function whitelist:process(msg, plr)
-        if plr == lplr and msg == 'helloimusingrehaler' then return true end
+        if plr == lplr and msg == 'helloimusinginhaler' then return true end
 
-        if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
+        if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
             self.said[plr.Name] = true
             notif('Vape', plr.Name..' is using revape!', 60)
             self.customtags[plr.Name] = {{
@@ -573,7 +573,7 @@ end
 			local bubblechat = exp:WaitForChild('bubbleChat', 5)
 			if bubblechat then
 				vape:Clean(bubblechat.DescendantAdded:Connect(function(newbubble)
-					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusingrehaler') then
+					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusinginhaler') then
 						newbubble.Parent.Parent.Visible = false
 					end
 				end))
@@ -582,7 +582,6 @@ end
 	end
 
     function whitelist:update(first)
-			local tttag = {}
 		local suc = pcall(function()
 			local _, subbed = pcall(function()
 				return game:HttpGet('https://github.com/soryed/WhitelistJSON')
@@ -613,7 +612,7 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
             if tag.color and tag.text then
                 local c = tag.color
                 tag.color = Color3.fromRGB(c[1], c[2], c[3])
-                tttag[v.userId] = {
+                self.customtags[v.userId] = {
                     color = Color3.fromRGB(c[1], c[2], c[3]),
                     text = tag.text,
                 }
@@ -622,12 +621,12 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 
-				
+task.wait(0.05)			
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
-    local whitelistData = tttag[userId] 
+    local whitelistData = self.customtags[userId] 
     if whitelistData then
         local color = whitelistData.color
         local tagText = whitelistData.text
@@ -643,7 +642,6 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
         )
         return props
     end
-print("niled")
     return nil
 end
 
