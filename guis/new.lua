@@ -22,7 +22,6 @@ local mainapi = {
 	Version = '0.3',
 	Windows = {}
 }
-shared.chatConnection = nil
 local cloneref = cloneref or function(obj)
 	return obj
 end
@@ -5661,16 +5660,7 @@ gui.DisplayOrder = 9999999
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 gui.IgnoreGuiInset = true
 gui.OnTopOfCoreBlur = true
-if shared.chatConnection then
-print("disconnectiong")
-shared.chatConnection:Disconnect()
-elseif shared.chatConnection == nil  then
 
-print("nil")
-else
-print("nothing")
-
-end
 if mainapi.ThreadFix then
 	gui.Parent = cloneref(game:GetService('CoreGui'))--(gethui and gethui()) or cloneref(game:GetService('CoreGui'))
 else
