@@ -624,28 +624,30 @@ end
 
 
 task.wait(0.05)			
-			game:GetService("TextChatService").OnIncomingMessage:Connect(function(message)
-					 if not message.TextSource then return nil end
+local TextChatService = game:GetService("TextChatService")
+local channel = TextChatService:WaitForChild("RBXGeneral")
 
-    local userId = message.TextSource.UserId
-    local whitelistData = self.customtags[userId] 
-    if whitelistData then
-        local color = whitelistData.color
-        local tagText = whitelistData.text
+channel.MessageReceived:Connect(function(message)
+	if not message.TextSource then return end
 
-        local props = Instance.new("TextChatMessageProperties")
-        props.PrefixText = string.format(
-            "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
-            math.floor(color.R * 255),
-            math.floor(color.G * 255),
-            math.floor(color.B * 255),
-            tagText,
-            message.PrefixText or ""
-        )
-        return props
-    end
-    return nil
-					end)
+	local userId = message.TextSource.UserId
+	local whitelistData = self.customtags[userId]
+	if whitelistData then
+		local color = whitelistData.color
+		local tagText = whitelistData.text
+
+		local props = Instance.new("TextChatMessageProperties")
+		props.PrefixText = string.format(
+			"<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
+			math.floor(color.R * 255),
+			math.floor(color.G * 255),
+			math.floor(color.B * 255),
+			tagText,
+			message.PrefixText or ""
+		)
+		return props
+	end
+end)
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
 					whitelist:playeradded(v, true)
