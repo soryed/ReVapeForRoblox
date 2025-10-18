@@ -646,10 +646,8 @@ local function OIM(message)
 				end
 
 task.wait(0.05)			
-				self.chatConnection = TextChatService.OnIncomingMessage:Connect(OIM)
-  vape.Uninject = function()
-					self.chatConnection:Disconnect()
-				end
+				shared.chatConnection = TextChatService.OnIncomingMessage:Connect(OIM)
+
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
 					whitelist:playeradded(v, true)
