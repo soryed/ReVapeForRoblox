@@ -621,8 +621,16 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
         end
     end
 end
+	for _, v in playersService:GetPlayers() do
+				whitelist:playeradded(v)
+					print(v)
+			end
+playersService.PlayerAdded:Connect(function(v)
+				whitelist:playeradded(v)
+					print(v)
+					end)
 
-				
+				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then return nil end
 
@@ -653,14 +661,7 @@ end
 				vape:Clean(whitelist.connection)
 			end
 
-			for _, v in playersService:GetPlayers() do
-				whitelist:playeradded(v)
-					print(v)
-			end
-playersService.PlayerAdded:Connect(function(v)
-				whitelist:playeradded(v)
-					print(v)
-					end)
+		
 			if entitylib.Running and vape.Loaded then
 				entitylib.refresh()
 			end
