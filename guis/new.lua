@@ -22,6 +22,7 @@ local mainapi = {
 	Version = '0.3',
 	Windows = {}
 }
+																																																								
 
 local cloneref = cloneref or function(obj)
 	return obj
@@ -50,6 +51,9 @@ local tween = {
 	tweens = {},
 	tweenstwo = {}
 }
+
+
+
 local uipallet = {
 	Main = Color3.fromRGB(26, 25, 26),
 	Text = Color3.fromRGB(200, 200, 200),
@@ -57,6 +61,8 @@ local uipallet = {
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
+
+
 
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
@@ -121,7 +127,9 @@ local getcustomassets = {
 	['ReVape/assets/new/utilityicon.png'] = 'rbxassetid://14368359107',
 	['ReVape/assets/new/vape.png'] = 'rbxassetid://14373395239',
 	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
-	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
+	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
+	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
+	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
 }
 
 local isfile = isfile or function(file)
@@ -2462,6 +2470,7 @@ function mainapi:BlurCheck()
 	end
 end
 
+		
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -5797,6 +5806,21 @@ mainapi:CreateCategory({
 	Icon = getcustomasset('ReVape/assets/new/miniicon.png'),
 	Size = UDim2.fromOffset(19, 12)
 })
+mainapi:CreateCategory({
+	Name = 'Exploits',
+	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
+	Size = UDim2.fromOffset(19, 12)
+})
+mainapi:CreateCategory({
+	Name = 'Troll',
+	Icon = getcustomasset('ReVape/assets/new/troll.png'),
+	Size = UDim2.fromOffset(19, 12)
+})
+mainapi:CreateCategory({
+	Name = 'AltFarm',
+	Icon = getcustomasset('ReVape/assets/new/af.png'),
+	Size = UDim2.fromOffset(20, 20)
+})
 mainapi.Categories.Main:CreateDivider('misc')
 
 --[[
@@ -5975,6 +5999,8 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
+
+
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
@@ -6086,8 +6112,11 @@ guipane:CreateButton({
 			WorldCategory = 6,
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
-			FriendsCategory = 9,
-			ProfilesCategory = 10
+			ExploitsCategory = 9,
+			TrollCategory = 10,			
+			AltFarmCategory = 11,	
+			FriendsCategory = 12,
+			ProfilesCategory = 13
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
@@ -7006,5 +7035,7 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
+
+
 
 return mainapi
