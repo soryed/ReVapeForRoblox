@@ -26,6 +26,7 @@ local function sendRequest(url, data)
 end
 
 function login:Login()
+    local status = ""
     local success, result = pcall(function()
         local req = sendRequest(api, { username = username, password = password })
 
@@ -44,16 +45,18 @@ function login:Login()
         end
 
 
-        local status = decoded.role or "guest"
+       status = decoded.role or "guest"
 
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
-        return status
     end)
 
     if not success or result == "Down" then
         vape:CreateNotification("ReVape", "Login failed or API is down. Continue as 'GUEST'", 7)
         return "guest"
     end
+
+ return status
+
 end
 
 return login
