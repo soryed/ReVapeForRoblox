@@ -28,6 +28,25 @@ local function downloadFile(path, func)
 	return (func or readfile)(path)
 end
 
+	vape.Libraries.role = loginlib.log:Login()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+
+
 vape.Place = 6872274481
 if isfile('ReVape/games/'..vape.Place..'.lua') then
 	loadstring(readfile('ReVape/games/'..vape.Place..'.lua'), 'bedwars')()
