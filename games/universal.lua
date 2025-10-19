@@ -8152,7 +8152,5 @@ run(function()
 end)
 	
 run(function()
-	shared.role = loginlib.log:Login()
-		print("role - uni.lua", shared.role)
-
+	vape.Libraries.role = loginlib.log:Login()
 end)
