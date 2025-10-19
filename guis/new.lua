@@ -513,7 +513,9 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
-	role = "guest"
+	role = "",
+	username = "",
+	password = "",
 }
 local components
 components = {
@@ -5967,8 +5969,12 @@ general:CreateButton({
 	Function = function()
 		shared.vapereload = true
 		if shared.VapeDeveloper then
+												getgenv().username = main.Libraries.username
+			getgenv().password =  main.Libraries.password
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
+			getgenv().username = main.Libraries.username
+			getgenv().password =  main.Libraries.password
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
