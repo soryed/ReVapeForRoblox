@@ -5,14 +5,23 @@ end
 
 local vape = shared.vape
 local httpService = game:GetService('HttpService')
-local api = "https://revapeclient.vercel.app/"
+local api = "https://revapeclient.vercel.app"
 
 local license = ({...})[1] or {}
 
 local username = getgenv().username or "USER"
 local password = getgenv().password or "PASSWORD"
 
+
+
+
 function login:Login()
+    if username == nil then
+     username = "USER"
+end
+if password == nil then
+     password = "PASSWORD"
+end
     local success, res = pcall(function()
         local req = request({
             Url = api .. "/login",
