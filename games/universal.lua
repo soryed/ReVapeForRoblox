@@ -460,36 +460,6 @@ end
         return false
     end
 
-    local olduninject
-    function whitelist:playeradded(v, joined)
-        if self:get(v) ~= 0 then
-            if self.alreadychecked[v.UserId] then return end
-            self.alreadychecked[v.UserId] = true
-            self:hook()
-
-            if self.localprio == 0 then
-                olduninject = vape.Uninject
-                vape.Uninject = function()
-                    notif('Vape', 'No escaping the private members :)', 10)
-                end
-
-                if joined then
-                    task.wait(10)
-                end
-
-                if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-                    local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
-                    local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
-                    if newchannel then
-                        newchannel:SendAsync('helloimusingrehaler')
-                    end
-                    textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
-                elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
-                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
-                end
-            end
-        end
-    end
 
     function whitelist:process(msg, plr)
         if plr == lplr and msg == 'helloimusingrehaler' then return true end
@@ -584,6 +554,36 @@ end
 			end
 		end
 	end
+    local olduninject
+    function whitelist:playeradded(v, joined)
+        if self:get(v) ~= 0 then
+            if self.alreadychecked[v.UserId] then return end
+            self.alreadychecked[v.UserId] = true
+            self:hook()
+
+            if self.localprio == 0 then
+                olduninject = vape.Uninject
+                vape.Uninject = function()
+                    notif('Vape', 'No escaping the private members :)', 10)
+                end
+
+                if joined then
+                    task.wait(10)
+                end
+
+                if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                    local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+                    local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
+                    if newchannel then
+                        newchannel:SendAsync('helloimusingrehaler')
+                    end
+                    textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
+                elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
+                end
+            end
+        end
+    end
 
     function whitelist:update(first)
 			local tttag = {}
@@ -607,9 +607,12 @@ end
 			local suc, res = pcall(function()
 				return httpService:JSONDecode(whitelist.textdata)
 			end)
+			print("old prio", whitelist.localprio)
 
 			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
-			whitelist.localprio = whitelist:get(lplr)
+			whitelist.localprio = select(1, whitelist:get(lplr))
+			task.wait(1)
+			print("new prio", whitelist.localprio)
 
 for _, v in pairs(whitelist.data.WhitelistedUsers) do
     if v.tags then
@@ -627,11 +630,9 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
 end
 	for _, v in playersService:GetPlayers() do
 				whitelist:playeradded(v)
-					print(v)
 			end
 playersService.PlayerAdded:Connect(function(v)
-				whitelist:playeradded(v)
-					print(v)
+				whitelist:playeradded(v,true)
 					end)
 
 				task.wait(2)
@@ -671,7 +672,6 @@ end
 			end
 
 			if whitelist.textdata ~= whitelist.olddata then
-				if whitelist.data.Announcement.expiretime > os.time() then
 					local targets = whitelist.data.Announcement.targets
 					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
@@ -680,7 +680,7 @@ end
 						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
 						hint.Parent = workspace
 						game:GetService('Debris'):AddItem(hint, 20)
-					end
+					
 				end
 				whitelist.olddata = whitelist.textdata
 				pcall(function()
@@ -7898,87 +7898,7 @@ run(function()
 	})
 end)
 	
-run(function()
-	local Speedmeter
-	local label
-	
-	Speedmeter = vape.Legit:CreateModule({
-		Name = 'Speedmeter',
-		Function = function(callback)
-			if callback then
-				repeat
-					local lastpos = entitylib.isAlive and entitylib.character.HumanoidRootPart.Position * Vector3.new(1, 0, 1) or Vector3.zero
-					local dt = task.wait(0.2)
-					local newpos = entitylib.isAlive and entitylib.character.HumanoidRootPart.Position * Vector3.new(1, 0, 1) or Vector3.zero
-					label.Text = math.round(((lastpos - newpos) / dt).Magnitude)..' sps'
-				until not Speedmeter.Enabled
-			end
-		end,
-		Size = UDim2.fromOffset(100, 41),
-		Tooltip = 'A label showing the average velocity in studs'
-	})
-	Speedmeter:CreateFont({
-		Name = 'Font',
-		Blacklist = 'Gotham',
-		Function = function(val)
-			label.FontFace = val
-		end
-	})
-	Speedmeter:CreateColorSlider({
-		Name = 'Color',
-		DefaultValue = 0,
-		DefaultOpacity = 0.5,
-		Function = function(hue, sat, val, opacity)
-			label.BackgroundColor3 = Color3.fromHSV(hue, sat, val)
-			label.BackgroundTransparency = 1 - opacity
-		end
-	})
-	label = Instance.new('TextLabel')
-	label.Size = UDim2.fromScale(1, 1)
-	label.BackgroundTransparency = 0.5
-	label.TextSize = 15
-	label.Font = Enum.Font.Gotham
-	label.Text = '0 sps'
-	label.TextColor3 = Color3.new(1, 1, 1)
-	label.BackgroundColor3 = Color3.new()
-	label.Parent = Speedmeter.Children
-	local corner = Instance.new('UICorner')
-	corner.CornerRadius = UDim.new(0, 4)
-	corner.Parent = label
-end)
-	
-run(function()
-	local TimeChanger
-	local Value
-	local old
-	
-	TimeChanger = vape.Legit:CreateModule({
-		Name = 'Time Changer',
-		Function = function(callback)
-			if callback then
-				old = lightingService.TimeOfDay
-				lightingService.TimeOfDay = Value.Value..':00:00'
-			else
-				lightingService.TimeOfDay = old
-				old = nil
-			end
-		end,
-		Tooltip = 'Change the time of the current world'
-	})
-	Value = TimeChanger:CreateSlider({
-		Name = 'Time',
-		Min = 0,
-		Max = 24,
-		Default = 12,
-		Function = function(val)
-			if TimeChanger.Enabled then 
-				lightingService.TimeOfDay = val..':00:00'
-			end
-		end
-	})
-	
-end)
-	
+
 run(function()
 	local weather
 	local oldatmosphere = {}
@@ -8146,3 +8066,86 @@ run(function()
 		end,
 	})
 end)
+
+
+run(function()
+	local Speedmeter
+	local label
+	
+	Speedmeter = vape.Legit:CreateModule({
+		Name = 'Speedmeter',
+		Function = function(callback)
+			if callback then
+				repeat
+					local lastpos = entitylib.isAlive and entitylib.character.HumanoidRootPart.Position * Vector3.new(1, 0, 1) or Vector3.zero
+					local dt = task.wait(0.2)
+					local newpos = entitylib.isAlive and entitylib.character.HumanoidRootPart.Position * Vector3.new(1, 0, 1) or Vector3.zero
+					label.Text = math.round(((lastpos - newpos) / dt).Magnitude)..' sps'
+				until not Speedmeter.Enabled
+			end
+		end,
+		Size = UDim2.fromOffset(100, 41),
+		Tooltip = 'A label showing the average velocity in studs'
+	})
+	Speedmeter:CreateFont({
+		Name = 'Font',
+		Blacklist = 'Gotham',
+		Function = function(val)
+			label.FontFace = val
+		end
+	})
+	Speedmeter:CreateColorSlider({
+		Name = 'Color',
+		DefaultValue = 0,
+		DefaultOpacity = 0.5,
+		Function = function(hue, sat, val, opacity)
+			label.BackgroundColor3 = Color3.fromHSV(hue, sat, val)
+			label.BackgroundTransparency = 1 - opacity
+		end
+	})
+	label = Instance.new('TextLabel')
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 0.5
+	label.TextSize = 15
+	label.Font = Enum.Font.Gotham
+	label.Text = '0 sps'
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.BackgroundColor3 = Color3.new()
+	label.Parent = Speedmeter.Children
+	local corner = Instance.new('UICorner')
+	corner.CornerRadius = UDim.new(0, 4)
+	corner.Parent = label
+end)
+	
+run(function()
+	local TimeChanger
+	local Value
+	local old
+	
+	TimeChanger = vape.Legit:CreateModule({
+		Name = 'Time Changer',
+		Function = function(callback)
+			if callback then
+				old = lightingService.TimeOfDay
+				lightingService.TimeOfDay = Value.Value..':00:00'
+			else
+				lightingService.TimeOfDay = old
+				old = nil
+			end
+		end,
+		Tooltip = 'Change the time of the current world'
+	})
+	Value = TimeChanger:CreateSlider({
+		Name = 'Time',
+		Min = 0,
+		Max = 24,
+		Default = 12,
+		Function = function(val)
+			if TimeChanger.Enabled then 
+				lightingService.TimeOfDay = val..':00:00'
+			end
+		end
+	})
+	
+end)
+	
