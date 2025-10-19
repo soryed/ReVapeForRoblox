@@ -64,7 +64,8 @@ local uipallet = {
 }
 
 task.spawn(function()
-	local data = readfile("ReVape/profiles/theme.txt") or "Dark"
+	local data = readfile("ReVape/profiles/theme.txt")
+		print(data)
 	if data == "Light" then
 			uipallet.Main = Color3.fromRGB(200, 200, 200)
 			uipallet.Text = Color3.fromRGB(26, 25, 26)
@@ -2494,8 +2495,13 @@ if v == true then
     end
 
     if not isfile(path) then
+										print("creating")
         writefile(path, "Light")
+																				print("wroth")
+
     else
+																				print("writing")
+
         local prev = readfile(path)
         writefile(path, "Light")
     end
@@ -2507,8 +2513,12 @@ else
     end
 
     if not isfile(path) then
+      										print("creating")
         writefile(path, "Dark")
+																				print("wroth")
     else
+																				print("writing")
+
         local prev = readfile(path)
         writefile(path, "Dark")
     end
@@ -6023,12 +6033,24 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
-					print(typeof(v),v)
 		mainapi:SWITCHTHEMECOLOR(v)
 	end,
 	Default = false,
 	Tooltip = 'Switches ur theme'
 })
+task.spawn(function()
+	local data = readfile("ReVape/profiles/theme.txt")
+		print(data)
+	if data == "Light" then
+		mainapi.LM.Enabled = true
+		elseif data == "Dark" then
+		mainapi.LM.Enabled = false
+
+		else
+					mainapi.LM.Enabled = false
+
+		end
+end)
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
