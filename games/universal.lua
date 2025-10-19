@@ -8152,5 +8152,5 @@ run(function()
 end)
 	
 run(function()
-	shared.vape.role = loginlib.log:Login()
+	shared.role = loginlib.log:Login()
 end)
