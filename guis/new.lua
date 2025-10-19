@@ -5969,12 +5969,9 @@ general:CreateButton({
 	Function = function()
 		shared.vapereload = true
 		if shared.VapeDeveloper then
-												getgenv().username = mainapi.Libraries.username
-			getgenv().password =  mainapi.Libraries.password
+
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
-			getgenv().username = mainapi.Libraries.username
-			getgenv().password =  mainapi.Libraries.password
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
