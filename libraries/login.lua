@@ -48,6 +48,9 @@ function login:Login()
        status = decoded.role or "guest"
 
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
+         vape.Libraries.username = username
+        vape.Libraries.password = password
+
     end)
 
     if not success or result == "Down" then
