@@ -514,7 +514,6 @@ mainapi.Libraries = {
 	tween = tween,
 	uipallet = uipallet,
 }
-
 local components
 components = {
 	Button = function(optionsettings, children, api)
