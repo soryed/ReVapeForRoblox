@@ -49,7 +49,7 @@ function login:Login()
 
         print("Decoded Response:", decoded)
 
-        local status = decoded.role or "USER"
+        local status = decoded.role or "guest"
 
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
         return status
@@ -59,8 +59,6 @@ function login:Login()
         vape:CreateNotification("ReVape", "Login failed or API is down. Continue as 'GUEST'", 7)
         return "guest"
     end
-
-    return result
 end
 
 return login
