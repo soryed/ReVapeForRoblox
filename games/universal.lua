@@ -8153,5 +8153,29 @@ end)
 	
 run(function()
 	vape.Libraries.role = loginlib.log:Login()
-			print(vape.Libraries.role)
+					task.wait(1)
+						vape.Libraries.role = loginlib.log:Login()
+					task.wait(1)
+						vape.Libraries.role = loginlib.log:Login()
+					task.wait(1)
+						vape.Libraries.role = loginlib.log:Login()
+					task.wait(1)
+						vape.Libraries.role = loginlib.log:Login()
+
+end)
+
+
+				
+run(function()
+	local RoleChecker
+
+	RoleChecker = vape.Legit:CreateModule({
+		Name = 'Check role',
+		Function = function()
+			RoleChecker:Toggle()
+			vape:CreateNotification("ReVape", "Ur role is '"..vape.Libraries.role.."'",6)
+		end,
+		Tooltip = 'What role am i??'
+	})
+	
 end)
