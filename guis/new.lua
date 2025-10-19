@@ -513,6 +513,7 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
+	role = "guest"
 }
 local components
 components = {
