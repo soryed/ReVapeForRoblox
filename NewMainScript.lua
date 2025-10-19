@@ -39,9 +39,7 @@ for _, folder in {'ReVape', 'ReVape/games', 'ReVape/profiles', 'ReVape/assets', 
 		makefolder(folder)
 	end
 end
-if not isfile("ReVape/profiles/theme.txt") then
-	writefile('ReVape/profiles/theme.txt', 'Dark')
-end
+
 if not shared.VapeDeveloper then
 	local _, subbed = pcall(function()
 		return game:HttpGet('https://github.com/soryed/ReVapeForRoblox')
