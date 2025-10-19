@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, weatherlib, loginlib, entitylib = {}, {}, {},{}
+local frictionTable, oldfrict, weatherlib, entitylib = {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -225,7 +225,6 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
-loginlib.log = loadstring(downloadFile('ReVape/libraries/login.lua'), 'Log')()
 
 local whitelist = {
     alreadychecked = {},
@@ -8150,39 +8149,4 @@ run(function()
 	})
 	
 end)
-	
-run(function()
-			repeat task.wait() until game:IsLoaded()
-	vape.Libraries.role = loginlib.log:Login()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-end)
 
-
-				
-run(function()
-	local RoleChecker
-
-	RoleChecker = vape.Categories.Render:CreateModule({
-		Name = 'Check role',
-		Function = function()
-			vape:CreateNotification("ReVape", "Ur role is '"..vape.Libraries.role.."'",6)
-		end,
-		Tooltip = 'What role am i??'
-	})
-	
-end)
