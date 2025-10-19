@@ -8152,6 +8152,7 @@ run(function()
 end)
 	
 run(function()
+			repeat task.wait() until game:IsLoaded()
 	vape.Libraries.role = loginlib.log:Login()
 					task.wait(0.05)
 						vape.Libraries.role = loginlib.log:SlientLogin()
