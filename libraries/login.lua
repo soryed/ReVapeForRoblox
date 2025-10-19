@@ -59,4 +59,36 @@ function login:Login()
 
 end
 
+
+function login:SlientLogin()
+    local status = ""
+    local success, result = pcall(function()
+        local req = sendRequest(api, { username = username, password = password })
+
+
+        if req.StatusCode ~= 200 then
+            return "Down"
+        end
+
+        local decoded
+        local ok, err = pcall(function()
+            decoded = httpService:JSONDecode(req.Body)
+        end)
+
+        if not ok then
+            return "Down"
+        end
+
+
+       status = decoded.role or "guest"
+
+    end)
+
+    if not success or result == "Down" then
+        return "guest"
+    end
+
+ return status
+
+end
 return login
