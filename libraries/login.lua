@@ -8,10 +8,9 @@ local httpService = game:GetService('HttpService')
 local api = "https://vapeclient.fsl58.workers.dev"
 
 
---local username = getgenv().username or "USER"
---local password = getgenv().password or "PASSWORD"
-local username = "USER"
-local password = "PASSWORD"
+local username = getgenv().username or "GUEST"
+local password = getgenv().password or "PASSWORD"
+
 local function sendRequest(url, data)
     local reqFunc = request or syn.request or http_request
     if not reqFunc then
