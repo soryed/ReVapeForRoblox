@@ -9761,7 +9761,7 @@ run(function()
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
-	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") KitRender:Toggle()  return end
+	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") KitRender.Enabled = false  return end
             if callback then
                 task.spawn(function()
                     local team2 = PlayerGui:WaitForChild("MatchDraftApp"):WaitForChild("DraftAppBackground"):WaitForChild("BodyContainer"):WaitForChild("Team2Column")
