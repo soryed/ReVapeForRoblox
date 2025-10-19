@@ -10061,7 +10061,7 @@ run(function()
         Tooltip = 'Enables so you can use desync fflag method'
 	})
 end)
-
+--[[
 run(function()
 		local KnitInit, Knit
 		repeat
@@ -10374,7 +10374,7 @@ run(function()
 			end,
 			Default = true
 		})
-end)
+end)--]]
 
 run(function()
 	local ViewProfiles 
