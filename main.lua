@@ -87,9 +87,7 @@ end
 if not isfile('ReVape/profiles/gui.txt') then
 	writefile('ReVape/profiles/gui.txt', 'new')
 end
-if not isfile("ReVape/profiles/theme.txt") then
-	writefile('ReVape/profiles/theme.txt', 'Dark')
-end
+
 local gui = readfile('ReVape/profiles/gui.txt')
 
 if not isfolder('ReVape/assets/'..gui) then
