@@ -10275,7 +10275,7 @@ run(function()
 					if v == Players.LocalPlayer then continue end
 					if tostring(v:GetAttribute("Disguised")) == "true" then
 						v:SetAttribute("Disguised", false)
-						notif("Remove Disguises", "Disabled streamer mode for "..tostring(v.Name).."!", 3)
+						notif("Vape", "Remove Disguises, Disabled streamer mode for "..tostring(v.Name).."!", 3)
 						table.insert(self.disguises, v)
 					end
 				end
@@ -10283,7 +10283,7 @@ run(function()
 				for i,v in pairs(self.disguises) do
 					if tostring(v:GetAttribute("Disguised")) ~= "true" then
 						v:SetAttribute("Disguised", true)
-						notif("Remove Disguises", "Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
+						notif("Vape", "Remove Disguises, Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
 					end
 				end
 				table.clear(self.disguises)
@@ -10374,7 +10374,20 @@ run(function()
 			end,
 			Default = true
 		})
-	end)
+end)
+
+run(function()
+	local ViewProfiles 
+
+	ViewProfiles = vape.Categories.Exploits:CreateModule({
+		Name = "ViewProfile",
+		Function = function(callback)
+			notif("Vape", "This function is not finish", 10,"alert")
+		end,
+		Tooltip = "This allows you to see other peoples profile"
+	})
+end)
+
 
 run(function()
 	local TAG
