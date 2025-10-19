@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.32',
+	Version = '0.33',
 	Discord = "@ye40",
 	Windows = {}
 }
@@ -513,6 +513,10 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
+	snow = loadstring(downloadFile('ReVape/libraries/Snow.lua'), 'snow')(),
+	rain = loadstring(downloadFile('ReVape/libraries/Rain.lua'), 'rain')(),
+	lightning = loadstring(downloadFile('ReVape/libraries/Lightning.lua'), 'lightning')(),
+
 }
 
 local components
