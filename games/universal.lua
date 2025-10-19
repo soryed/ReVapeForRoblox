@@ -8153,15 +8153,22 @@ end)
 	
 run(function()
 	vape.Libraries.role = loginlib.log:Login()
-					task.wait(1)
+					task.wait(0.05)
 						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(1)
+					task.wait(0.05)
 						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(1)
+					task.wait(0.05)
 						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(1)
+					task.wait(0.05)
 						vape.Libraries.role = loginlib.log:SlientLogin()
-
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
 end)
 
 
@@ -8172,7 +8179,6 @@ run(function()
 	RoleChecker = vape.Categories.Render:CreateModule({
 		Name = 'Check role',
 		Function = function()
-			RoleChecker:Toggle()
 			vape:CreateNotification("ReVape", "Ur role is '"..vape.Libraries.role.."'",6)
 		end,
 		Tooltip = 'What role am i??'
