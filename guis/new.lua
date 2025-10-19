@@ -506,6 +506,19 @@ do
 		end
 	end
 end
+local function downloadFile(path, func)
+	if not isfile(path) then
+		createDownloader(path)
+		local suc, res = pcall(function()
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+		end)
+		if not suc or res == '404: Not Found' then
+			error(res)
+		end
+		writefile(path, res)
+	end
+	return (func or readfile)(path)
+end
 
 mainapi.Libraries = {
 	color = color,
