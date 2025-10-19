@@ -20,7 +20,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
 	Version = '0.3',
-	LightMode = true,
+	Discord = "@ye40",
 	Windows = {}
 }
 																																																								
@@ -62,16 +62,19 @@ local uipallet = {
 	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
 	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
 }
+
 task.spawn(function()
-	if mainapi.LightMode == true then
+	local data = readfile("ReVape/profiles/theme.txt") or "Dark"
+	if data == "Light" then
 			uipallet.Main = Color3.fromRGB(200, 200, 200)
 			uipallet.Text = Color3.fromRGB(26, 25, 26)
-
 	
-		else
-						uipallet.Main = Color3.fromRGB(26, 25, 26)
+		elseif data == "Dark" then
+					uipallet.Main = Color3.fromRGB(26, 25, 26)
 			uipallet.Text = Color3.fromRGB(200, 200, 200)
-
+		else
+			uipallet.Main = Color3.fromRGB(26, 25, 26)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
 		end
 end)
 local getcustomassets = {
@@ -2480,7 +2483,37 @@ function mainapi:BlurCheck()
 	end
 end
 
-		
+function mainapi:SCM(V)
+							local path = "ReVape/profiles/theme.txt"
+	if self.ThreadFix then
+		setthreadidentity(8)
+if v == true or v == "true" then
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, "Light")
+    else
+        local prev = readfile(path)
+        writefile(path, "Light")
+    end
+else
+    if not isfolder("ReVape/profiles") then
+        makefolder("ReVape/profiles")
+    end
+
+    if not isfile(path) then
+        writefile(path, "Dark")
+    else
+        local prev = readfile(path)
+        writefile(path, "Dark")
+    end
+end
+							end
+end
+
+						
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -2546,7 +2579,7 @@ function mainapi:CreateGUI()
 	discordbutton.BackgroundTransparency = 1
 	discordbutton.Image = getcustomasset('ReVape/assets/new/discord.png')
 	discordbutton.Parent = window
-	addTooltip(discordbutton, 'Join discord')
+	addTooltip(discordbutton, 'my discord')
 	local settingspane = Instance.new('TextButton')
 	settingspane.Size = UDim2.fromScale(1, 1)
 	settingspane.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
@@ -3585,33 +3618,8 @@ function mainapi:CreateGUI()
 	end)
 	discordbutton.MouseButton1Click:Connect(function()
 		task.spawn(function()
-			local body = httpService:JSONEncode({
-				nonce = httpService:GenerateGUID(false),
-				args = {
-					invite = {code = '5gJqhQmrdS'},
-					code = '5gJqhQmrdS'
-				},
-				cmd = 'INVITE_BROWSER'
-			})
-
-			for i = 1, 14 do
-				task.spawn(function()
-					request({
-						Method = 'POST',
-						Url = 'http://127.0.0.1:64'..(53 + i)..'/rpc?v=1',
-						Headers = {
-							['Content-Type'] = 'application/json',
-							Origin = 'https://discord.com'
-						},
-						Body = body
-					})
-				end)
-			end
-		end)
-
-		task.spawn(function()
 			tooltip.Text = 'Copied!'
-			setclipboard('https://discord.gg/5gJqhQmrdS')
+			setclipboard(mainapi.Discord)
 		end)
 	end)
 	settingsbutton.MouseEnter:Connect(function()
@@ -6009,8 +6017,14 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-
-
+mainapi.LM = guipane:CreateToggle({
+	Name = 'Light Mode',
+	Function = function(v)
+		mainapi:SCM(v)
+	end,
+	Default = true,
+	Tooltip = 'Switches ur theme'
+})
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
