@@ -2484,10 +2484,11 @@ function mainapi:BlurCheck()
 end
 
 function mainapi:SCM(V)
-							local path = "ReVape/profiles/theme.txt"
 	if self.ThreadFix then
 		setthreadidentity(8)
-if v == true or v == "true" then
+if v == true then
+																local path = "ReVape/profiles/theme.txt"
+
     if not isfolder("ReVape/profiles") then
         makefolder("ReVape/profiles")
     end
@@ -2499,6 +2500,8 @@ if v == true or v == "true" then
         writefile(path, "Light")
     end
 else
+																local path = "ReVape/profiles/theme.txt"
+
     if not isfolder("ReVape/profiles") then
         makefolder("ReVape/profiles")
     end
@@ -6020,9 +6023,10 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
+					print(typeof(v),v)
 		mainapi:SCM(v)
 	end,
-	Default = true,
+	Default = false,
 	Tooltip = 'Switches ur theme'
 })
 guipane:CreateToggle({
