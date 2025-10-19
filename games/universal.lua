@@ -1,4 +1,3 @@
---This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
@@ -59,11 +58,6 @@ local assetfunction = getcustomasset
 
 local vape = shared.vape
 local tween = vape.Libraries.tween
-local weatherlib = {
-	Snow = vape.Libraries.snow,
-	Rain = vape.Libraries.rain,
-	Lightning = vape.Libraries.lightning
-}
 local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
@@ -194,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, entitylib = {}, {}
+local frictionTable, oldfrict, weatherlib, entitylib = {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -228,6 +222,10 @@ end
 local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
+weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
+weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
+weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
+
 local whitelist = {
     alreadychecked = {},
     customtags = {},
