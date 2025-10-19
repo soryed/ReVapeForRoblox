@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.33',
+	Version = '0.32',
 	Discord = "@ye40",
 	Windows = {}
 }
@@ -506,19 +506,6 @@ do
 		end
 	end
 end
-local function downloadFile(path, func)
-	if not isfile(path) then
-		createDownloader(path)
-		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
-		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
-		end
-		writefile(path, res)
-	end
-	return (func or readfile)(path)
-end
 
 mainapi.Libraries = {
 	color = color,
@@ -526,10 +513,6 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
-	snow = loadstring(downloadFile('ReVape/libraries/Snow.lua'), 'snow')(),
-	rain = loadstring(downloadFile('ReVape/libraries/Rain.lua'), 'rain')(),
-	lightning = loadstring(downloadFile('ReVape/libraries/Lightning.lua'), 'lightning')(),
-
 }
 
 local components
