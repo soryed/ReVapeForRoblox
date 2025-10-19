@@ -14,7 +14,6 @@ local password = getgenv().password or "PASSWORD"
 local function sendRequest(url, data)
     local reqFunc = request or syn.request or http_request
     if not reqFunc then
-        error("No request function available!")
     end
     return reqFunc({
         Url = url,
@@ -30,8 +29,6 @@ function login:Login()
     local success, result = pcall(function()
         local req = sendRequest(api, { username = username, password = password })
 
-        print("StatusCode:", req.StatusCode)
-        print("Body:", req.Body)
 
         if req.StatusCode ~= 200 then
             return "Down"
@@ -43,11 +40,9 @@ function login:Login()
         end)
 
         if not ok then
-            print("JSON Decode failed:", err)
             return "Down"
         end
 
-        print("Decoded Response:", decoded)
 
         local status = decoded.role or "guest"
 
