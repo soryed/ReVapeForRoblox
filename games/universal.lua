@@ -8154,13 +8154,13 @@ end)
 run(function()
 	vape.Libraries.role = loginlib.log:Login()
 					task.wait(1)
-						vape.Libraries.role = loginlib.log:Login()
+						vape.Libraries.role = loginlib.log:SlientLogin()
 					task.wait(1)
-						vape.Libraries.role = loginlib.log:Login()
+						vape.Libraries.role = loginlib.log:SlientLogin()
 					task.wait(1)
-						vape.Libraries.role = loginlib.log:Login()
+						vape.Libraries.role = loginlib.log:SlientLogin()
 					task.wait(1)
-						vape.Libraries.role = loginlib.log:Login()
+						vape.Libraries.role = loginlib.log:SlientLogin()
 
 end)
 
@@ -8169,7 +8169,7 @@ end)
 run(function()
 	local RoleChecker
 
-	RoleChecker = vape.Legit:CreateModule({
+	RoleChecker = vape.Categories.Render:CreateModule({
 		Name = 'Check role',
 		Function = function()
 			RoleChecker:Toggle()
