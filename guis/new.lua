@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.3',
+	Version = '0.32',
 	Discord = "@ye40",
 	Windows = {}
 }
@@ -2483,7 +2483,7 @@ function mainapi:BlurCheck()
 	end
 end
 
-function mainapi:SCM(V)
+function mainapi:SWITCHTHEMECOLOR(V)
 	if self.ThreadFix then
 		setthreadidentity(8)
 if v == true then
@@ -6024,7 +6024,7 @@ mainapi.LM = guipane:CreateToggle({
 	Name = 'Light Mode',
 	Function = function(v)
 					print(typeof(v),v)
-		mainapi:SCM(v)
+		mainapi:SWITCHTHEMECOLOR(v)
 	end,
 	Default = false,
 	Tooltip = 'Switches ur theme'
