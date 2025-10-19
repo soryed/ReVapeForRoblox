@@ -9761,7 +9761,7 @@ run(function()
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
-	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert")  return end
+	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") KitRender:Toggle()  return end
             if callback then
                 task.spawn(function()
                     local team2 = PlayerGui:WaitForChild("MatchDraftApp"):WaitForChild("DraftAppBackground"):WaitForChild("BodyContainer"):WaitForChild("Team2Column")
@@ -9852,7 +9852,7 @@ run(function()
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
-		if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert")  return end
+		if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") MatchHistory:Toggle() return end
 			if callback then 
 				MatchHistory:Toggle()
 				local TeleportService = game:GetService("TeleportService")
@@ -9868,7 +9868,7 @@ run(function()
 		Name = "AutoBan",
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
-		if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert")  return end
+		if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") AutoBan:Toggle() return end
 			if callback then 
 				AutoBan:Toggle()
 				  local kits = {"berserker", "hatterr", "flower_bee", "glacial_skater",'void_dragon','card','cat'}
@@ -10049,7 +10049,7 @@ run(function()
 		Name = "Desync",
 		Function = function()
 			if not enabled.Enabled then vape:CreateNotification('ReVape', "Ignored, You do not have the setting on to use this module",5,"warning") return end
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif("Vape", "You do not have the permission to use this", 10,"alert")Desync:Toggle() return end
 
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
@@ -10389,7 +10389,7 @@ run(function()
 	ViewProfiles = vape.Categories.Exploits:CreateModule({
 		Name = "ViewProfile",
 		Function = function(callback)
-	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert")  return end
+	if role ~= "owner" and role ~= "coowner" and role ~= "admin"  and role ~= "friend" and role ~= "premium" then  notif("Vape", "You do not have the permission to use this", 10, "alert") ViewProfiles:Toggle() return end
 			notif("Vape", "This function is not finish", 10,"alert")
 		end,
 		Tooltip = "This allows you to see other peoples profile"
