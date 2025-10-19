@@ -8856,7 +8856,7 @@ run(function()
                     vape:CreateNotification('No Mods Online!', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('Vape', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('ReVape', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9070,7 +9070,7 @@ run(function()
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
-            vape:CreateNotification('Vape', "Currently fetching mods", 3)
+            vape:CreateNotification('ReVape', "Currently fetching mods", 3)
             task.wait(4)
 
             local HttpService = game:GetService("HttpService")
@@ -9099,7 +9099,7 @@ run(function()
             end
 
             if #data.userIds == 0 then
-                vape:CreateNotification('Vape', "No Users Selected, Pick a Side/Specific to fetch", 5, "alert")
+                vape:CreateNotification('ReVape', "No Users Selected, Pick a Side/Specific to fetch", 5, "alert")
                 return
             end
 
@@ -9115,7 +9115,7 @@ run(function()
                 end)
 
                 if not okDecode or not result then
-                    vape:CreateNotification('Vape', "Failed to decode presence JSON", 15, "alert")
+                    vape:CreateNotification('ReVape', "Failed to decode presence JSON", 15, "alert")
                     return
                 end
 
@@ -9132,18 +9132,18 @@ run(function()
                         if user.userPresenceType == 0 then
                             Offline = Offline + 1
                             if IncludeOffline and IncludeOffline.Value then
-                                vape:CreateNotification('Vape', username, 5, "alert")
+                                vape:CreateNotification('ReVape', username, 5, "alert")
                             end
                         elseif user.userPresenceType == 1 then 
                             Online = Online + 1
-                            vape:CreateNotification('Vape', username, 15, "warning")
+                            vape:CreateNotification('ReVape', username, 15, "warning")
                         elseif user.userPresenceType == 2 then 
                             InGame = InGame + 1
-                            vape:CreateNotification('Vape', username, 15, "warning")
+                            vape:CreateNotification('ReVape', username, 15, "warning")
                         elseif user.userPresenceType == 3 then 
                             Studio = Studio + 1
                             if IncludeStudio and IncludeStudio.Value then
-                                vape:CreateNotification('Vape', username, 5, "warning")
+                                vape:CreateNotification('ReVape', username, 5, "warning")
                             end
                         end
                     end
@@ -9151,18 +9151,18 @@ run(function()
 
                 task.wait(5)
                 if InGame >= 2 then
-                    vape:CreateNotification('Vape', "There are [" .. InGame .. "] mods in game", 45)
+                    vape:CreateNotification('ReVape', "There are [" .. InGame .. "] mods in game", 45)
                 elseif InGame == 0 then
-                    vape:CreateNotification('Vape', "There are none in-game", 45)
+                    vape:CreateNotification('ReVape', "There are none in-game", 45)
                 end
 
                 if Online >= 2 then
-                    vape:CreateNotification('Vape', "There are [" .. Online .. "] mods online", 45)
+                    vape:CreateNotification('ReVape', "There are [" .. Online .. "] mods online", 45)
                 elseif Online == 0 then
-                    vape:CreateNotification('Vape', "There are none online", 45)
+                    vape:CreateNotification('ReVape', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('Vape', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('ReVape', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9253,98 +9253,98 @@ local function staffFunction(plr, checktype, checktypee)
 if checktype == "spectator_join" then
 	if 	IdentifyMod.Enabled then 
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
-		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
+		vape:CreateNotification('ReVape', "Chase Has joined!","alert", 15)																																																																																
 		end
 	if plr.UserId == 547598710 or  plr.UserId == 5728889572 or  plr.UserId == 4652232128 or  plr.UserId == 7043591647  or  plr.UserId == 7209929547 or  plr.UserId == 7043958628 or  plr.UserId == 7418525152 or  plr.UserId == 3774791573 or  plr.UserId == 8606089749 then
-	vape:CreateNotification('Vape', "Orion Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Orion Has joined!","alert", 15)
 	end
 	if plr.UserId == 162442297 or  plr.UserId == 702354331 or  plr.UserId == 9350301723  then
-	vape:CreateNotification('Vape', "Lisnix Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Lisnix Has joined!","alert", 15)
 	end
 	if plr.UserId == 307212658 or  plr.UserId == 5097000699 or  plr.UserId == 4923561416 then
-	vape:CreateNotification('Vape', "Nwr Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Nwr Has joined!","alert", 15)
 	end
 	if plr.UserId == 514679433 or  plr.UserId == 2431747703 or  plr.UserId == 4531785383 then
-	vape:CreateNotification('Vape', "Gorilla Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Gorilla Has joined!","alert", 15)
 	end
 	if plr.UserId == 2428373515 or  plr.UserId == 7659437319 then
-	vape:CreateNotification('Vape', "Typhoon Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Typhoon Has joined!","alert", 15)
 	end
 	if plr.UserId == 2465133159 then
-	vape:CreateNotification('Vape', "Erin Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Erin Has joined!","alert", 15)
 	end
 	if plr.UserId == 7558211130 or  plr.UserId == 1708400489 or  plr.UserId == 9554637663 then
-	vape:CreateNotification('Vape', "Ghost Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Ghost Has joined!","alert", 15)
 	end
 	if plr.UserId == 376388734 or  plr.UserId == 5157136850 then
-	vape:CreateNotification('Vape', "Sponge Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Sponge Has joined!","alert", 15)
 	end
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
-	vape:CreateNotification('Vape', "Gora Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Gora Has joined!","alert", 15)
 	end
 	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 then
-	vape:CreateNotification('Vape', "Apple Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
-	vape:CreateNotification('Vape', "Dom Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Dom Has joined!","alert", 15)
 	end
 	if plr.UserId == 575474067 or  plr.UserId == 4785639950 or  plr.UserId == 8735055832 then
-	vape:CreateNotification('Vape', "Kevin Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Kevin Has joined!","alert", 15)
 	end
 	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
-	vape:CreateNotification('Vape', "Vic Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Vic Has joined!","alert", 15)
 	end
 if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
-	vape:CreateNotification('Vape', "Soryed Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Soryed Has joined!","alert", 15)
 end
 		end	
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
 	if 	IdentifyMod.Enabled then 
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
-		vape:CreateNotification('Vape', "Chase Has joined!","alert", 15)																																																																																
+		vape:CreateNotification('ReVape', "Chase Has joined!","alert", 15)																																																																																
 		end
 	if plr.UserId == 547598710 or  plr.UserId == 5728889572 or  plr.UserId == 4652232128 or  plr.UserId == 7043591647  or  plr.UserId == 7209929547 or  plr.UserId == 7043958628 or  plr.UserId == 7418525152 or  plr.UserId == 3774791573 or  plr.UserId == 8606089749 then
-	vape:CreateNotification('Vape', "Orion Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Orion Has joined!","alert", 15)
 	end
 	if plr.UserId == 162442297 or  plr.UserId == 702354331 or  plr.UserId == 9350301723  then
-	vape:CreateNotification('Vape', "Lisnix Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Lisnix Has joined!","alert", 15)
 	end
 	if plr.UserId == 307212658 or  plr.UserId == 5097000699 or  plr.UserId == 4923561416 then
-	vape:CreateNotification('Vape', "Nwr Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Nwr Has joined!","alert", 15)
 	end
 	if plr.UserId == 514679433 or  plr.UserId == 2431747703 or  plr.UserId == 4531785383 then
-	vape:CreateNotification('Vape', "Gorilla Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Gorilla Has joined!","alert", 15)
 	end
 	if plr.UserId == 2428373515 or  plr.UserId == 7659437319 then
-	vape:CreateNotification('Vape', "Typhoon Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Typhoon Has joined!","alert", 15)
 	end
 	if plr.UserId == 2465133159 then
-	vape:CreateNotification('Vape', "Erin Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Erin Has joined!","alert", 15)
 	end
 	if plr.UserId == 7558211130 or  plr.UserId == 1708400489 or  plr.UserId == 9554637663 then
-	vape:CreateNotification('Vape', "Ghost Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Ghost Has joined!","alert", 15)
 	end
 	if plr.UserId == 376388734 or  plr.UserId == 5157136850 then
-	vape:CreateNotification('Vape', "Sponge Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Sponge Has joined!","alert", 15)
 	end
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
-	vape:CreateNotification('Vape', "Gora Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Gora Has joined!","alert", 15)
 	end
 	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 then
-	vape:CreateNotification('Vape', "Apple Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
-	vape:CreateNotification('Vape', "Dom Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Dom Has joined!","alert", 15)
 	end
 	if plr.UserId == 575474067 or  plr.UserId == 4785639950 or  plr.UserId == 8735055832 then
-	vape:CreateNotification('Vape', "Kevin Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Kevin Has joined!","alert", 15)
 	end
 	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
-	vape:CreateNotification('Vape', "Vic Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Vic Has joined!","alert", 15)
 	end
 if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
-	vape:CreateNotification('Vape', "Soryed Has joined!","alert", 15)
+	vape:CreateNotification('ReVape', "Soryed Has joined!","alert", 15)
 end
 																																																																																
      end																																																																																				
@@ -10043,7 +10043,7 @@ run(function()
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
 		Function = function()
-			if not enabled.Enabled then vape:CreateNotification("Vape", "Ignored, You do not have the setting on to use this module",5,"warning") return end
+			if not enabled.Enabled then vape:CreateNotification('ReVape', "Ignored, You do not have the setting on to use this module",5,"warning") return end
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
 		setfflag("FFlagHandleAltEnterFullscreenManually","False")
@@ -10199,7 +10199,7 @@ run(function()
 				for _, memberId in pairs(members) do
 					local memberIdStr = tostring(memberId)
 					if memberIdStr == playerIdInTeams then
-						vape:CreateNotification("Vape", "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
+						vape:CreateNotification('ReVape', "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
 					else
 						table.insert(cleanedMembers, memberIdStr)
 					end
