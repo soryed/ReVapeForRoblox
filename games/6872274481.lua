@@ -4,34 +4,7 @@ end
 local cloneref = cloneref or function(obj)
 	return obj
 end
-local loadstring = function(...)
-	local res, err = loadstring(...)
-	if err and vape then
-		vape:CreateNotification('ReVape', 'Failed to load : '..err, 30, 'alert')
-	end
-	return res
-end
-local isfile = isfile or function(file)
-	local suc, res = pcall(function()
-		return readfile(file)
-	end)
-	return suc and res ~= nil and res ~= ''
-end
-local function downloadFile(path, func)
-	if not isfile(path) then
-		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
-		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
-		end
-		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
-		end
-		writefile(path, res)
-	end
-	return (func or readfile)(path)
-end
+
 local vapeEvents = setmetatable({}, {
 	__index = function(self, index)
 		self[index] = Instance.new('BindableEvent')
@@ -443,7 +416,6 @@ local kitorder = {
 	jade = 2,
 	regent = 1
 }
-loginlib.log = loadstring(downloadFile('ReVape/libraries/login.lua'), 'Log')()
 
 local sortmethods = {
 	Damage = function(a, b)
@@ -467,24 +439,6 @@ local sortmethods = {
 	end
 }
 
-run(function()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-end)
 
 run(function()
 	local oldstart = entitylib.start
@@ -10586,21 +10540,3 @@ run(function()
 end)
 
 
-run(function()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-end)
