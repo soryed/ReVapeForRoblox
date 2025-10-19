@@ -8153,4 +8153,6 @@ end)
 	
 run(function()
 	shared.role = loginlib.log:Login()
+		print("role - uni.lua", shared.role)
+
 end)
