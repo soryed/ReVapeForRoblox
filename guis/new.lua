@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.32',
+	Version = '0.33',
 	Discord = "@ye40",
 	Windows = {}
 }
@@ -2484,46 +2484,30 @@ function mainapi:BlurCheck()
 	end
 end
 
-function mainapi:SWITCHTHEMECOLOR(V)
-	if self.ThreadFix then
-		setthreadidentity(8)
-if v == true then
-																local path = "ReVape/profiles/theme.txt"
+function mainapi:SWITCHTHEMECOLOR(v)
+	if not self.ThreadFix then return end
+	setthreadidentity(8)
 
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
+	local path = "ReVape/profiles/theme.txt"
+	local folder = "ReVape/profiles"
 
-    if not isfile(path) then
-										print("creating")
-        writefile(path, "Light")
-																				print("wroth")
+	if not isfolder(folder) then
+		makefolder(folder)
+	end
 
-    else
-																				print("writing")
+	local theme = v and "Light" or "Dark"
+	local upperTheme = string.upper(theme)
 
-        local prev = readfile(path)
-        writefile(path, "Light")
-    end
-else
-																local path = "ReVape/profiles/theme.txt"
+	if not isfile(path) then
+		writefile(path, theme)
+	else
+		local prev = readfile(path)
+		if prev ~= theme then
+			writefile(path, theme)
+		end
+	end
 
-    if not isfolder("ReVape/profiles") then
-        makefolder("ReVape/profiles")
-    end
-
-    if not isfile(path) then
-      										print("creating")
-        writefile(path, "Dark")
-																				print("wroth")
-    else
-																				print("writing")
-
-        local prev = readfile(path)
-        writefile(path, "Dark")
-    end
-end
-							end
+	mainapi:CreateNotification("ReVape", ("Please reinject to finalize to '%s' theme!"):format(upperTheme), 5)
 end
 
 						
