@@ -33,7 +33,9 @@ local function wipeFolder(path)
 		end
 	end
 end
-
+if not isfile("ReVape/profiles/theme.txt") then
+	writefile('ReVape/profiles/theme.txt', 'Dark')
+end
 for _, folder in {'ReVape', 'ReVape/games', 'ReVape/profiles', 'ReVape/assets', 'ReVape/libraries', 'ReVape/guis'} do
 	if not isfolder(folder) then
 		makefolder(folder)
