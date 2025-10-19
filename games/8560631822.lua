@@ -1,4 +1,5 @@
 local vape = shared.vape
+local loginlib = {}
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then 
@@ -27,28 +28,30 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
+loginlib.log = loadstring(downloadFile('ReVape/libraries/login.lua'), 'Log')()
 
-	vape.Libraries.role = loginlib.log:Login()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
-					task.wait(0.05)
-						vape.Libraries.role = loginlib.log:SlientLogin()
 
 
 vape.Place = 6872274481
 if isfile('ReVape/games/'..vape.Place..'.lua') then
+		vape.Libraries.role = loginlib.log:Login()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+					task.wait(0.05)
+						vape.Libraries.role = loginlib.log:SlientLogin()
+
 	loadstring(readfile('ReVape/games/'..vape.Place..'.lua'), 'bedwars')()
 else
 	if not shared.VapeDeveloper then
