@@ -23,8 +23,7 @@ local contextActionService = cloneref(game:GetService('ContextActionService'))
 local guiService = cloneref(game:GetService('GuiService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
---local IE = identifyexecutor() or "NIL"
-local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 
@@ -9841,145 +9840,6 @@ run(function()
     })
 
 end)
-run(function()
-	local TAG
-	local CustomTAG
-	local R, G, B
-	local Org = ""
-	local OrgText = ""
-	local player = game:GetService('Players').LocalPlayer
-
-	if not player:FindFirstChild("Tags") then
-		notif("Vape", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
-		return
-	end
-
-	local tagObj = player.Tags:FindFirstChild("0")
-	if not tagObj then
-		notif("Vape", "Couldn't find any tag inside 'Tags'", 20, "alert")
-		return 	end
-
-	local function Color3ToHex(r, g, b)
-		return string.lower(string.format("#%02X%02X%02X", r, g, b))
-	end
-
-	Org = tagObj.Value
-	OrgText = tagObj:GetAttribute("Text")
-
-	CustomTAG = vape.Categories.Troll:CreateModule({
-		Name = "CustomTag",
-		Function = function(callback)
-			if callback then
-				tagObj.Value = string.format(
-					"<font color='rgb(%s,%s,%s)'>[%s]</font>",
-					R.Value, G.Value, B.Value, TAG.Value
-				)
-				tagObj:SetAttribute("Text", TAG.Value)
-				player:SetAttribute("ClanTag", TAG.Value)
-
-				local player = game.Players.LocalPlayer
-
-				local function Color3ToHex(color)
-					return string.format("#%02X%02X%02X", color.R * 255, color.G * 255, color.B * 255)
-				end
-
-				player.PlayerGui.ChildAdded:Connect(function(child)
-					if child.Name == "TabListScreenGui" and child:IsA("ScreenGui") then
-						task.spawn(function()
-							while CustomTAG.Enabled do
-								for _, v in ipairs(child:GetDescendants()) do
-									if v:IsA("TextLabel") then
-										local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
-											and player.Name
-											or player.DisplayName
-
-										if string.find(string.lower(v.Text), string.lower(nameToFind)) then
-											v.Text = string.format(
-												'<font transparency="0.3" color="%s">[%s]</font> %s',
-												Color3ToHex(Color3.fromRGB(R.Value, G.Value, B.Value)),
-												TAG.Value,
-												nameToFind
-											)
-										end
-									end
-								end
-								task.wait(0.01)
-							end
-
-							for _, v in ipairs(child:GetDescendants()) do
-								if v:IsA("TextLabel") then
-									local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
-										and player.Name
-										or player.DisplayName
-
-									if string.find(string.lower(v.Text), string.lower(nameToFind)) then
-										v.Text = string.format(
-											'<font transparency="0.3" color="%s">[%s]</font> %s',
-											Color3ToHex(Color3.fromRGB(255, 255, 255)),
-											tagObj:GetAttribute("Text"),
-											nameToFind
-										)
-									end
-								end
-							end
-						end)
-					end
-				end)
-			else
-				tagObj.Value = Org
-				tagObj:SetAttribute("Text", OrgText)
-				player:SetAttribute("ClanTag", OrgText)
-			end
-		end,
-		Tooltip = "Client-Sided visual custom clan tag on-chat",
-	})
-
-	TAG = CustomTAG:CreateTextBox({
-		Name = "Tag Text",
-		Placeholder = "",
-		Function = function()
-			CustomTAG:Toggle()
-			task.wait()
-			CustomTAG:Toggle()
-		end,
-	})
-
-	R = CustomTAG:CreateSlider({
-		Name = "R",
-		Min = 0,
-		Max = 255,
-		Default = 255,
-		Function = function()
-			CustomTAG:Toggle()
-			task.wait()
-			CustomTAG:Toggle()
-		end,
-	})
-
-	G = CustomTAG:CreateSlider({
-		Name = "G",
-		Min = 0,
-		Max = 255,
-		Default = 255,
-		Function = function()
-			CustomTAG:Toggle()
-			task.wait()
-			CustomTAG:Toggle()
-		end,
-	})
-
-	B = CustomTAG:CreateSlider({
-		Name = "B",
-		Min = 0,
-		Max = 255,
-		Default = 255,
-		Function = function()
-			CustomTAG:Toggle()
-			task.wait()
-			CustomTAG:Toggle()
-		end,
-	})
-end)
 
 
 
@@ -10202,7 +10062,6 @@ run(function()
 	})
 end)
 
---[[
 run(function()
 		local KnitInit, Knit
 		repeat
@@ -10219,8 +10078,8 @@ run(function()
 
 		local Players = game:GetService("Players")
 
-		shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT = shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT or Knit.Controllers.PermissionController.hasAnyPermissions
-		shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT = shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT or Knit.Controllers.MatchController.getPlayerParty
+		shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT = Knit.Controllers.PermissionController.hasAnyPermissions
+		shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT =  Knit.Controllers.MatchController.getPlayerParty
 
 		local AC_MOD_View = {
 			playerConnections = {},
@@ -10234,7 +10093,8 @@ run(function()
 			disable_disguises = false,
 			disguises = {},
 			teamData = {},
-			moduleInstance = {}
+			moduleInstance = {},
+			disableDisguisesToggle = {}
 		}
 
 		AC_MOD_View.controller = Knit.Controllers.PermissionController
@@ -10339,7 +10199,7 @@ run(function()
 				for _, memberId in pairs(members) do
 					local memberIdStr = tostring(memberId)
 					if memberIdStr == playerIdInTeams then
-						print("Warning: Player " .. playerIdInTeams .. " has themselves in their team list.")
+						vape:CreateNotification("Vape", "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
 					else
 						table.insert(cleanedMembers, memberIdStr)
 					end
@@ -10515,4 +10375,143 @@ run(function()
 			Default = true
 		})
 	end)
---]]
+
+run(function()
+	local TAG
+	local CustomTAG
+	local R, G, B
+	local Org = ""
+	local OrgText = ""
+	local player = game:GetService('Players').LocalPlayer
+
+	if not player:FindFirstChild("Tags") then
+		notif("Vape", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
+		return
+	end
+
+	local tagObj = player.Tags:FindFirstChild("0")
+	if not tagObj then
+		notif("Vape", "Couldn't find any tag inside 'Tags'", 20, "alert")
+		return 	end
+
+	local function Color3ToHex(r, g, b)
+		return string.lower(string.format("#%02X%02X%02X", r, g, b))
+	end
+
+	Org = tagObj.Value
+	OrgText = tagObj:GetAttribute("Text")
+
+	CustomTAG = vape.Categories.Troll:CreateModule({
+		Name = "CustomTag",
+		Function = function(callback)
+			if callback then
+				tagObj.Value = string.format(
+					"<font color='rgb(%s,%s,%s)'>[%s]</font>",
+					R.Value, G.Value, B.Value, TAG.Value
+				)
+				tagObj:SetAttribute("Text", TAG.Value)
+				player:SetAttribute("ClanTag", TAG.Value)
+
+				local player = game.Players.LocalPlayer
+
+				local function Color3ToHex(color)
+					return string.format("#%02X%02X%02X", color.R * 255, color.G * 255, color.B * 255)
+				end
+
+				player.PlayerGui.ChildAdded:Connect(function(child)
+					if child.Name == "TabListScreenGui" and child:IsA("ScreenGui") then
+						task.spawn(function()
+							while CustomTAG.Enabled do
+								for _, v in ipairs(child:GetDescendants()) do
+									if v:IsA("TextLabel") then
+										local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+											and player.Name
+											or player.DisplayName
+
+										if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+											v.Text = string.format(
+												'<font transparency="0.3" color="%s">[%s]</font> %s',
+												Color3ToHex(Color3.fromRGB(R.Value, G.Value, B.Value)),
+												TAG.Value,
+												nameToFind
+											)
+										end
+									end
+								end
+								task.wait(0.01)
+							end
+
+							for _, v in ipairs(child:GetDescendants()) do
+								if v:IsA("TextLabel") then
+									local nameToFind = (player.DisplayName == "" or player.DisplayName == player.Name)
+										and player.Name
+										or player.DisplayName
+
+									if string.find(string.lower(v.Text), string.lower(nameToFind)) then
+										v.Text = string.format(
+											'<font transparency="0.3" color="%s">[%s]</font> %s',
+											Color3ToHex(Color3.fromRGB(255, 255, 255)),
+											tagObj:GetAttribute("Text"),
+											nameToFind
+										)
+									end
+								end
+							end
+						end)
+					end
+				end)
+			else
+				tagObj.Value = Org
+				tagObj:SetAttribute("Text", OrgText)
+				player:SetAttribute("ClanTag", OrgText)
+			end
+		end,
+		Tooltip = "Client-Sided visual custom clan tag on-chat",
+	})
+
+	TAG = CustomTAG:CreateTextBox({
+		Name = "Tag Text",
+		Placeholder = "",
+		Function = function()
+			CustomTAG:Toggle()
+			task.wait()
+			CustomTAG:Toggle()
+		end,
+	})
+
+	R = CustomTAG:CreateSlider({
+		Name = "R",
+		Min = 0,
+		Max = 255,
+		Default = 255,
+		Function = function()
+			CustomTAG:Toggle()
+			task.wait()
+			CustomTAG:Toggle()
+		end,
+	})
+
+	G = CustomTAG:CreateSlider({
+		Name = "G",
+		Min = 0,
+		Max = 255,
+		Default = 255,
+		Function = function()
+			CustomTAG:Toggle()
+			task.wait()
+			CustomTAG:Toggle()
+		end,
+	})
+
+	B = CustomTAG:CreateSlider({
+		Name = "B",
+		Min = 0,
+		Max = 255,
+		Default = 255,
+		Function = function()
+			CustomTAG:Toggle()
+			task.wait()
+			CustomTAG:Toggle()
+		end,
+	})
+end)
