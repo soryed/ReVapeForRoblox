@@ -7,57 +7,52 @@ local vape = shared.vape
 local httpService = game:GetService('HttpService')
 local api = "https://revapeclient.vercel.app"
 
-local license = ({...})[1] or {}
-
 local username = getgenv().username or "USER"
 local password = getgenv().password or "PASSWORD"
 
+local function sendRequest(url, data)
+    local requestFunction = request or syn.request or http_request
+    if not requestFunction then
+        error("No request function found!")
+    end
 
+    local req = requestFunction({
+        Url = url,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = httpService:JSONEncode(data)
+    })
 
+    return req
+end
 
 function login:Login()
-    if username == nil then
-     username = "USER"
-end
-if password == nil then
-     password = "PASSWORD"
-end
     local success, res = pcall(function()
-        local req = request({
-            Url = api .. "/login",
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = httpService:JSONEncode({
-                username = username,
-                password = password
-            })
+        local req = sendRequest(api .. "/login", {
+            username = username,
+            password = password
         })
-    
-        if req.StatusCode == 404 or req.StatusCode == 502 then
+
+        if req.StatusCode ~= 200 then
             return "Down"
         end
-    
-        local API
-        local ok, err = pcall(function()
-            API = httpService:JSONDecode(req.Body)
-        end)
-    
-        if not ok then
-            return "Down"
-        end
-    
+
+        local API = httpService:JSONDecode(req.Body)
         local status = API.role or "USER"
-    
+
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
-    
-         return status
+
+        return status
     end)
-    
+
     if not success or res == "Down" then
         vape:CreateNotification("ReVape", "Login failed or API is down. Continue as 'GUEST'", 7)
+        return "guest"
     end
-end   
+
+    return res
+end
 
 return login
