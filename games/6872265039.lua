@@ -206,12 +206,12 @@ run(function()
 			if callback then
 				task.spawn(function()
 				local timer = 4.5
-					vape:CreateNotification('Loading...', "Currently searching for your executor", timer)
+					vape:CreateNotification('ReVape', "Currently searching for your executor", timer)
 					if identifyexecutor then
 					task.wait(timer + 0.5)
-						vape:CreateNotification("Success", "Could find your executor '"..identifyexecutor().."'", 20)
+						vape:CreateNotification("ReVape", "Could find your executor '"..identifyexecutor().."'", 20)
 					else
-						vape:CreateNotification("Error", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+						vape:CreateNotification("ReVape", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
 					end
 				end)
 			end
@@ -256,7 +256,7 @@ run(function()
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
-            vape:CreateNotification('Loading...', "Currently fetching mods", 3)
+            vape:CreateNotification('ReVape', "Currently fetching mods", 3)
             task.wait(4)
 
             local HttpService = game:GetService("HttpService")
@@ -545,7 +545,7 @@ run(function()
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
-            vape:CreateNotification('Loading...', "Currently fetching mods", 3)
+            vape:CreateNotification('ReVape', "Currently fetching mods", 3)
             task.wait(4)
 
             local HttpService = game:GetService("HttpService")
@@ -637,7 +637,7 @@ run(function()
                     vape:CreateNotification('No Mods Online!', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('Failed!', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('ReVape', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
