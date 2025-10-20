@@ -10547,7 +10547,7 @@ run(function()
 		Name = "AutoReport",
 		Function = function(callback)
 			if callback then
-								AutoReport:Toggle()
+								AutoReport.Enabled = false
 
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
