@@ -9855,7 +9855,6 @@ run(function()
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
-		
 			if callback then 
 				MatchHistory:Toggle()
 				local TeleportService = game:GetService("TeleportService")
