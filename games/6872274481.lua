@@ -10547,7 +10547,6 @@ run(function()
 		Name = "AutoReport",
 		Function = function(callback)
 			if callback then
-								AutoReport.Enabled = false
 
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
@@ -10561,14 +10560,9 @@ run(function()
 							:FindFirstChild("ReportPlayer")
 
 						if reportEvent then
-							-- send report request
 							reportEvent:FireServer(v.UserId)
-
-							-- show notification
 							vape:CreateNotification("ReVape", "Reported '" .. v.Name .. "'", 1, "alert")
-
-							-- random small delay between each
-							task.wait(1 + math.random()) -- wait 1–2 seconds
+							task.wait(1 + math.random())
 						end
 					end
 				end
