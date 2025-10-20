@@ -10545,8 +10545,8 @@ end)
 run(function()
 	local AutoReport = vape.Categories.Troll:CreateModule({
 		Name = "AutoReport",
-		Function = function(callback)
-			if callback then
+		Function = function()
+AutoReport:Toggle()
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
 						local args = { v.UserId }
