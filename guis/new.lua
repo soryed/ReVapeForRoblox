@@ -65,7 +65,6 @@ local uipallet = {
 
 task.spawn(function()
 	local data = readfile("ReVape/profiles/theme.txt")
-		print(data)
 	if data == "Light" then
 			uipallet.Main = Color3.fromRGB(200, 200, 200)
 			uipallet.Text = Color3.fromRGB(26, 25, 26)
@@ -6027,7 +6026,6 @@ mainapi.LM = guipane:CreateToggle({
 })
 task.spawn(function()
 	local data = readfile("ReVape/profiles/theme.txt")
-		print(data)
 	if data == "Light" then
 		mainapi.LM.Enabled = true
 		elseif data == "Dark" then
