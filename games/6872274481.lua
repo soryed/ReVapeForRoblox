@@ -10585,9 +10585,7 @@ if args[1] == "niled" then
 
 end				
 			
-game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer(unpack(args))
-
-	AutoQueue:Toggle(False)
+repeat game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer(unpack(args)) task.wait() until not AutoQueue.Enabled 
 		end,
 		Tooltip = "Auto Queues for you",
 	})
