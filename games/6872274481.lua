@@ -995,6 +995,7 @@ run(function()
 		if new.Game ~= old.Game then
 			store.matchState = new.Game.matchState
 			store.queueType = new.Game.queueType or 'bedwars_test'
+			print(store.queueType)
 		end
 
 		if new.Inventory ~= old.Inventory then
