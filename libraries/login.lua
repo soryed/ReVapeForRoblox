@@ -26,13 +26,13 @@ local function sendRequest(url, data)
 end
 
 function login:Login()
-    local status, S = "", ""
+    local status, S,U,P = "", "","","",""
     local success, result = pcall(function()
         local req = sendRequest(api, { username = username, password = password })
 
 
         if req.StatusCode ~= 200 then
-            return "Down"
+            return "guest", "GUEST", "PASSWORD"
         end
 
         local decoded
@@ -41,23 +41,25 @@ function login:Login()
         end)
 
         if not ok then
-            return "Down"
+            return"guest", "GUEST", "PASSWORD"
         end
 
 
        status = decoded.role
         S = status
+        U = username
+        P = password
         status = string.upper(status)
-        vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
+        vape:CreateNotification("ReVape", "Logged in as "..username.." (Type '"..status.."')", 7)
 
     end)
 
     if not success or result == "Down" then
         vape:CreateNotification("ReVape", "Login failed or API is down. Continue as 'GUEST'", 7)
-        return "guest"
+        return "guest", "GUEST", "PASSWORD"
     end
 
- return S
+ return S,U,P
 
 end
 
@@ -69,7 +71,7 @@ function login:SlientLogin()
 
 
         if req.StatusCode ~= 200 then
-            return "Down"
+            return "guest", "GUEST", "PASSWORD"
         end
 
         local decoded
@@ -78,7 +80,7 @@ function login:SlientLogin()
         end)
 
         if not ok then
-            return "Down"
+            return "guest", "GUEST", "PASSWORD"
         end
 
 
@@ -89,10 +91,10 @@ function login:SlientLogin()
     end)
 
     if not success or result == "Down" then
-        return "guest"
+        return "guest", "GUEST", "PASSWORD"
     end
 
- return S
+ return S,U,P
 
 end
 return login
