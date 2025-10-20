@@ -10541,6 +10541,33 @@ run(function()
 		end,
 	})
 end)
+
+run(function()
+	local AutoReport = vape.Categories.Troll:CreateModule({
+		Name = "AutoReport",
+		Function = function(callback)
+			if callback then
+				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
+					if v ~= game.Players.LocalPlayer then
+						local args = { v.UserId }
+						local reportEvent = game:GetService("ReplicatedStorage")
+							:WaitForChild("rbxts_include")
+							:WaitForChild("node_modules")
+							:WaitForChild("@rbxts")
+							.net.out._NetManaged:FindFirstChild("ReportPlayer")
+
+						if reportEvent then
+							reportEvent:FireServer(unpack(args))
+						end
+					end
+				end
+			end
+		end,
+		Tooltip = "Auto reports everyone ingame",
+	})
+end)
+
+	
 --[[local function FindTeamBed()
 	local bedstate, res = pcall(function()
 		return lplr.leaderstats.Bed.Value
