@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, weatherlib, entitylib = {}, {}, {}
+local frictionTable, oldfrict, weatherlib, loginlib, entitylib = {}, {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -225,6 +225,8 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
+loginlib.log = loadstring(downloadFile('ReVape/libraries/Login.lua'), 'Log')()
+
 
 local whitelist = {
     alreadychecked = {},
@@ -8150,3 +8152,25 @@ run(function()
 	
 end)
 
+run(function()
+	local path = "ReVape/role.txt"
+	local role = loginlib.log:Login()
+							
+    if not isfile(path) then
+        writefile(path, role)
+    else
+        local prev = readfile(path)
+        writefile(path, role)
+    end
+	vape:CreateNotification('ReVape', 'if you think this isnt correct please reinject.', 10, 'warning')
+	task.wait(2)
+	local role = loginlib.log:SlientLogin()
+							
+    if not isfile(path) then
+        writefile(path, role)
+    else
+        local prev = readfile(path)
+        writefile(path, role)
+    end								
+end)
+					
