@@ -513,7 +513,7 @@ mainapi.Libraries = {
 	tween = tween,
 	uipallet = uipallet,
 	login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")(),
-	Role = ""
+	Account = {Role = "", User = "", Pass = ""}
 }
 local components
 components = {
@@ -5961,8 +5961,10 @@ general:CreateButton({
 																																		local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
-										
+			mainapi.Libraries.Account.Role = S
+											mainapi.Libraries.Account.User = U
+			mainapi.Libraries.Account.Pass = P
+		
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		
 
@@ -5970,7 +5972,7 @@ general:CreateButton({
 																	local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
+						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 										
 
@@ -5993,7 +5995,7 @@ general:CreateButton({
 																																		local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
+						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
 										
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
@@ -6001,7 +6003,7 @@ general:CreateButton({
 																																		local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
+						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
 													
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
@@ -6132,7 +6134,7 @@ guipane:CreateDropdown({
 																																		local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
+						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
 										
 																													loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
@@ -6140,7 +6142,7 @@ guipane:CreateDropdown({
 																																		local S,U,P = mainapi:Login(true)
 			getgenv().username = U
 			getgenv().password = P
-			mainapi.Libraries.Role = S
+						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
 										
 																													loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 
