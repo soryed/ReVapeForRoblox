@@ -10542,7 +10542,8 @@ run(function()
 end)
 
 run(function()
-	local AutoReport = vape.Categories.Troll:CreateModule({
+local AutoReport 
+	 AutoReport = vape.Categories.Troll:CreateModule({
 		Name = "AutoReport",
 		Function = function(callback)
 			if callback then
@@ -10572,7 +10573,9 @@ run(function()
 end)
 
 run(function()
-	local AutoQueue = vape.Categories.Troll:CreateModule({
+	local AutoQueue
+
+	 AutoQueue = vape.Categories.Troll:CreateModule({
 		Name = "AutoQueue",
 		Function = function()
 		local args = {
