@@ -26,7 +26,7 @@ local function sendRequest(url, data)
 end
 
 function login:Login()
-    local status = ""
+    local status, S = "", ""
     local success, result = pcall(function()
         local req = sendRequest(api, { username = username, password = password })
 
@@ -46,7 +46,8 @@ function login:Login()
 
 
        status = decoded.role
-
+        S = status
+        status = string.upper(status)
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
 
     end)
@@ -56,13 +57,13 @@ function login:Login()
         return "guest"
     end
 
- return status
+ return S
 
 end
 
 
 function login:SlientLogin()
-    local status = ""
+    local status, S = "", ""
     local success, result = pcall(function()
         local req = sendRequest(api, { username = username, password = password })
 
@@ -82,6 +83,8 @@ function login:SlientLogin()
 
 
        status = decoded.role
+        S = status
+        status = string.upper(status)
 
     end)
 
@@ -89,7 +92,7 @@ function login:SlientLogin()
         return "guest"
     end
 
- return status
+ return S
 
 end
 return login
