@@ -8151,26 +8151,4 @@ run(function()
 	})
 	
 end)
-
-run(function()
-	local path = "ReVape/role.txt"
-	local role = loginlib.log:Login()
-							
-    if not isfile(path) then
-        writefile(path, role)
-    else
-        local prev = readfile(path)
-        writefile(path, role)
-    end
-	vape:CreateNotification('ReVape', 'if you think this isnt correct please reinject.', 10, 'warning')
-	task.wait(2)
-	local role = loginlib.log:SlientLogin()
-							
-    if not isfile(path) then
-        writefile(path, role)
-    else
-        local prev = readfile(path)
-        writefile(path, role)
-    end								
-end)
 					
