@@ -32,7 +32,10 @@ end
 
 vape.Place = 6872274481
 if isfile('ReVape/games/'..vape.Place..'.lua') then
-	
+																																			local S,U,P = vape:Login(true)
+			getgenv().username = U
+			getgenv().password = P
+			vape.Libraries.Role = S
 	loadstring(readfile('ReVape/games/'..vape.Place..'.lua'), 'bedwars')()
 else
 	if not shared.VapeDeveloper then
@@ -40,6 +43,10 @@ else
 			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/games/'..vape.Place..'.lua', true) 
 		end)
 		if suc and res ~= '404: Not Found' then
+																																						local S,U,P = vape:Login(true)
+			getgenv().username = U
+			getgenv().password = P
+			vape.Libraries.Role = S
 			loadstring(downloadFile('ReVape/games/'..vape.Place..'.lua'), 'bedwars')()
 		end
 	end
