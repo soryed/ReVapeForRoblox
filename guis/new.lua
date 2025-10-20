@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.33',
+	Version = '0.34',
 	Discord = "@ye40",
 	Windows = {}
 }
@@ -512,9 +512,8 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
-	role = "",
-	username = "",
-	password = "",
+	login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")(),
+	Role = ""
 }
 local components
 components = {
@@ -5290,6 +5289,10 @@ function mainapi:CreateLegit()
 	return legitapi
 end
 
+function mainapi:Login(sliently)
+	if not sliently then mainapi.Libraries.login:Login() else mainapi.Libraries.login:SlientLogin() end
+end								
+							
 function mainapi:CreateNotification(title, text, duration, type)
 	if not self.Notifications.Enabled then return end
 	task.delay(0, function()
@@ -5971,6 +5974,7 @@ general:CreateButton({
 
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
+			
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
@@ -7070,7 +7074,6 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
-
 
 
 return mainapi
