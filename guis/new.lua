@@ -5298,7 +5298,7 @@ function mainapi:Login(sliently)
 								end
 	return S,U,P							
 end								
-							
+	mainapi:Login(false)				
 function mainapi:CreateNotification(title, text, duration, type)
 	if not self.Notifications.Enabled then return end
 	task.delay(0, function()
