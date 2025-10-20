@@ -10571,7 +10571,28 @@ run(function()
 	})
 end)
 
-	
+run(function()
+	local AutoQueue = vape.Categories.Troll:CreateModule({
+		Name = "AutoQueue",
+		Function = function()
+		local args = {
+    [1] = {
+        ["queueType"] = store.queueType or "niled"
+    }
+}
+
+if args[1] == "niled" then
+
+end				
+			
+game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer(unpack(args))
+
+	AutoQueue:Toggle(False)
+		end,
+		Tooltip = "Auto Queues for you",
+	})
+end)
+
 --[[local function FindTeamBed()
 	local bedstate, res = pcall(function()
 		return lplr.leaderstats.Bed.Value
