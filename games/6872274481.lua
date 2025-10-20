@@ -10565,6 +10565,7 @@ run(function()
 	Autowin =vape.Categories.Exploits:CreateModule({
 		Name = "Autowin",
 		Function = function(callback)
+			
 			if callback then
 				task.spawn(function()
 					task.spawn(function()
