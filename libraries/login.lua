@@ -45,11 +45,9 @@ function login:Login()
         end
 
 
-       status = decoded.role or "guest"
+       status = decoded.role
 
         vape:CreateNotification("ReVape", "Logged in as "..username.." (Type "..status..")", 7)
-         vape.Libraries.username = username
-        vape.Libraries.password = password
 
     end)
 
@@ -83,7 +81,7 @@ function login:SlientLogin()
         end
 
 
-       status = decoded.role or "guest"
+       status = decoded.role
 
     end)
 
