@@ -10557,7 +10557,9 @@ run(function()
 							.net.out._NetManaged:FindFirstChild("ReportPlayer")
 
 						if reportEvent then
+		
 							reportEvent:FireServer(unpack(args))
+vape:CreateNotification("ReVape", "Reported '"..v.Name..'",1,"alert")
 										task.wait(math.random(1,2) - math.random())
 						end
 					end
