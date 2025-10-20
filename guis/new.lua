@@ -5384,7 +5384,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		end)
 	end)
 end
-
+						
 function mainapi:Load(skipgui, profile)
 	if not skipgui then
 		self.GUIColor:SetValue(nil, nil, nil, 4)
