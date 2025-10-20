@@ -18,7 +18,7 @@ end
 
 local function saveAccountFiles(S, U, P)
     ensureAccountsFolder()
-    writefile("ReVape/accounts/status.txt", tostring(S))
+    shared.vape.Libraries.Role = tostring(S)
     writefile("ReVape/accounts/username.txt", tostring(U))
     writefile("ReVape/accounts/password.txt", tostring(P))
 end
