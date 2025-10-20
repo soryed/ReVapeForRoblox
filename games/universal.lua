@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, weatherlib, loginlib, entitylib = {}, {}, {}, {}
+local frictionTable, oldfrict, weatherlib, entitylib = {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -225,8 +225,6 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
-loginlib.log = loadstring(downloadFile('ReVape/libraries/Login.lua'), 'Log')()
-
 
 local whitelist = {
     alreadychecked = {},
