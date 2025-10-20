@@ -10559,7 +10559,8 @@ AutoReport:Toggle()
 						if reportEvent then
 		
 							reportEvent:FireServer(unpack(args))
-vape:CreateNotification("ReVape", "Reported '"..v.Name..'",1,"alert")
+vape:CreateNotification("ReVape", "Reported '" .. v.Name .. "'", 1, "alert")
+
 										task.wait(math.random(1,2) - math.random())
 						end
 					end
