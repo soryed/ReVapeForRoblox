@@ -10541,7 +10541,7 @@ run(function()
 		end,
 	})
 end)
-local function FindTeamBed()
+--[[local function FindTeamBed()
 	local bedstate, res = pcall(function()
 		return lplr.leaderstats.Bed.Value
 	end)
@@ -10558,6 +10558,7 @@ local vapeAssert = function(argument, title, text, duration, hault, moduledisabl
     end)
     if hault then while true do task.wait() end end end
 end
+
 run(function()
 	local Autowin = {Enabled = false}
 	local AutowinNotification = {Enabled = true}
@@ -10662,3 +10663,4 @@ run(function()
 		end,
 		Tooltip = "holy autowin? may be patched idk lol"
 	})
+--]]
