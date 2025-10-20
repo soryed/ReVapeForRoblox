@@ -10558,6 +10558,7 @@ run(function()
 
 						if reportEvent then
 							reportEvent:FireServer(unpack(args))
+										task.wait(math.random(1,2) - math.random())
 						end
 					end
 				end
