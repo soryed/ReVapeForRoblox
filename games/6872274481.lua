@@ -10545,29 +10545,36 @@ end)
 run(function()
 	local AutoReport = vape.Categories.Troll:CreateModule({
 		Name = "AutoReport",
-		Function = function()
-AutoReport:Toggle()
+		Function = function(callback)
+			if callback then
+								AutoReport:Toggle()
+
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
-						local args = { v.UserId }
 						local reportEvent = game:GetService("ReplicatedStorage")
 							:WaitForChild("rbxts_include")
 							:WaitForChild("node_modules")
 							:WaitForChild("@rbxts")
-							.net.out._NetManaged:FindFirstChild("ReportPlayer")
+							:WaitForChild("net")
+							:WaitForChild("out")
+							:WaitForChild("_NetManaged")
+							:FindFirstChild("ReportPlayer")
 
 						if reportEvent then
-		
-							reportEvent:FireServer(unpack(args))
-vape:CreateNotification("ReVape", "Reported '" .. v.Name .. "'", 1, "alert")
+							-- send report request
+							reportEvent:FireServer(v.UserId)
 
-										task.wait(math.random(1,2) - math.random())
+							-- show notification
+							vape:CreateNotification("ReVape", "Reported '" .. v.Name .. "'", 1, "alert")
+
+							-- random small delay between each
+							task.wait(1 + math.random()) -- wait 1–2 seconds
 						end
 					end
 				end
 			end
 		end,
-		Tooltip = "Auto reports everyone ingame",
+		Tooltip = "Auto reports everyone in the game",
 	})
 end)
 
