@@ -513,7 +513,6 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
-	login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")(),
 }
 local components
 components = {
