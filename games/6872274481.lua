@@ -10624,10 +10624,10 @@ task.spawn(function()
 				if string.find(v.Name, "MatchEnd") then
 					task.wait(0.2)
 					local joinEvent = ReplicatedStorage:FindFirstChild(
-						"events-@easy-games/lobby:shared/event/lobby-events@getEvents"
+						"events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events"
 					)
-					if joinEvent and joinEvent:FindFirstChild("Events") and joinEvent.Events:FindFirstChild("joinQueue") then
-						joinEvent.Events.joinQueue:FireServer(unpack(args))
+					if joinEvent and joinEvent.Events:FindFirstChild("joinQueue") then
+						joinEvent.joinQueue:FireServer(unpack(args))
 					end
 				end
 			end
