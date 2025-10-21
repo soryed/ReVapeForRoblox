@@ -5948,10 +5948,16 @@ general:CreateButton({
 		if shared.VapeDeveloper then
 
 		
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		
 
 		else
+
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
 
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 										
@@ -5973,12 +5979,17 @@ general:CreateButton({
 		shared.vapereload = true
 		if shared.VapeDeveloper then
 
-										
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
 		else
 
-													
+			
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+										
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
@@ -6106,12 +6117,18 @@ guipane:CreateDropdown({
 			shared.vapereload = true
 			if shared.VapeDeveloper then
 
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+
 										
 																													loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
 			else
 
-										
+							
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+			
 																													loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 
 			end
