@@ -512,8 +512,6 @@ mainapi.Libraries = {
 	getfontsize = getfontsize,
 	tween = tween,
 	uipallet = uipallet,
-	login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")(),
-	Account = {Role = "", User = "", Pass = ""}
 }
 local components
 components = {
@@ -5287,18 +5285,7 @@ function mainapi:CreateLegit()
 	self.Legit = legitapi
 
 	return legitapi
-end
-
-function mainapi:Login(sliently)
-								local S,U,P 
-	if not sliently then
-										 S,U,P = mainapi.Libraries.login:Login() 
-								else 
-								  S,U,P = 	mainapi.Libraries.login:SlientLogin() 
-								end
-	return S,U,P							
-end								
-	mainapi:Login(false)				
+end				
 function mainapi:CreateNotification(title, text, duration, type)
 	if not self.Notifications.Enabled then return end
 	task.delay(0, function()
@@ -5958,21 +5945,13 @@ general:CreateButton({
 		end
 		shared.vapereload = true
 		if shared.VapeDeveloper then
-																																		local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-			mainapi.Libraries.Account.Role = S
-											mainapi.Libraries.Account.User = U
-			mainapi.Libraries.Account.Pass = P
+
 		
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		
 
 		else
-																	local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
+
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 										
 
@@ -5992,18 +5971,12 @@ general:CreateButton({
 	Function = function()
 		shared.vapereload = true
 		if shared.VapeDeveloper then
-																																		local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
+
 										
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
 		else
-																																		local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
+
 													
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
@@ -6131,18 +6104,12 @@ guipane:CreateDropdown({
 			writefile('ReVape/profiles/gui.txt', val)
 			shared.vapereload = true
 			if shared.VapeDeveloper then
-																																		local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
+
 										
 																													loadstring(readfile('ReVape/loader.lua'), 'loader')()
 
 			else
-																																		local S,U,P = mainapi:Login(true)
-			getgenv().username = U
-			getgenv().password = P
-						mainapi.Libraries.Account.Role = S 											mainapi.Libraries.Account.User = U 			mainapi.Libraries.Account.Pass = P
+
 										
 																													loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 
