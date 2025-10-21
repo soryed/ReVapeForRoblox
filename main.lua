@@ -70,11 +70,14 @@ local function finishLoading()
 			if shared.VapeDeveloper then
 									getgenv().username = getgenv().username or "GUEST"
 					getgenv().password = getgenv().password or "PASSWORD"
-						
+						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 						
 			end
 			if shared.VapeCustomProfile then
+														getgenv().username = getgenv().username or "GUEST"
+					getgenv().password = getgenv().password or "PASSWORD"
+						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
 			vape:Save()
