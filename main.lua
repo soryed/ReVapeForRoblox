@@ -69,8 +69,10 @@ local function finishLoading()
 			]]
 			if shared.VapeDeveloper then
 									getgenv().username = getgenv().username or "GUEST"
-					getgenv().password = getgenv().password or "PASSWORD"		
+					getgenv().password = getgenv().password or "PASSWORD"
+						
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
+						
 			end
 			if shared.VapeCustomProfile then
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
