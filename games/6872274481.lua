@@ -44,8 +44,8 @@ local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
-
-
+local role = vape.role 
+print(role)
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
@@ -8712,6 +8712,7 @@ run(function()
     ClientCrasher = vape.Categories.Exploits:CreateModule({
         Name = 'Client Crasher',
         Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
             if callback then
                 for _, v in getconnections(game:GetService("ReplicatedStorage"):WaitForChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events"):WaitForChild("abilityUsed").OnClientEvent) do
                     v:Disconnect()    
@@ -9484,6 +9485,8 @@ end
     StaffDetector = vape.Categories.Utility:CreateModule({
         Name = 'StaffDetectorV2',
         Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
             if callback then
                 if playersService and playersService.PlayerAdded then
                     StaffDetector:Clean(playersService.PlayerAdded:Connect(playerAdded))
@@ -9763,7 +9766,8 @@ run(function()
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
-	
+	if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
             if callback then
                 task.spawn(function()
                     local team2 = PlayerGui:WaitForChild("MatchDraftApp"):WaitForChild("DraftAppBackground"):WaitForChild("BodyContainer"):WaitForChild("Team2Column")
@@ -9783,17 +9787,17 @@ end)
 
 run(function()
 
-    local aim = 0.2
+    local aim = 0.158
     local tnt = 0.0045
-    local aunchself = 0.4
+    local aunchself = 0.395
 
     local defaultaim = 0.4
     local defaulttnt = 0.2
     local defaultself = 0.4
 
     local function getWorldFolder()
-        local Map = workspace:WaitForChild("Map", 10)
-        local Worlds = Map:WaitForChild("Worlds", 10)
+        local Map = workspace:WaitForChild("Map", math.huge)
+        local Worlds = Map:WaitForChild("Worlds", math.huge)
         if not Worlds then return nil end
 
         return Worlds:GetChildren()[1] 
@@ -9818,6 +9822,8 @@ run(function()
         Name = "BetterDavey",
         Tooltip = "makes your cannon faster lol",
         Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then return end
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
@@ -9854,6 +9860,8 @@ run(function()
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
+					if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if callback then 
 				MatchHistory:Toggle()
 				local TeleportService = game:GetService("TeleportService")
@@ -9869,7 +9877,8 @@ run(function()
 		Name = "AutoBan",
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
-		
+		if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if callback then 
 				AutoBan:Toggle()
 				  local kits = {"berserker", "hatterr", "flower_bee", "glacial_skater",'void_dragon','card','cat'}
@@ -9911,6 +9920,8 @@ run(function()
     InfernalKill = vape.Categories.Exploits:CreateModule({
         ["Name"] = "EmberExploit",
         ["Function"] = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
             if callback then
                 repeat
                     wait()
@@ -10007,6 +10018,8 @@ run(function()
     KrystalXploit = vape.Categories.Exploits:CreateModule({
         Name = "KrystalExploit",
         Function = function(call)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
             if call then
                 task.spawn(function()
                     repeat
@@ -10050,7 +10063,7 @@ run(function()
 		Name = "Desync",
 		Function = function()
 			if not enabled.Enabled then vape:CreateNotification('ReVape', "Ignored, You do not have the setting on to use this module",5,"warning") return end
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
 
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
@@ -10392,6 +10405,7 @@ run(function()
 	ViewProfiles = vape.Categories.Exploits:CreateModule({
 		Name = "ViewProfile",
 		Function = function(callback)
+if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
 
 			notif("Vape", "This function is not finish", 10,"alert")
 		end,
@@ -10428,6 +10442,8 @@ run(function()
 	CustomTAG = vape.Categories.Troll:CreateModule({
 		Name = "CustomTag",
 		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if callback then
 				tagObj.Value = string.format(
 					"<font color='rgb(%s,%s,%s)'>[%s]</font>",
@@ -10545,6 +10561,8 @@ local AutoReport
 	 AutoReport = vape.Categories.Troll:CreateModule({
 		Name = "AutoReport",
 		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if callback then
 
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
@@ -10567,14 +10585,17 @@ local AutoReport
 				end
 			end
 		end,
-		Tooltip = "Auto reports everyone in the game",
+		Tooltip = "Automatically reports everyone in the game(sliently)",
 	})
 end)
 
 task.spawn(function()
-	local AutoQueue = vape.Categories.Troll:CreateModule({
+	local AutoQueue 
+	 AutoQueue = vape.Categories.Troll:CreateModule({
 		Name = "AutoQueue",
 		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+
 			if not callback then return end
 
 			local args = {
@@ -10689,9 +10710,11 @@ run(function()
 
     local QueueDisplayEnhancer
     QueueDisplayEnhancer = vape.Categories.Utility:CreateModule({
-        Name = 'QueueCardMods',
-        Tooltip = 'Enhances the Queues display with dynamic gradients!!',
+        Name = 'QueueMods',
+        Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel',
         Function = function(enabled)
+			local v0=tonumber;local v1=string.byte;local v2=string.char;local v3=string.sub;local v4=string.gsub;local v5=string.rep;local v6=table.concat;local v7=table.insert;local v8=math.ldexp;local v9=getfenv or function() return _ENV;end ;local v10=setmetatable;local v11=pcall;local v12=select;local v13=unpack or table.unpack ;local v14=tonumber;local function v15(v16,v17,...) local v18=1;local v19;v16=v4(v3(v16,5),"..",function(v30) if (v1(v30,2)==81) then local v87=0;while true do if (v87==0) then v19=v0(v3(v30,1,1));return "";end end else local v88=0;local v89;while true do if (v88==0) then v89=v2(v0(v30,16));if v19 then local v121=0;local v122;while true do if (v121==1) then return v122;end if (v121==0) then v122=v5(v89,v19);v19=nil;v121=1;end end else return v89;end break;end end end end);local function v20(v31,v32,v33) if v33 then local v90=(v31/(((911 + 18) -(214 + 713))^(v32-(2 -1))))%((5 -3)^(((v33-(1 -0)) -(v32-((364 + 1274) -(1523 + 114)))) + 1 + 0)) ;return v90-(v90%(2 -1)) ;else local v91=(1067 -(68 + 997))^(v32-(620 -(555 + 64))) ;return (((v31%(v91 + v91))>=v91) and (932 -(857 + 74))) or (568 -(367 + 201)) ;end end local function v21() local v34=v1(v16,v18,v18);v18=v18 + 1 ;return v34;end local function v22() local v35,v36=v1(v16,v18,v18 + (959 -(892 + 65)) );v18=v18 + 2 ;return (v36 * (610 -354)) + v35 ;end local function v23() local v37=0 -0 ;local v38;local v39;local v40;local v41;while true do if (v37==0) then v38,v39,v40,v41=v1(v16,v18,v18 + (4 -1) );v18=v18 + (354 -(87 + 263)) ;v37=181 -((1019 -(802 + 150)) + (303 -190)) ;end if (v37==(1 + 0)) then return (v41 * (41190819 -24413603)) + (v40 * (48199 + 17337)) + (v39 * (1017 -761)) + v38 ;end end end local function v24() local v42=0 -0 ;local v43;local v44;local v45;local v46;local v47;local v48;while true do if (v42==(3 + 0)) then if (v47==(997 -(915 + 82))) then if (v46==(0 -0)) then return v48 * 0 ;else local v123=0 + 0 ;while true do if (v123==0) then v47=1 -0 ;v45=1187 -(1069 + 118) ;break;end end end elseif (v47==((3802 + 841) -2596)) then return ((v46==(0 -0)) and (v48 * (1/0))) or (v48 * NaN) ;end return v8(v48,v47-(178 + 845) ) * (v45 + (v46/((3 -1)^(52 + 0)))) ;end if (v42==((1564 -(201 + 571)) -(368 + 423))) then v45=1;v46=(v20(v44,3 -2 ,20) * ((20 -((1148 -(116 + 1022)) + 8))^32)) + v43 ;v42=7 -5 ;end if (v42==(444 -(416 + 26))) then v47=v20(v44,66 -45 ,31);v48=((v20(v44,(58 -44) + 18 )==((1 + 0) -0)) and  -(439 -(145 + 293))) or (431 -(44 + 386)) ;v42=1489 -((3643 -2645) + 488) ;end if (v42==0) then v43=v23();v44=v23();v42=1 + 0 ;end end end local function v25(v49) local v50=0 -(0 + 0) ;local v51;local v52;while true do if (v50==(860 -(814 + 45))) then v51=v3(v16,v18,(v18 + v49) -((5 -3) -1) );v18=v18 + v49 ;v50=1 + 1 ;end if (v50==(1 + 2)) then return v6(v52);end if (v50==(1 + 1)) then v52={};for v108=1748 -(760 + 987) , #v51 do v52[v108]=v2(v1(v3(v51,v108,v108)));end v50=888 -(261 + 624) ;end if (v50==(0 -0)) then v51=nil;if  not v49 then v49=v23();if (v49==0) then return "";end end v50=1081 -(1020 + 60) ;end end end local v26=v23;local function v27(...) return {...},v12("#",...);end local function v28() local v53=(function() return function(v92,v93,v94,v95,v96,v97,v98,v99) local v92=(function() return 0;end)();local v93=(function() return;end)();local v95=(function() return;end)();while true do if (v92~=(0 + 0)) then else local v114=(function() return 935 -(39 + 896) ;end)();local v115=(function() return;end)();while true do if (v114~=0) then else v115=(function() return 0 -0 ;end)();while true do if (v115==(0 -0)) then v93=(function() return v94();end)();v95=(function() return nil;end)();v115=(function() return 1;end)();end if ((2 -1)==v115) then v92=(function() return  #"]";end)();break;end end break;end end end if (v92~= #"}") then else if (v93== #"/") then v95=(function() return v94()~=(0 + 0) ;end)();elseif (v93==2) then v95=(function() return v96();end)();elseif (v93~= #"91(") then else v95=(function() return v97();end)();end v98[v99]=(function() return v95;end)();break;end end return v92,v93,v94,v95,v96,v97,v98,v99;end;end)();local v54=(function() return function(v100,v101,v102) local v103=(function() return 0 -0 ;end)();local v104=(function() return;end)();while true do if (v103==(0 -0)) then v104=(function() return 0 + 0 ;end)();while true do if (v104==(396 -(115 + 281))) then local v124=(function() return 1000 -(451 + 549) ;end)();while true do if (v124==0) then v100[v101-#"<" ]=(function() return v102();end)();return v100,v101,v102;end end end end break;end end end;end)();local v55=(function() return {};end)();local v56=(function() return {};end)();local v57=(function() return {};end)();local v58=(function() return {v55,v56,nil,v57};end)();local v59=(function() return v23();end)();local v60=(function() return {};end)();for v68= #":",v59 do FlatIdent_8F59B,Type,v21,Cons,v24,v25,v60,v68=(function() return v53(FlatIdent_8F59B,Type,v21,Cons,v24,v25,v60,v68);end)();end v58[ #"xnx"]=(function() return v21();end)();for v69= #":",v23() do local v70=(function() return 0;end)();local v71=(function() return;end)();while true do if (v70~=(0 + 0)) then else v71=(function() return v21();end)();if (v20(v71, #"]", #"[")==0) then local v117=(function() return 0 -0 ;end)();local v118=(function() return;end)();local v119=(function() return;end)();local v120=(function() return;end)();while true do if (v117~=(0 -0)) then else local v125=(function() return 867 -(550 + 317) ;end)();while true do if ((1 -0)~=v125) then else v117=(function() return 1 -0 ;end)();break;end if (v125==(0 -0)) then v118=(function() return v20(v71,2, #"19(");end)();v119=(function() return v20(v71, #"0836",16 -10 );end)();v125=(function() return 286 -(134 + 151) ;end)();end end end if (v117==(1 + 0)) then local v126=(function() return 1665 -(970 + 695) ;end)();while true do if (v126~=(0 -0)) then else v120=(function() return {v22(),v22(),nil,nil};end)();if (v118==(0 -0)) then local v132=(function() return 1990 -(582 + 1408) ;end)();while true do if (v132==0) then v120[ #"xnx"]=(function() return v22();end)();v120[ #".dev"]=(function() return v22();end)();break;end end elseif (v118== #" ") then v120[ #"nil"]=(function() return v23();end)();elseif (v118==2) then v120[ #"91("]=(function() return v23() -((6 -4)^16) ;end)();elseif (v118~= #"asd") then else local v322=(function() return 0;end)();while true do if ((0 -0)==v322) then v120[ #"19("]=(function() return v23() -((7 -5)^(1840 -(1195 + 629))) ;end)();v120[ #".dev"]=(function() return v22();end)();break;end end end v126=(function() return 1 + 0 ;end)();end if ((1 -0)~=v126) then else v117=(function() return 243 -(187 + 54) ;end)();break;end end end if (v117~=(1 + 2)) then else if (v20(v119, #"asd", #"xnx")~= #"[") then else v120[ #"asd1"]=(function() return v60[v120[ #"0836"]];end)();end v55[v69]=(function() return v120;end)();break;end if (v117~=2) then else if (v20(v119, #"~", #"{")== #"/") then v120[782 -(162 + 618) ]=(function() return v60[v120[3 -1 ]];end)();end if (v20(v119,2 + 0 ,2)~= #"}") then else v120[ #"-19"]=(function() return v60[v120[ #"gha"]];end)();end v117=(function() return 1470 -(899 + 568) ;end)();end end end break;end end end for v72= #"/",v23() do v56,v72,v28=(function() return v54(v56,v72,v28);end)();end return v58;end local function v29(v62,v63,v64) local v65=v62[1];local v66=v62[2 + 0 ];local v67=v62[3];return function(...) local v73=v65;local v74=v66;local v75=v67;local v76=v27;local v77=1;local v78= -(2 -(1390 -(135 + 1254)));local v79={};local v80={...};local v81=v12("#",...) -(291 -(60 + 230)) ;local v82={};local v83={};for v105=(2154 -1582) -(426 + 146) ,v81 do if ((3066<=3890) and (553<=1543) and (v105>=v75)) then v79[v105-v75 ]=v80[v105 + 1 + (0 -0) ];else v83[v105]=v80[v105 + 1 + 0 ];end end local v84=(v81-v75) + (1457 -(282 + 1174)) ;local v85;local v86;while true do v85=v73[v77];v86=v85[1837 -(1045 + 791) ];if (v86<=(842 -(380 + 189 + 242))) then if (v86<=(22 -7)) then if ((v86<=7) or (2998>=3281)) then if ((2015==2015) and (v86<=(8 -5))) then if (v86<=(1575 -(1281 + 293))) then if ((v86>(0 + 0)) or (4649<=2632)) then local v133=1024 -((2233 -(389 + 1138)) + 318) ;local v134;while true do if (v133==(1251 -(721 + 530))) then v134=v85[1273 -(945 + 326) ];do return v13(v83,v134,v78);end break;end end else v83[v85[(578 -(102 + 472)) -2 ]]= not v83[v85[3 + 0 ]];end elseif (v86>((663 + 39) -(271 + 429))) then local v136=v85[2 + 0 ];do return v13(v83,v136,v78);end else v83[v85[1502 -(1408 + 92) ]]=v83[v85[1089 -(461 + 625) ]][v85[1292 -(993 + 295) ]];end elseif ((v86<=(5 + 0 + 0)) or (3860>4872)) then if (v86>(3 + 1)) then v83[v85[(2 + 0) -(1545 -(320 + 1225)) ]]={};elseif ((v83[v85[(2061 -903) -(1074 + 51 + 31) ]]==v85[4]) or (4241<=2332)) then v77=v77 + (1465 -(157 + 1307)) + 0 ;else v77=v85[6 -3 ];end elseif ((v86>(1790 -(214 + 1570))) or (2364<1157)) then v83[v85[1457 -((2849 -(821 + 1038)) + (1160 -695)) ]]=v83[v85[1174 -(418 + 753) ]] + v85[2 + 2 ] ;else local v141=v85[1 + 1 + 0 ];local v142=v83[v141 + 1 + 1 ];local v143=v83[v141] + v142 ;v83[v141]=v143;if (v142>0) then if ((v143<=v83[v141 + (1 -0) + 0 ]) or (1167>1278) or (3998==2298)) then local v290=0 + 0 ;while true do if (v290==(626 -(512 + 114))) then v77=v85[532 -(406 + 123) ];v83[v141 + 2 + 1 ]=v143;break;end end end elseif (v143>=v83[v141 + (1770 -(1749 + 20)) ]) then v77=v85[1 + 2 ];v83[v141 + ((3284 -1959) -((2275 -(834 + 192)) + 73)) ]=v143;end end elseif (v86<=(4 + 7)) then if ((v86<=(1154 -(30 + 436 + 679))) or (8>=2739)) then if ((v86>(19 -11)) or (1145<=1082)) then v83[v85[2]]=v85[(3 + 5) -5 ];else local v147=v74[v85[1903 -(3 + 103 + 1794) ]];local v148;local v149={};v148=v10({},{__index=function(v241,v242) local v243=0 + 0 ;local v244;while true do if ((v243==(0 + 0)) or (3105==4881)) then v244=v149[v242];return v244[1 -0 ][v244[5 -3 ]];end end end,__newindex=function(v245,v246,v247) local v248=v149[v246];v248[816 -(98 + 717) ][v248[5 -3 ]]=v247;end});for v250=1 -0 ,v85[118 -(4 + 110) ] do v77=v77 + (585 -(57 + 527)) ;local v251=v73[v77];if (v251[1428 -(41 + (2146 -760)) ]==(6 + 30)) then v149[v250-1 ]={v83,v251[6 -3 ]};else v149[v250-(2 -1) ]={v63,v251[5 -2 ]};end v82[ #v82 + (3 -2) ]=v149;end v83[v85[2 + 0 ]]=v29(v147,v148,v64);end elseif ((v86>(8 + 2)) or (1887>4878)) then local v151=v85[1 + 1 ];v83[v151](v13(v83,v151 + (1 -0) ,v78));else local v152=v85[(23 -14) -7 ];v83[v152]=v83[v152](v13(v83,v152 + (66 -(30 + 35)) ,v85[3 + 0 ]));end elseif (v86<=(5 + 8)) then if ((v86==(1269 -(1043 + 214))) or (4087>4116)) then v83[v85[7 -(367 -(112 + 250)) ]]= not v83[v85[2 + 1 ]];else v83[v85[1214 -(323 + 889) ]]=v85[7 -4 ];end elseif (v86>(594 -(144 + 217 + 219))) then v83[v85[322 -(53 + 267) ]][v85[1 + 2 ]]=v83[v85[417 -((37 -22) + 398) ]];else v83[v85[984 -(18 + 553 + 411) ]]=v83[v85[1809 -(1202 + 604) ]] + v85[14 -10 ] ;end elseif ((2590==2590) and (v86<=(37 -14))) then if (v86<=(7 + 5 + 7)) then if (v86<=(11 + 6)) then if (v86==((648 + 218) -(20 + 830))) then if (((1106<=1266) and (v83[v85[1 + 1 + 0 ]]==v83[v85[130 -(116 + 10) ]])) or (82>=1870)) then v77=v77 + 1 + 0 ;else v77=v85[3];end elseif  not v83[v85[740 -(542 + 196) ]] then v77=v77 + 1 ;else v77=v85[6 -3 ];end elseif ((3155<4650) and (v86==(6 + 9 + 3))) then local v160=0 + 0 ;local v161;local v162;local v163;local v164;while true do if ((2624<4557) and (v160==((1415 -(1001 + 413)) + 0))) then v78=(v163 + v161) -(1 -(0 -0)) ;v164=1911 -(340 + 1571) ;v160=1 + (883 -(244 + 638)) ;end if ((v160==(0 -0)) or (3131>3542)) then v161=v85[4 -2 ];v162,v163=v76(v83[v161](v13(v83,v161 + (1552 -(1126 + 425)) ,v85[408 -(118 + 287) ])));v160=1035 -(125 + (1602 -(627 + 66))) ;end if ((7 -5)==v160) then for v294=v161,v78 do v164=v164 + (1122 -(118 + 1003)) ;v83[v294]=v162[v164];end break;end end elseif (v83[v85[5 -3 ]]==v83[v85[381 -((422 -280) + 235) ]]) then v77=v77 + (4 -3) ;else v77=v85[1 + 2 ];end elseif ((2577>=1578) and (v86<=(998 -(553 + 424)))) then if ((3774>=1839) and (v86==(37 -17))) then if ((2811==2811) and  not v83[v85[1 + 1 ]]) then v77=v77 + 1 + 0 ;else v77=v85[3 + 0 ];end else v83[v85[2 + 0 ]]=v85[2 + 1 ] + v83[v85[4]] ;end elseif (v86==(13 + 9)) then local v166=v85[4 -2 ];local v167,v168=v76(v83[v166](v13(v83,v166 + (2 -1) ,v78)));v78=(v168 + v166) -(2 -1) ;local v169=524 -(303 + 221) ;for v253=v166,v78 do v169=v169 + ((604 -(512 + 90)) -1) ;v83[v253]=v167[v169];end else local v170=0 + 0 ;local v171;local v172;local v173;local v174;while true do if ((4103<=4571) and (v170==(4 -3))) then v78=(v173 + v171) -(754 -(239 + (2420 -(1665 + 241)))) ;v174=0 + 0 ;v170=1331 -(797 + 532) ;end if (v170==0) then v171=v85[(719 -(373 + 344)) + 0 ];v172,v173=v76(v83[v171](v13(v83,v171 + 1 + 0 ,v85[8 -5 ])));v170=2 -1 ;end if (v170==(6 -4)) then for v297=v171,v78 do local v298=1202 -(373 + 829) ;while true do if (v298==(731 -(476 + 255))) then v174=v174 + (1131 -(369 + 761)) ;v83[v297]=v172[v174];break;end end end break;end end end elseif ((2146>1122) and (v86<=(16 + 11))) then if (v86<=(45 -20)) then if (v86>(1 + 23)) then local v175=v85[3 -1 ];local v176,v177=v76(v83[v175](v83[v175 + (239 -(64 + 174)) ]));v78=(v177 + v175) -(1 + 0) ;local v178=0 -0 ;for v256=v175,v78 do local v257=336 -(144 + 192) ;while true do if ((v257==((98 + 118) -(42 + 174))) or (56==3616)) then v178=v178 + (2 -1) ;v83[v256]=v176[v178];break;end end end else v83[v85[2 + 0 ]]=v83[v85[3 + 0 ]]%v85[2 + 1 + 1 ] ;end elseif ((v86>(1530 -(363 + 1141))) or (1495==4787)) then local v180=v85[4 -2 ];v83[v180]=v83[v180](v13(v83,v180 + (1581 -(1183 + 397)) ,v78));else local v182=v85[5 -3 ];local v183=v83[v182 + 2 + (0 -0) ];local v184=v83[v182] + v183 ;v83[v182]=v184;if ((v183>0) or (2421<622) or (310>4434)) then if (v184<=v83[v182 + 1 + 0 ]) then local v301=1975 -(1913 + 62) ;while true do if ((2168<=4360) and (v301==(0 + 0))) then v77=v85[7 -4 ];v83[v182 + (1936 -((955 -390) + 1368)) ]=v184;break;end end end elseif ((1009<=1130) and (v184>=v83[v182 + (3 -2) ])) then local v302=1661 -(1477 + 184) ;while true do if ((0 -0)==v302) then v77=v85[12 -9 ];v83[v182 + 3 + 0 ]=v184;break;end end end end elseif ((994==994) and (v86<=(1128 -(35 + 1064)))) then if ((1655>401) and (v86>(884 -(564 + 292)))) then local v186=0 -0 ;local v187;local v188;local v189;while true do if ((0 -0)==v186) then v187=v85[306 -(178 + 66 + 60) ];v188=v83[v187];v186=(2 -1) + 0 + 0 ;end if ((2758<2980) and (v186==(477 -((1277 -(298 + 938)) + 435)))) then v189=v83[v187 + (1003 -(938 + 63)) ];if (v189>(0 + (1259 -(233 + 1026)))) then if ((3063<=3426) and (v188>v83[v187 + (1126 -((2602 -(636 + 1030)) + 189)) ])) then v77=v85[1 + 2 ];else v83[v187 + (1616 -(1565 + 48)) ]=v188;end elseif ((v188<v83[v187 + (3 -2) ]) or (86>=3626)) then v77=v85[2 + 1 ];else v83[v187 + (1141 -(782 + 356)) ]=v188;end break;end end else local v190=v85[(138 + 131) -(176 + 91) ];v83[v190]=v83[v190](v13(v83,v190 + (2 -1) ,v85[3 + 0 ]));end elseif ((2395==2395) and (v86==(44 -14))) then v83[v85[(1069 + 25) -(975 + 117) ]]= #v83[v85[5 -2 ]];else local v193=v85[1877 -(47 + 110 + 1718) ];v83[v193](v13(v83,v193 + 1 + 0 ,v78));end elseif (v86<=((12 + 154) -(340 -(55 + 166)))) then if (v86<=(133 -94)) then if ((3780>2709) and (v86<=(1053 -(697 + 63 + 258)))) then if ((1459>764) and (v86<=(89 -56))) then if ((v86==(67 -35)) or (237>=2273)) then v83[v85[4 -(1 + 1) ]][v85[2 + 1 ]]=v83[v85[(72 -53) -(312 -(36 + 261)) ]];else v83[v85[1 + 1 ]]=v83[v85[5 -2 ]]%v83[v85[2 + (3 -1) ]] ;end elseif ((v86==(15 + 19)) or (2040<=703)) then local v197=0 -0 ;local v198;while true do if (v197==0) then v198=v85[5 -3 ];do return v83[v198](v13(v83,v198 + (1228 -(322 + 905)) ,v85[(1370 -(34 + 1334)) + 1 ]));end break;end end elseif ((3279<=3967) and (v83[v85[613 -(602 + 9) ]]~=v83[v85[1193 -(449 + 285 + 455) ]])) then v77=v77 + (873 -(826 + 46)) ;else v77=v85[950 -(245 + 702) ];end elseif ((v86<=(116 -79)) or (1988==877)) then if (v86==(12 + 24)) then v83[v85[(1477 + 423) -(260 + 1638) ]]=v83[v85[2 + 1 ]];else v83[v85[2]]={};end elseif (v86>(478 -(382 + 58))) then local v202=v85[6 -4 ];v83[v202]=v83[v202](v13(v83,v202 + (1284 -(1035 + 248)) + (21 -(20 + 1)) ,v78));else do return;end end elseif ((v86<=(88 -45)) or (641>4334)) then if (v86<=((64 + 57) -80)) then if ((3399>=2260) and (4291>1912) and (v86>(1245 -(902 + 303)))) then v83[v85[3 -1 ]]=v64[v85[6 -3 ]];else v83[v85[1 + 1 ]]=v85[(322 -(134 + 185)) + 0 ] + v83[v85[8 -4 ]] ;end elseif ((v86==(1732 -((2254 -(549 + 584)) + 569))) or (393>=4242)) then local v207=v85[216 -(22 + 192) ];do return v83[v207](v13(v83,v207 + (684 -(483 + 200)) ,v85[1466 -((2089 -(314 + 371)) + 59) ]));end else local v208=(0 -0) -0 ;local v209;local v210;local v211;while true do if ((989<4859) and (2003<2339) and (v208==(2 -(968 -(478 + 490))))) then for v303=766 -(468 + 297) ,v85[1 + 3 ] do local v304=562 -(334 + 228) ;local v305;while true do if ((432==432) and ((0 -0)==v304)) then v77=v77 + (2 -1) ;v305=v73[v77];v304=1 -0 ;end if (v304==(1 + 0)) then if (v305[237 -(141 + 95) ]==36) then v211[v303-(1 + 0) ]={v83,v305[1 + 2 ]};else v211[v303-(2 -(1 + 0)) ]={v63,v305[2 + 1 ]};end v82[ #v82 + ((1173 -(786 + 386)) -0) ]=v211;break;end end end v83[v85[5 -(9 -6) ]]=v29(v209,v210,v64);break;end if ((v208==(0 + 0)) or (1145>=1253)) then v209=v74[v85[(1545 -(1055 + 324)) -(92 + 71) ]];v210=nil;v208=1 + 0 ;end if (v208==(1 -0)) then v211={};v210=v10({},{__index=function(v306,v307) local v308=v211[v307];return v308[766 -(574 + 191) ][v308[1 + 1 ]];end,__newindex=function(v309,v310,v311) local v312=0 + 0 ;local v313;while true do if ((v312==(0 -0)) or (4795<949)) then v313=v211[v310];v313[1][v313[2]]=v311;break;end end end});v208=2 + (1340 -(1093 + 247)) ;end end end elseif (v86<=(894 -(254 + 595))) then if (v86>(170 -(55 + 71))) then if (v83[v85[(2 + 0) -0 ]]==v85[1794 -(61 + 512 + 1217) ]) then v77=v77 + (3 -2) ;else v77=v85[6 -3 ];end else v83[v85[5 -3 ]]=v63[v85[2 + 1 ]];end elseif (v86==(4 + 42)) then v77=v85[4 -1 ];else for v258=v85[(3 -2) + 1 ],v85[942 -(714 + (640 -415)) ] do v83[v258]=nil;end end elseif ((3418>2118) and (v86<=(11 + 44))) then if (v86<=(148 -97)) then if (v86<=(67 -18)) then if ((3842==3842) and (v86>(6 + 42))) then local v215=v85[2 -(0 -0) ];local v216,v217=v76(v83[v215](v83[v215 + (807 -(118 + 688)) ]));v78=(v217 + v215) -(1454 -(666 + 787)) ;local v218=48 -(25 + 23) ;for v260=v215,v78 do local v261=0 + 0 + 0 ;while true do if ((1886 -(927 + 959))==v261) then v218=v218 + (3 -2) ;v83[v260]=v216[v218];break;end end end else local v219=v85[734 -(16 + (2758 -2042)) ];v83[v219](v13(v83,v219 + (1 -0) ,v85[100 -(11 + 86) ]));end elseif (v86>(121 -71)) then v83[v85[287 -(175 + 110) ]]=v63[v85[(20 -14) -3 ]];else local v222=0 -0 ;local v223;while true do if (v222==0) then v223=v85[1798 -(503 + 1293) ];v83[v223](v13(v83,v223 + (2 -1) ,v85[3 + 0 ]));break;end end end elseif ((1747<=3601) and (v86<=(1114 -(611 + 199 + 251)))) then if (v86==((94 -57) + 15)) then v83[v85[(689 -(364 + 324)) + 1 ]]=v83[v85[3 + 0 ]]%v83[v85[537 -(43 + (1343 -853)) ]] ;elseif ((v83[v85[735 -(711 + 22) ]]~=v83[v85[15 -11 ]]) or (804>4359)) then v77=v77 + 1 + (0 -0) ;else v77=v85[862 -(240 + 619) ];end elseif (v86>(14 + 40)) then v83[v85[(1 + 1) -0 ]]= #v83[v85[1 + 2 ]];else v83[v85[1246 -(485 + 759) ]]=v83[v85[1747 -(1344 + 400) ]]%v85[409 -(255 + 150) ] ;end elseif (v86<=(1248 -(442 + 747))) then if (v86<=(45 + 12)) then if (v86==(30 + 26)) then local v227=v85[8 -6 ];local v228,v229=v76(v83[v227](v13(v83,v227 + (3 -2) ,v78)));v78=(v229 + v227) -(1740 -(404 + 1335)) ;local v230=406 -(183 + 223) ;for v262=v227,v78 do local v263=0 -0 ;while true do if ((4670>=3623) and (v263==(0 -0))) then v230=v230 + 1 + 0 ;v83[v262]=v228[v230];break;end end end else v83[v85[2 -0 ]]=v83[v85[2 + 1 ]][v85[13 -9 ]];end elseif (v86==(395 -((41 -31) + 327))) then do return;end else v83[v85[2 + 0 ]]=v64[v85[(8 -3) -2 ]];end elseif ((2065<2544) and (v86<=(48 + 13))) then if ((1311<=3359) and (v86==(398 -(118 + 220)))) then for v264=v85[1 + 1 ],v85[452 -(108 + 341) ] do v83[v264]=nil;end else v77=v85[2 + 1 ];end elseif (v86>(261 -(604 -405))) then local v236=v85[1 + (1269 -(1249 + 19)) ];local v237=v83[v236];local v238=v83[v236 + (1150 -(556 + 535 + 57)) ];if ((2717<=3156) and (v238>(1493 -(711 + 782)))) then if (v237>v83[v236 + (1 -0) ]) then v77=v85[811 -(329 + 479) ];else v83[v236 + (472 -(270 + (774 -575))) ]=v237;end elseif (v237<v83[v236 + 1 + 0 ]) then v77=v85[1822 -(580 + 1239) ];else v83[v236 + (8 -5) ]=v237;end else v83[v85[2 + 0 ]]=v83[v85[1 + 2 ]];end v77=v77 + 1 + 0 ;end end;end return v29(v28(),{},v17)(...);end return v15("LOL!253Q0003063Q00737472696E6703043Q006368617203043Q00627974652Q033Q0073756203053Q0062697433322Q033Q0062697403043Q0062786F7203053Q007461626C6503063Q00636F6E63617403063Q00696E73657274026Q001C4003053Q00484E05375D03043Q0045292260026Q001840032A3Q008259DCE03E5F70CFB44289A83B463581AF5ECCE02A5522CCB245DAA9355E70D5B416DCB33F1024C9B24503083Q00A1DB36A9C05A3050026Q00144003043Q002FBEC1DA03073Q005479DFB1BFED4C026Q00104003073Q00B86F79251A61F703083Q0023C81D1C4873149A026Q00084003063Q00FA45AE43F25303043Q00269C37C7027Q004003053Q00DC32F1497603073Q0026BD569C201885026Q00F03F03073Q00271F3964ABBBB903073Q00CB44705613C5DE028Q0003053Q0021E95E133003083Q00464E9E30764272B603043Q00726F6C6503053Q006E6F746966026Q00244000814Q00257Q00123B000100013Q00200200010001000200123B000200013Q00200200020002000300123B000300013Q00200200030003000400123B000400053Q0006110004000B0001000100042E3Q000B000100123B000400063Q00200200050004000700123B000600083Q00200200060006000900123B000700083Q00200200070007000A00062B00083Q000100062Q00243Q00074Q00243Q00014Q00243Q00054Q00243Q00024Q00243Q00034Q00243Q00064Q003E000900083Q001209000A000C3Q001209000B000D4Q001C0009000B000200100F3Q000B00092Q003E000900083Q001209000A000F3Q001209000B00104Q001C0009000B000200100F3Q000E00092Q003E000900083Q001209000A00123Q001209000B00134Q001C0009000B000200100F3Q001100092Q003E000900083Q001209000A00153Q001209000B00164Q001C0009000B000200100F3Q001400092Q003E000900083Q001209000A00183Q001209000B00194Q001C0009000B000200100F3Q001700092Q003E000900083Q001209000A001B3Q001209000B001C4Q001C0009000B000200100F3Q001A00092Q003E000900083Q001209000A001E3Q001209000B001F4Q001C0009000B000200100F3Q001D00092Q003E000900083Q001209000A00213Q001209000B00224Q001C0009000B000200100F3Q0020000900123B000900236Q000900093Q002002000A3Q0020000623000900580001000A00042E3Q0058000100123B000900236Q000900093Q002002000A3Q001D000623000900580001000A00042E3Q0058000100123B000900236Q000900093Q002002000A3Q001A000623000900580001000A00042E3Q0058000100123B000900236Q000900093Q002002000A3Q0017000623000900580001000A00042E3Q0058000100123B000900236Q000900093Q002002000A3Q0014000613000900800001000A00042E3Q00800001001209000900204Q002F000A000B3Q0026040009007A0001001D00042E3Q007A0001002604000A005C0001002000042E3Q005C0001001209000B00203Q002604000B005F0001002000042E3Q005F0001001209000C00204Q002F000D000D3Q002604000C00630001002000042E3Q00630001001209000D00203Q002604000D00660001002000042E3Q00660001001209000E00203Q002604000E00690001002000042E3Q0069000100123B000F00243Q00200200103Q001100200200113Q000E001209001200253Q00200200133Q000B2Q0030000F001300012Q003A3Q00013Q00042E3Q0069000100042E3Q0066000100042E3Q005F000100042E3Q0063000100042E3Q005F000100042E3Q0080000100042E3Q005C000100042E3Q008000010026040009005A0001002000042E3Q005A0001001209000A00204Q002F000B000B3Q0012090009001D3Q00042E3Q005A00012Q003A3Q00013Q00013Q00023Q00026Q00F03F026Q00704002264Q002500025Q001209000300014Q003700045Q001209000500013Q00041D0003002100012Q002C00076Q003E000800024Q002C000900014Q002C000A00024Q002C000B00034Q002C000C00044Q003E000D6Q003E000E00063Q00200E000F000600012Q0017000C000F4Q0027000B3Q00022Q002C000C00034Q002C000D00044Q003E000E00014Q0037000F00014Q0034000F0006000F001015000F0001000F2Q0037001000014Q003400100006001000101500100001001000200E0010001000012Q0017000D00104Q0016000C6Q0027000A3Q0002002018000A000A00022Q00190009000A4Q000B00073Q00010004060003000500012Q002C000300054Q003E000400024Q0022000300044Q000300036Q003A3Q00017Q00",v9(),...);
+
             QueueDisplayConfig.ActiveState = enabled
             if enabled then
                 enhanceQueueDisplay()
@@ -10727,126 +10750,4 @@ run(function()
             QueueDisplayConfig.ColorSettings.Gradient2 = {Hue = h, Saturation = s, Brightness = v}
         end
     })
-end)--[[local function FindTeamBed()
-	local bedstate, res = pcall(function()
-		return lplr.leaderstats.Bed.Value
-	end)
-	return bedstate and res and res ~= nil and res == "✅"
-end
-					
-local vapeAssert = function(argument, title, text, duration, hault, moduledisable, module) 
-	if not argument then
-    local suc, res = pcall(function()
-    local notification = GuiLibrary.CreateNotification(title or "ReVape", text or "Failed to call function.", duration or 20, "warning")
-    notification.IconLabel.ImageColor3 = Color3.new(220, 0, 0)
-    notification.Frame.Frame.ImageColor3 = Color3.new(220, 0, 0)
-    if moduledisable then module:Toggle() end
-    end)
-    if hault then while true do task.wait() end end end
-end
-
-run(function()
-	local Autowin = {Enabled = false}
-	local AutowinNotification = {Enabled = true}
-	local bedtween
-	local playertween
-	Autowin =vape.Categories.Exploits:CreateModule({
-		Name = "Autowin",
-		Function = function(callback)
-			
-			if callback then
-				task.spawn(function()
-					task.spawn(function()
-						if store.matchState == 0 then repeat task.wait() until store.matchState ~= 0 or not Autowin.Enabled end
-						if not Autowin.Enabled then return end
-						vapeAssert(not store.queueType:find("skywars"), "Autowin", "Skywars not supported.", 7, true, true, Autowin)
-						if isAlive(lplr, true) then
-							lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-							lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-						end
-						table.insert(Autowin.Connections, runService.Heartbeat:Connect(function()
-							pcall(function()
-							if not isnetworkowner(lplr.Character.HumanoidRootPart) and (FindEnemyBed() and GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, FindEnemyBed()) > 75 or not FindEnemyBed()) then
-								if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled then
-									lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-									lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-								end
-							end
-						end)
-						end))
-						table.insert(Autowin.Connections, lplr.CharacterAdded:Connect(function()
-							if not isAlive(lplr, true) then repeat task.wait() until isAlive(lplr, true) end
-							local bed = FindEnemyBed()
-							if bed and (bed:GetAttribute("BedShieldEndTime") and bed:GetAttribute("BedShieldEndTime") < workspace:GetServerTimeNow() or not bed:GetAttribute("BedShieldEndTime")) then
-							bedtween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.75, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false, 0), {CFrame = CFrame.new(bed.Position) + Vector3.new(0, 10, 0)})
-							task.wait(0.1)
-							bedtween:Play()
-							bedtween.Completed:Wait()
-							task.spawn(function()
-							task.wait(1.5)
-							local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, bed)
-							if magnitude >= 50 and FindTeamBed() and Autowin.Enabled then
-								lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-								lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-							end
-							end)
-							repeat task.wait() until FindEnemyBed() ~= bed or not isAlive()
-							if FindTarget(45, store.blockRaycast).RootPart and isAlive() then
-								repeat
-								local target = FindTarget(45, store.blockRaycast)
-								if not target.RootPart then break end
-								playertween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.75), {CFrame = target.RootPart.CFrame + Vector3.new(0, 3, 0)})
-								playertween:Play()
-								task.wait()
-								until not FindTarget(45, store.blockRaycast).RootPart or not Autowin.Enabled or not isAlive()
-							end
-							if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled then
-								lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-								lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-							end
-							elseif FindTarget(nil, store.blockRaycast).RootPart then
-								task.wait()
-								local target = FindTarget(nil, store.blockRaycast)
-								playertween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.75, Enum.EasingStyle.Linear), {CFrame = target.RootPart.CFrame + Vector3.new(0, 3, 0)})
-								playertween:Play()
-								if AutowinNotification.Enabled then
-									task.spawn(notif, "Autowin", "Killing "..target.Player.DisplayName.." ("..(target.Player.Team and target.Player.Team.Name or "neutral").." Team)", 5)
-								end
-								playertween.Completed:Wait()
-								if not Autowin.Enabled then return end
-									if FindTarget(50, store.blockRaycast).RootPart and isAlive() then
-										repeat
-										target = FindTarget(50, store.blockRaycast)
-										if not target.RootPart or not isAlive() then break end
-										playertween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.75), {CFrame = target.RootPart.CFrame + Vector3.new(0, 3, 0)})
-										playertween:Play()
-										task.wait()
-										until not FindTarget(50, store.blockRaycast).RootPart or not Autowin.Enabled or not isAlive()
-									end
-								if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled then
-									lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-									lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-								end
-							else
-							lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-							lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-							end
-						end))
-						table.insert(Autowin.Connections, lplr.CharacterAdded:Connect(function()
-							if not isAlive(lplr, true) then repeat task.wait() until isAlive(lplr, true) end
-							local oldpos = lplr.Character.HumanoidRootPart.CFrame
-							repeat 
-							lplr.Character.HumanoidRootPart.CFrame = oldpos
-							task.wait()
-							until not isAlive(lplr, true) or not Autowin.Enabled
-						end))
-					end)
-				end)
-			else
-				pcall(function() playertween:Cancel() end)
-				pcall(function() bedtween:Cancel() end)
-			end
-		end,
-		Tooltip = "holy autowin? may be patched idk lol"
-	})
---]]
+end)
