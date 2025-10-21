@@ -55,23 +55,24 @@ local function finishLoading()
 
 	local teleportedServers
 	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+				print("Sup")
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
 			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
-					print("Sup dev boy")
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
-										print("Sup not dev boy")
 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
 			]]
 			if shared.VapeDeveloper then
+						print("nigga dev")
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 			end
 			if shared.VapeCustomProfile then
+					print("nigga custom profile")
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
 			vape:Save()
