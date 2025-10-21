@@ -60,8 +60,11 @@ local function finishLoading()
 			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
+					print("Sup dev boy")
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
+										print("Sup not dev boy")
+
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
 			]]
