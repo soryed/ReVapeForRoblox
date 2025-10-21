@@ -10577,7 +10577,7 @@ run(function()
 				AutoQueue:Clean(vapeEvents.MatchEndEvent.Event:Connect(joinQueue))
 			end
 		end,
-		Tooltip = 'Automatically queues for the next match"
+		Tooltip = 'Automatically queues for the next match'
 	})
 
 end)
