@@ -55,24 +55,24 @@ local function finishLoading()
 
 	local teleportedServers
 	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
-				print("Sup")
+				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
 			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
+
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
-
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
 			]]
 			if shared.VapeDeveloper then
-						print("nigga dev")
+									getgenv().username = getgenv().username or "GUEST"
+					getgenv().password = getgenv().password or "PASSWORD"		
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 			end
 			if shared.VapeCustomProfile then
-					print("nigga custom profile")
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
 			vape:Save()
@@ -86,6 +86,7 @@ local function finishLoading()
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 		end
 	end
+	vape.login:Login()
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
