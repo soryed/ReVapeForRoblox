@@ -88,7 +88,7 @@ local function finishLoading()
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 		end
 	end
-	vape.login:Login()
+	
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
