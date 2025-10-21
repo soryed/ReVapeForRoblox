@@ -21,6 +21,7 @@ local mainapi = {
 	ToggleNotifications = {},
 	Version = '0.34',
 	Discord = "@ye40",
+	role = "",
 	Windows = {}
 }
 																																																								
