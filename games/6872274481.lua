@@ -4375,49 +4375,7 @@ run(function()
 	})
 end)
 	
-run(function()
-	local AutoPlay
-	local Random
-	
-	local function isEveryoneDead()
-		return #bedwars.Store:getState().Party.members <= 0
-	end
-	
-	local function joinQueue()
-		if not bedwars.Store:getState().Game.customMatch and bedwars.Store:getState().Party.leader.userId == lplr.UserId and bedwars.Store:getState().Party.queueState == 0 then
-			if Random.Enabled then
-				local listofmodes = {}
-				for i, v in bedwars.QueueMeta do
-					if not v.disabled and not v.voiceChatOnly and not v.rankCategory then 
-						table.insert(listofmodes, i) 
-					end
-				end
-				bedwars.QueueController:joinQueue(listofmodes[math.random(1, #listofmodes)])
-			else
-				bedwars.QueueController:joinQueue(store.queueType)
-			end
-		end
-	end
-	
-	AutoPlay = vape.Categories.Utility:CreateModule({
-		Name = 'AutoPlay',
-		Function = function(callback)
-			if callback then
-				AutoPlay:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-						joinQueue()
-					end
-				end))
-				AutoPlay:Clean(vapeEvents.MatchEndEvent.Event:Connect(joinQueue))
-			end
-		end,
-		Tooltip = 'Automatically queues after the match ends.'
-	})
-	Random = AutoPlay:CreateToggle({
-		Name = 'Random',
-		Tooltip = 'Chooses a random mode'
-	})
-end)
+
 	
 run(function()
 	local shooting, old = false
@@ -10589,55 +10547,41 @@ local AutoReport
 	})
 end)
 
-task.spawn(function()
-	local AutoQueue 
-	 AutoQueue = vape.Categories.Troll:CreateModule({
-		Name = "AutoQueue",
+
+
+run(function()
+	local AutoQueue
+	
+	local function isEveryoneDead()
+		return #bedwars.Store:getState().Party.members <= 0
+	end
+	
+	local function joinQueue()
+		if not bedwars.Store:getState().Game.customMatch and bedwars.Store:getState().Party.leader.userId == lplr.UserId and bedwars.Store:getState().Party.queueState == 0 then
+			
+				bedwars.QueueController:joinQueue(store.queueType)
+		end
+	end
+	
+	AutoQueue = vape.Categories.Troll:CreateModule({
+		Name = 'AutoQueue',
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+								if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
 
-			if not callback then return end
-
-			local args = {
-				[1] = {
-					queueType = store.queueType
-				}
-			}
-
-			if queueType == "niled" then
-				task.wait(0.2)
-				local lobbyEvent = ReplicatedStorage
-					:WaitForChild("rbxts_include")
-					:WaitForChild("node_modules")
-					:WaitForChild("@rbxts")
-					:WaitForChild("net")
-					:WaitForChild("out")
-					:WaitForChild("_NetManaged")
-					:FindFirstChild("TeleportToLobby")
-
-				if lobbyEvent then
-					lobbyEvent:FireServer()
-				end
-			end
-
-			local function onGuiAdded(v)
-				if string.find(v.Name, "MatchEnd") then
-					task.wait(0.2)
-					local joinEvent = ReplicatedStorage:FindFirstChild(
-						"events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events"
-					)
-					if joinEvent and joinEvent.Events:FindFirstChild("joinQueue") then
-						joinEvent.joinQueue:FireServer(unpack(args))
+			if callback then
+				AutoQueue:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+						joinQueue()
 					end
-				end
+				end))
+				AutoQueue:Clean(vapeEvents.MatchEndEvent.Event:Connect(joinQueue))
 			end
-
-			AutoQueue:Clean(lplr.PlayerGui.ChildAdded:Connect(onGuiAdded))
 		end,
-		Tooltip = "Automatically queues for the next match",
+		Tooltip = 'Automatically queues for the next match"
 	})
-end)
 
+end)
+			
 run(function()
     local QueueDisplayConfig = {
         ActiveState = false,
