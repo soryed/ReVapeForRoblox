@@ -8152,4 +8152,8 @@ run(function()
 	
 end)
 
-
+run(function()
+	local S,U,P = login:Login()
+	vape.role = S
+	print(S,U,P)			
+end)
