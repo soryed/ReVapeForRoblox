@@ -9800,11 +9800,6 @@ run(function()
 					
 						if not humanoid then return end
 					
-						local blockMeta = bedwars.ItemMeta[dblock.Name]
-						if not blockMeta or not blockMeta.block then return end
-					
-						local breakType = blockMeta.block.breakType
-					
 						if Speed.Enabled and Fly.Enabled then
 							Fly:Toggle()
 							task.wait(0.025)
@@ -9815,10 +9810,8 @@ run(function()
 							Fly:Toggle()
 						end
 					
-						local tool = store.tools[breakType]
-						if tool then
-							switchItem(tool.tool)
-						end
+						bedwars.breakBlock(child)
+
 					
 						if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
 							humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
