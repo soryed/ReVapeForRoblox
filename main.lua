@@ -63,23 +63,22 @@ local function finishLoading()
 			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
-
+									getgenv().username = user
+					getgenv().password = password 
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
+														getgenv().username = user
+					getgenv().password = password 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
 			]]
 			if shared.VapeDeveloper then
-									getgenv().username = user
-					getgenv().password = password 
-						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
+
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 						
 			end
 			if shared.VapeCustomProfile then
-										getgenv().username = user 
-					getgenv().password = password 
-						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
+
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
 			vape:Save()
