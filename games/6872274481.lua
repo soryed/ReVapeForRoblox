@@ -9732,9 +9732,9 @@ run(function()
                     for _, child in ipairs(team2:GetDescendants()) do
                         if KitRender.Enabled then handleLabel(child) end
                     end
-                    team2.DescendantAdded:Connect(function(child)
+                    KitRender:Clean(team2.DescendantAdded:Connect(function(child)
                         if KitRender.Enabled then handleLabel(child) end
-                    end)
+                    end))
                 end)
             else
                 removeallkitrenders()
@@ -9790,7 +9790,7 @@ run(function()
             if callback then
                 setCannonSpeeds(blocks, aim, tnt, aunchself)
 
-                blocks.ChildAdded:Connect(function(child)
+               BetterDavey:Clean( blocks.ChildAdded:Connect(function(child)
                     if child:IsA("BasePart") and child.Name == "cannon" and BetterDavey.Enabled then
                         local AimPrompt = child:WaitForChild("AimPrompt")
                         local FirePrompt = child:WaitForChild("FirePrompt")
@@ -9799,9 +9799,11 @@ run(function()
                         AimPrompt.HoldDuration = aim
                         FirePrompt.HoldDuration = tnt
                         LaunchSelfPrompt.HoldDuration = aunchself
-						
+						LaunchSelfPrompt.Triggered:Connect(function(p)
+												print(p.Name)
+									end)
                     end
-                end)
+                end))
             else
                 setCannonSpeeds(blocks, defaultaim, defaulttnt, defaultself)
             end
@@ -9824,7 +9826,7 @@ run(function()
 				MatchHistory:Toggle()
 				local TeleportService = game:GetService("TeleportService")
 				local data = TeleportService:GetLocalPlayerTeleportData()
-				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data)
+				MatchHistory:Clean(game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 			end
 		end,
 	}) 
@@ -10416,7 +10418,7 @@ run(function()
 					return string.format("#%02X%02X%02X", color.R * 255, color.G * 255, color.B * 255)
 				end
 
-				player.PlayerGui.ChildAdded:Connect(function(child)
+				CustomTag:Clean(player.PlayerGui.ChildAdded:Connect(function(child)
 					if child.Name == "TabListScreenGui" and child:IsA("ScreenGui") then
 						task.spawn(function()
 							while CustomTAG.Enabled do
@@ -10457,7 +10459,7 @@ run(function()
 							end
 						end)
 					end
-				end)
+				end))
 			else
 				tagObj.Value = Org
 				tagObj:SetAttribute("Text", OrgText)
