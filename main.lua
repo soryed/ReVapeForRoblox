@@ -44,6 +44,8 @@ local function downloadFile(path, func)
 end
 
 local function finishLoading()
+	local user =  readfile("ReVape/accounts/username.txt") or "GUEST"
+	local password = readfile("ReVape/accounts/password.txt") or "PASSWORD"
 	vape.Init = nil
 	vape:Load()
 	task.spawn(function()
@@ -68,15 +70,15 @@ local function finishLoading()
 				end
 			]]
 			if shared.VapeDeveloper then
-									getgenv().username = getgenv().username or "GUEST"
-					getgenv().password = getgenv().password or "PASSWORD"
+									getgenv().username = user
+					getgenv().password = password 
 						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 						
 			end
 			if shared.VapeCustomProfile then
-														getgenv().username = getgenv().username or "GUEST"
-					getgenv().password = getgenv().password or "PASSWORD"
+										getgenv().username = user 
+					getgenv().password = password 
 						vape:CreateNotification("ReVape", 'If you think this is incorrect, please destory revape and reinject from ur executor', 30, 'alert')
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
