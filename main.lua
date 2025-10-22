@@ -42,7 +42,7 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-
+local login = loadstring(downloadFile('ReVape/libraries/login.lua'), 'login')()
 local function finishLoading()
 	local user =  readfile("ReVape/accounts/username.txt") or "GUEST"
 	local password = readfile("ReVape/accounts/password.txt") or "PASSWORD"
@@ -54,6 +54,7 @@ local function finishLoading()
 			task.wait(10)
 		until not vape.Loaded
 	end)
+
 
 	local teleportedServers
 	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
@@ -92,7 +93,8 @@ local function finishLoading()
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 		end
 	end
-	
+		local S,U,P = login:Login()
+	vape.role = S
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
