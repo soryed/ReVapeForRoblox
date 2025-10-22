@@ -65,8 +65,7 @@ local function finishLoading()
 
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
-														getgenv().username = user
-					getgenv().password = password 
+
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
 			]]
