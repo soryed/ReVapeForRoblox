@@ -225,7 +225,6 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
-local login = loadstring(downloadFile('ReVape/libraries/login.lua'), 'login')()
 
 
 local whitelist = {
@@ -8152,8 +8151,3 @@ run(function()
 	
 end)
 
-run(function()
-	local S,U,P = login:Login()
-	vape.role = S
-	print(S,U,P)			
-end)
