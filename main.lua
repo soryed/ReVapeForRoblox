@@ -42,10 +42,8 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local login = loadstring(downloadFile('ReVape/libraries/login.lua'), 'login')()
 local function finishLoading()
-	local user =  readfile("ReVape/accounts/username.txt") or "GUEST"
-	local password = readfile("ReVape/accounts/password.txt") or "PASSWORD"
+
 	vape.Init = nil
 	vape:Load()
 	task.spawn(function()
@@ -64,8 +62,7 @@ local function finishLoading()
 			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
-									getgenv().username = user
-					getgenv().password = password 
+
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
 														getgenv().username = user
@@ -93,8 +90,7 @@ local function finishLoading()
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 		end
 	end
-		local S,U,P = login:Login()
-	vape.role = S
+	vape.role = "owner"
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
