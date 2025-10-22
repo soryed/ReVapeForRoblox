@@ -68,6 +68,8 @@ local HitBoxes = {}
 local InfiniteFly = {}
 local TrapDisabler
 local AntiFallPart
+local Speed
+local Fly
 local bedwars, remotes, sides, oldinvrender, oldSwing = {}, {}, {}
 
 local function addBlur(parent)
@@ -849,10 +851,6 @@ run(function()
 		return getBlockHealth(block, bedwars.BlockController:getBlockPosition(blockpos)) / tool
 	end
 
-	--[[
-		Pathfinding using a luau version of dijkstra's algorithm
-		Source: https://stackoverflow.com/questions/39355587/speeding-up-dijkstras-algorithm-to-solve-a-3d-maze
-	]]
 	local function calculatePath(target, blockpos)
 		if cache[blockpos] then
 			return unpack(cache[blockpos])
@@ -1815,7 +1813,6 @@ run(function()
 	})
 end)
 	
-local Fly
 local LongJump
 run(function()
 	local Value
@@ -3123,7 +3120,6 @@ run(function()
 end)
 	
 run(function()
-	local Speed
 	local Value
 	local WallCheck
 	local AutoJump
@@ -9799,9 +9795,35 @@ run(function()
                         AimPrompt.HoldDuration = aim
                         FirePrompt.HoldDuration = tnt
                         LaunchSelfPrompt.HoldDuration = aunchself
-						LaunchSelfPrompt.Triggered:Connect(function(p)
-												print(p.Name)
-									end)
+					BetterDavey:Clean(LaunchSelfPrompt.Triggered:Connect(function(p)
+						local humanoid = lplr.Character and lplr.Character:FindFirstChildOfClass("Humanoid")
+					
+						if not humanoid then return end
+					
+						local blockMeta = bedwars.ItemMeta[dblock.Name]
+						if not blockMeta or not blockMeta.block then return end
+					
+						local breakType = blockMeta.block.breakType
+					
+						if Speed.Enabled and Fly.Enabled then
+							Fly:Toggle()
+							task.wait(0.025)
+							Speed:Toggle()
+						elseif Speed.Enabled then
+							Speed:Toggle()
+						elseif Fly.Enabled then
+							Fly:Toggle()
+						end
+					
+						local tool = store.tools[breakType]
+						if tool then
+							switchItem(tool.tool)
+						end
+					
+						if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
+							humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						end
+					end))
                     end
                 end))
             else
