@@ -65,13 +65,28 @@ local uipallet = {
 }
 
 task.spawn(function()
-	local data = readfile("ReVape/profiles/theme.txt")
+	local data = readfile("ReVape/profiles/theme.txt") or "Dark"
 	if data == "Light" then
 			uipallet.Main = Color3.fromRGB(200, 200, 200)
 			uipallet.Text = Color3.fromRGB(26, 25, 26)
 	
 		elseif data == "Dark" then
 					uipallet.Main = Color3.fromRGB(26, 25, 26)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+			elseif data == "Light Red" then
+					uipallet.Main = Color3.fromRGB(235, 101, 63)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+			elseif data == "Light Blue" then
+					uipallet.Main = Color3.fromRGB(63, 86, 235)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+			elseif data == "Light Yellow" then
+					uipallet.Main = Color3.fromRGB(207, 196, 74)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+elseif data == "Darkish Blue" then
+					uipallet.Main = Color3.fromRGB(38, 41, 222)
+			uipallet.Text = Color3.fromRGB(200, 200, 200)
+			elseif data == "Light Green" then
+					uipallet.Main = Color3.fromRGB(104, 207, 56)
 			uipallet.Text = Color3.fromRGB(200, 200, 200)
 		else
 			uipallet.Main = Color3.fromRGB(26, 25, 26)
@@ -2494,7 +2509,7 @@ function mainapi:SWITCHTHEMECOLOR(v)
 		makefolder(folder)
 	end
 
-	local theme = v and "Light" or "Dark"
+	local theme = v 
 	local upperTheme = string.upper(theme)
 
 	if not isfile(path) then
@@ -6035,26 +6050,17 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
-mainapi.LM = guipane:CreateToggle({
-	Name = 'Light Mode',
-	Function = function(v)
-		mainapi:SWITCHTHEMECOLOR(v)
+mainapi.Theme = guipane:CreateDropdown({
+	Name = 'Theme',
+	List =  {"Light","Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green"},
+	Function = function(v,m)
+			if m then 
+			mainapi:SWITCHTHEMECOLOR(v)
+			end
 	end,
-	Default = false,
 	Tooltip = 'Switches ur theme'
 })
-task.spawn(function()
-	local data = readfile("ReVape/profiles/theme.txt")
-	if data == "Light" then
-		mainapi.LM.Enabled = true
-		elseif data == "Dark" then
-		mainapi.LM.Enabled = false
 
-		else
-					mainapi.LM.Enabled = false
-
-		end
-end)
 guipane:CreateToggle({
 	Name = 'GUI bind indicator',
 	Default = true,
