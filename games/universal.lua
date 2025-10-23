@@ -244,6 +244,18 @@ local whitelist = {
                     },
                 },
             },
+		--[[	["9705518292"] = {
+				userId = 9705518292,
+                hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "REVAPE OWNER",
+                        color = {78, 200, 54},
+                    },
+                },
+            },--]]
         },
 
         WhitelistTags = {
@@ -262,7 +274,7 @@ local whitelist = {
         },
     },
 
-    hashes = setmetatable({}, {
+    es = setmetatable({}, {
         __index = function(_, v)
             return (hash and hash.sha512) and hash.sha512(v .. 'SelfReport') or ''
         end,
@@ -424,7 +436,7 @@ run(function()
 		local key = plr.Name..plr.UserId
 local plrstr = self.hashes[key]
 
-
+print(plrstr,key)
 for _, v in self.data.WhitelistedUsers do
     if v.hash == plrstr then
 
