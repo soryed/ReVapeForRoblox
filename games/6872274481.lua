@@ -45,7 +45,7 @@ local prediction = vape.Libraries.prediction
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role 
-print(role)
+
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
@@ -779,7 +779,7 @@ run(function()
 	for i, v in remoteNames do
 		local remote = dumpRemote(debug.getconstants(v))
 		if remote == '' then
-			notif('Vape', 'Failed to grab remote ('..i..')', 10, 'alert')
+			notif('Onyx', 'Failed to grab remote ('..i..')', 10, 'alert')
 		end
 		remotes[i] = remote
 	end
@@ -8666,7 +8666,7 @@ run(function()
     ClientCrasher = vape.Categories.Exploits:CreateModule({
         Name = 'Client Crasher',
         Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
             if callback then
                 for _, v in getconnections(game:GetService("ReplicatedStorage"):WaitForChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events"):WaitForChild("abilityUsed").OnClientEvent) do
                     v:Disconnect()    
@@ -8815,7 +8815,7 @@ run(function()
                     vape:CreateNotification('No Mods Online!', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('ReVape', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('Onyx', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9029,7 +9029,7 @@ run(function()
         Name = 'Anti-Cheat Mods',
         Tooltip = "Fetches all AC mod users (including unknowns)",
         Function = function()
-            vape:CreateNotification('ReVape', "Currently fetching mods", 3)
+            vape:CreateNotification('Onyx', "Currently fetching mods", 3)
             task.wait(4)
 
             local HttpService = game:GetService("HttpService")
@@ -9058,7 +9058,7 @@ run(function()
             end
 
             if #data.userIds == 0 then
-                vape:CreateNotification('ReVape', "No Users Selected, Pick a Side/Specific to fetch", 5, "alert")
+                vape:CreateNotification('Onyx', "No Users Selected, Pick a Side/Specific to fetch", 5, "alert")
                 return
             end
 
@@ -9074,7 +9074,7 @@ run(function()
                 end)
 
                 if not okDecode or not result then
-                    vape:CreateNotification('ReVape', "Failed to decode presence JSON", 15, "alert")
+                    vape:CreateNotification('Onyx', "Failed to decode presence JSON", 15, "alert")
                     return
                 end
 
@@ -9091,18 +9091,18 @@ run(function()
                         if user.userPresenceType == 0 then
                             Offline = Offline + 1
                             if IncludeOffline and IncludeOffline.Value then
-                                vape:CreateNotification('ReVape', username, 5, "alert")
+                                vape:CreateNotification('Onyx', username, 5, "alert")
                             end
                         elseif user.userPresenceType == 1 then 
                             Online = Online + 1
-                            vape:CreateNotification('ReVape', username, 15, "warning")
+                            vape:CreateNotification('Onyx', username, 15, "warning")
                         elseif user.userPresenceType == 2 then 
                             InGame = InGame + 1
-                            vape:CreateNotification('ReVape', username, 15, "warning")
+                            vape:CreateNotification('Onyx', username, 15, "warning")
                         elseif user.userPresenceType == 3 then 
                             Studio = Studio + 1
                             if IncludeStudio and IncludeStudio.Value then
-                                vape:CreateNotification('ReVape', username, 5, "warning")
+                                vape:CreateNotification('Onyx', username, 5, "warning")
                             end
                         end
                     end
@@ -9110,18 +9110,18 @@ run(function()
 
                 task.wait(5)
                 if InGame >= 2 then
-                    vape:CreateNotification('ReVape', "There are [" .. InGame .. "] mods in game", 45)
+                    vape:CreateNotification('Onyx', "There are [" .. InGame .. "] mods in game", 45)
                 elseif InGame == 0 then
-                    vape:CreateNotification('ReVape', "There are none in-game", 45)
+                    vape:CreateNotification('Onyx', "There are none in-game", 45)
                 end
 
                 if Online >= 2 then
-                    vape:CreateNotification('ReVape', "There are [" .. Online .. "] mods online", 45)
+                    vape:CreateNotification('Onyx', "There are [" .. Online .. "] mods online", 45)
                 elseif Online == 0 then
-                    vape:CreateNotification('ReVape', "There are none online", 45)
+                    vape:CreateNotification('Onyx', "There are none online", 45)
                 end
             else
-                vape:CreateNotification('ReVape', "Failed to get presence data: " .. tostring(err), 15, "alert")
+                vape:CreateNotification('Onyx', "Failed to get presence data: " .. tostring(err), 15, "alert")
             end
         end
     })
@@ -9212,98 +9212,98 @@ local function staffFunction(plr, checktype, checktypee)
 if checktype == "spectator_join" then
 	if 	IdentifyMod.Enabled then 
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
-		vape:CreateNotification('ReVape', "Chase Has joined!","alert", 15)																																																																																
+		vape:CreateNotification('Onyx', "Chase Has joined!","alert", 15)																																																																																
 		end
 	if plr.UserId == 547598710 or  plr.UserId == 5728889572 or  plr.UserId == 4652232128 or  plr.UserId == 7043591647  or  plr.UserId == 7209929547 or  plr.UserId == 7043958628 or  plr.UserId == 7418525152 or  plr.UserId == 3774791573 or  plr.UserId == 8606089749 then
-	vape:CreateNotification('ReVape', "Orion Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Orion Has joined!","alert", 15)
 	end
 	if plr.UserId == 162442297 or  plr.UserId == 702354331 or  plr.UserId == 9350301723  then
-	vape:CreateNotification('ReVape', "Lisnix Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Lisnix Has joined!","alert", 15)
 	end
 	if plr.UserId == 307212658 or  plr.UserId == 5097000699 or  plr.UserId == 4923561416 then
-	vape:CreateNotification('ReVape', "Nwr Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Nwr Has joined!","alert", 15)
 	end
 	if plr.UserId == 514679433 or  plr.UserId == 2431747703 or  plr.UserId == 4531785383 then
-	vape:CreateNotification('ReVape', "Gorilla Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Gorilla Has joined!","alert", 15)
 	end
 	if plr.UserId == 2428373515 or  plr.UserId == 7659437319 then
-	vape:CreateNotification('ReVape', "Typhoon Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Typhoon Has joined!","alert", 15)
 	end
 	if plr.UserId == 2465133159 then
-	vape:CreateNotification('ReVape', "Erin Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Erin Has joined!","alert", 15)
 	end
 	if plr.UserId == 7558211130 or  plr.UserId == 1708400489 or  plr.UserId == 9554637663 then
-	vape:CreateNotification('ReVape', "Ghost Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Ghost Has joined!","alert", 15)
 	end
 	if plr.UserId == 376388734 or  plr.UserId == 5157136850 then
-	vape:CreateNotification('ReVape', "Sponge Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Sponge Has joined!","alert", 15)
 	end
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
-	vape:CreateNotification('ReVape', "Gora Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Gora Has joined!","alert", 15)
 	end
 	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 then
-	vape:CreateNotification('ReVape', "Apple Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
-	vape:CreateNotification('ReVape', "Dom Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Dom Has joined!","alert", 15)
 	end
 	if plr.UserId == 575474067 or  plr.UserId == 4785639950 or  plr.UserId == 8735055832 then
-	vape:CreateNotification('ReVape', "Kevin Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Kevin Has joined!","alert", 15)
 	end
 	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
-	vape:CreateNotification('ReVape', "Vic Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Vic Has joined!","alert", 15)
 	end
 if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
-	vape:CreateNotification('ReVape', "Soryed Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Soryed Has joined!","alert", 15)
 end
 		end	
 else
 notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
 	if 	IdentifyMod.Enabled then 
 		if plr.UserId == 22808138 or  plr.UserId == 4782733628 or  plr.UserId == 7447190808 or  plr.UserId == 3196162848 then
-		vape:CreateNotification('ReVape', "Chase Has joined!","alert", 15)																																																																																
+		vape:CreateNotification('Onyx', "Chase Has joined!","alert", 15)																																																																																
 		end
 	if plr.UserId == 547598710 or  plr.UserId == 5728889572 or  plr.UserId == 4652232128 or  plr.UserId == 7043591647  or  plr.UserId == 7209929547 or  plr.UserId == 7043958628 or  plr.UserId == 7418525152 or  plr.UserId == 3774791573 or  plr.UserId == 8606089749 then
-	vape:CreateNotification('ReVape', "Orion Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Orion Has joined!","alert", 15)
 	end
 	if plr.UserId == 162442297 or  plr.UserId == 702354331 or  plr.UserId == 9350301723  then
-	vape:CreateNotification('ReVape', "Lisnix Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Lisnix Has joined!","alert", 15)
 	end
 	if plr.UserId == 307212658 or  plr.UserId == 5097000699 or  plr.UserId == 4923561416 then
-	vape:CreateNotification('ReVape', "Nwr Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Nwr Has joined!","alert", 15)
 	end
 	if plr.UserId == 514679433 or  plr.UserId == 2431747703 or  plr.UserId == 4531785383 then
-	vape:CreateNotification('ReVape', "Gorilla Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Gorilla Has joined!","alert", 15)
 	end
 	if plr.UserId == 2428373515 or  plr.UserId == 7659437319 then
-	vape:CreateNotification('ReVape', "Typhoon Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Typhoon Has joined!","alert", 15)
 	end
 	if plr.UserId == 2465133159 then
-	vape:CreateNotification('ReVape', "Erin Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Erin Has joined!","alert", 15)
 	end
 	if plr.UserId == 7558211130 or  plr.UserId == 1708400489 or  plr.UserId == 9554637663 then
-	vape:CreateNotification('ReVape', "Ghost Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Ghost Has joined!","alert", 15)
 	end
 	if plr.UserId == 376388734 or  plr.UserId == 5157136850 then
-	vape:CreateNotification('ReVape', "Sponge Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Sponge Has joined!","alert", 15)
 	end
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
-	vape:CreateNotification('ReVape', "Gora Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Gora Has joined!","alert", 15)
 	end
 	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 then
-	vape:CreateNotification('ReVape', "Apple Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
-	vape:CreateNotification('ReVape', "Dom Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Dom Has joined!","alert", 15)
 	end
 	if plr.UserId == 575474067 or  plr.UserId == 4785639950 or  plr.UserId == 8735055832 then
-	vape:CreateNotification('ReVape', "Kevin Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Kevin Has joined!","alert", 15)
 	end
 	if plr.UserId == 839818760 or plr.UserId == 1524739259  then
-	vape:CreateNotification('ReVape', "Vic Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Vic Has joined!","alert", 15)
 	end
 if plr.UserId == 1092621569 or  plr.UserId == 9673014247 or  plr.UserId == 9673085642 or  plr.UserId == 9701608749 or  plr.UserId == 9617190012 or  plr.UserId == 9673029143 or plr.UserId == 9705518292  then
-	vape:CreateNotification('ReVape', "Soryed Has joined!","alert", 15)
+	vape:CreateNotification('Onyx', "Soryed Has joined!","alert", 15)
 end
 																																																																																
      end																																																																																				
@@ -9439,7 +9439,7 @@ end
     StaffDetector = vape.Categories.Utility:CreateModule({
         Name = 'StaffDetectorV2',
         Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
             if callback then
                 if playersService and playersService.PlayerAdded then
@@ -9720,7 +9720,7 @@ run(function()
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
-	if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+	if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
             if callback then
                 task.spawn(function()
@@ -9776,7 +9776,7 @@ run(function()
         Name = "BetterDavey",
         Tooltip = "makes your cannon faster lol",
         Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then return end
             local worldFolder = getWorldFolder()
@@ -9835,7 +9835,7 @@ run(function()
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
-					if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+					if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then 
 				MatchHistory:Toggle()
@@ -9852,7 +9852,7 @@ run(function()
 		Name = "AutoBan",
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
-		if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+		if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then 
 				AutoBan:Toggle()
@@ -9895,7 +9895,7 @@ run(function()
     InfernalKill = vape.Categories.Exploits:CreateModule({
         ["Name"] = "EmberExploit",
         ["Function"] = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
             if callback then
                 repeat
@@ -9993,7 +9993,7 @@ run(function()
     KrystalXploit = vape.Categories.Exploits:CreateModule({
         Name = "KrystalExploit",
         Function = function(call)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
             if call then
                 task.spawn(function()
@@ -10037,8 +10037,8 @@ run(function()
 	Desync = vape.Categories.Exploits:CreateModule({
 		Name = "Desync",
 		Function = function()
-			if not enabled.Enabled then vape:CreateNotification('ReVape', "Ignored, You do not have the setting on to use this module",5,"warning") return end
-if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
+if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
@@ -10195,7 +10195,7 @@ run(function()
 				for _, memberId in pairs(members) do
 					local memberIdStr = tostring(memberId)
 					if memberIdStr == playerIdInTeams then
-						vape:CreateNotification('ReVape', "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
+						vape:CreateNotification('Onyx', "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
 					else
 						table.insert(cleanedMembers, memberIdStr)
 					end
@@ -10271,7 +10271,7 @@ run(function()
 					if v == Players.LocalPlayer then continue end
 					if tostring(v:GetAttribute("Disguised")) == "true" then
 						v:SetAttribute("Disguised", false)
-						notif("Vape", "Remove Disguises, Disabled streamer mode for "..tostring(v.Name).."!", 3)
+						notif('Onyx', "Remove Disguises, Disabled streamer mode for "..tostring(v.Name).."!", 3)
 						table.insert(self.disguises, v)
 					end
 				end
@@ -10279,7 +10279,7 @@ run(function()
 				for i,v in pairs(self.disguises) do
 					if tostring(v:GetAttribute("Disguised")) ~= "true" then
 						v:SetAttribute("Disguised", true)
-						notif("Vape", "Remove Disguises, Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
+						notif('Onyx', "Remove Disguises, Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
 					end
 				end
 				table.clear(self.disguises)
@@ -10380,9 +10380,9 @@ run(function()
 	ViewProfiles = vape.Categories.Exploits:CreateModule({
 		Name = "ViewProfile",
 		Function = function(callback)
-if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
-			notif("Vape", "This function is not finish", 10,"alert")
+			notif('Onyx', "This function is not finish", 10,"alert")
 		end,
 		Tooltip = "This allows you to see other peoples profile"
 	})
@@ -10398,13 +10398,13 @@ run(function()
 	local player = game:GetService('Players').LocalPlayer
 
 	if not player:FindFirstChild("Tags") then
-		notif("Vape", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
+		notif('Onyx', "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
 		return
 	end
 
 	local tagObj = player.Tags:FindFirstChild("0")
 	if not tagObj then
-		notif("Vape", "Couldn't find any tag inside 'Tags'", 20, "alert")
+		notif('Onyx', "Couldn't find any tag inside 'Tags'", 20, "alert")
 		return 	end
 
 	local function Color3ToHex(r, g, b)
@@ -10417,7 +10417,7 @@ run(function()
 	CustomTAG = vape.Categories.Troll:CreateModule({
 		Name = "CustomTag",
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"  then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
 				tagObj.Value = string.format(
@@ -10536,7 +10536,7 @@ local AutoReport
 	 AutoReport = vape.Categories.Troll:CreateModule({
 		Name = "AutoReport",
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
 
@@ -10553,7 +10553,7 @@ local AutoReport
 
 						if reportEvent then
 							reportEvent:FireServer(v.UserId)
-							vape:CreateNotification("ReVape", "Reported '" .. v.Name .. "'", 1, "alert")
+							vape:CreateNotification('Onyx', "Reported '" .. v.Name .. "'", 1, "alert")
 							task.wait(1 + math.random())
 						end
 					end
@@ -10583,7 +10583,7 @@ run(function()
 	AutoQueue = vape.Categories.Troll:CreateModule({
 		Name = 'AutoQueue',
 		Function = function(callback)
-								if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+								if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
 				AutoQueue:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
@@ -10674,7 +10674,7 @@ run(function()
         Name = 'QueueMods',
         Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel',
         Function = function(enabled)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"then notif("Vape", "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium"then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
             QueueDisplayConfig.ActiveState = enabled
             if enabled then
