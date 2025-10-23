@@ -2550,6 +2550,7 @@ function mainapi:CreateGUI()
 	logo.Position = UDim2.fromOffset(11, 10)
 	logo.BackgroundTransparency = 1
 	logo.Image = getcustomasset('ReVape/assets/new/guivape.png')
+							print(logo.Image)
 	logo.ImageColor3 = select(3, uipallet.Main:ToHSV()) > 0.5 and uipallet.Text or Color3.new(1, 1, 1)
 	logo.Parent = window
 	local logov4 = Instance.new('ImageLabel')
@@ -6460,6 +6461,7 @@ VapeLogo.BorderSizePixel = 0
 VapeLogo.Visible = false
 VapeLogo.BackgroundColor3 = Color3.new()
 VapeLogo.Image = getcustomasset('ReVape/assets/new/textvape.png')
+			print(VapeLogo.Image)
 VapeLogo.Parent = textgui.Children
 
 local lastside = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
