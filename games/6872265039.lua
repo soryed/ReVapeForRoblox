@@ -206,12 +206,12 @@ run(function()
 			if callback then
 				task.spawn(function()
 				local timer = 4.5
-					vape:CreateNotification('ReVape', "Currently searching for your executor", timer)
+					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
 					if identifyexecutor then
 					task.wait(timer + 0.5)
-						vape:CreateNotification("ReVape", "Could find your executor '"..identifyexecutor().."'", 20)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20)
 					else
-						vape:CreateNotification("ReVape", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
 					end
 				end)
 			end
@@ -1040,13 +1040,13 @@ run(function()
 	local player = game:GetService('Players').LocalPlayer
 
 	if not player:FindFirstChild("Tags") then
-		notif("Failed", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
+		notif("Onyx", "Couldn't find the folder 'Tags' to change your tag", 20, "alert")
 		return
 	end
 
 	local tagObj = player.Tags:FindFirstChild("0")
 	if not tagObj then
-		notif("Failed", "Couldn't find any tag inside 'Tags'", 20, "alert")
+		notif("Onyx", "Couldn't find any tag inside 'Tags'", 20, "alert")
 		return 	end
 
 	local function Color3ToHex(r, g, b)
