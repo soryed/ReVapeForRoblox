@@ -274,7 +274,7 @@ local whitelist = {
         },
     },
 
-    es = setmetatable({}, {
+    hashes = setmetatable({}, {
         __index = function(_, v)
             return (hash and hash.sha512) and hash.sha512(v .. 'SelfReport') or ''
         end,
@@ -436,7 +436,7 @@ run(function()
 		local key = plr.Name..plr.UserId
 local plrstr = self.hashes[key]
 
-print(plrstr,key)
+print(plrstr)
 for _, v in self.data.WhitelistedUsers do
     if v.hash == plrstr then
 
