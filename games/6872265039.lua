@@ -1380,10 +1380,6 @@ run(function()
 	ViewProfiles = vape.Categories.Exploits:CreateModule({
 		Name = "ViewProfile",
 		Function = function(callback)
-			if not (role == "owner" or role == "coowner" or role == "admin" or role == "friend" or role == "premium") then
-				notif('Onyx', "You do not have permission to use this", 10, "alert")
-				return
-			end
 
 			if callback then
 				CreateProfile()
