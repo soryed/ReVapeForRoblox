@@ -6225,7 +6225,7 @@ run(function()
 				
 				local ind = 1
 				repeat
-					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'vxpe on top')
+					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'revape on top')
 					if Mode.Value == 'Order' and #Lines.ListEnabled > 0 then
 						message = Lines.ListEnabled[ind] or Lines.ListEnabled[1]
 						ind = (ind % #Lines.ListEnabled) + 1
@@ -6286,7 +6286,7 @@ run(function()
 		end
 	end
 	
-	Disabler = vape.Categories.Utility:CreateModule({
+	Disabler = vape.Categories.Exploits:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
