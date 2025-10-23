@@ -441,7 +441,6 @@ run(function()
 	function whitelist:get(plr)
 		local key = plr.Name..plr.UserId
 local plrstr = self.hashes[key]
-setclipboard(plrstr)
 			for _, v in self.data.WhitelistedUsers do
     if v.hash == plrstr then
 
