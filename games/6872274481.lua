@@ -2353,6 +2353,7 @@ local S = 0
 	})
 	SyncHit = Killaura:CreateToggle({
 		Name = 'Sync Hit-Time',
+		Tooltip = "Synchronize's ur hit time",
 		Default = false
 	})
 	AngleSlider = Killaura:CreateSlider({
