@@ -2063,6 +2063,7 @@ end)
 local Attacking
 run(function()
 	local Killaura
+	local SyncHits
 	local Targets
 	local Sort
 	local SwingRange
@@ -2247,11 +2248,12 @@ run(function()
 									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
 										AnimDelay = tick()
 									end
-
+local Q = 0.5
+																																if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
 									AttackRemote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = 0},
-										lastSwingServerTimeDelta = 0.5,
+										lastSwingServerTimeDelta = Q,
 										entityInstance = v.Character,
 										validate = {
 											raycast = {
@@ -2284,9 +2286,9 @@ run(function()
 						local vec = attacked[1].Entity.RootPart.Position * Vector3.new(1, 0, 1)
 						entitylib.character.RootPart.CFrame = CFrame.lookAt(entitylib.character.RootPart.Position, Vector3.new(vec.X, entitylib.character.RootPart.Position.Y + 0.001, vec.Z))
 					end
-
-					--#attacked > 0 and #attacked * 0.02 or
-					task.wait(1 / UpdateRate.Value)
+local S = 0
+					if SyncHit.Enabled then S = 1 / UpdateRate.Value else S = 0.75 / UpdateRate.Value end
+					task.wait(S)
 				until not Killaura.Enabled
 			else
 				store.KillauraTarget = nil
@@ -2348,6 +2350,10 @@ run(function()
 		Max = 0.5,
 		Default = 0.5,
 		Decimal = 100
+	})
+	SyncHit = Killaura:CreateToggle({
+		Name = 'Sync Hit-Time',
+		Default = false
 	})
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
@@ -9922,71 +9928,7 @@ run(function()
         ["Tooltip"] = "insta kill"
     })
 end)
---[[
 
-run(function()
-	local Shaders = {Enabled = false}
-
-    local Shaders = vape.Categories.Render:CreateModule({
-        Name = "Shaders",
-        Function = function(call)
-            if call then
-                local VaporwaveSky = Lighting:FindFirstChild("VaporwaveSky") or Instance.new("Sky")
-                VaporwaveSky.Name = "VaporwaveSky"
-                VaporwaveSky.SkyboxBk = "rbxassetid://159454299"
-                VaporwaveSky.SkyboxDn = "rbxassetid://159454296"
-                VaporwaveSky.SkyboxFt = "rbxassetid://159454293"
-                VaporwaveSky.SkyboxLf = "rbxassetid://159454286"
-                VaporwaveSky.SkyboxRt = "rbxassetid://159454300"
-                VaporwaveSky.SkyboxUp = "rbxassetid://159454288"
-                VaporwaveSky.StarCount = 200
-                VaporwaveSky.SunAngularSize = 10
-                VaporwaveSky.MoonAngularSize = 9
-                VaporwaveSky.CelestialBodiesShown = true
-                VaporwaveSky.Parent = Lighting
-
-                local Bloom = Lighting:FindFirstChild("VaporwaveBloom") or Instance.new("BloomEffect")
-                Bloom.Name = "VaporwaveBloom"
-                Bloom.Enabled = true
-                Bloom.Intensity = 0.35
-                Bloom.Threshold = 0.2
-                Bloom.Size = 56
-                Bloom.Parent = Lighting
-
-                local Color = Lighting:FindFirstChild("VaporwaveColor") or Instance.new("ColorCorrectionEffect")
-                Color.Name = "VaporwaveColor"
-                Color.Enabled = true
-                Color.Brightness = 0.05
-                Color.Contrast = 0.25
-                Color.Saturation = 0.5
-                Color.TintColor = Color3.fromRGB(220, 160, 255)
-                Color.Parent = Lighting
-
-                local Atmosphere = Lighting:FindFirstChild("VaporwaveAtmosphere") or Instance.new("Atmosphere")
-                Atmosphere.Name = "VaporwaveAtmosphere"
-                Atmosphere.Density = 0.25
-                Atmosphere.Offset = 0.15
-                Atmosphere.Glare = 1.2
-                Atmosphere.Haze = 1
-                Atmosphere.Color = Color3.fromRGB(180, 140, 255)
-                Atmosphere.Decay = Color3.fromRGB(220, 120, 200)
-                Atmosphere.Parent = Lighting
-            else
-                local sky = Lighting:FindFirstChild("VaporwaveSky")
-                if sky then sky:Destroy() end
-                local bloom = Lighting:FindFirstChild("VaporwaveBloom")
-                if bloom then bloom.Enabled = false end
-                local color = Lighting:FindFirstChild("VaporwaveColor")
-                if color then color.Enabled = false end
-                local atmosphere = Lighting:FindFirstChild("VaporwaveAtmosphere")
-                if atmosphere then atmosphere:Destroy() end
-            end
-        end,
-        Tooltip = "Shaders"
-    })
-end)
-
---]]
 run(function()
     local KrystalXploit = {Enabled = false}
 	local MomentumUpdate = replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate
@@ -10022,6 +9964,16 @@ run(function()
 					task.wait(0.4)
 					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 75, 0)
 				end
+task.wait(0.025)
+				for i = 1, 2 do
+					task.wait(0.125)
+					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 85, 0)
+				end
+task.wait(0.3)
+				for i = 1, 3 do
+					task.wait(0.15)
+					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 64, 0)
+				end
 			else
 				workspace.Gravity = 192.6
 			end
@@ -10039,7 +9991,7 @@ run(function()
 		Function = function()
 			if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
 if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" or not role == "user" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
-
+vape:CreateNotification('Onyx', "Note setfflag does not work for every supported executor now, this function just throws an error for now",10,"alert")
 		setfflag("FFlagDebugGraphicsPreferD3D11","True")
 		setfflag("FLogNetwork","7")
 		setfflag("FFlagHandleAltEnterFullscreenManually","False")
@@ -10057,322 +10009,6 @@ if not role == "owner" or not role == "coowner" or not role == "admin" or not ro
         Tooltip = 'Enables so you can use desync fflag method'
 	})
 end)
---[[
-run(function()
-		local KnitInit, Knit
-		repeat
-			KnitInit, Knit = pcall(function()
-				return debug.getupvalue(require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.knit).setup, 6)
-			end)
-			if KnitInit then break end
-			task.wait()
-		until KnitInit
-
-		if not debug.getupvalue(Knit.Start, 1) then
-			repeat task.wait() until debug.getupvalue(Knit.Start, 1)
-		end
-
-		local Players = game:GetService("Players")
-
-		shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT = Knit.Controllers.PermissionController.hasAnyPermissions
-		shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT =  Knit.Controllers.MatchController.getPlayerParty
-
-		local AC_MOD_View = {
-			playerConnections = {},
-			Enabled = false,
-			Friends = {}, 
-			parties = {}, 
-			teamMap = {}, 
-			display = {},
-			isRefreshing = false,
-			cacheDirty = true,
-			disable_disguises = false,
-			disguises = {},
-			teamData = {},
-			moduleInstance = {},
-			disableDisguisesToggle = {}
-		}
-
-		AC_MOD_View.controller = Knit.Controllers.PermissionController
-		AC_MOD_View.match_controller = Knit.Controllers.MatchController
-
-		function AC_MOD_View:getPartyById(displayId)
-			if not displayId then return end
-			displayId = tostring(displayId)
-			if self.display[displayId] then return self.display[displayId] end
-			for _, party in pairs(self.parties) do
-				if party.displayId == tostring(displayId) then
-					self.display[displayId] = party
-					return party
-				end
-			end
-		end
-
-		function AC_MOD_View:refreshDisplayCache()
-			for _, plr in pairs(Players:GetPlayers()) do
-				local playerId = tostring(plr.UserId)
-
-				local playerPartyId = self.teamMap[playerId]
-				if playerPartyId ~= nil then
-					self:getPartyById(playerPartyId)
-				end
-				task.wait()
-			end
-		end
-
-		function AC_MOD_View:refreshDisplayCacheAsync()
-			task.spawn(self.refreshDisplayCache, self)
-		end
-
-		function AC_MOD_View:getPlayerTeamData(plr)
-			if self.teamData[plr] then return self.teamData[plr] end
-
-			self.teamData[plr] = {}
-
-			local teamMembers = {}
-			local playerTeam = plr.Team 
-			if not playerTeam then
-				return teamMembers 
-			end
-
-			local playerId = tostring(plr.UserId)
-			self.Friends[playerId] = self.Friends[playerId] or {}
-
-			for _, otherPlayer in pairs(Players:GetPlayers()) do
-				if otherPlayer == plr then continue end 
-
-				local otherPlayerId = tostring(otherPlayer.UserId)
-				local areFriends = self.Friends[playerId][otherPlayerId]
-
-				if areFriends == nil then
-					local suc, res = pcall(function()
-						return plr:IsFriendsWith(otherPlayer.UserId)
-					end)
-					areFriends = suc and res or false
-
-					if suc then
-						self.Friends[playerId][otherPlayerId] = areFriends
-						self.Friends[otherPlayerId] = self.Friends[otherPlayerId] or {}
-						self.Friends[otherPlayerId][playerId] = areFriends
-					end
-				end
-
-				if areFriends and otherPlayer.Team == playerTeam then
-					table.insert(teamMembers, otherPlayerId)
-				end
-			end
-
-			self.teamData[plr] = teamMembers
-
-			return teamMembers
-		end
-
-		function AC_MOD_View:refreshPlayerTeamData()
-			for i,v in pairs(Players:GetPlayers()) do
-				self:getPlayerTeamData(v)
-				task.wait()
-			end
-		end
-
-		function AC_MOD_View:refreshPlayerTeamDataAsync()
-			task.spawn(self.refreshPlayerTeamData, self)
-		end
-
-		function AC_MOD_View:refreshTeamMap()
-			local allTeams = {}
-			for _, p in pairs(Players:GetPlayers()) do
-				local teamMembers = self:getPlayerTeamData(p)
-				if teamMembers and #teamMembers > 0 then 
-					allTeams[p] = teamMembers
-				end
-			end
-
-			local validTeams = {}
-			for playerInTeams, members in pairs(allTeams) do
-				local playerIdInTeams = tostring(playerInTeams.UserId)
-				local cleanedMembers = {}
-
-				for _, memberId in pairs(members) do
-					local memberIdStr = tostring(memberId)
-					if memberIdStr == playerIdInTeams then
-						vape:CreateNotification('Onyx', "Player " .. playerIdInTeams .. " has themselves in their team list.",8,"warning") 
-					else
-						table.insert(cleanedMembers, memberIdStr)
-					end
-				end
-
-				if #cleanedMembers > 0 then
-					validTeams[playerInTeams] = cleanedMembers
-				end
-			end
-
-			self.parties = {}
-			self.teamMap = {}
-			local teamId = 0
-			for playerInTeams, members in pairs(validTeams) do
-				local playerIdInTeams = tostring(playerInTeams.UserId)
-				if not self.teamMap[playerIdInTeams] then
-					self.teamMap[playerIdInTeams] = teamId
-					table.insert(self.parties, {
-						displayId = tostring(teamId),
-						members = members
-					})
-					teamId = teamId + 1
-
-					for _, memberId in pairs(members) do
-						self.teamMap[memberId] = teamId - 1
-					end
-				end
-			end
-
-			self.cacheDirty = false
-			self.isRefreshing = false
-		end
-
-		function AC_MOD_View:refreshTeamMapAsync()
-			if self.isRefreshing then return end 
-			self.isRefreshing = true
-			task.spawn(function()
-				self:refreshTeamMap()
-			end)
-		end
-
-		function AC_MOD_View:getPlayerParty(plr)
-			if not plr or not plr:IsA("Player") then
-				return nil
-			end
-
-			local playerId = tostring(plr.UserId)
-
-			if self.cacheDirty or not next(self.teamMap) then
-				self:refreshTeamMapAsync()
-			end
-
-			local playerPartyId = self.teamMap[playerId]
-			if playerPartyId ~= nil then
-				return self:getPartyById(playerPartyId)
-			end
-
-			return nil 
-		end
-
-		AC_MOD_View.mockGetPlayerParty = function(self, plr)
-			local parties = self.parties 
-			if parties ~= nil and #parties > 0 then
-				return shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT(self, plr)
-			end
-			return AC_MOD_View:getPlayerParty(plr)
-		end
-
-		function AC_MOD_View:toggleDisableDisguises()
-			if not self.Enabled then return end
-			if self.disable_disguises then
-				for _,v in pairs(Players:GetPlayers()) do
-					if v == Players.LocalPlayer then continue end
-					if tostring(v:GetAttribute("Disguised")) == "true" then
-						v:SetAttribute("Disguised", false)
-						notif('Onyx', "Remove Disguises, Disabled streamer mode for "..tostring(v.Name).."!", 3)
-						table.insert(self.disguises, v)
-					end
-				end
-			else
-				for i,v in pairs(self.disguises) do
-					if tostring(v:GetAttribute("Disguised")) ~= "true" then
-						v:SetAttribute("Disguised", true)
-						notif('Onyx', "Remove Disguises, Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
-					end
-				end
-				table.clear(self.disguises)
-			end
-		end
-
-		function AC_MOD_View:refreshCore()
-			self:refreshTeamMapAsync()
-			self:refreshDisplayCacheAsync()
-			self:refreshPlayerTeamDataAsync()
-
-			self:toggleDisableDisguises()
-		end
-
-		function AC_MOD_View:refreshCoreAsync()
-			task.spawn(self.refreshCore, self)
-		end
-
-		function AC_MOD_View:init()
-			self.Enabled = true
-			self.controller.hasAnyPermissions = function(self)
-				return true
-			end
-			self.match_controller.getPlayerParty = self.mockGetPlayerParty
-
-			self.playerConnections = {
-				added = Players.PlayerAdded:Connect(function(player)
-					self.cacheDirty = true
-					self:refreshCoreAsync()
-					player:GetPropertyChangedSignal("Team"):Connect(function()
-						self.cacheDirty = true
-						self:refreshCoreAsync()
-					end)
-				end),
-				removed = Players.PlayerRemoving:Connect(function(player)
-					local playerId = tostring(player.UserId)
-					self.Friends[playerId] = nil 
-					for _, cache in pairs(self.Friends) do
-						cache[playerId] = nil
-					end
-					self.cacheDirty = true
-					self:refreshCoreAsync()
-				end)
-			}
-
-			self:refreshCore()
-		end
-
-		function AC_MOD_View:disable()
-			self.Enabled = false
-
-			self.controller.hasAnyPermissions = shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT
-			self.match_controller.getPlayerParty = shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT
-
-			if self.playerConnections then
-				for _, v in pairs(self.playerConnections) do
-					pcall(function() v:Disconnect() end)
-				end
-				table.clear(self.playerConnections)
-			end
-
-			self.parties = {}
-			self.teamMap = {}
-			self.Friends = {}
-			self.display = {}
-			self.teamData = {}
-			self.cacheDirty = true
-
-			self:toggleDisableDisguises()
-		end
-
-		AC_MOD_View.moduleInstance = vape.Categories.Troll:CreateModule({
-			Name = "ACMOD View",
-			Function = function(call)
-				if call then
-					AC_MOD_View:init()
-				else
-					AC_MOD_View:disable()
-				end
-			end
-		})
-
-		AC_MOD_View.disableDisguisesToggle = AC_MOD_View.moduleInstance:CreateToggle({
-			Name = "Remove Disguises",
-			Function = function(call)
-				AC_MOD_View.disable_disguises = call
-				AC_MOD_View:toggleDisableDisguises()
-			end,
-			Default = true
-		})
-end)--]]
-
-
 
 run(function()
 	local TAG
@@ -10518,7 +10154,7 @@ end)
 
 run(function()
 local AutoReport 
-	 AutoReport = vape.Categories.Troll:CreateModule({
+	 AutoReport = vape.Categories.Exploits:CreateModule({
 		Name = "AutoReport",
 		Function = function(callback)
 			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
@@ -10565,7 +10201,7 @@ run(function()
 		end
 	end
 	
-	AutoQueue = vape.Categories.Troll:CreateModule({
+	AutoQueue = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoQueue',
 		Function = function(callback)
 								if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
@@ -10679,7 +10315,7 @@ run(function()
             QueueDisplayConfig.Animation.Speed = math.clamp(speed, 0.1, 5)
         end,
         Min = 1,
-        Max = 6,
+        Max = 8,
         Default = 5
     })
 
@@ -10696,5 +10332,20 @@ run(function()
             QueueDisplayConfig.ColorSettings.Gradient2 = {Hue = h, Saturation = s, Brightness = v}
         end
     })
+end)
+
+run(function()
+local ReportStatus 
+	 ReportStatus = vape.Categories.Exploits:CreateModule({
+		Name = "ReportStatus",
+		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+
+			if callback then
+vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = "Returns a report status of your account",
+	})
 end)
 
