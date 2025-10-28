@@ -10351,3 +10351,82 @@ vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 	})
 end)
 
+run(function()
+local Clutch 
+	 Clutch = vape.Categories.Exploits:CreateModule({
+		Name = "Clutch",
+		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+
+			if callback then
+vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = "Whenever u fall it saves u lol might fail sometimes",
+	})
+end)
+
+run(function()
+--[[
+																				local Players = game:GetService("Players")
+																			local plr
+																			local tdcd = {}
+local t = lplr.Character:GetAttribute("Team")
+
+
+
+local mapCFrames = workspace:FindFirstChild("MapCFrames")
+if mapCFrames then
+	for _, obj in pairs(mapCFrames:GetChildren()) do
+		if obj:IsA("CFrameValue") and string.match(obj.Name, "^" .. t .. "_bed$") then
+			local part = Instance.new("Part")
+            part.Transparency = 1
+            part.CanCollide = false
+			part.Anchored = true
+			part.Size = Vector3.new(64, 64, 64)
+			part.CFrame = obj.Value
+			part.Parent = workspace
+part.Touched:Connect(function(hit)
+	local char = hit.Parent
+	local plr = Players:GetPlayerFromCharacter(char)
+
+	if plr and plr ~= LocalPlayer then
+		if not touchedCooldown[plr] then
+			touchedCooldown[plr] = true
+vape:CreateNotification("Bed alarm","SOMEONE IS ON UR BASE!!!",9,"alert")
+
+		end
+	end
+end)
+part.TouchedEnded:Connect(function(hit)
+																						local char = hit.Parent
+	local plr = Players:GetPlayerFromCharacter(char)
+
+	if plr and plr ~= LocalPlayer then
+		if  touchedCooldown[plr] then
+			touchedCooldown[plr] = nil
+
+		end
+	end
+																							end)
+		end
+	end
+else
+	warn("MapCFrames folder not found!")
+end
+
+																			--]]
+
+local BedAlarm 
+	 BedAlarm = vape.Categories.Exploits:CreateModule({
+		Name = "BedAlarm",
+		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+
+			if callback then
+vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = "Alerts you without needing to purchase the bed alarm upgrade",
+	})
+end)
