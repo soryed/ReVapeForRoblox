@@ -10341,7 +10341,7 @@ local ReportStatus
 	 ReportStatus = vape.Categories.Exploits:CreateModule({
 		Name = "ReportStatus",
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
 vape:CreateNotification("Onyx","This module is not finished",6,"alert")
