@@ -9170,7 +9170,7 @@ end)
 
 
 
-																			run(function()																																																																											
+run(function()																																																																											
     local UsersList = {
         22808138, 4782733628, 7447190808, 3196162848,
         547598710, 5728889572, 4652232128, 7043591647, 7209929547, 7043958628, 7418525152, 3774791573, 8606089749,
@@ -9261,7 +9261,7 @@ if checktype == "spectator_join" then
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
 	vape:CreateNotification('Onyx', "Gora Has joined!","alert", 15)
 	end
-	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 or plr.UserId = 9575298878 then
+	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 or plr.UserId == 9575298878 then
 	vape:CreateNotification('Onyx', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
@@ -9310,7 +9310,7 @@ notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr
 	if plr.UserId == 589533315 or  plr.UserId == 567497793 then
 	vape:CreateNotification('Onyx', "Gora Has joined!","alert", 15)
 	end
-	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 or plr.UserId = 9575298878 then
+	if plr.UserId == 334013471 or  plr.UserId == 145981200 or  plr.UserId == 4721068661 or  plr.UserId == 8006518573 or  plr.UserId == 3547758846 or  plr.UserId == 7155624750 or  plr.UserId == 7468661659 or plr.UserId == 9575298878 then
 	vape:CreateNotification('Onyx', "Apple Has joined!","alert", 15)
 	end
 	if plr.UserId == 239431610 or  plr.UserId == 2621170992 or  plr.UserId == 9613415615 then
