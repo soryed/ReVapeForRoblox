@@ -10352,10 +10352,102 @@ vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 	})
 end)
 
+run(function()
+    local Clutch
+    local lastY = 0
+    local scanRadius = 12  -- how far it scans for land
+    local maxPathLength = 8 -- how many blocks it builds forward
+
+    local function getHeldBlock()
+        if store.hand.toolType == "block" then
+            return store.hand.tool.Name
+        end
+    end
+
+    local function isAir(pos)
+        local part = workspace:FindPartOnRayWithIgnoreList(
+            Ray.new(pos + Vector3.new(0, 2, 0), Vector3.new(0, -5, 0)),
+            {workspace.Camera, entitylib.character}
+        )
+        return not part
+    end
+
+    local function findClosestLand(startPos)
+        local bestDist, bestPos = math.huge, nil
+        for x = -scanRadius, scanRadius, 3 do
+            for z = -scanRadius, scanRadius, 3 do
+                local check = startPos + Vector3.new(x, -5, z)
+                local part = workspace:FindPartOnRayWithIgnoreList(
+                    Ray.new(check + Vector3.new(0, 10, 0), Vector3.new(0, -20, 0)),
+                    {workspace.Camera, entitylib.character}
+                )
+                if part then
+                    local dist = (part.Position - startPos).Magnitude
+                    if dist < bestDist then
+                        bestDist = dist
+                        bestPos = part.Position
+                    end
+                end
+            end
+        end
+        return bestPos
+    end
+
+    local function buildPathTo(targetPos, blockName)
+        local root = entitylib.character.RootPart
+        local dir = (Vector3.new(targetPos.X, root.Position.Y, targetPos.Z) - root.Position).Unit
+        for i = 1, maxPathLength do
+            local pos = root.Position + dir * (i * 3)
+            local placePos = Vector3.new(math.floor(pos.X / 3 + 0.5), math.floor(pos.Y / 3 - 1), math.floor(pos.Z / 3 + 0.5))
+            if isAir(pos) then
+                task.spawn(bedwars.placeBlock, placePos * 3, blockName, false)
+                task.wait(0.03)
+            end
+        end
+    end
+
+    local function tryClutch()
+        if not entitylib.isAlive then return end
+        local root = entitylib.character.RootPart
+        local humanoid = entitylib.character.Humanoid
+        if not root or not humanoid then return end
+
+        local heldBlock = getHeldBlock()
+        if not heldBlock then return end
+
+        local velocity = root.Velocity
+        local posBelow = root.Position - Vector3.new(0, 6, 0)
+
+        if velocity.Y < -3 and humanoid.FloorMaterial == Enum.Material.Air then
+            if isAir(posBelow) then
+                local landPos = findClosestLand(root.Position)
+                if landPos then
+                    buildPathTo(landPos, heldBlock)
+                else
+                    -- fallback single block clutch
+                    task.spawn(bedwars.placeBlock, (posBelow / 3).Floor() * 3, heldBlock, false)
+                end
+            end
+        end
+    end
+
+    Clutch = vape.Categories.Exploits:CreateModule({
+        Name = "Clutch",
+        Function = function(callback)
+            if callback then
+                repeat
+                    pcall(tryClutch)
+                    task.wait(0.03)
+                until not Clutch.Enabled
+            end
+        end,
+        Tooltip = "Auto-builds blocks under and toward nearest land while falling."
+    })
+end)
 
 
 	
-run(function()
+--[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10398,7 +10490,7 @@ run(function()
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)
+end)--]]
 
 --[[run(function()
 	local Clutch
