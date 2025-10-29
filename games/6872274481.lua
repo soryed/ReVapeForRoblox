@@ -10354,6 +10354,56 @@ end)
 
 run(function()
 	local Clutch
+
+	local function getHeldBlock()
+		if store.hand.toolType == "block" then
+			return store.hand.tool.Name
+		end
+	end
+
+	local function tryClutch()
+		if not entitylib.isAlive then return end
+
+		local root = entitylib.character.RootPart
+		local humanoid = entitylib.character.Humanoid
+		if not root or not humanoid then return end
+
+		local heldBlock = getHeldBlock()
+		if not heldBlock then return end
+
+		local velocity = root.Velocity
+		local direction = root.CFrame.LookVector * 2 
+		local below = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+
+		if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
+			for i = 0, 3 do 
+				local offset = below + (direction * i)
+				local block, blockPos = getPlacedBlock(offset)
+				if not block then
+					task.spawn(bedwars.placeBlock, blockPos, heldBlock, false)
+					task.wait(0.01)
+				end
+			end
+		end
+	end
+
+	Clutch = vape.Categories.Exploits:CreateModule({
+		Name = "Clutch",
+		Function = function(callback)
+			if callback then
+				repeat
+					pcall(tryClutch)
+					task.wait(0.05)
+				until not Clutch.Enabled
+			end
+		end,
+		Tooltip = "Automatically clutches you by placing blocks under and in front of you when falling."
+	})
+end)
+
+	
+--[[run(function()
+	local Clutch
 	local lastY = 0
 
 	local function getHeldBlock()
@@ -10395,7 +10445,7 @@ run(function()
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)
+end)--]]
 
 
 run(function()
