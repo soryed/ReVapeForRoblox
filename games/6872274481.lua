@@ -10365,64 +10365,7 @@ run(function()
 		end
 	end
 
-local function tryClutch()
-	if not entitylib.isAlive then return end
-
-	local root = entitylib.character.RootPart
-	local humanoid = entitylib.character.Humanoid
-	if not root or not humanoid then return end
-
-	local heldBlock = getHeldBlock()
-	if not heldBlock then return end
-
-	local velocity = root.Velocity
-	local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
-
-	if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
-		local block, blockPos = getPlacedBlock(posBelow)
-		if not block then
-			-- try to find closest safe block around player
-			local nearestDist = math.huge
-			local nearestPos = nil
-			local scanRadius = 12
-
-			for x = -scanRadius, scanRadius, 3 do
-				for z = -scanRadius, scanRadius, 3 do
-					local checkPos = posBelow + Vector3.new(x, -3, z)
-					local hit = workspace:FindPartOnRayWithIgnoreList(
-						Ray.new(checkPos + Vector3.new(0, 10, 0), Vector3.new(0, -20, 0)),
-						{entitylib.character, workspace.Camera}
-					)
-					if hit then
-						local dist = (hit.Position - posBelow).Magnitude
-						if dist < nearestDist then
-							nearestDist = dist
-							nearestPos = hit.Position
-						end
-					end
-				end
-			end
-
-			if nearestPos then
-				-- build a small path to nearest block (anti-cheat safe)
-				local direction = (nearestPos - root.Position).Unit
-				for i = 1, 6 do -- limit to 6 placements
-					local placePos = root.Position + direction * (i * 3)
-					local gridPos = Vector3.new(
-						math.floor(placePos.X / 3 + 0.5),
-						math.floor(placePos.Y / 3 - 1),
-						math.floor(placePos.Z / 3 + 0.5)
-					)
-					task.spawn(bedwars.placeBlock, gridPos * 3, heldBlock, false)
-					task.wait(0.04) -- delay = anti-cheat safe
-				end
-			else
-				-- fallback: place block under if no land found
-				task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false)
-			end
-		end
-	end
-end
+local function tryClutch() if not entitylib.isAlive then return end local root = entitylib.character.RootPart local humanoid = entitylib.character.Humanoid if not root or not humanoid then return end local heldBlock = getHeldBlock() if not heldBlock then return end local velocity = root.Velocity local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0) if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then local block, blockPos = getPlacedBlock(posBelow) if not block then task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) end end end
 
 	Clutch = vape.Categories.Exploits:CreateModule({
 		Name = "Clutch",
