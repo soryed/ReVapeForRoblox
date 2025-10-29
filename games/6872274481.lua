@@ -10354,9 +10354,37 @@ end)
 
 
 run(function()
+local SetFPS 
+		local FPS
+	 SetFPS = vape.Categories.Utility:CreateModule({
+		Name = "SetFPS",
+		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+
+			if callback then
+				setfpscap(FPS.Value)
+			else
+				setfpscap(240)
+			end
+		end,
+		Tooltip = "Removes the Frame-Per-Second limit",
+	})
+		FPS:CreateSlider({
+        Name = "Frames Per Second",
+		Min = 0,
+		Max = 420,
+		Default = 240
+        Function = function()
+            setfpscap(FPS.Value)
+        end
+    })
+end)
+
+
+run(function()
 	local Clutch
 	local lastY = 0
-	local VOID_HEIGHT = -5 -- adjust this if needed (lower = deeper void detection)
+	local VOID_HEIGHT = -2 -- adjust this if needed (lower = deeper void detection)
 	local PLATFORM_SIZE = 2 -- how many blocks wide to clutch
 	local PLACEMENT_DELAY = 0.02 -- lower = faster placement
 	
