@@ -10365,7 +10365,31 @@ run(function()
 		end
 	end
 
-local function tryClutch() if not entitylib.isAlive then return end local root = entitylib.character.RootPart local humanoid = entitylib.character.Humanoid if not root or not humanoid then return end local heldBlock = getHeldBlock() if not heldBlock then return end local velocity = root.Velocity local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0) if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then local block, blockPos = getPlacedBlock(posBelow) if not block then task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) end end end
+local function tryClutch() 
+if not entitylib.isAlive then return end 
+local root = entitylib.character.RootPart
+ local humanoid = entitylib.character.Humanoid
+ if not root or not humanoid then return end
+ local heldBlock = getHeldBlock() 
+if not heldBlock then return end
+ local velocity = root.Velocity 
+local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+ if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then 
+local block, blockPos = getPlacedBlock(posBelow) 
+if not block then 
+task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) 
+task.wait(0.006)
+task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) 
+task.wait(0.006)
+task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) 
+task.wait(0.006)
+task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) 
+task.wait(0.006)
+task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false) 
+task.wait(0.006)
+end 
+end 
+end
 
 	Clutch = vape.Categories.Exploits:CreateModule({
 		Name = "Clutch",
