@@ -15,6 +15,16 @@ local loadstring = function(...)
 	end
 	return res
 end
+
+if identifyexecutor then
+	if table.find({'Xeno','Solara'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
+		return
+	end
+	if table.find({'Seliware','Macsploit','Sirhurt','Volcano'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
+	end
+end
 local queue_on_teleport = queue_on_teleport or function() end
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
