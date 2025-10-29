@@ -10352,19 +10352,50 @@ vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 end)
 
 run(function()
-local Clutch 
-	 Clutch = vape.Categories.Exploits:CreateModule({
+	local Clutch
+	local lastY = 0
+
+	local function getHeldBlock()
+		if store.hand.toolType == 'block' then
+			return store.hand.tool.Name
+		end
+	end
+
+	local function tryClutch()
+		if not entitylib.isAlive then return end
+
+		local root = entitylib.character.RootPart
+		local humanoid = entitylib.character.Humanoid
+		if not root or not humanoid then return end
+
+		local heldBlock = getHeldBlock()
+		if not heldBlock then return end
+
+		local velocity = root.Velocity
+		local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+
+		if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
+			local block, blockPos = getPlacedBlock(posBelow)
+			if not block then
+				task.spawn(bedwars.placeBlock, blockPos * 3, heldBlock, false)
+			end
+		end
+	end
+
+	Clutch = vape.Categories.Exploits:CreateModule({
 		Name = "Clutch",
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
-
 			if callback then
-vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+				repeat
+					pcall(tryClutch)
+					task.wait(0.01)
+				until not Clutch.Enabled
 			end
 		end,
-		Tooltip = "Whenever u fall it saves u lol might fail sometimes",
+		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
 end)
+
 
 run(function()
 --[[
