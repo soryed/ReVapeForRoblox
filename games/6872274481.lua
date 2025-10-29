@@ -10353,96 +10353,98 @@ vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 end)
 
 run(function()
-    local Clutch
-    local lastY = 0
-    local scanRadius = 12  -- how far it scans for land
-    local maxPathLength = 8 -- how many blocks it builds forward
+	local Clutch
+	local scanRadius = 10
+	local maxPathLength = 6
 
-    local function getHeldBlock()
-        if store.hand.toolType == "block" then
-            return store.hand.tool.Name
-        end
-    end
+	local function getHeldBlock()
+		if store.hand.toolType == "block" then
+			return store.hand.tool.Name
+		end
+	end
 
-    local function isAir(pos)
-        local part = workspace:FindPartOnRayWithIgnoreList(
-            Ray.new(pos + Vector3.new(0, 2, 0), Vector3.new(0, -5, 0)),
-            {workspace.Camera, entitylib.character}
-        )
-        return not part
-    end
+	local function isVoid(pos)
+		local ray = Ray.new(pos, Vector3.new(0, -30, 0))
+		local hit = workspace:FindPartOnRayWithIgnoreList(ray, {entitylib.character, workspace.Camera})
+		return hit == nil
+	end
 
-    local function findClosestLand(startPos)
-        local bestDist, bestPos = math.huge, nil
-        for x = -scanRadius, scanRadius, 3 do
-            for z = -scanRadius, scanRadius, 3 do
-                local check = startPos + Vector3.new(x, -5, z)
-                local part = workspace:FindPartOnRayWithIgnoreList(
-                    Ray.new(check + Vector3.new(0, 10, 0), Vector3.new(0, -20, 0)),
-                    {workspace.Camera, entitylib.character}
-                )
-                if part then
-                    local dist = (part.Position - startPos).Magnitude
-                    if dist < bestDist then
-                        bestDist = dist
-                        bestPos = part.Position
-                    end
-                end
-            end
-        end
-        return bestPos
-    end
+	local function findClosestLand(startPos)
+		local best, bestDist = nil, math.huge
+		for x = -scanRadius, scanRadius, 3 do
+			for z = -scanRadius, scanRadius, 3 do
+				local check = startPos + Vector3.new(x, -6, z)
+				local ray = Ray.new(check + Vector3.new(0, 20, 0), Vector3.new(0, -50, 0))
+				local hit = workspace:FindPartOnRayWithIgnoreList(ray, {entitylib.character, workspace.Camera})
+				if hit then
+					local d = (hit.Position - startPos).Magnitude
+					if d < bestDist then
+						best, bestDist = hit.Position, d
+					end
+				end
+			end
+		end
+		return best
+	end
 
-    local function buildPathTo(targetPos, blockName)
-        local root = entitylib.character.RootPart
-        local dir = (Vector3.new(targetPos.X, root.Position.Y, targetPos.Z) - root.Position).Unit
-        for i = 1, maxPathLength do
-            local pos = root.Position + dir * (i * 3)
-            local placePos = Vector3.new(math.floor(pos.X / 3 + 0.5), math.floor(pos.Y / 3 - 1), math.floor(pos.Z / 3 + 0.5))
-            if isAir(pos) then
-                task.spawn(bedwars.placeBlock, placePos * 3, blockName, false)
-                task.wait(0.03)
-            end
-        end
-    end
+	local function buildBridgeTo(targetPos, block)
+		local root = entitylib.character.RootPart
+		local dir = (Vector3.new(targetPos.X, root.Position.Y, targetPos.Z) - root.Position).Unit
+		for i = 1, maxPathLength do
+			local pos = root.Position + dir * (i * 3)
+			local gridPos = Vector3.new(
+				math.floor(pos.X / 3 + 0.5),
+				math.floor(pos.Y / 3 - 1),
+				math.floor(pos.Z / 3 + 0.5)
+			)
+			if isVoid(pos) then
+				task.spawn(bedwars.placeBlock, gridPos * 3, block, false)
+				task.wait(0.05)
+			end
+		end
+	end
 
-    local function tryClutch()
-        if not entitylib.isAlive then return end
-        local root = entitylib.character.RootPart
-        local humanoid = entitylib.character.Humanoid
-        if not root or not humanoid then return end
+	local function tryClutch()
+		if not entitylib.isAlive then return end
+		local root = entitylib.character.RootPart
+		if not root then return end
 
-        local heldBlock = getHeldBlock()
-        if not heldBlock then return end
+		local block = getHeldBlock()
+		if not block then return end
 
-        local velocity = root.Velocity
-        local posBelow = root.Position - Vector3.new(0, 6, 0)
+		local vel = root.Velocity
+		local posBelow = root.Position - Vector3.new(0, 6, 0)
 
-        if velocity.Y < -3 and humanoid.FloorMaterial == Enum.Material.Air then
-            if isAir(posBelow) then
-                local landPos = findClosestLand(root.Position)
-                if landPos then
-                    buildPathTo(landPos, heldBlock)
-                else
-                    -- fallback single block clutch
-                    task.spawn(bedwars.placeBlock, (posBelow / 3).Floor() * 3, heldBlock, false)
-                end
-            end
-        end
-    end
+		if vel.Y < -4 and isVoid(posBelow) then
+			print("Falling - attempting clutch...")
+			local land = findClosestLand(root.Position)
+			if land then
+				print("Land found → building path")
+				buildBridgeTo(land, block)
+			else
+				print("No land found → placing block under")
+				local gridPos = Vector3.new(
+					math.floor(posBelow.X / 3 + 0.5),
+					math.floor(posBelow.Y / 3),
+					math.floor(posBelow.Z / 3 + 0.5)
+				)
+				task.spawn(bedwars.placeBlock, gridPos * 3, block, false)
+			end
+		end
+	end
 
-    Clutch = vape.Categories.Exploits:CreateModule({
-        Name = "Clutch",
-        Function = function(callback)
-            if callback then
-                repeat
-                    pcall(tryClutch)
-                    task.wait(0.03)
-                until not Clutch.Enabled
-            end
-        end,
-        Tooltip = "Auto-builds blocks under and toward nearest land while falling."
-    })
+	Clutch = vape.Categories.Exploits:CreateModule({
+		Name = "Clutch",
+		Function = function(state)
+			if state then
+				repeat
+					pcall(tryClutch)
+					task.wait(0.05)
+				until not Clutch.Enabled
+			end
+		end,
+		Tooltip = "Places a block path back to land while falling."
+	})
 end)
 
 
