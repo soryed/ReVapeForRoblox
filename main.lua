@@ -110,7 +110,7 @@ if identifyexecutor then
 		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
 		return
 	end
-	if table.find({'Seliware','Macsploit','Sirhurt','Volcano','Delta'}, ({identifyexecutor()})[1]) then
+	if table.find({'Seliware','Macsploit','Sirhurt','Delta'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
 	end
 end
