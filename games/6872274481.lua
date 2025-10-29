@@ -2642,6 +2642,7 @@ run(function()
 							task.wait(0.1)
 						end
 					end)
+																																				LongJump:Toggle()
 				end
 			end)
 		end,
@@ -2660,12 +2661,17 @@ run(function()
 			if bedwars.AbilityController:canUseAbility('CAT_POUNCE') and LongJump.Enabled then
 				bedwars.AbilityController:useAbility('CAT_POUNCE')
 			end
+																																																																					LongJump:Toggle()
+LongJump:Toggle()
 		end,
 		fireball = function(item, pos, dir)
 			launchProjectile(item, pos, 'fireball', 60, dir)
+																																																																					LongJump:Toggle()
+LongJump:Toggle()
 		end,
 		grappling_hook = function(item, pos, dir)
 			launchProjectile(item, pos, 'grappling_hook_projectile', 140, dir)
+																																	LongJump:Toggle()
 		end,
 		jade_hammer = function(item, _, dir)
 			if not bedwars.AbilityController:canUseAbility(item.itemType..'_jump') then
@@ -2678,12 +2684,14 @@ run(function()
 				JumpTick = tick() + 2.5
 				Direction = Vector3.new(dir.X, 0, dir.Z).Unit
 			end
+																																	LongJump:Toggle()
 		end,
 		tnt = function(item, pos, dir)
 			pos = pos - Vector3.new(0, (entitylib.character.HipHeight + (entitylib.character.RootPart.Size.Y / 2)) - 3, 0)
 			local rounded = Vector3.new(math.round(pos.X / 3) * 3, math.round(pos.Y / 3) * 3, math.round(pos.Z / 3) * 3)
 			start = Vector3.new(rounded.X, start.Y, rounded.Z) + (dir * (item.itemType == 'pirate_gunpowder_barrel' and 2.6 or 0.2))
 			bedwars.placeBlock(rounded, item.itemType, false)
+																																	LongJump:Toggle()
 		end,
 		wood_dao = function(item, pos, dir)
 			if (lplr.Character:GetAttribute('CanDashNext') or 0) > workspace:GetServerTimeNow() or not bedwars.AbilityController:canUseAbility('dash') then
@@ -2702,6 +2710,7 @@ run(function()
 				JumpTick = tick() + 2.4
 				Direction = Vector3.new(dir.X, 0, dir.Z).Unit
 			end
+																																	LongJump:Toggle()
 		end
 	}
 	for _, v in {'stone_dao', 'iron_dao', 'diamond_dao', 'emerald_dao'} do
