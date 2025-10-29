@@ -16,15 +16,7 @@ local loadstring = function(...)
 	return res
 end
 
-if identifyexecutor then
-	if table.find({'Xeno','Solara'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
-		return
-	end
-	if table.find({'Seliware','Macsploit','Sirhurt','Volcano','Delta'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
-	end
-end
+
 local queue_on_teleport = queue_on_teleport or function() end
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
@@ -113,7 +105,15 @@ if not isfolder('ReVape/assets/'..gui) then
 end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
-
+if identifyexecutor then
+	if table.find({'Xeno','Solara'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
+		return
+	end
+	if table.find({'Seliware','Macsploit','Sirhurt','Volcano','Delta'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
+	end
+end
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
