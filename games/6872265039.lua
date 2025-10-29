@@ -1392,12 +1392,13 @@ run(function()
 end)
 
 run(function()
-local SetFPS 
-local FPS
-	 SetFPS = vape.Categories.Utility:CreateModule({
+	local SetFPS
+	local FPS
+	
+	SetFPS = vape.Categories.Utility:CreateModule({
 		Name = "SetFPS",
 		Function = function(callback)
-			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+			
 
 			if callback then
 				setfpscap(FPS.Value)
@@ -1405,15 +1406,16 @@ local FPS
 				setfpscap(240)
 			end
 		end,
-		Tooltip = "Removes the Frame-Per-Second limit",
+		Tooltip = "Removes or customizes the Frame-Per-Second limit",
 	})
-		FPS:CreateSlider({
-        Name = "Frames Per Second",
+	
+	FPS = SetFPS:CreateSlider({
+		Name = "Frames Per Second",
 		Min = 0,
 		Max = 420,
-		Default = 240
-        Function = function()
-            setfpscap(FPS.Value)
-        end
-    })
+		Default = 240,
+		Function = function(value)
+			setfpscap(value)
+		end
+	})
 end)
