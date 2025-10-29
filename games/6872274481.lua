@@ -410,6 +410,16 @@ local function updateVelocity(force)
 	frictionState = newState
 end
 
+local function isEveryoneDead()
+	return #bedwars.Store:getState().Party.members <= 0
+end
+	
+local function joinQueue()
+	if not bedwars.Store:getState().Game.customMatch and bedwars.Store:getState().Party.leader.userId == lplr.UserId and bedwars.Store:getState().Party.queueState == 0 then
+		bedwars.QueueController:joinQueue(store.queueType)
+	end
+end
+
 local kitorder = {
 	hannah = 5,
 	spirit_assassin = 4,
@@ -10192,16 +10202,7 @@ end)
 run(function()
 	local AutoQueue
 	
-	local function isEveryoneDead()
-		return #bedwars.Store:getState().Party.members <= 0
-	end
-	
-	local function joinQueue()
-		if not bedwars.Store:getState().Game.customMatch and bedwars.Store:getState().Party.leader.userId == lplr.UserId and bedwars.Store:getState().Party.queueState == 0 then
-			
-				bedwars.QueueController:joinQueue(store.queueType)
-		end
-	end
+
 	
 	AutoQueue = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoQueue',
