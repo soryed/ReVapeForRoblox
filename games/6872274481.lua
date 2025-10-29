@@ -10355,7 +10355,7 @@ end)
 
 
 	
---[[run(function()
+run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10398,9 +10398,9 @@ end)
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)--]]
+end)
 
-run(function()
+--[[run(function()
 	local Clutch
 	local placed = {}
 
@@ -10411,15 +10411,14 @@ run(function()
 	end
 
 	local function isVoidBelow(position)
-		-- Scan a few studs below; if no block is found, it's void
 		for y = 0, 30, 3 do
 			local checkPos = position - Vector3.new(0, y, 0)
 			local block = getPlacedBlock(checkPos)
 			if block then
-				return false -- there's something solid below
+				return false
 			end
 		end
-		return true -- pure void below
+		return true 
 	end
 
 	local function placeChain(startPos, heldBlock)
@@ -10454,7 +10453,6 @@ run(function()
 		local velocity = root.Velocity
 		local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
 
-		-- Only clutch when truly falling into void
 		if velocity.Y < -5 and humanoid.FloorMaterial == Enum.Material.Air and isVoidBelow(posBelow) then
 			placeChain(posBelow, heldBlock)
 		end
@@ -10473,7 +10471,7 @@ run(function()
 		end,
 		Tooltip = "Clutches only over the void, filling missing blocks continuously."
 	})
-end)
+end)--]]
 
 run(function()
 --[[
