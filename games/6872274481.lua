@@ -10383,83 +10383,9 @@ run(function()
 end)
 
 
+
+
 run(function()
-	local Clutch
-	local lastY = 0
-	local VOID_HEIGHT = -2 -- adjust this if needed (lower = deeper void detection)
-	local PLATFORM_SIZE = 2 -- how many blocks wide to clutch
-	local PLACEMENT_DELAY = 0.02 -- lower = faster placement
-	
-	local function getHeldBlock()
-		if store.hand.toolType == 'block' then
-			return store.hand.tool.Name
-		end
-	end
-
-	local function isVoidBelow(pos)
-		-- Raycast downward to check if there’s a solid block below
-		local rayOrigin = pos
-		local rayDirection = Vector3.new(0, -20, 0)
-		local raycastParams = RaycastParams.new()
-		raycastParams.FilterDescendantsInstances = {workspace.Players}
-		raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-
-		local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
-		return not result -- returns true if no solid ground detected (void area)
-	end
-
-	local function placePlatform(centerPos, blockName)
-		for x = -PLATFORM_SIZE, PLATFORM_SIZE do
-			for z = -PLATFORM_SIZE, PLATFORM_SIZE do
-				local offset = Vector3.new(x * 3, 0, z * 3)
-				local placePos = centerPos + offset
-				task.spawn(bedwars.placeBlock, placePos, blockName, false)
-				task.wait(PLACEMENT_DELAY)
-			end
-		end
-	end
-
-	local function tryClutch()
-		if not entitylib.isAlive then return end
-
-		local root = entitylib.character.RootPart
-		local humanoid = entitylib.character.Humanoid
-		if not root or not humanoid then return end
-
-		local heldBlock = getHeldBlock()
-		if not heldBlock then return end
-
-		local velocity = root.Velocity
-		local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
-
-		-- Only clutch when falling fast and in the air
-		if velocity.Y < -10 and humanoid.FloorMaterial == Enum.Material.Air then
-			-- Check that there’s no ground under (void)
-			if isVoidBelow(posBelow) then
-				-- Place multiple blocks for a stable clutch
-				task.spawn(function()
-					placePlatform(posBelow, heldBlock)
-				end)
-			end
-		end
-	end
-
-	Clutch = vape.Categories.Exploits:CreateModule({
-		Name = "Clutch",
-		Function = function(callback)
-			if callback then
-				repeat
-					pcall(tryClutch)
-					task.wait(0.01)
-				until not Clutch.Enabled
-			end
-		end,
-		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
-	})
-end)
-
-
---[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10499,80 +10425,7 @@ end
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)--]]
-
---[[run(function()
-	local Clutch
-	local placed = {}
-
-	local function getHeldBlock()
-		if store.hand.toolType == "block" then
-			return store.hand.tool.Name
-		end
-	end
-
-	local function isVoidBelow(position)
-		for y = 0, 30, 3 do
-			local checkPos = position - Vector3.new(0, y, 0)
-			local block = getPlacedBlock(checkPos)
-			if block then
-				return false
-			end
-		end
-		return true 
-	end
-
-	local function placeChain(startPos, heldBlock)
-		local currentY = math.floor(startPos.Y / 3 + 0.5)
-		for i = 1, 4 do -- place up to 4 blocks below you (extend if needed)
-			local blockPos = Vector3.new(
-				math.floor(startPos.X / 3 + 0.5),
-				currentY - i,
-				math.floor(startPos.Z / 3 + 0.5)
-			)
-			local key = tostring(blockPos)
-			if not placed[key] then
-				placed[key] = true
-				task.spawn(function()
-					pcall(function()
-						bedwars.placeBlock(blockPos * 3, heldBlock, false)
-					end)
-				end)
-			end
-		end
-	end
-
-	local function tryClutch()
-		if not entitylib.isAlive then return end
-		local root = entitylib.character.RootPart
-		local humanoid = entitylib.character.Humanoid
-		if not root or not humanoid then return end
-
-		local heldBlock = getHeldBlock()
-		if not heldBlock then return end
-
-		local velocity = root.Velocity
-		local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
-
-		if velocity.Y < -5 and humanoid.FloorMaterial == Enum.Material.Air and isVoidBelow(posBelow) then
-			placeChain(posBelow, heldBlock)
-		end
-	end
-
-	Clutch = vape.Categories.Exploits:CreateModule({
-		Name = "Clutch",
-		Function = function(callback)
-			if callback then
-				placed = {}
-				repeat
-					pcall(tryClutch)
-					task.wait(0.03)
-				until not Clutch.Enabled
-			end
-		end,
-		Tooltip = "Clutches only over the void, filling missing blocks continuously."
-	})
-end)--]]
+end)
 
 run(function()
 --[[
