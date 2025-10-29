@@ -10402,18 +10402,48 @@ end)--]]
 
 run(function()
 	local Clutch
-	local lastPlaced = {}
-	local lastY = 0
+	local placed = {}
 
 	local function getHeldBlock()
-		if store.hand.toolType == 'block' then
+		if store.hand.toolType == "block" then
 			return store.hand.tool.Name
+		end
+	end
+
+	local function isVoidBelow(position)
+		-- Scan a few studs below; if no block is found, it's void
+		for y = 0, 30, 3 do
+			local checkPos = position - Vector3.new(0, y, 0)
+			local block = getPlacedBlock(checkPos)
+			if block then
+				return false -- there's something solid below
+			end
+		end
+		return true -- pure void below
+	end
+
+	local function placeChain(startPos, heldBlock)
+		local currentY = math.floor(startPos.Y / 3 + 0.5)
+		for i = 1, 4 do -- place up to 4 blocks below you (extend if needed)
+			local blockPos = Vector3.new(
+				math.floor(startPos.X / 3 + 0.5),
+				currentY - i,
+				math.floor(startPos.Z / 3 + 0.5)
+			)
+			local key = tostring(blockPos)
+			if not placed[key] then
+				placed[key] = true
+				task.spawn(function()
+					pcall(function()
+						bedwars.placeBlock(blockPos * 3, heldBlock, false)
+					end)
+				end)
+			end
 		end
 	end
 
 	local function tryClutch()
 		if not entitylib.isAlive then return end
-
 		local root = entitylib.character.RootPart
 		local humanoid = entitylib.character.Humanoid
 		if not root or not humanoid then return end
@@ -10424,22 +10454,9 @@ run(function()
 		local velocity = root.Velocity
 		local posBelow = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
 
-		if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
-			local blockPos = Vector3.new(
-				math.floor(posBelow.X / 3 + 0.5),
-				math.floor(posBelow.Y / 3 + 0.5),
-				math.floor(posBelow.Z / 3 + 0.5)
-			)
-
-			local posKey = tostring(blockPos)
-			if not lastPlaced[posKey] then
-				lastPlaced[posKey] = true
-				task.spawn(function()
-					pcall(function()
-						bedwars.placeBlock(blockPos * 3, heldBlock, false)
-					end)
-				end)
-			end
+		-- Only clutch when truly falling into void
+		if velocity.Y < -5 and humanoid.FloorMaterial == Enum.Material.Air and isVoidBelow(posBelow) then
+			placeChain(posBelow, heldBlock)
 		end
 	end
 
@@ -10447,17 +10464,16 @@ run(function()
 		Name = "Clutch",
 		Function = function(callback)
 			if callback then
-				lastPlaced = {}
+				placed = {}
 				repeat
 					pcall(tryClutch)
-					task.wait(0.05)
+					task.wait(0.03)
 				until not Clutch.Enabled
 			end
 		end,
-		Tooltip = "Automatically places multiple blocks under you while falling without deleting old ones."
+		Tooltip = "Clutches only over the void, filling missing blocks continuously."
 	})
 end)
-
 
 run(function()
 --[[
