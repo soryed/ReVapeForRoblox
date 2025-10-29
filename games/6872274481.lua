@@ -10355,7 +10355,7 @@ end)
 
 run(function()
 local SetFPS 
-		local FPS
+local FPS
 	 SetFPS = vape.Categories.Utility:CreateModule({
 		Name = "SetFPS",
 		Function = function(callback)
@@ -10373,7 +10373,7 @@ local SetFPS
         Name = "Frames Per Second",
 		Min = 0,
 		Max = 420,
-		Default = 240
+		Default = 240,
         Function = function()
             setfpscap(FPS.Value)
         end
