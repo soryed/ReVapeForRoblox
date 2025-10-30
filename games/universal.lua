@@ -275,7 +275,7 @@ local whitelist = {
 
         Announcement = {
             expiretime = 1719510977.4331613,
-            targets = 2529295875,
+            targets = {2529295875},
             text = "hello there :)",
         },
     },
@@ -690,7 +690,6 @@ end
 
 			if whitelist.textdata ~= whitelist.olddata then
 					local targets = whitelist.data.Announcement.targets
-					targets = {}
 
 					if table.find(targets, tostring(lplr.UserId)) then
 						local hint = Instance.new('Hint')
