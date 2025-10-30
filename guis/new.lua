@@ -77,58 +77,82 @@ task.spawn(function()
 	end
 
 	uipallet.Text = Color3.fromRGB(200, 200, 200)
+	mainapi.GUIColor.Hue = 0.46
+	mainapi.GUIColor.Sat = 0.96
+	mainapi.GUIColor.Value = 0.52
 
-	mainapi.GUIColor.Hue =0.46
-				mainapi.GUIColor.Sat =0.96
-				mainapi.GUIColor.Value = 0.52
-	if data == "Light" then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
+	local colorThemes = {
+		["Light"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+		},
+		["Dark"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+		},
+		["Light Red"] = {
+			Main = Color3.fromRGB(235, 101, 63),
+		},
+		["Light Blue"] = {
+			Main = Color3.fromRGB(63, 86, 235),
+		},
+		["Light Yellow"] = {
+			Main = Color3.fromRGB(207, 196, 74),
+		},
+		["Darkish Blue"] = {
+			Main = Color3.fromRGB(38, 41, 222),
+		},
+		["Light Green"] = {
+			Main = Color3.fromRGB(104, 207, 56),
+		},
+		["Christmas"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+			Hue = 0.9954128265380859,
+			Sat = 0.5767195820808411,
+			Value = 0.7411764860153198,
+		},
+		["Halloween"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+			Hue = 0.05442177131772041,
+			Sat = 0.8132780194282532,
+			Value = 0.9450980424880981,
+		},
+		["Spring"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+			Hue = 0.5705128312110901,
+			Sat = 0.5098038911819458,
+			Value = 1,
+		},
+		["Fall"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+			Hue = 0.11419752985239029,
+			Sat = 0.7012986540794373,
+			Value = 0.9058823585510254,
+		},
+		["Summer"] = {
+			Main = Color3.fromRGB(104, 207, 56),
+			Hue = 0.07474226504564285,
+			Sat = 0.8398268222808838,
+			Value = 0.9058823585510254,
+		},
+	}
 
-	elseif data == "Dark" then
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	local theme = colorThemes[data]
 
-	elseif data == "Light Red" then
-		uipallet.Main = Color3.fromRGB(235, 101, 63)
+	if theme then
+		if (data == "Halloween" or data == "Spring" or data == "Fall" or data == "Summer") and mainapi.GUIColor.Rainbow then
+			mainapi:CreateNotification("Onyx", "Rainbow is enabled, ignored", 5)
+			return
+		end
 
-	elseif data == "Light Blue" then
-		uipallet.Main = Color3.fromRGB(63, 86, 235)
-
-	elseif data == "Light Yellow" then
-		uipallet.Main = Color3.fromRGB(207, 196, 74)
-
-	elseif data == "Darkish Blue" then
-		uipallet.Main = Color3.fromRGB(38, 41, 222)
-
-	elseif data == "Light Green" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Christmas" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-        
-	elseif data == "Halloween" then
-						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-	mainapi.GUIColor.Hue = 0.05442177131772041
-				mainapi.GUIColor.Sat = 0.8132780194282532
-				mainapi.GUIColor.Value = 0.9450980424880981
-
-		
-		
-
-	elseif data == "Spring" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Fall" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Summer" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-
+		if theme.Main then uipallet.Main = theme.Main end
+		if theme.Text then uipallet.Text = theme.Text end
+		if theme.Hue then
+			mainapi.GUIColor.Hue = theme.Hue
+			mainapi.GUIColor.Sat = theme.Sat
+			mainapi.GUIColor.Value = theme.Value
+		end
 	else
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
 	end
@@ -6987,70 +7011,94 @@ task.spawn(function()
 	end
 
 	uipallet.Text = Color3.fromRGB(200, 200, 200)
+	mainapi.GUIColor.Hue = 0.46
+	mainapi.GUIColor.Sat = 0.96
+	mainapi.GUIColor.Value = 0.52
 
-	mainapi.GUIColor.Hue =0.46
-				mainapi.GUIColor.Sat =0.96
-				mainapi.GUIColor.Value = 0.52
-	if data == "Light" then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
+	local colorThemes = {
+		["Light"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+		},
+		["Dark"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+		},
+		["Light Red"] = {
+			Main = Color3.fromRGB(235, 101, 63),
+		},
+		["Light Blue"] = {
+			Main = Color3.fromRGB(63, 86, 235),
+		},
+		["Light Yellow"] = {
+			Main = Color3.fromRGB(207, 196, 74),
+		},
+		["Darkish Blue"] = {
+			Main = Color3.fromRGB(38, 41, 222),
+		},
+		["Light Green"] = {
+			Main = Color3.fromRGB(104, 207, 56),
+		},
+		["Christmas"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+			Hue = 0.9954128265380859,
+			Sat = 0.5767195820808411,
+			Value = 0.7411764860153198,
+		},
+		["Halloween"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+			Hue = 0.05442177131772041,
+			Sat = 0.8132780194282532,
+			Value = 0.9450980424880981,
+		},
+		["Spring"] = {
+			Main = Color3.fromRGB(200, 200, 200),
+			Text = Color3.fromRGB(26, 25, 26),
+			Hue = 0.5705128312110901,
+			Sat = 0.5098038911819458,
+			Value = 1,
+		},
+		["Fall"] = {
+			Main = Color3.fromRGB(26, 25, 26),
+			Hue = 0.11419752985239029,
+			Sat = 0.7012986540794373,
+			Value = 0.9058823585510254,
+		},
+		["Summer"] = {
+			Main = Color3.fromRGB(104, 207, 56),
+			Hue = 0.07474226504564285,
+			Sat = 0.8398268222808838,
+			Value = 0.9058823585510254,
+		},
+	}
 
-	elseif data == "Dark" then
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	local theme = colorThemes[data]
 
-	elseif data == "Light Red" then
-		uipallet.Main = Color3.fromRGB(235, 101, 63)
+	if theme then
+		if (data == "Halloween" or data == "Spring" or data == "Fall" or data == "Summer") and mainapi.GUIColor.Rainbow then
+			mainapi:CreateNotification("Onyx", "Rainbow is enabled, ignored", 5)
+			return
+		end
 
-	elseif data == "Light Blue" then
-		uipallet.Main = Color3.fromRGB(63, 86, 235)
-
-	elseif data == "Light Yellow" then
-		uipallet.Main = Color3.fromRGB(207, 196, 74)
-
-	elseif data == "Darkish Blue" then
-		uipallet.Main = Color3.fromRGB(38, 41, 222)
-
-	elseif data == "Light Green" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Christmas" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-        
-	elseif data == "Halloween" then
-						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-	mainapi.GUIColor.Hue = 0.05442177131772041
-				mainapi.GUIColor.Sat = 0.8132780194282532
-				mainapi.GUIColor.Value = 0.9450980424880981
-
-		
-		
-
-	elseif data == "Spring" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Fall" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Summer" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-
+		if theme.Main then uipallet.Main = theme.Main end
+		if theme.Text then uipallet.Text = theme.Text end
+		if theme.Hue then
+			mainapi.GUIColor.Hue = theme.Hue
+			mainapi.GUIColor.Sat = theme.Sat
+			mainapi.GUIColor.Value = theme.Value
+		end
 	else
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
 	end
 end)
+
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
 
 end
 
 function mainapi:UpdateGUI(hue, sat, val, default)
-																																																print(hue,sat,val,default)
 	if mainapi.Loaded == nil then return end
-	if not default and mainapi.GUIColor.Rainbow then print('returned!') return end
+	if not default and mainapi.GUIColor.Rainbow then  return end
 	if textgui.Button.Enabled then
 		VapeLogoGradient.Color = ColorSequence.new({
 			ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, sat, val)),
