@@ -4782,6 +4782,7 @@ function mainapi:CreateCategoryList(categorysettings)
 			end
 		end
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
+print("1")
 	end
 
 	function categoryapi:Expand()
@@ -5330,6 +5331,8 @@ function mainapi:CreateLegit()
 	self:Clean(clickgui:GetPropertyChangedSignal('Visible'):Connect(visibleCheck))
 	window:GetPropertyChangedSignal('Visible'):Connect(function()
 		self:UpdateGUI(self.GUIColor.Hue, self.GUIColor.Sat, self.GUIColor.Value)
+print("2")
+
 		visibleCheck()
 	end)
 	windowlist:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
@@ -5818,6 +5821,8 @@ end))
 
 mainapi:Clean(clickgui:GetPropertyChangedSignal('Visible'):Connect(function()
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
+print("3")
+
 	if clickgui.Visible and inputService.MouseEnabled then
 		repeat
 			local visibleCheck = clickgui.Visible
@@ -6278,6 +6283,8 @@ mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
 		mainapi:UpdateGUI(h, s, v, true)
+																				print("4")
+
 	end
 })
 mainapi.Categories.Main:CreateBind()
@@ -6322,6 +6329,8 @@ textguicolor = textgui:CreateColorSlider({
 	Name = 'Text GUI color',
 	Function = function()
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
+																									print("5")
+
 	end,
 	Darker = true,
 	Visible = false
@@ -6474,6 +6483,8 @@ textguicolorcustomtoggle = textgui:CreateToggle({
 	Function = function(enabled)
 		textguicolorcustom.Object.Visible = enabled
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
+																																									print("6")
+
 	end,
 	Darker = true,
 	Visible = false
@@ -6966,6 +6977,8 @@ function mainapi:UpdateTextGUI(afterload)
 	end
 
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
+																																																print("7")
+
 end
 
 function mainapi:UpdateGUI(hue, sat, val, default)
