@@ -2816,14 +2816,16 @@ LongJump:Toggle()
 end)
 	
 run(function()
+	local SoftenDamage
 	local NoFall
 	local Mode
 	local rayParams = RaycastParams.new()
 	local groundHit
+
 	task.spawn(function()
 		groundHit = bedwars.Client:Get(remotes.GroundHit).instance
 	end)
-	
+
 	NoFall = vape.Categories.Blatant:CreateModule({
 		Name = 'NoFall',
 		Function = function(callback)
@@ -2837,11 +2839,17 @@ run(function()
 							if root.AssemblyLinearVelocity.Y < -85 then
 								rayParams.FilterDescendantsInstances = {lplr.Character, gameCamera}
 								rayParams.CollisionGroup = root.CollisionGroup
-	
+
 								local rootSize = root.Size.Y / 2 + entitylib.character.HipHeight
 								local ray = workspace:Blockcast(root.CFrame, Vector3.new(3, 3, 3), Vector3.new(0, (tracked * 0.1) - rootSize, 0), rayParams)
 								if not ray then
-									root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, -86, root.AssemblyLinearVelocity.Z)
+									local fallY = root.AssemblyLinearVelocity.Y
+									if SoftenDamage.Enabled then
+										fallY = math.max(fallY * 0.4, -80) 
+									else
+										fallY = -86
+									end
+									root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, fallY, root.AssemblyLinearVelocity.Z)
 									root.CFrame += Vector3.new(0, extraGravity * dt, 0)
 									extraGravity += -workspace.Gravity * dt
 								end
@@ -2855,14 +2863,19 @@ run(function()
 						if entitylib.isAlive then
 							local root = entitylib.character.RootPart
 							tracked = entitylib.character.Humanoid.FloorMaterial == Enum.Material.Air and math.min(tracked, root.AssemblyLinearVelocity.Y) or 0
-	
+
 							if tracked < -85 then
 								if Mode.Value == 'Packet' then
-									groundHit:FireServer(nil, Vector3.new(0, tracked, 0), workspace:GetServerTimeNow())
+									if SoftenDamage.Enabled then
+										groundHit:FireServer(nil, Vector3.new(0, tracked * 0.3, 0), workspace:GetServerTimeNow())
+									else
+										groundHit:FireServer(nil, Vector3.new(0, tracked, 0), workspace:GetServerTimeNow())
+									end
+
 								else
 									rayParams.FilterDescendantsInstances = {lplr.Character, gameCamera}
 									rayParams.CollisionGroup = root.CollisionGroup
-	
+
 									local rootSize = root.Size.Y / 2 + entitylib.character.HipHeight
 									if Mode.Value == 'Teleport' then
 										local ray = workspace:Blockcast(root.CFrame, Vector3.new(3, 3, 3), Vector3.new(0, -1000, 0), rayParams)
@@ -2873,20 +2886,22 @@ run(function()
 										local ray = workspace:Blockcast(root.CFrame, Vector3.new(3, 3, 3), Vector3.new(0, (tracked * 0.1) - rootSize, 0), rayParams)
 										if ray then
 											tracked = 0
-											root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, -80, root.AssemblyLinearVelocity.Z)
+											local newY = SoftenDamage.Enabled and -60 or -80
+											root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, newY, root.AssemblyLinearVelocity.Z)
 										end
 									end
 								end
 							end
 						end
-	
+
 						task.wait(0.03)
 					until not NoFall.Enabled
 				end
 			end
 		end,
-		Tooltip = 'Prevents taking fall damage.'
+		Tooltip = 'Prevents or reduces fall damage.'
 	})
+
 	Mode = NoFall:CreateDropdown({
 		Name = 'Mode',
 		List = {'Packet', 'Gravity', 'Teleport', 'Bounce'},
@@ -2897,7 +2912,15 @@ run(function()
 			end
 		end
 	})
+
+	SoftenDamage = NoFall:CreateToggle({
+		Name = 'Soften Damage',
+		Default = true,
+		Tooltip = 'Reduces fall velocity instead of fully negating it.'
+	})
 end)
+
+																														
 	
 run(function()
 	local old
@@ -10433,9 +10456,73 @@ run(function()
 end)
 
 
-
-
 run(function()
+	local Clutch
+
+	local function getHeldBlock()
+		if store.hand.toolType == "block" then
+			return store.hand.tool.Name
+		end
+	end
+
+	local function tryClutch()
+		if not entitylib.isAlive then return end
+
+		local root = entitylib.character.RootPart
+		local humanoid = entitylib.character.Humanoid
+		if not root or not humanoid then return end
+
+		local heldBlock = getHeldBlock()
+		if not heldBlock then return end
+
+		local velocity = root.Velocity
+		if velocity.Y > -2 then return end 
+
+		local predictedPos = prediction.predictPosition(root.Position, velocity, 0.1)
+		local posBelow = predictedPos - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+
+		local rayParams = RaycastParams.new()
+		rayParams.FilterDescendantsInstances = {entitylib.character}
+		rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+		local result = workspace:Raycast(root.Position, Vector3.new(0, -25, 0), rayParams)
+		if result then return end 
+
+		local spreadOffsets = {
+			Vector3.new(0, 0, 0),
+			Vector3.new(3, 0, 0),
+			Vector3.new(-3, 0, 0),
+			Vector3.new(0, 0, 3),
+			Vector3.new(0, 0, -3),
+			Vector3.new(3, 0, 3),
+			Vector3.new(3, 0, -3),
+			Vector3.new(-3, 0, 3),
+			Vector3.new(-3, 0, -3)
+		}
+
+		for _, offset in ipairs(spreadOffsets) do
+			local blockPos = posBelow + offset
+			local block, pos = getPlacedBlock(blockPos)
+			if not block then
+				task.spawn(bedwars.placeBlock, pos * 3, heldBlock, false)
+			end
+		end
+	end
+
+	Clutch = vape.Categories.Exploits:CreateModule({
+		Name = "Clutch",
+		Function = function(callback)
+			if callback then
+				repeat
+					pcall(tryClutch)
+					task.wait(0.015)
+				until not Clutch.Enabled
+			end
+		end,
+		Tooltip = "Automatically clutches you by placing a block under your feet when falling"
+	})
+end)
+
+--[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10475,7 +10562,7 @@ end
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)
+end)--]]
 
 run(function()
 --[[
