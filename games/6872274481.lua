@@ -3986,7 +3986,7 @@ run(function()
 						.net.out._NetManaged.Airbender_RequestMovingTornado:FireServer(unpack(args))
 				end
 			until not AutoKit.Enabled
-		end																																																											
+		end	,																																																								
 		battery = function()
 			repeat
 				if entitylib.isAlive then
