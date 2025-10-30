@@ -115,7 +115,7 @@ task.spawn(function()
 
 		
 		
-	},
+
 	elseif data == "Spring" then
 									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
 
