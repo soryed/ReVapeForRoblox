@@ -10456,7 +10456,7 @@ run(function()
 end)
 
 
-run(function()
+--[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10514,9 +10514,9 @@ run(function()
 		end,
 		Tooltip = "Places a bridge forward while falling to clutch safely."
 	})
-end)
+end)--]]
 
---[[run(function()
+run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10556,7 +10556,7 @@ end
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)--]]
+end)
 
 run(function()
 --[[
