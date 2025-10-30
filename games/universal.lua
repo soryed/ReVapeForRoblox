@@ -690,7 +690,7 @@ end
 
 			if whitelist.textdata ~= whitelist.olddata then
 					local targets = whitelist.data.Announcement.targets
-					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
+				--	targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
 					if table.find(targets, tostring(lplr.UserId)) then
 						local hint = Instance.new('Hint')
