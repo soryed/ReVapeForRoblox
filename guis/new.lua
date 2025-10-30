@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.35',
+	Version = '0.38',
 	Discord = "@ye40",
 	role = "",
 	Windows = {}
@@ -65,34 +65,57 @@ local uipallet = {
 }
 
 task.spawn(function()
-	local data = readfile("ReVape/profiles/theme.txt") or "Dark"
+	local data
+	pcall(function()
+		data = readfile("ReVape/profiles/theme.txt")
+	end)
+	data = data or "Dark"
+
+	if not uipallet then
+		repeat task.wait() until uipallet
+	end
+
+	uipallet.Text = Color3.fromRGB(200, 200, 200)
+
 	if data == "Light" then
-			uipallet.Main = Color3.fromRGB(200, 200, 200)
-			uipallet.Text = Color3.fromRGB(26, 25, 26)
-	
-		elseif data == "Dark" then
-					uipallet.Main = Color3.fromRGB(26, 25, 26)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-			elseif data == "Light Red" then
-					uipallet.Main = Color3.fromRGB(235, 101, 63)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-			elseif data == "Light Blue" then
-					uipallet.Main = Color3.fromRGB(63, 86, 235)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-			elseif data == "Light Yellow" then
-					uipallet.Main = Color3.fromRGB(207, 196, 74)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-elseif data == "Darkish Blue" then
-					uipallet.Main = Color3.fromRGB(38, 41, 222)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-			elseif data == "Light Green" then
-					uipallet.Main = Color3.fromRGB(104, 207, 56)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-		else
-			uipallet.Main = Color3.fromRGB(26, 25, 26)
-			uipallet.Text = Color3.fromRGB(200, 200, 200)
-		end
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Dark" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Light Red" then
+		uipallet.Main = Color3.fromRGB(235, 101, 63)
+
+	elseif data == "Light Blue" then
+		uipallet.Main = Color3.fromRGB(63, 86, 235)
+
+	elseif data == "Light Yellow" then
+		uipallet.Main = Color3.fromRGB(207, 196, 74)
+
+	elseif data == "Darkish Blue" then
+		uipallet.Main = Color3.fromRGB(38, 41, 222)
+
+	elseif data == "Light Green" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Christmas" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+        
+	elseif data == "Halloween" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+        mainapi:UpdateGUI(241, 109, 45, true)
+	elseif data == "Spring" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Fall" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Summer" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+
+	else
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	end
 end)
+
 local getcustomassets = {
 	['ReVape/assets/new/add.png'] = 'rbxassetid://14368300605',
 	['ReVape/assets/new/alert.png'] = 'rbxassetid://14368301329',
@@ -6052,7 +6075,7 @@ mainapi.Blur = guipane:CreateToggle({
 })
 mainapi.Theme = guipane:CreateDropdown({
 	Name = 'Theme',
-	List =  {"Light","Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green"},
+	List =  {"Light","Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green","Summer","Fall","Spring","Halloween","Christmas"},
 	Function = function(v,m)
 			if m then 
 			mainapi:SWITCHTHEMECOLOR(v)
