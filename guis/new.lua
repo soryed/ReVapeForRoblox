@@ -4782,7 +4782,7 @@ function mainapi:CreateCategoryList(categorysettings)
 			end
 		end
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
-print("1")
+
 	end
 
 	function categoryapi:Expand()
@@ -5331,7 +5331,7 @@ function mainapi:CreateLegit()
 	self:Clean(clickgui:GetPropertyChangedSignal('Visible'):Connect(visibleCheck))
 	window:GetPropertyChangedSignal('Visible'):Connect(function()
 		self:UpdateGUI(self.GUIColor.Hue, self.GUIColor.Sat, self.GUIColor.Value)
-print("2")
+
 
 		visibleCheck()
 	end)
@@ -5821,7 +5821,7 @@ end))
 
 mainapi:Clean(clickgui:GetPropertyChangedSignal('Visible'):Connect(function()
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
-print("3")
+
 
 	if clickgui.Visible and inputService.MouseEnabled then
 		repeat
@@ -6283,7 +6283,7 @@ mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
 		mainapi:UpdateGUI(h, s, v, true)
-																				print("4")
+																				
 
 	end
 })
@@ -6329,7 +6329,7 @@ textguicolor = textgui:CreateColorSlider({
 	Name = 'Text GUI color',
 	Function = function()
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
-																									print("5")
+																									
 
 	end,
 	Darker = true,
@@ -6483,7 +6483,7 @@ textguicolorcustomtoggle = textgui:CreateToggle({
 	Function = function(enabled)
 		textguicolorcustom.Object.Visible = enabled
 		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
-																																									print("6")
+																																									
 
 	end,
 	Darker = true,
@@ -6975,9 +6975,75 @@ function mainapi:UpdateTextGUI(afterload)
 			v.Object.LayoutOrder = i
 		end
 	end
+task.spawn(function()
+	local data
+	pcall(function()
+		data = readfile("ReVape/profiles/theme.txt")
+	end)
+	data = data or "Dark"
 
+	if not uipallet then
+		repeat task.wait() until uipallet
+	end
+
+	uipallet.Text = Color3.fromRGB(200, 200, 200)
+
+	mainapi.GUIColor.Hue =0.46
+				mainapi.GUIColor.Sat =0.96
+				mainapi.GUIColor.Value = 0.52
+	if data == "Light" then
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Dark" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Light Red" then
+		uipallet.Main = Color3.fromRGB(235, 101, 63)
+
+	elseif data == "Light Blue" then
+		uipallet.Main = Color3.fromRGB(63, 86, 235)
+
+	elseif data == "Light Yellow" then
+		uipallet.Main = Color3.fromRGB(207, 196, 74)
+
+	elseif data == "Darkish Blue" then
+		uipallet.Main = Color3.fromRGB(38, 41, 222)
+
+	elseif data == "Light Green" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Christmas" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+        
+	elseif data == "Halloween" then
+						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	mainapi.GUIColor.Hue = 0.05442177131772041
+				mainapi.GUIColor.Sat = 0.8132780194282532
+				mainapi.GUIColor.Value = 0.9450980424880981
+
+		
+		
+
+	elseif data == "Spring" then
+									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Fall" then
+									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Summer" then
+									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+
+	else
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	end
+end)
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
-																																																print("7")
 
 end
 
