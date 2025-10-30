@@ -103,7 +103,6 @@ task.spawn(function()
         
 	elseif data == "Halloween" then
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
-        mainapi:UpdateGUI(241, 109, 45, true)
 	elseif data == "Spring" then
 		uipallet.Main = Color3.fromRGB(104, 207, 56)
 	elseif data == "Fall" then
@@ -7062,7 +7061,58 @@ function mainapi:UpdateGUI(hue, sat, val, default)
 		end
 	end
 end
+task.spawn(function()
+	local data
+	pcall(function()
+		data = readfile("ReVape/profiles/theme.txt")
+	end)
+	data = data or "Dark"
 
+	if not uipallet then
+		repeat task.wait() until uipallet
+	end
+
+	uipallet.Text = Color3.fromRGB(200, 200, 200)
+
+	if data == "Light" then
+		uipallet.Main = Color3.fromRGB(200, 200, 200)
+		uipallet.Text = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Dark" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Light Red" then
+		uipallet.Main = Color3.fromRGB(235, 101, 63)
+
+	elseif data == "Light Blue" then
+		uipallet.Main = Color3.fromRGB(63, 86, 235)
+
+	elseif data == "Light Yellow" then
+		uipallet.Main = Color3.fromRGB(207, 196, 74)
+
+	elseif data == "Darkish Blue" then
+		uipallet.Main = Color3.fromRGB(38, 41, 222)
+
+	elseif data == "Light Green" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Christmas" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+        
+	elseif data == "Halloween" then
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+        mainapi:UpdateGUI(241, 109, 45, true)
+	elseif data == "Spring" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Fall" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Summer" then
+		uipallet.Main = Color3.fromRGB(104, 207, 56)
+
+	else
+		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	end
+end)
+																																															
 mainapi:Clean(notifications.ChildRemoved:Connect(function()
 	for i, v in notifications:GetChildren() do
 		if tween.Tween then
