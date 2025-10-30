@@ -10456,6 +10456,8 @@ run(function()
 end)
 
 
+local prediction = vape.prediction
+
 run(function()
 	local Clutch
 
@@ -10476,18 +10478,21 @@ run(function()
 		if not heldBlock then return end
 
 		local velocity = root.Velocity
-		if velocity.Y > -2 then return end 
+		if velocity.Y > -2 then return end
 
-		local predictedPos = prediction.predictPosition(root.Position, velocity, 0.1)
-		local posBelow = predictedPos - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+		-- Predict slightly further ahead
+		local predictedPos = prediction.predictPosition(root.Position, velocity, 0.15)
+		local posBelow = predictedPos - Vector3.new(0, entitylib.character.HipHeight + 4, 0)
 
+		-- Raycast straight down to check for void
 		local rayParams = RaycastParams.new()
 		rayParams.FilterDescendantsInstances = {entitylib.character}
 		rayParams.FilterType = Enum.RaycastFilterType.Blacklist
 		local result = workspace:Raycast(root.Position, Vector3.new(0, -25, 0), rayParams)
-		if result then return end 
+		if result then return end -- don’t clutch if solid ground
 
-		local spreadOffsets = {
+		-- 3x3 spread
+		local offsets = {
 			Vector3.new(0, 0, 0),
 			Vector3.new(3, 0, 0),
 			Vector3.new(-3, 0, 0),
@@ -10499,11 +10504,20 @@ run(function()
 			Vector3.new(-3, 0, -3)
 		}
 
-		for _, offset in ipairs(spreadOffsets) do
-			local blockPos = posBelow + offset
-			local block, pos = getPlacedBlock(blockPos)
-			if not block then
-				task.spawn(bedwars.placeBlock, pos * 3, heldBlock, false)
+		for _, offset in ipairs(offsets) do
+			local placePos = posBelow + offset
+
+			-- Snap to nearest block grid
+			local gridPos = Vector3.new(
+				math.floor(placePos.X / 3 + 0.5) * 3,
+				math.floor(placePos.Y / 3 + 0.5) * 3,
+				math.floor(placePos.Z / 3 + 0.5) * 3
+			)
+
+			-- Check again for void directly under that spot
+			local hitCheck = workspace:Raycast(gridPos + Vector3.new(0, 2, 0), Vector3.new(0, -5, 0), rayParams)
+			if not hitCheck then
+				task.spawn(bedwars.placeBlock, gridPos, heldBlock, false)
 			end
 		end
 	end
@@ -10518,7 +10532,7 @@ run(function()
 				until not Clutch.Enabled
 			end
 		end,
-		Tooltip = "Automatically clutches you by placing a block under your feet when falling"
+		Tooltip = "Places multiple predicted blocks beneath and around you to clutch over the void."
 	})
 end)
 
