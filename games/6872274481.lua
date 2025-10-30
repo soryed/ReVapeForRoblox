@@ -1349,6 +1349,7 @@ run(function()
 	    Default = 0.4,
 	    Decimal = 100
 	})
+				vape:Remove('AutoCharge')
 end)
 	
 run(function()
@@ -4444,7 +4445,7 @@ run(function()
 		end,
 		Tooltip = 'Automatically crossbow macro\'s'
 	})
-	
+	vape:Remove('AutoShoot')
 end)
 	
 run(function()
@@ -10498,5 +10499,66 @@ vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 			end
 		end,
 		Tooltip = "Alerts you without needing to purchase the bed alarm upgrade",
+	})
+end)
+
+
+run(function()
+	local MS
+	local AutoShoot
+	local shooting = false
+	local old
+
+	AutoShoot = vape.Categories.Exploits:CreateModule({
+		Name = "AutoShoot",
+		Function = function(callback)
+			if not (role == "owner" or role == "coowner" or role == "admin" or role == "friend" or role == "premium") then
+				notif('Onyx', "You do not have permission to use this", 10, "alert")
+				return
+			end
+
+			if callback then
+				old = bedwars.ProjectileController.createLocalProjectile
+
+				bedwars.ProjectileController.createLocalProjectile = function(...)
+					local source, data, proj = ...
+					if source and (proj == "arrow" or proj == "fireball") and not shooting then
+						task.spawn(function()
+							local bows = getCrossbows()
+							if #bows > 0 then
+								shooting = true
+								task.wait(0.15)
+								local selected = store.inventory.hotbarSlot
+
+								for _, v in getCrossbows() do
+									if hotbarSwitch(v) then
+										task.wait(MS.Value / 1000)
+										mouse1click()
+										task.wait(MS.Value / 1000)
+									end
+								end
+
+								hotbarSwitch(selected)
+								shooting = false
+							end
+						end)
+					end
+					return old(...)
+				end
+			else
+				if old then
+					bedwars.ProjectileController.createLocalProjectile = old
+				end
+			end
+		end,
+		Tooltip = "Automatically shoots for you with every projectile",
+	})
+
+	MS = AutoShoot:CreateSlider({
+		Name = "Swap Delay",
+		Min = 50,
+		Max = 1000,
+		Default = 150,
+		Suffix = "ms"
 	})
 end)
