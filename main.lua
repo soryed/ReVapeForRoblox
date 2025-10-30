@@ -106,11 +106,11 @@ end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 if identifyexecutor then
-	if table.find({'Xeno','Solara'}, ({identifyexecutor()})[1]) then
+	if table.find({'Krnl','Solara'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
 		return
 	end
-	if table.find({'Seliware','Macsploit','Sirhurt','Delta'}, ({identifyexecutor()})[1]) then
+	if table.find({'Seliware','Macsploit','Sirhurt','Delta','Xeno'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
 	end
 end
