@@ -10456,87 +10456,8 @@ run(function()
 end)
 
 
-local prediction = vape.prediction
 
 run(function()
-	local Clutch
-
-	local function getHeldBlock()
-		if store.hand.toolType == "block" then
-			return store.hand.tool.Name
-		end
-	end
-
-	local function tryClutch()
-		if not entitylib.isAlive then return end
-
-		local root = entitylib.character.RootPart
-		local humanoid = entitylib.character.Humanoid
-		if not root or not humanoid then return end
-
-		local heldBlock = getHeldBlock()
-		if not heldBlock then return end
-
-		local velocity = root.Velocity
-		if velocity.Y > -2 then return end
-
-		-- Predict slightly further ahead
-		local predictedPos = prediction.predictPosition(root.Position, velocity, 0.15)
-		local posBelow = predictedPos - Vector3.new(0, entitylib.character.HipHeight + 4, 0)
-
-		-- Raycast straight down to check for void
-		local rayParams = RaycastParams.new()
-		rayParams.FilterDescendantsInstances = {entitylib.character}
-		rayParams.FilterType = Enum.RaycastFilterType.Blacklist
-		local result = workspace:Raycast(root.Position, Vector3.new(0, -25, 0), rayParams)
-		if result then return end -- don’t clutch if solid ground
-
-		-- 3x3 spread
-		local offsets = {
-			Vector3.new(0, 0, 0),
-			Vector3.new(3, 0, 0),
-			Vector3.new(-3, 0, 0),
-			Vector3.new(0, 0, 3),
-			Vector3.new(0, 0, -3),
-			Vector3.new(3, 0, 3),
-			Vector3.new(3, 0, -3),
-			Vector3.new(-3, 0, 3),
-			Vector3.new(-3, 0, -3)
-		}
-
-		for _, offset in ipairs(offsets) do
-			local placePos = posBelow + offset
-
-			-- Snap to nearest block grid
-			local gridPos = Vector3.new(
-				math.floor(placePos.X / 3 + 0.5) * 3,
-				math.floor(placePos.Y / 3 + 0.5) * 3,
-				math.floor(placePos.Z / 3 + 0.5) * 3
-			)
-
-			-- Check again for void directly under that spot
-			local hitCheck = workspace:Raycast(gridPos + Vector3.new(0, 2, 0), Vector3.new(0, -5, 0), rayParams)
-			if not hitCheck then
-				task.spawn(bedwars.placeBlock, gridPos, heldBlock, false)
-			end
-		end
-	end
-
-	Clutch = vape.Categories.Exploits:CreateModule({
-		Name = "Clutch",
-		Function = function(callback)
-			if callback then
-				repeat
-					pcall(tryClutch)
-					task.wait(0.015)
-				until not Clutch.Enabled
-			end
-		end,
-		Tooltip = "Places multiple predicted blocks beneath and around you to clutch over the void."
-	})
-end)
-
---[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10576,7 +10497,7 @@ end
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)--]]
+end)
 
 run(function()
 --[[
