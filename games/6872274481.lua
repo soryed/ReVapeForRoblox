@@ -10456,8 +10456,75 @@ run(function()
 end)
 
 
-
 run(function()
+	local Clutch
+	local lastY = 0
+
+	local function getHeldBlock()
+		if store.hand.toolType == 'block' then
+			return store.hand.tool.Name
+		end
+	end
+
+	local function placeBlockAt(pos, block)
+		task.spawn(function()
+			pcall(function()
+				bedwars.placeBlock(pos, block, false)
+			end)
+		end)
+	end
+
+	local function tryClutch()
+		if not entitylib.isAlive then return end
+		local root = entitylib.character.RootPart
+		local humanoid = entitylib.character.Humanoid
+		if not root or not humanoid then return end
+
+		local heldBlock = getHeldBlock()
+		if not heldBlock then return end
+
+		local velocity = root.Velocity
+		local belowPos = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
+
+		-- Only clutch if falling and not on the ground
+		if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
+			local _, blockPos = getPlacedBlock(belowPos)
+			if blockPos then
+				-- Create a 3x3 mini bridge pattern
+				local offsets = {
+					Vector3.new(0, 0, 0),
+					Vector3.new(3, 0, 0),
+					Vector3.new(-3, 0, 0),
+					Vector3.new(0, 0, 3),
+					Vector3.new(0, 0, -3),
+					Vector3.new(3, 0, 3),
+					Vector3.new(-3, 0, 3),
+					Vector3.new(3, 0, -3),
+					Vector3.new(-3, 0, -3)
+				}
+
+				for _, offset in ipairs(offsets) do
+					placeBlockAt(blockPos + offset, heldBlock)
+				end
+			end
+		end
+	end
+
+	Clutch = vape.Categories.Exploits:CreateModule({
+		Name = "Clutch",
+		Function = function(callback)
+			if callback then
+				repeat
+					pcall(tryClutch)
+					task.wait(0.05) -- small delay for better block sync
+				until not Clutch.Enabled
+			end
+		end,
+		Tooltip = "Automatically clutches you with a small bridge under you."
+	})
+end)
+
+--[[run(function()
 	local Clutch
 	local lastY = 0
 
@@ -10497,7 +10564,7 @@ end
 		end,
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
-end)
+end)--]]
 
 run(function()
 --[[
