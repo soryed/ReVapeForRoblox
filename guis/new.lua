@@ -6952,7 +6952,7 @@ end
 function mainapi:UpdateGUI(hue, sat, val, default)
 																																																print(hue,sat,val,default)
 	if mainapi.Loaded == nil then return end
-	if not default and mainapi.GUIColor.Rainbow then return end
+	if not default and mainapi.GUIColor.Rainbow then print('returned!') return end
 	if textgui.Button.Enabled then
 		VapeLogoGradient.Color = ColorSequence.new({
 			ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, sat, val)),
