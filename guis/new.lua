@@ -78,6 +78,9 @@ task.spawn(function()
 
 	uipallet.Text = Color3.fromRGB(200, 200, 200)
 
+	mainapi.GUIColor.Hue =0.46
+				mainapi.GUIColor.Sat =0.96
+				mainapi.GUIColor.Value = 0.52
 	if data == "Light" then
 		uipallet.Main = Color3.fromRGB(200, 200, 200)
 		uipallet.Text = Color3.fromRGB(26, 25, 26)
