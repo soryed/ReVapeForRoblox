@@ -106,7 +106,13 @@ task.spawn(function()
 						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
 
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
+	mainapi.GUIColor.Hue = 0.05442177131772041
+				mainapi.GUIColor.Sat = 0.8132780194282532
+				mainapi.GUIColor.Value = 0.9450980424880981
 
+		
+		
+	},
 	elseif data == "Spring" then
 									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
 
