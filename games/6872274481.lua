@@ -10484,29 +10484,21 @@ run(function()
 		if not heldBlock then return end
 
 		local velocity = root.Velocity
+		if velocity.Y >= -2 then return end -- only clutch while falling
+		if humanoid.FloorMaterial ~= Enum.Material.Air then return end -- skip if on ground
+
 		local belowPos = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
 
-		-- Only clutch if falling and not on the ground
-		if velocity.Y < -2 and humanoid.FloorMaterial == Enum.Material.Air then
-			local _, blockPos = getPlacedBlock(belowPos)
-			if blockPos then
-				-- Create a 3x3 mini bridge pattern
-				local offsets = {
-					Vector3.new(0, 0, 0),
-					Vector3.new(3, 0, 0),
-					Vector3.new(-3, 0, 0),
-					Vector3.new(0, 0, 3),
-					Vector3.new(0, 0, -3),
-					Vector3.new(3, 0, 3),
-					Vector3.new(-3, 0, 3),
-					Vector3.new(3, 0, -3),
-					Vector3.new(-3, 0, -3)
-				}
+		-- get normalized horizontal direction
+		local moveDir = Vector3.new(velocity.X, 0, velocity.Z)
+		if moveDir.Magnitude < 0.1 then moveDir = root.CFrame.LookVector * 3 else moveDir = moveDir.Unit * 3 end
 
-				for _, offset in ipairs(offsets) do
-					placeBlockAt(blockPos + offset, heldBlock)
-				end
-			end
+		-- extend forward bridge
+		local extendLength = math.clamp(math.floor(math.abs(velocity.Y) / 2), 2, 8) -- faster fall = longer bridge
+		for i = 0, extendLength do
+			local placePos = belowPos + (moveDir * i)
+			placeBlockAt(placePos, heldBlock)
+			task.wait(0.01)
 		end
 	end
 
@@ -10516,11 +10508,11 @@ run(function()
 			if callback then
 				repeat
 					pcall(tryClutch)
-					task.wait(0.05) -- small delay for better block sync
+					task.wait(0.05)
 				until not Clutch.Enabled
 			end
 		end,
-		Tooltip = "Automatically clutches you with a small bridge under you."
+		Tooltip = "Places a bridge forward while falling to clutch safely."
 	})
 end)
 
