@@ -10512,6 +10512,7 @@ run(function()
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = "AutoShoot",
 		Function = function(callback)
+		print(role)
 			if not (role == "owner" or role == "coowner" or role == "admin" or role == "friend" or role == "premium") then
 				notif('Onyx', "You do not have permission to use this", 10, "alert")
 				return
