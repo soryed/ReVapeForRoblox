@@ -5,6 +5,7 @@ local mainapi = {
 		Sat = 0.96,
 		Value = 0.52
 	},
+
 	HeldKeybinds = {},
 	Keybind = {'RightShift'},
 	Loaded = false,
@@ -77,6 +78,9 @@ task.spawn(function()
 
 	uipallet.Text = Color3.fromRGB(200, 200, 200)
 
+	mainapi.GUIColor.Hue =  0.46
+	mainapi.GUIColor.Sat = 0.96
+	mainapi.GUIColor.Value = 0.52
 	if data == "Light" then
 		uipallet.Main = Color3.fromRGB(200, 200, 200)
 		uipallet.Text = Color3.fromRGB(26, 25, 26)
@@ -105,6 +109,9 @@ task.spawn(function()
 						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
 
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
+			mainapi.GUIColor.Hue = 241
+	mainapi.GUIColor.Sat = 109
+	mainapi.GUIColor.Value = 45
 	elseif data == "Spring" then
 									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
 
@@ -7070,66 +7077,7 @@ function mainapi:UpdateGUI(hue, sat, val, default)
 		end
 	end
 end
-task.spawn(function()
-	local data
-	pcall(function()
-		data = readfile("ReVape/profiles/theme.txt")
-	end)
-	data = data or "Dark"
 
-	if not uipallet then
-		repeat task.wait() until uipallet
-	end
-
-	uipallet.Text = Color3.fromRGB(200, 200, 200)
-
-	if data == "Light" then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
-
-	elseif data == "Dark" then
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-
-	elseif data == "Light Red" then
-		uipallet.Main = Color3.fromRGB(235, 101, 63)
-
-	elseif data == "Light Blue" then
-		uipallet.Main = Color3.fromRGB(63, 86, 235)
-
-	elseif data == "Light Yellow" then
-		uipallet.Main = Color3.fromRGB(207, 196, 74)
-
-	elseif data == "Darkish Blue" then
-		uipallet.Main = Color3.fromRGB(38, 41, 222)
-
-	elseif data == "Light Green" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Christmas" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-        
-	elseif data == "Halloween" then
-						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-																																																	        mainapi:UpdateGUI(241, 109, 45, true)
-
-	elseif data == "Spring" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Fall" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Summer" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-
-	else
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-	end
-end)
 																																												
 mainapi:Clean(notifications.ChildRemoved:Connect(function()
 	for i, v in notifications:GetChildren() do
