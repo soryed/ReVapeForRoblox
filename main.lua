@@ -105,15 +105,7 @@ if not isfolder('ReVape/assets/'..gui) then
 end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
-if identifyexecutor then
-	if table.find({'Krnl','Solara'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Onyx", 'non supported executor', 30, 'alert')
-		return
-	end
-	if table.find({'Seliware','Macsploit','Sirhurt','Delta','Xeno'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Onyx", 'Supported executor, may cause some errors', 30, 'warning')
-	end
-end
+
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
