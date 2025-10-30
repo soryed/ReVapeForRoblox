@@ -10512,7 +10512,6 @@ run(function()
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = "AutoShoot",
 		Function = function(callback)
-		print(role)
 			if not (role == "owner" or role == "coowner" or role == "admin" or role == "friend" or role == "premium") then
 				notif('Onyx', "You do not have permission to use this", 10, "alert")
 				return
@@ -10523,7 +10522,33 @@ run(function()
 
 				bedwars.ProjectileController.createLocalProjectile = function(...)
 					local source, data, proj = ...
-					if source and (proj == "arrow" or proj == "fireball") and not shooting then
+					local projectileWhitelist = {
+						"banana_peel", "bananarang", "beehive_grenade", "blackhole_bomb", "boba_blaster", "carrot_cannon",
+						"glue_projectile_charging", "chicken_deploy", "cluster_bomb", "orions_belt_bow", "pit",
+						"ninja_chakram_1", "ninja_chakram_2", "ninja_chakram_3", "ninja_chakram_4",
+						"disco_grenade", "dizzy_toad", "feather_bow", "falconer_bow", "falconer_crossbow",
+						"falconer_headhuter", "firecrackers", "firework_rocket_launcher", "flower_bow",
+						"flower_crossbow", "flower_headhunter", "frozen_fortness", "glue_projectile",
+						"gumball_launcher", "impulse_grenade", "pumpkin_bomb_1", "pumpkin_bomb_2",
+						"pumpkin_bomb_3", "large_rock", "life_bow", "life_crossbow", "life_headhunter",
+						"meteor_shower", "necromancer_staff", "oil_consumable", "party_hat_launcher",
+						"poison_splash_potion", "popup_cube", "glitch_popup_cube", "throwable_bridge",
+						"glitch_throwable_bridge", "c4_bomb", "robbery_ball", "glitch_robbery_ball",
+						"grenade_launcher", "rocket_launcher", "glitch_grenade_launcher", "santa_bomb_siege",
+						"santa_bomb", "sheriff_crossbow", "sand_spear", "sleep_splash_potion", "smoke_grenade",
+						"glitch_snowball", "spear", "rainbow_bow", "spirit", "sticky_firework", "swap_ball", "tennis_racket",
+						"arrow", "fireball", "snowball", "frosted_snowball"
+					}
+					
+					local function isProjectileAllowed(name)
+						for _, projName in ipairs(projectileWhitelist) do
+							if name == projName then
+								return true
+							end
+						end
+						return false
+					end
+				if source and isProjectileAllowed(proj) and not shooting then
 						task.spawn(function()
 							local bows = getCrossbows()
 							if #bows > 0 then
