@@ -183,8 +183,72 @@ if not shared.VapeIndependent then
 			end
 		end
 	end
+	
 	finishLoading()
 else
 	vape.Init = finishLoading
+				task.spawn(function()
+	local data
+	pcall(function()
+		data = readfile("ReVape/profiles/theme.txt")
+	end)
+	data = data or "Dark"
+
+	if not vape.uipallet then
+		repeat task.wait() until vape.uipallet
+	end
+
+	vape.uipallet.Text = Color3.fromRGB(200, 200, 200)
+
+	if data == "Light" then
+		vape.uipallet.Main = Color3.fromRGB(200, 200, 200)
+		vape.uipallet.Text = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Dark" then
+		vape.uipallet.Main = Color3.fromRGB(26, 25, 26)
+
+	elseif data == "Light Red" then
+		vape.uipallet.Main = Color3.fromRGB(235, 101, 63)
+
+	elseif data == "Light Blue" then
+		vape.uipallet.Main = Color3.fromRGB(63, 86, 235)
+
+	elseif data == "Light Yellow" then
+		vape.uipallet.Main = Color3.fromRGB(207, 196, 74)
+
+	elseif data == "Darkish Blue" then
+		vape.uipallet.Main = Color3.fromRGB(38, 41, 222)
+
+	elseif data == "Light Green" then
+		vape.uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Christmas" then
+		vape.uipallet.Main = Color3.fromRGB(104, 207, 56)
+        
+	elseif data == "Halloween" then
+									if vape.GUIColor.Rainbow then vape:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		vape.uipallet.Main = Color3.fromRGB(26, 25, 26)
+																																											vape.GUIColor.Hue = 0.05442177131772041
+				vape.GUIColor.Sat = 0.8132780194282532
+				vape.GUIColor.Value = 0.9450980424880981
+vape:UpdateGUI(Color3.fromRGB(241, 109, 45), true)
+
+	elseif data == "Spring" then
+									if vape.GUIColor.Rainbow then vape:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		vape.uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Fall" then
+									if vape.GUIColor.Rainbow then vape:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		vape.uipallet.Main = Color3.fromRGB(104, 207, 56)
+	elseif data == "Summer" then
+									if vape.GUIColor.Rainbow then vape:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
+
+		vape.uipallet.Main = Color3.fromRGB(104, 207, 56)
+
+	else
+		vape.uipallet.Main = Color3.fromRGB(26, 25, 26)
+	end
+end)
 	return vape
 end
