@@ -3943,6 +3943,50 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		airbender = function()
+			repeat
+				task.wait(0.1)
+		
+				if not entitylib.isAlive then continue end
+				local root = entitylib.character.RootPart
+				if not root then continue end
+		
+				local plr = entitylib.EntityPosition({
+					Range = 25,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+		
+				local plr2 = entitylib.EntityPosition({
+					Range = 31,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+		
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+					game:GetService("ReplicatedStorage")
+						:FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events")
+						.useAbility:FireServer("airbender_tornado")
+				end
+		
+				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+					game:GetService("ReplicatedStorage")
+						:FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events")
+						.useAbility:FireServer("airbender_moving_tornado")
+		
+					task.wait(0.0025)
+		
+					local direction = (plr2.RootPart.Position - root.Position).Unit
+					local args = { [1] = { direction = direction } }
+		
+					game:GetService("ReplicatedStorage")
+						.rbxts_include.node_modules:FindFirstChild("@rbxts")
+						.net.out._NetManaged.Airbender_RequestMovingTornado:FireServer(unpack(args))
+				end
+			until not AutoKit.Enabled
+		end																																																											
 		battery = function()
 			repeat
 				if entitylib.isAlive then
@@ -9991,11 +10035,7 @@ task.wait(0.025)
 					task.wait(0.125)
 					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 85, 0)
 				end
-task.wait(0.3)
-				for i = 1, 3 do
-					task.wait(0.15)
-					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 64, 0)
-				end
+
 			else
 				workspace.Gravity = 192.6
 			end
@@ -10615,3 +10655,5 @@ run(function()
 		Tooltip = 'Disables GetPropertyChangedSignal detections for movement'
 	})
 end)
+
+
