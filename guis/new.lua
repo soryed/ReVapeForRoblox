@@ -5326,106 +5326,110 @@ function mainapi:CreateLegit()
 	self.Legit = legitapi
 
 	return legitapi
-end				
+end		
 function mainapi:CreateNotification(title, text, duration, type)
-	if not self.Notifications.Enabled then return end
-	task.delay(0, function()
-		if self.ThreadFix then
-			setthreadidentity(8)
-		end
-		local i = #notifications:GetChildren() + 1
-		local notification = Instance.new('ImageLabel')
-		notification.Name = 'Notification'
-		notification.Size = UDim2.fromOffset(math.max(getfontsize(removeTags(text), 14, uipallet.Font).X + 80, 266), 75)
-		notification.Position = UDim2.new(1, 0, 1, -(29 + (78 * i)))
-		notification.ZIndex = 5
-		notification.BackgroundTransparency = 1
-		notification.Image = getcustomasset('ReVape/assets/new/notification.png')
-		notification.ScaleType = Enum.ScaleType.Slice
-		notification.SliceCenter = Rect.new(7, 7, 9, 9)
-		notification.Parent = notifications
-		if mainapi.SC then	
+  if not self.Notifications.Enabled then
+    return
+  end
+  task.delay(0, function()
+    if self.ThreadFix then
+      setthreadidentity(8)
+    end
+    local i = #notifications:GetChildren() + 1
+    local notification = Instance.new 'ImageLabel'
+    notification.Name = 'Notification'
+    notification.Size = UDim2.fromOffset(math.max(getfontsize(removeTags(text), 14, uipallet.Font).X + 80, 266), 75)
+    notification.Position = UDim2.new(1, 0, 1, -(29 + (78 * i)))
+    notification.ZIndex = 5
+    notification.BackgroundTransparency = 1
+    notification.Image = getcustomasset('ReVape/assets/new/notification.png')
+if mainapi.SC then	
 		    notification.ImageColor3 =   uipallet.Main:lerp(Color3.fromHSV(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value), 0.6)
 		else 
 			notification.ImageColor3 =  Color3.new(0,0,0)
 		end
-		addBlur(notification, true)
-		local iconshadow = Instance.new('ImageLabel')
-		iconshadow.Name = 'Icon'
-		iconshadow.Size = UDim2.fromOffset(60, 60)
-		iconshadow.Position = UDim2.fromOffset(-5, -8)
-		iconshadow.ZIndex = 5
-		iconshadow.BackgroundTransparency = 1
-		iconshadow.Image = getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
-		iconshadow.ImageColor3 = Color3.new() 
-		iconshadow.ImageTransparency = 0.5
-		iconshadow.Parent = notification
-		local icon = iconshadow:Clone()
-		icon.Position = UDim2.fromOffset(-1, -1)
-		icon.ImageColor3 = Color3.new(1, 1, 1)
-		icon.ImageTransparency = 0
-		icon.Parent = iconshadow
-		local titlelabel = Instance.new('TextLabel')
-		titlelabel.Name = 'Title'
-		titlelabel.Size = UDim2.new(1, -56, 0, 20)
-		titlelabel.Position = UDim2.fromOffset(46, 16)
-		titlelabel.ZIndex = 5
-		titlelabel.BackgroundTransparency = 1
-		titlelabel.Text = "<stroke color='#FFFFFF' joins='round' thickness='0.3' transparency='0.5'>"..title..'</stroke>'
-		titlelabel.TextXAlignment = Enum.TextXAlignment.Left
-		titlelabel.TextYAlignment = Enum.TextYAlignment.Top
-		titlelabel.TextColor3 = Color3.fromRGB(209, 209, 209)
-		titlelabel.TextSize = 14
-		titlelabel.RichText = true
-		titlelabel.FontFace = uipallet.FontSemiBold
-		titlelabel.Parent = notification
-		local textshadow = titlelabel:Clone()
-		textshadow.Name = 'Text'
-		textshadow.Position = UDim2.fromOffset(47, 44)
-		textshadow.Text = removeTags(text)
-		textshadow.TextColor3 = Color3.new()
-		textshadow.TextTransparency = 0.5
-		textshadow.RichText = false
-		textshadow.FontFace = uipallet.Font
-		textshadow.Parent = notification
-		local textlabel = textshadow:Clone()
-		textlabel.Position = UDim2.fromOffset(-1, -1)
-		textlabel.Text = text
-		textlabel.TextColor3 = Color3.fromRGB(170, 170, 170)
-		textlabel.TextTransparency = 0
-		textlabel.RichText = true
-		textlabel.Parent = textshadow
-		local progress = Instance.new('Frame')
-		progress.Name = 'Progress'
-		progress.Size = UDim2.new(1, -13, 0, 2)
-		progress.Position = UDim2.new(0, 3, 1, -4)
-		progress.ZIndex = 5
-		progress.BackgroundColor3 =
-			type == 'alert' and Color3.fromRGB(250, 50, 56)
-			or type == 'warning' and Color3.fromRGB(236, 129, 43)
-			or Color3.fromRGB(220, 220, 220)
-		progress.BorderSizePixel = 0
-		progress.Parent = notification
-		if tween.Tween then
-			tween:Tween(notification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-				AnchorPoint = Vector2.new(1, 0)
-			}, tween.tweenstwo)
-			tween:Tween(progress, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
-				Size = UDim2.fromOffset(0, 2)
-			})
-		end
-		task.delay(duration, function()
-			if tween.Tween then
-				tween:Tween(notification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-					AnchorPoint = Vector2.new(0, 0)
-				}, tween.tweenstwo)
-			end
-			task.wait(0.2)
-			notification:ClearAllChildren()
-			notification:Destroy()
-		end)
-	end)
+    notification.ScaleType = Enum.ScaleType.Slice
+    notification.SliceCenter = Rect.new(7, 7, 9, 9)
+    notification.Parent = notifications
+    addBlur(notification, true)
+    local iconshadow = Instance.new 'ImageLabel'
+    iconshadow.Name = 'Icon'
+    iconshadow.Size = UDim2.fromOffset(60, 60)
+    iconshadow.Position = UDim2.fromOffset(-5, -8)
+    iconshadow.ZIndex = 5
+    iconshadow.BackgroundTransparency = 1
+    iconshadow.Image =getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
+    iconshadow.ImageColor3 = Color3.new()
+    iconshadow.ImageTransparency = 0.5
+    iconshadow.Parent = notification
+    local icon = iconshadow:Clone()
+    icon.Position = UDim2.fromOffset(-1, -1)
+    icon.ImageColor3 = Color3.new(1, 1, 1)
+    icon.ImageTransparency = 0
+    icon.Parent = iconshadow
+    local titlelabel = Instance.new 'TextLabel'
+    titlelabel.Name = 'Title'
+    titlelabel.Size = UDim2.new(1, -56, 0, 20)
+    titlelabel.Position = UDim2.fromOffset(46, 16)
+    titlelabel.ZIndex = 5
+    titlelabel.BackgroundTransparency = 1
+    titlelabel.Text = "<stroke color='#FFFFFF' joins='round' thickness='0.3' transparency='0.5'>"
+      .. title
+      .. '</stroke>'
+    titlelabel.TextXAlignment = Enum.TextXAlignment.Left
+    titlelabel.TextYAlignment = Enum.TextYAlignment.Top
+    titlelabel.TextColor3 = Color3.fromRGB(209, 209, 209)
+    titlelabel.TextSize = 14
+    titlelabel.RichText = true
+    titlelabel.FontFace = uipallet.FontSemiBold
+    titlelabel.Parent = notification
+    local textshadow = titlelabel:Clone()
+    textshadow.Name = 'Text'
+    textshadow.Position = UDim2.fromOffset(47, 44)
+    textshadow.Text = removeTags(text)
+    textshadow.TextColor3 = Color3.new()
+    textshadow.TextTransparency = 0.5
+    textshadow.RichText = false
+    textshadow.FontFace = uipallet.Font
+    textshadow.Parent = notification
+    local textlabel = textshadow:Clone()
+    textlabel.Position = UDim2.fromOffset(-1, -1)
+    textlabel.Text = text
+    textlabel.TextColor3 = Color3.fromRGB(170, 170, 170)
+    textlabel.TextTransparency = 0
+    textlabel.RichText = true
+    textlabel.Parent = textshadow
+    local progress = Instance.new 'Frame'
+    progress.Name = 'Progress'
+    progress.Size = UDim2.new(1, -13, 0, 2)
+    progress.Position = UDim2.new(0, 3, 1, -4)
+    progress.ZIndex = 5
+    progress.BackgroundColor3 = type == 'alert' and Color3.fromRGB(250, 50, 56)
+      or type == 'warning' and Color3.fromRGB(236, 129, 43)
+      or Color3.fromRGB(220, 220, 220)
+    progress.BorderSizePixel = 0
+    progress.Parent = notification
+    if tween.Tween then
+      tween:Tween(notification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+        AnchorPoint = Vector2.new(1, 0),
+      }, tween.tweenstwo)
+      tween:Tween(progress, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
+        Size = UDim2.fromOffset(0, 2),
+      })
+    end
+    task.delay(duration, function()
+      if tween.Tween then
+        tween:Tween(notification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+          AnchorPoint = Vector2.new(0, 0),
+        }, tween.tweenstwo)
+      end
+      task.wait(0.2)
+      notification:ClearAllChildren()
+      notification:Destroy()
+    end)
+  end)
 end
+
 						
 function mainapi:Load(skipgui, profile)
 	if not skipgui then
@@ -6081,24 +6085,6 @@ mainapi.Blur = guipane:CreateToggle({
 	end,
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
-})
-mainapi.INFO = guipane:CreateToggle({
-	Name = 'INFO',
-	Function = function()
-		mainapi:CreateNotification("TEST","TEST",200)
-	end,
-})
-mainapi.ALERT = guipane:CreateToggle({
-	Name = 'ALERT',
-	Function = function()
-		mainapi:CreateNotification("TEST","TEST",200,"alert")
-	end,
-})
-mainapi.WARNING = guipane:CreateToggle({
-	Name = 'WARNING',
-	Function = function()
-		mainapi:CreateNotification("TEST","TEST",200,"warning")
-	end,
 })
 mainapi.Theme = guipane:CreateDropdown({
 	Name = 'Theme',
