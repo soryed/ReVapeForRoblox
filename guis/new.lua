@@ -5375,11 +5375,11 @@ function mainapi:CreateNotification(title, text, duration, type)
 		iconshadow.BackgroundTransparency = 1
 		iconshadow.Image = getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
 		if mainapi.SC then	
-											local R,G,B  =  mainapi:HSVtoRGB(mainapi.GUIColor.Hue,mainapi.GUIColor.Sat,mainapi.GUIColor.Value)
-											iconshadow.ImageColor3 = Color3.FromRGB(R,G,B)
-										else 
-											iconshadow.ImageColor3 = Color3.new() 
-										end
+			local R, G, B = mainapi:HSVtoRGB(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
+			iconshadow.ImageColor3 = Color3.fromRGB(R * 255, G * 255, B * 255)
+		else 
+			iconshadow.ImageColor3 = Color3.new() 
+		end
 		iconshadow.ImageTransparency = 0.5
 		iconshadow.Parent = notification
 		local icon = iconshadow:Clone()
