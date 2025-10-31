@@ -6104,6 +6104,24 @@ mainapi.Blur = guipane:CreateToggle({
 	Default = true,
 	Tooltip = 'Blur the background of the GUI'
 })
+mainapi.INFO = guipane:CreateToggle({
+	Name = 'INFO',
+	Function = function()
+		mainapi:CreateNotification("TEST","TEST",math.huge)
+	end,
+})
+mainapi.ALERT = guipane:CreateToggle({
+	Name = 'ALERT',
+	Function = function()
+		mainapi:CreateNotification("TEST","TEST",math.huge,"alert")
+	end,
+})
+mainapi.WARNING = guipane:CreateToggle({
+	Name = 'WARNING',
+	Function = function()
+		mainapi:CreateNotification("TEST","TEST",math.huge,"warning")
+	end,
+})
 mainapi.Theme = guipane:CreateDropdown({
 	Name = 'Theme',
 	List =  {"Light","Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green","Summer","Fall","Spring","Halloween","Christmas"},
