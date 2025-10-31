@@ -10741,21 +10741,13 @@ run(function()
 end)
 
 run(function()
-	local function getWool()
-		for _, wool in pairs(inv or store.inventory.inventory.items) do
-			if wool.itemType and wool.itemType:find("wool") then
-				return wool.itemType, wool.amount
-			end
-		end
-	end
-
 	local function penis()
 		local root = entitylib.character.RootPart
 		local basePos = root.Position
 
 		local item, amount = getWool()
 		if not item then
-			notif("Funny", "No wool found in inventory!", 5, "alert")
+			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "alert")
 			return
 		end
 
@@ -10783,8 +10775,10 @@ run(function()
 	local Funny = vape.Categories.Troll:CreateModule({
 		Name = "Funny",
 		Function = function(callback)
+			print("sujp")
+
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				notif("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
 
@@ -10792,9 +10786,9 @@ run(function()
 				if Funny.Options.Value == "penis" then
 					penis()
 				elseif Funny.Options.Value == "smile" then
-					notif("Funny", "Coming soon :D", 5)
+					vape:CreateNotification("Funny", "Coming soon :D", 5)
 				elseif Funny.Options.Value == "nazi" then
-					notif("Funny", "Coming soon :D", 5)
+					vape:CreateNotification("Funny", "Coming soon :D", 5)
 				end
 			end
 		end,
