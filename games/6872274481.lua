@@ -10693,8 +10693,10 @@ run(function()
 		end
 		bedwars.placeBlock(basePos, item)
 	end
+	
+
 	local function penis()
-				local root = entitylib.character.RootPart
+		local root = entitylib.character.RootPart
 		local basePos = root.Position
 
 		local item, amount = getWool()
@@ -10703,7 +10705,7 @@ run(function()
 			return
 		end
 
-		local forward = root.CFrame.LookVector * 3
+			local forward = root.CFrame.LookVector * 3
 		local origin = (basePos + forward) - Vector3.new(0, 3, 0)
 
 		local pattern = {
@@ -10713,18 +10715,12 @@ run(function()
 			Vector3.new(0, 1, 0), 
 			Vector3.new(0, 2, 0),  
 		}
-
-		for i, offset in ipairs(pattern) do
-			local pos = origin + (root.CFrame.RightVector * offset.X * 3)
+		for _, offset in ipairs(pattern) do
+			--local pos = basePos + offset * 3
+					local pos = origin + (root.CFrame.RightVector * offset.X * 3)
 				+ (Vector3.new(0, offset.Y * 3, 0))
 				+ (root.CFrame.LookVector * offset.Z * 3)
-
-			local success = false
-			for attempt = 1, 3 do
-				success = bedwars.placeBlock(pos, item)
-				if success then break end
-				task.wait(0.001)
-			end
+			bedwars.placeBlock(pos, item)
 			task.wait(0.001)
 		end
 	end
