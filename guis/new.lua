@@ -77,9 +77,6 @@ task.spawn(function()
 	end
 
 	uipallet.Text = Color3.fromRGB(200, 200, 200)
-	mainapi.GUIColor.Hue = 0.46
-	mainapi.GUIColor.Sat = 0.96
-	mainapi.GUIColor.Value = 0.52
 
 	local colorThemes = {
 		["Light"] = {
@@ -104,40 +101,15 @@ task.spawn(function()
 		["Light Green"] = {
 			Main = Color3.fromRGB(104, 207, 56),
 		},
-		["Christmas"] = {
-			Main = Color3.fromRGB(200, 200, 200),
-			Text = Color3.fromRGB(26, 25, 26),
-		},
-		["Halloween"] = {
-			Main = Color3.fromRGB(26, 25, 26),
-		},
-		["Spring"] = {
-			Main = Color3.fromRGB(200, 200, 200),
-			Text = Color3.fromRGB(26, 25, 26),
-		},
-		["Fall"] = {
-			Main = Color3.fromRGB(26, 25, 26),
-		},
-		["Summer"] = {
-			Main = Color3.fromRGB(104, 207, 56),
-		},
 	}
 
 	local theme = colorThemes[data]
 
 	if theme then
-		if (data == "Halloween" or data == "Spring" or data == "Fall" or data == "Summer") and mainapi.GUIColor.Rainbow then
-			mainapi:CreateNotification("Onyx", "Rainbow is enabled, ignored", 5)
-			return
-		end
+
 
 		if theme.Main then uipallet.Main = theme.Main end
 		if theme.Text then uipallet.Text = theme.Text end
-		if theme.Hue then
-			mainapi.GUIColor.Hue = theme.Hue
-			mainapi.GUIColor.Sat = theme.Sat
-			mainapi.GUIColor.Value = theme.Value
-		end
 	else
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
 	end
@@ -6984,86 +6956,6 @@ function mainapi:UpdateTextGUI(afterload)
 			v.Object.LayoutOrder = i
 		end
 	end
-task.spawn(function()
-	local data
-	pcall(function()
-		data = readfile("ReVape/profiles/theme.txt")
-	end)
-	data = data or "Dark"
-
-	if not uipallet then
-		repeat task.wait() until uipallet
-	end
-
-	uipallet.Text = Color3.fromRGB(200, 200, 200)
-	mainapi.GUIColor.Hue = 0.46
-	mainapi.GUIColor.Sat = 0.96
-	mainapi.GUIColor.Value = 0.52
-
-	local colorThemes = {
-		["Light"] = {
-			Main = Color3.fromRGB(200, 200, 200),
-			Text = Color3.fromRGB(26, 25, 26),
-		},
-		["Dark"] = {
-			Main = Color3.fromRGB(26, 25, 26),
-		},
-		["Light Red"] = {
-			Main = Color3.fromRGB(235, 101, 63),
-		},
-		["Light Blue"] = {
-			Main = Color3.fromRGB(63, 86, 235),
-		},
-		["Light Yellow"] = {
-			Main = Color3.fromRGB(207, 196, 74),
-		},
-		["Darkish Blue"] = {
-			Main = Color3.fromRGB(38, 41, 222),
-		},
-		["Light Green"] = {
-			Main = Color3.fromRGB(104, 207, 56),
-		},
-		["Christmas"] = {
-			Main = Color3.fromRGB(200, 200, 200),
-			Text = Color3.fromRGB(26, 25, 26),
-		},
-		["Halloween"] = {
-			Main = Color3.fromRGB(26, 25, 26),
-		},
-		["Spring"] = {
-			Main = Color3.fromRGB(200, 200, 200),
-			Text = Color3.fromRGB(26, 25, 26),
-
-		},
-		["Fall"] = {
-			Main = Color3.fromRGB(26, 25, 26),
-
-		},
-		["Summer"] = {
-			Main = Color3.fromRGB(104, 207, 56),
-		},
-	}
-
-	local theme = colorThemes[data]
-
-	if theme then
-		if (data == "Halloween" or data == "Spring" or data == "Fall" or data == "Summer") and mainapi.GUIColor.Rainbow then
-			mainapi:CreateNotification("Onyx", "Rainbow is enabled, ignored", 5)
-			return
-		end
-
-		if theme.Main then uipallet.Main = theme.Main end
-		if theme.Text then uipallet.Text = theme.Text end
-		if theme.Hue then
-			mainapi.GUIColor.Hue = theme.Hue
-			mainapi.GUIColor.Sat = theme.Sat
-			mainapi.GUIColor.Value = theme.Value
-		end
-	else
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-	end
-end)
-
 	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
 
 end
