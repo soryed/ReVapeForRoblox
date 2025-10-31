@@ -10741,6 +10741,38 @@ run(function()
 end)
 
 run(function()
+	local function penis()
+	local root = entitylib.character.RootPart
+	local basePos = root.Position
+
+	local item, amount = getWool()
+	if not item then
+		notif("Funny", "No wool found in inventory!", 5, "alert")
+		return
+	end
+
+	local pattern = {
+		{0,1,0},
+		{0,1,0},
+		{1,1,1},
+	}
+
+	for z = 1, #pattern do
+		for x = 1, #pattern[z] do
+			if pattern[z][x] == 1 then
+				local pos = Vector3.new(
+					basePos.X + (x - 2),
+					basePos.Y - 3,
+					basePos.Z + (z - 2)
+				)
+				bedwars.placeBlock(pos, item)
+				task.wait(0.05)
+			end
+		end
+	end
+end)
+	
+	end
 	local Funny
 	local Options
 	Funny = vape.Categories.Troll:CreateModule({
@@ -10749,7 +10781,8 @@ run(function()
 			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
-				vape:CreateNotification("Onyx","This module is not finished. not sure if i will actually add this idea tho",6,"alert")
+				--vape:CreateNotification("Onyx","This module is not finished. not sure if i will actually add this idea tho",6,"alert")
+				if Options.Value == 'penis' then penis() end
 			end
 		end,
 		Tooltip = ':troll: '
