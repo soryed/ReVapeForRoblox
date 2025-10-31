@@ -2546,29 +2546,7 @@ function mainapi:SWITCHTHEMECOLOR(v)
 
 	mainapi:CreateNotification("Onyx", ("Please reinject to finalize to '%s' theme!"):format(upperTheme), 5)
 end
-function mainapi:HSVtoRGB(h,s,v)
-    local c = v * s
-    local x = c * (1 - math.abs((h / 60) % 2 - 1))
-    local m = v - c
-
-    local r, g, b
-    if h < 60 then
-        r, g, b = c, x, 0
-    elseif h < 120 then
-        r, g, b = x, c, 0
-    elseif h < 180 then
-        r, g, b = 0, c, x
-    elseif h < 240 then
-        r, g, b = 0, x, c
-    elseif h < 300 then
-        r, g, b = x, 0, c
-    else
-        r, g, b = c, 0, x
-    end
-
-    return (r + m), (g + m), (b + m)
-end
-						
+					
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
@@ -5366,6 +5344,11 @@ function mainapi:CreateNotification(title, text, duration, type)
 		notification.ScaleType = Enum.ScaleType.Slice
 		notification.SliceCenter = Rect.new(7, 7, 9, 9)
 		notification.Parent = notifications
+		if mainapi.SC then	
+		    notification.ImageColor3 =   uipallet.Main:lerp(Color3.fromHSV(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value), 0.6)
+		else 
+			notification.ImageColor3 =  Color3.new(0,0,0)
+		end
 		addBlur(notification, true)
 		local iconshadow = Instance.new('ImageLabel')
 		iconshadow.Name = 'Icon'
@@ -5374,12 +5357,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		iconshadow.ZIndex = 5
 		iconshadow.BackgroundTransparency = 1
 		iconshadow.Image = getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
-		if mainapi.SC then	
-			local R, G, B = mainapi:HSVtoRGB(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value)
-			iconshadow.ImageColor3 = Color3.fromRGB(R * 255, G * 255, B * 255)
-		else 
-			iconshadow.ImageColor3 = Color3.new() 
-		end
+		iconshadow.ImageColor3 = Color3.new() 
 		iconshadow.ImageTransparency = 0.5
 		iconshadow.Parent = notification
 		local icon = iconshadow:Clone()
