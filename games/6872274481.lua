@@ -10749,7 +10749,7 @@ run(function()
 			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
 			if callback then
-				vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+				vape:CreateNotification("Onyx","This module is not finished. not sure if i will actually add this idea tho",6,"alert")
 			end
 		end,
 		Tooltip = ':troll: '
@@ -10772,7 +10772,7 @@ run(function()
 			if callback then
 vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 			end
-		end,
-		Tooltip = 'Creates logs of every match you played(10/30/2025+ supported)'
+		end,	
+		Tooltip = 'Creates logs of every match you played(??/??/2025+ supported)'
 	})
 end)
