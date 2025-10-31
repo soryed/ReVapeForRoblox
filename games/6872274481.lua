@@ -10716,10 +10716,8 @@ run(function()
 			Vector3.new(0, 2, 0),  
 		}
 		for _, offset in ipairs(pattern) do
-			--local pos = basePos + offset * 3
-					local pos = origin + (root.CFrame.RightVector * offset.X * 3)
-				+ (Vector3.new(0, offset.Y * 3, 0))
-				+ (root.CFrame.LookVector * offset.Z * 3)
+			local pos = basePos + offset * 3
+
 			bedwars.placeBlock(pos, item)
 			task.wait(0.001)
 		end
@@ -10746,7 +10744,7 @@ local Options
 				end
 			end
 		end,
-		Tooltip = ":troll:"
+		Tooltip = ":troll: doesnt work for some reason ill do a rewrite on it"
 	})
 
 	Options = Funny:CreateDropdown({
