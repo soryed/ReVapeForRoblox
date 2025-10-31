@@ -10682,6 +10682,17 @@ run(function()
 end)
 
 run(function()
+	local function test()
+		local root = entitylib.character.RootPart
+		local basePos = root.Position
+
+		local item, amount = getWool()
+		if not item then
+			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "alert")
+			return
+		end
+		bedwars.placeBlock(basePos, item)
+	end
 	local function penis()
 		local root = entitylib.character.RootPart
 		local basePos = root.Position
@@ -10717,8 +10728,6 @@ local Options
 	Funny = vape.Categories.Troll:CreateModule({
 		Name = "Funny",
 		Function = function(callback)
-			print("sujp")
-
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
@@ -10731,6 +10740,8 @@ local Options
 					vape:CreateNotification("Funny", "Coming soon :D", 5)
 				elseif Options.Value == "nazi" then
 					vape:CreateNotification("Funny", "Coming soon :D", 5)
+				elseif Options.Value == "test" then
+					test()
 				end
 			end
 		end,
@@ -10739,7 +10750,7 @@ local Options
 
 	Options = Funny:CreateDropdown({
 		Name = "Options",
-		List = {"penis", "nazi", "smile"}
+		List = {"penis", "nazi", "smile",'test'}
 	})
 end)
 
