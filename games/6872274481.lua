@@ -1002,7 +1002,6 @@ run(function()
 		if new.Game ~= old.Game then
 			store.matchState = new.Game.matchState
 			store.queueType = new.Game.queueType or 'bedwars_test'
-			print(store.queueType)
 		end
 
 		if new.Inventory ~= old.Inventory then
@@ -5189,12 +5188,13 @@ end)
 run(function()
 	TrapDisabler = vape.Categories.Utility:CreateModule({
 		Name = 'TrapDisabler',
-		Tooltip = 'Disables Snap Traps - NOTE THIS DOESNT WORK ANYMORE'
+		Tooltip = 'Disables Snap Traps -- FIXED THIS MODULE'
 	})
 end)
 	
 run(function()
-	vape.Categories.World:CreateModule({
+local afk	
+afk = vape.Categories.Minigames:CreateModule({
 		Name = 'Anti-AFK',
 		Function = function(callback)
 			if callback then
@@ -5208,9 +5208,12 @@ run(function()
 					end
 				end
 	
+				repeat 
 				bedwars.Client:Get(remotes.AfkStatus):SendToServer({
 					afk = false
-				})
+				}) 
+				task.wait(0.001)
+				until not afk.Enabled
 			end
 		end,
 		Tooltip = 'Lets you stay ingame without getting kicked'
@@ -10737,4 +10740,39 @@ run(function()
 	})
 end)
 
+run(function()
+	local Funny
+	local Options
+	Funny = vape.Categories.Troll:CreateModule({
+		Name = 'funny',
+		Function = function(callback)
+			if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
 
+			if callback then
+				vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = ':troll: '
+	})
+
+	Options = Funny:CreateDropdown({
+		Name = 'Options',
+		List = {"penis","nazi","smile"}
+	})
+end)
+
+run(function()
+	local Logs
+	
+	Logs = vape.Categories.Minigames:CreateModule({
+		Name = 'GameLogs',
+		Function = function(callback)
+						if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
+
+			if callback then
+vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = 'Creates logs of every match you played(10/30/2025+ supported)'
+	})
+end)
