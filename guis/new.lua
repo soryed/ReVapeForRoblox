@@ -2566,7 +2566,7 @@ function mainapi:HSVtoRGB(h,s,v)
         r, g, b = c, 0, x
     end
 
-    return Color3.FromRGB((r + m), (g + m), (b + m))
+    return (r + m), (g + m), (b + m)
 end
 						
 addMaid(mainapi)
@@ -5374,7 +5374,12 @@ function mainapi:CreateNotification(title, text, duration, type)
 		iconshadow.ZIndex = 5
 		iconshadow.BackgroundTransparency = 1
 		iconshadow.Image = getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
-		if mainapi.SC then	iconshadow.ImageColor3 = mainapi:HSVtoRGB(mainapi.GUIColor.Hue,mainapi.GUIColor.Sat,mainapi.GUIColor.Value) else iconshadow.ImageColor3 = Color3.new() end
+		if mainapi.SC then	
+											local R,G,B  =  mainapi:HSVtoRGB(mainapi.GUIColor.Hue,mainapi.GUIColor.Sat,mainapi.GUIColor.Value)
+											iconshadow.ImageColor3 = Color3.FromRGB(R,G,B)
+										else 
+											iconshadow.ImageColor3 = Color3.new() 
+										end
 		iconshadow.ImageTransparency = 0.5
 		iconshadow.Parent = notification
 		local icon = iconshadow:Clone()
