@@ -23,6 +23,7 @@ local mainapi = {
 	Version = '0.38',
 	Discord = "@ye40",
 	role = "",
+	SC = false,
 	Windows = {}
 }
 																																																								
@@ -5373,8 +5374,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		iconshadow.ZIndex = 5
 		iconshadow.BackgroundTransparency = 1
 		iconshadow.Image = getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
-		--iconshadow.ImageColor3 = Color3.new()
-		iconshadow.ImageColor3 = mainapi:HSVtoRGB(mainapi.GUIColor.Hue,mainapi.GUIColor.Sat,mainapi.GUIColor.Value)
+		if mainapi.SC then	iconshadow.ImageColor3 = mainapi:HSVtoRGB(mainapi.GUIColor.Hue,mainapi.GUIColor.Sat,mainapi.GUIColor.Value) else iconshadow.ImageColor3 = Color3.new() end
 		iconshadow.ImageTransparency = 0.5
 		iconshadow.Parent = notification
 		local icon = iconshadow:Clone()
@@ -6281,13 +6281,18 @@ mainapi.ToggleNotifications = notifpane:CreateToggle({
 	Default = true,
 	Darker = true
 })
-
+mainapi.ColoredNotifications = notifpane:CreateToggle({
+	Name = 'Colored Notifications',
+	Tooltip = 'Notifications will be colored to ur color theme',
+	Default = false,
+	Function = function(v)
+		mainapi.SC = v
+	end
+})
 mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
-		mainapi:UpdateGUI(h, s, v, true)
-																				
-
+		mainapi:UpdateGUI(h, s, v, true)																	
 	end
 })
 mainapi.Categories.Main:CreateBind()
@@ -7228,67 +7233,4 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
-task.spawn(function()
-	local data
-	pcall(function()
-		data = readfile("ReVape/profiles/theme.txt")
-	end)
-	data = data or "Dark"
-
-	if not uipallet then
-		repeat task.wait() until uipallet
-	end
-
-	uipallet.Text = Color3.fromRGB(200, 200, 200)
-
-	if data == "Light" then
-		uipallet.Main = Color3.fromRGB(200, 200, 200)
-		uipallet.Text = Color3.fromRGB(26, 25, 26)
-
-	elseif data == "Dark" then
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-
-	elseif data == "Light Red" then
-		uipallet.Main = Color3.fromRGB(235, 101, 63)
-
-	elseif data == "Light Blue" then
-		uipallet.Main = Color3.fromRGB(63, 86, 235)
-
-	elseif data == "Light Yellow" then
-		uipallet.Main = Color3.fromRGB(207, 196, 74)
-
-	elseif data == "Darkish Blue" then
-		uipallet.Main = Color3.fromRGB(38, 41, 222)
-
-	elseif data == "Light Green" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Christmas" then
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-        
-	elseif data == "Halloween" then
-						if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-																																											mainapi.GUIColor.Hue = 0.05442177131772041
-				mainapi.GUIColor.Sat = 0.8132780194282532
-				mainapi.GUIColor.Value = 0.9450980424880981
-mainapi:UpdateGUI(Color3.fromRGB(241, 109, 45), true)
-
-	elseif data == "Spring" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Fall" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-	elseif data == "Summer" then
-									if mainapi.GUIColor.Rainbow then mainapi:CreateNotification("Onyx", 'Rainbow is enabled, ignored', 5)  return end
-
-		uipallet.Main = Color3.fromRGB(104, 207, 56)
-
-	else
-		uipallet.Main = Color3.fromRGB(26, 25, 26)
-	end
-end)
 return mainapi
