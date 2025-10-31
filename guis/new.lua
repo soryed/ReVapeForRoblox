@@ -107,34 +107,19 @@ task.spawn(function()
 		["Christmas"] = {
 			Main = Color3.fromRGB(200, 200, 200),
 			Text = Color3.fromRGB(26, 25, 26),
-			Hue = 0.9954128265380859,
-			Sat = 0.5767195820808411,
-			Value = 0.7411764860153198,
 		},
 		["Halloween"] = {
 			Main = Color3.fromRGB(26, 25, 26),
-			Hue = 0.05442177131772041,
-			Sat = 0.8132780194282532,
-			Value = 0.9450980424880981,
 		},
 		["Spring"] = {
 			Main = Color3.fromRGB(200, 200, 200),
 			Text = Color3.fromRGB(26, 25, 26),
-			Hue = 0.5705128312110901,
-			Sat = 0.5098038911819458,
-			Value = 1,
 		},
 		["Fall"] = {
 			Main = Color3.fromRGB(26, 25, 26),
-			Hue = 0.11419752985239029,
-			Sat = 0.7012986540794373,
-			Value = 0.9058823585510254,
 		},
 		["Summer"] = {
 			Main = Color3.fromRGB(104, 207, 56),
-			Hue = 0.07474226504564285,
-			Sat = 0.8398268222808838,
-			Value = 0.9058823585510254,
 		},
 	}
 
@@ -7041,34 +7026,21 @@ task.spawn(function()
 		["Christmas"] = {
 			Main = Color3.fromRGB(200, 200, 200),
 			Text = Color3.fromRGB(26, 25, 26),
-			Hue = 0.9954128265380859,
-			Sat = 0.5767195820808411,
-			Value = 0.7411764860153198,
 		},
 		["Halloween"] = {
 			Main = Color3.fromRGB(26, 25, 26),
-			Hue = 0.05442177131772041,
-			Sat = 0.8132780194282532,
-			Value = 0.9450980424880981,
 		},
 		["Spring"] = {
 			Main = Color3.fromRGB(200, 200, 200),
 			Text = Color3.fromRGB(26, 25, 26),
-			Hue = 0.5705128312110901,
-			Sat = 0.5098038911819458,
-			Value = 1,
+
 		},
 		["Fall"] = {
 			Main = Color3.fromRGB(26, 25, 26),
-			Hue = 0.11419752985239029,
-			Sat = 0.7012986540794373,
-			Value = 0.9058823585510254,
+
 		},
 		["Summer"] = {
 			Main = Color3.fromRGB(104, 207, 56),
-			Hue = 0.07474226504564285,
-			Sat = 0.8398268222808838,
-			Value = 0.9058823585510254,
 		},
 	}
 
