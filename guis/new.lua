@@ -2566,7 +2566,7 @@ function mainapi:HSVtoRGB(h,s,v)
         r, g, b = c, 0, x
     end
 
-    return (r + m), (g + m), (b + m)
+    return Color3.FromRGB((r + m), (g + m), (b + m))
 end
 						
 addMaid(mainapi)
