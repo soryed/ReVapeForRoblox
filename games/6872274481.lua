@@ -10459,65 +10459,6 @@ run(function()
 end)
 
 
---[[run(function()
-	local Clutch
-	local lastY = 0
-
-	local function getHeldBlock()
-		if store.hand.toolType == 'block' then
-			return store.hand.tool.Name
-		end
-	end
-
-	local function placeBlockAt(pos, block)
-		task.spawn(function()
-			pcall(function()
-				bedwars.placeBlock(pos, block, false)
-			end)
-		end)
-	end
-
-	local function tryClutch()
-		if not entitylib.isAlive then return end
-		local root = entitylib.character.RootPart
-		local humanoid = entitylib.character.Humanoid
-		if not root or not humanoid then return end
-
-		local heldBlock = getHeldBlock()
-		if not heldBlock then return end
-
-		local velocity = root.Velocity
-		if velocity.Y >= -2 then return end -- only clutch while falling
-		if humanoid.FloorMaterial ~= Enum.Material.Air then return end -- skip if on ground
-
-		local belowPos = root.Position - Vector3.new(0, entitylib.character.HipHeight + 3, 0)
-
-		-- get normalized horizontal direction
-		local moveDir = Vector3.new(velocity.X, 0, velocity.Z)
-		if moveDir.Magnitude < 0.1 then moveDir = root.CFrame.LookVector * 3 else moveDir = moveDir.Unit * 3 end
-
-		-- extend forward bridge
-		local extendLength = math.clamp(math.floor(math.abs(velocity.Y) / 2), 2, 8) -- faster fall = longer bridge
-		for i = 0, extendLength do
-			local placePos = belowPos + (moveDir * i)
-			placeBlockAt(placePos, heldBlock)
-			task.wait(0.01)
-		end
-	end
-
-	Clutch = vape.Categories.Exploits:CreateModule({
-		Name = "Clutch",
-		Function = function(callback)
-			if callback then
-				repeat
-					pcall(tryClutch)
-					task.wait(0.05)
-				until not Clutch.Enabled
-			end
-		end,
-		Tooltip = "Places a bridge forward while falling to clutch safely."
-	})
-end)--]]
 
 run(function()
 	local Clutch
@@ -10771,8 +10712,9 @@ run(function()
 			end
 		end
 	end
-
-	local Funny = vape.Categories.Troll:CreateModule({
+local Funny
+local Options
+	Funny = vape.Categories.Troll:CreateModule({
 		Name = "Funny",
 		Function = function(callback)
 			print("sujp")
@@ -10783,11 +10725,11 @@ run(function()
 			end
 
 			if callback then
-				if Funny.Options.Value == "penis" then
+				if Options.Value == "penis" then
 					penis()
-				elseif Funny.Options.Value == "smile" then
+				elseif Options.Value == "smile" then
 					vape:CreateNotification("Funny", "Coming soon :D", 5)
-				elseif Funny.Options.Value == "nazi" then
+				elseif Options.Value == "nazi" then
 					vape:CreateNotification("Funny", "Coming soon :D", 5)
 				end
 			end
@@ -10795,7 +10737,7 @@ run(function()
 		Tooltip = ":troll:"
 	})
 
-	Funny.Options = Funny:CreateDropdown({
+	Options = Funny:CreateDropdown({
 		Name = "Options",
 		List = {"penis", "nazi", "smile"}
 	})
