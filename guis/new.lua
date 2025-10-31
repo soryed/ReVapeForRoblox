@@ -6107,19 +6107,19 @@ mainapi.Blur = guipane:CreateToggle({
 mainapi.INFO = guipane:CreateToggle({
 	Name = 'INFO',
 	Function = function()
-		mainapi:CreateNotification("TEST","TEST",math.huge)
+		mainapi:CreateNotification("TEST","TEST",200)
 	end,
 })
 mainapi.ALERT = guipane:CreateToggle({
 	Name = 'ALERT',
 	Function = function()
-		mainapi:CreateNotification("TEST","TEST",math.huge,"alert")
+		mainapi:CreateNotification("TEST","TEST",200,"alert")
 	end,
 })
 mainapi.WARNING = guipane:CreateToggle({
 	Name = 'WARNING',
 	Function = function()
-		mainapi:CreateNotification("TEST","TEST",math.huge,"warning")
+		mainapi:CreateNotification("TEST","TEST",200,"warning")
 	end,
 })
 mainapi.Theme = guipane:CreateDropdown({
