@@ -10704,23 +10704,17 @@ run(function()
 		end
 
 		local pattern = {
-			{0,1,0},
-			{0,1,0},
-			{1,1,1},
+			Vector3.new(0, 0, 0),
+			Vector3.new(-1, 0, 0),
+			Vector3.new(1, 0, 0),
+			Vector3.new(0, 1, 0), 
+			Vector3.new(0, 2, 0), 
 		}
 
-		for z = 1, #pattern do
-			for x = 1, #pattern[z] do
-				if pattern[z][x] == 1 then
-					local pos = Vector3.new(
-						basePos.X + (x - 2),
-						basePos.Y - 3,
-						basePos.Z + (z - 2)
-					)
-					bedwars.placeBlock(pos, item)
-					task.wait(0.05)
-				end
-			end
+		for _, offset in ipairs(pattern) do
+			local pos = basePos + offset * 3 
+			bedwars.placeBlock(pos, item)
+			task.wait(0.05)
 		end
 	end
 local Funny
