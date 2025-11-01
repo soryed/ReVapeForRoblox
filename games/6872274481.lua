@@ -3972,7 +3972,7 @@ run(function()
 	local AutoKitFunctions = {
 		defender = function()
 		    -- Get the local player's DefenderKitController
-		    local controller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits.defender["defender-kit-controller"]).new()
+		    local controller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits.defender["defender-kit-controller"])
 		
 		    repeat
 		        -- Wait until the schematic is loaded
