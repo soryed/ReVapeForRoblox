@@ -9,7 +9,7 @@ local api = "https://vapeclient.fsl58.workers.dev"
 
 local username = getgenv().username or "GUEST"
 local password = getgenv().password or "PASSWORD"
-
+print(password)
 local function ensureAccountsFolder()
     if not isfolder("ReVape/accounts") then
         makefolder("ReVape/accounts")
