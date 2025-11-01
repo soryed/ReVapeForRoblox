@@ -891,8 +891,9 @@ components = {
 			optionsettings.Function(self.Hue, self.Sat, self.Value, self.Opacity)
 		end
 		
-		function optionapi:Toggle()
-			self.Rainbow = not self.Rainbow
+		function optionapi:Toggle(db)
+			if not db then self.Rainbow = not self.Rainbow else self.Rainbow = db end
+			--self.Rainbow = not self.Rainbow
 			if self.Rainbow then
 				table.insert(mainapi.RainbowTable, self)
 				rainbow1.ImageColor3 = Color3.fromRGB(5, 127, 100)
