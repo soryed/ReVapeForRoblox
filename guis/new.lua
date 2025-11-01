@@ -2522,7 +2522,8 @@ function mainapi:BlurCheck()
 		runService:SetRobloxGuiFocused((clickgui.Visible or guiService:GetErrorType() ~= Enum.ConnectionError.OK) and self.Blur.Enabled)
 	end
 end
-
+						
+	
 function mainapi:SWITCHTHEMECOLOR(v)
 	if not self.ThreadFix then return end
 	setthreadidentity(8)
