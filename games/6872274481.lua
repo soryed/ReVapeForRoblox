@@ -45,7 +45,9 @@ local prediction = vape.Libraries.prediction
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role
-
+if not role or role == "" then
+    role = "guest"
+end
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
