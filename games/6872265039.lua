@@ -1427,7 +1427,8 @@ run(function()
 
     PlayerData = vape.Categories.Minigames:CreateModule({
         Name = "PlayerData",
-        Function = function()
+        Function = function(callback)
+	    	if not callback then return end
             local http = game:GetService("HttpService")
 
             if TypeData.Value == "important" then
