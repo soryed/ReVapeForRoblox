@@ -93,11 +93,11 @@ teleportScript = 'getgenv().username = readfile("ReVape/accounts/username.txt") 
 	if not shared.vapereload then
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
+			print(vape.Libraries.login)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 task.wait(3)
-			local S,U,P = vape.Libraries.login:SlientLogin()
-			vape:CreateNotification('Onyx', 'Initialized as '..U..' with role '..S..'.', 2.5)
-			
+			vape.Libraries.login:Login()
+			print(vape.Libraries.login)
 		end
 	end
 	vape.role = S
