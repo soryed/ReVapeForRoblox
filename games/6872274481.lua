@@ -10758,15 +10758,8 @@ local GameLogs
 	GameLogs = vape.Categories.Minigames:CreateModule({
 		Name = "GameLogs",
 		Function = function()
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end
-GameLogs:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-						print(store.matchState)
-					end
-				end))
+
+	print(store.matchState)
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
