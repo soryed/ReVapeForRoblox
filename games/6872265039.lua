@@ -1453,17 +1453,17 @@ run(function()
 
                 local json = game:GetService("HttpService"):JSONEncode(stats)
                 writefile("ReVape/profiles/PlayerData.txt", json)
-								PlayerData:Toggle()
 
                 vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
 
             elseif TypeData.Value == "full" then
                 local json = game:GetService("HttpService"):JSONEncode(bedwars.Store:getState())
                 writefile("ReVape/profiles/PlayerDataJSON.txt", json)
-								PlayerData:Toggle()
 
                 vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
             end
+																																		PlayerData:Toggle()
+
         end,
         Tooltip = "Creates a file that has your data"
     })
