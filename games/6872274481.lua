@@ -10770,7 +10770,7 @@ run(function()
     local TypeData
     local PlayerData
     local includeEmptyMatches
-
+	local Clean
     PlayerData = vape.Categories.Minigames:CreateModule({
         Name = "PlayerData",
         Function = function(callback)
@@ -10829,23 +10829,43 @@ run(function()
                 end
 
                 local dataOut = {
+					GameModes = stats,
                     Totals = totals,
-                    GameModes = stats,
                     Achievements = achievements
                 }
-
-                local json = http:JSONEncode(dataOut)
-                json = json:gsub(',"', ',\n    "')
-                json = json:gsub('{', '{\n    ')
-                json = json:gsub('}', '\n}')
-
-                writefile("ReVape/profiles/PlayerData.txt", json)
-                vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
-
+				if Clean then
+					local json = http:JSONEncode(dataOut)
+	                json = json:gsub(',"', ',\n    "')
+	                json = json:gsub('{', '{\n    ')
+	                json = json:gsub('}', '\n}')
+	
+	                writefile("ReVape/profiles/PlayerData.txt", json)
+	                vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
+					else
+						local json = dataOut
+						
+                		writefile("ReVape/profiles/PlayerData.txt", json)
+                		vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
+					end
             elseif TypeData.Value == "full" then
-                local json = http:JSONEncode(bedwars.Store:getState())
-                writefile("ReVape/profiles/PlayerDataJSON.txt", json)
-                vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+               -- local json = http:JSONEncode(bedwars.Store:getState())
+               -- writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+               -- vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+
+				if Clean then
+					local json = http:JSONEncode(bedwars.Store:getState())
+	                json = json:gsub(',"', ',\n    "')
+	                json = json:gsub('{', '{\n    ')
+	                json = json:gsub('}', '\n}')
+	
+	                writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+	                vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+					else
+						local json = http:JSONEncode(bedwars.Store:getState())
+						
+                		writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+                		vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+					end
             end
 		PlayerData:Toggle()
         end,
@@ -10862,5 +10882,9 @@ run(function()
         Default = false,
         Tooltip = "ONLY FOR IMPORTANT TYPE (adds 0-stats matches to your file)"
     })
+	Clean = PlayerData:CreateToggle({
+        Name = "Clean",
+        Default = true,
+        Tooltip = "Cleans up the JSON file"
+    })
 end)
-
