@@ -69,7 +69,7 @@ function login:Login()
         U = username
         P = password
         status = string.upper(status)
-            vape:CreateNotification('Onyx',"Initialized as "..U.." with role "..S..",7)
+        vape:CreateNotification('Onyx', "Initialized as " .. U .. " with role " .. S, 7)
        -- vape:CreateNotification("Onyx", "Logged in as "..username.." (Type '"..status.."')", 7)
         saveAccountFiles(S, U, P)
     end)
