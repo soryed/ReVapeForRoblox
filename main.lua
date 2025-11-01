@@ -17,7 +17,11 @@ local loadstring = function(...)
 end
 
 
-local queue_on_teleport = queue_on_teleport or function() end
+queue_on_teleport = queue_on_teleport or
+    (syn and syn.queue_on_teleport) or
+    (fluxus and fluxus.queue_on_teleport) or
+    function() end
+
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
