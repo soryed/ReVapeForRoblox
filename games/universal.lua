@@ -8184,3 +8184,20 @@ run(function()
 local S,U,P = loginlib:Login()
 			vape.role = S
 end)
+
+
+run(function()
+	if getgenv().closet then
+		repeat
+			for _, v in getconnections(game:GetService('LogService').MessageOut) do
+				v:Disable()
+			end
+
+			for _, v in getconnections(game:GetService('ScriptContext').Error) do
+				v:Disable()
+			end
+
+			task.wait(1)
+		until not getgenv().closet
+end
+end)
