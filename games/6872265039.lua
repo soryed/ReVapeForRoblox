@@ -1429,11 +1429,20 @@ run(function()
         Name = "PlayerData",
         Function = function(callback)
 	    	if not callback then return end
+
             local http = game:GetService("HttpService")
+            local store = bedwars.Store:getState()
 
             if TypeData.Value == "important" then
                 local stats = {}
-                local store = bedwars.Store:getState()
+                local totals = {
+                    TotalWins = 0,
+                    TotalLosses = 0,
+                    TotalMatches = 0,
+                    TotalBedBreaks = 0,
+                    TotalFinalKills = 0
+                }
+
                 local leaderboard = store and store.Leaderboard and store.Leaderboard.queues
 
                 if leaderboard then
@@ -1442,19 +1451,44 @@ run(function()
                         local losses = data.losses or 0
                         local matches = data.matches or (wins + losses)
                         local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
+                        local bedBreaks = data.bedBreaks or 0
+                        local finalKills = data.finalKills or 0
+
+                        totals.TotalWins += wins
+                        totals.TotalLosses += losses
+                        totals.TotalMatches += matches
+                        totals.TotalBedBreaks += bedBreaks
+                        totals.TotalFinalKills += finalKills
 
                         if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
                             stats[mode] = {
                                 Winrate = string.format("%.2f%%", winrate),
                                 Wins = wins,
                                 Losses = losses,
-                                Matches = matches
+                                Matches = matches,
+                                BedBreaks = bedBreaks,
+                                FinalKills = finalKills
                             }
                         end
                     end
                 end
 
-                local json = http:JSONEncode(stats)
+                local achievements = {}
+                if store and store.Bedwars and store.Bedwars.achievements then
+                    for _, ach in pairs(store.Bedwars.achievements) do
+                        table.insert(achievements, ach)
+                    end
+                elseif leaderboard and leaderboard.bedwars_duels and leaderboard.bedwars_duels.obtainedAchievements then
+                    achievements = leaderboard.bedwars_duels.obtainedAchievements
+                end
+
+                local dataOut = {
+                    Totals = totals,
+                    GameModes = stats,
+                    Achievements = achievements
+                }
+
+                local json = http:JSONEncode(dataOut)
                 json = json:gsub(',"', ',\n    "')
                 json = json:gsub('{', '{\n    ')
                 json = json:gsub('}', '\n}')
