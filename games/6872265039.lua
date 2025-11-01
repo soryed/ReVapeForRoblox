@@ -205,6 +205,7 @@ run(function()
 		Function = function(callback)
 			if callback then
 				task.spawn(function()
+				GetExecutor:Toggle(false)
 				local timer = 4.5
 					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
 					if identifyexecutor then
@@ -1380,7 +1381,10 @@ run(function()
 	ViewProfiles = vape.Categories.Exploits:CreateModule({
 		Name = "ViewProfile",
 		Function = function(callback)
-
+			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
 			if callback then
 				CreateProfile()
 			else
@@ -1428,6 +1432,10 @@ run(function()
     PlayerData = vape.Categories.Minigames:CreateModule({
         Name = "PlayerData",
         Function = function(callback)
+				   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
 	    	if not callback then return end
 
             local http = game:GetService("HttpService")
