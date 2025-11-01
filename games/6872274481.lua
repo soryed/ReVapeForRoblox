@@ -10787,7 +10787,6 @@ run(function()
                         local matches = data.matches or (wins + losses)
                         local winrate = (wins + losses > 0) and math.floor((wins / (wins + losses)) * 100) or 0
 
-                        -- skip empty ones unless toggle is on
                         if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
                             stats[mode] = {
                                 Wins = wins,
