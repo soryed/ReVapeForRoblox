@@ -4293,6 +4293,7 @@ run(function()
 		end,
 		drill = function()
 			repeat
+			local root = entitylib.character.RootPart
 		    local drills = {}
 		    
 		    for _, obj in ipairs(workspace:GetDescendants()) do
@@ -4302,17 +4303,30 @@ run(function()
 		    end
 		
 		    if #drills == 0 then
-		        vape:CreateNotification('No Drills found!', 'All current drills were destroyed or not found', 5)
+		        vape:CreateNotification('Autokit', 'All current drills were destroyed or not found', 5)
 		       	return
 		    end
 		
-		    for _, drillObj in ipairs(drills) do
-		        bedwars.Client:Get('ExtractFromDrill'):SendToServer({
-		            drill = drillObj
-		        })
-		    end
-			until not AutoKit.Enabled
-		end,
+	        for _, drillObj in ipairs(drills) do
+	            if Legit.Value then
+	                if drillObj:FindFirstChild("RootPart") then
+	                    local drillRoot = drillObj.RootPart
+	                    if (drillRoot.Position - root.Position).Magnitude <= 15 then
+	                        bedwars.Client:Get('ExtractFromDrill'):SendToServer({
+	                            drill = drillObj
+	                        })
+	                    end
+	                end
+	            else
+	                bedwars.Client:Get('ExtractFromDrill'):SendToServer({
+	                    drill = drillObj
+	                })
+	            end
+	        end
+	
+	        task.wait(0.1)
+	    until not AutoKit.Enabled
+	end,
 	}
 	
 	AutoKit = vape.Categories.Utility:CreateModule({
