@@ -3972,7 +3972,7 @@ run(function()
 	local AutoKitFunctions = {
 		defender = function()
 			repeat			
-			local controller = require(lplr.PlayerScripts.TS.controllers.game.bedwars.kit.kits.defender['defender-kit-controller']),
+			local controller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits.defender['defender-kit-controller']),
 			while not next(controller.currentSchematic) do
 			    task.wait(0.1)
 			end
