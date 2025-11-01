@@ -10759,7 +10759,7 @@ local GameLogs
 		Name = "GameLogs",
 		Function = function()
 local json = game:GetService('HttpService'):JSONEncode(bedwars.Store:getState())
-	print(json)
+	setclipboard(json)
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
