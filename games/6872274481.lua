@@ -10758,8 +10758,8 @@ local GameLogs
 	GameLogs = vape.Categories.Minigames:CreateModule({
 		Name = "GameLogs",
 		Function = function()
-
-	print(bedwars.Store:getState())
+local json = game:GetService('HttpService'):JSONEncode(bedwars.Store:getState())
+	print(json)
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
