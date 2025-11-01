@@ -1419,3 +1419,48 @@ run(function()
 		end
 	})
 end)
+
+run(function()
+    local TypeData
+    local PlayerData
+
+    PlayerData = vape.Categories.Minigames:CreateModule({
+        Name = "PlayerData",
+        Function = function()
+            if TypeData.Value == "important" then
+                local stats = {}
+                local store = bedwars.Store:getState()
+
+                local leaderboard = store and store.Leaderboard and store.Leaderboard.queues
+                if leaderboard then
+                    for mode, data in pairs(leaderboard) do
+                        local wins = data.wins or 0
+                        local losses = data.losses or 0
+                        local matches = data.matches or (wins + losses)
+                        local winrate = (wins + losses > 0) and math.floor((wins / (wins + losses)) * 100) or 0
+                        
+                        stats[mode] = {
+                            Wins = wins,
+                            Losses = losses,
+                            Matches = matches,
+                            Winrate = winrate .. "%"
+                        }
+                    end
+                end
+
+                local json = game:GetService("HttpService"):JSONEncode(stats)
+                writefile("ReVape/profiles/PlayerData.txt", json)
+
+            elseif TypeData.Value == "full" then
+                local json = game:GetService("HttpService"):JSONEncode(bedwars.Store:getState())
+                writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+            end
+        end,
+        Tooltip = "Creates a file that has your data"
+    })
+
+    TypeData = PlayerData:CreateDropdown({
+        Name = "Type",
+        List = {"important", "full"}
+    })
+end)
