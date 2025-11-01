@@ -1,3 +1,4 @@
+print("nigga")
 repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
