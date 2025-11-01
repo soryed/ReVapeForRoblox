@@ -48,6 +48,7 @@ local role = vape.role
 if not role or role == "" then
     role = "guest"
 end
+print(role)
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
