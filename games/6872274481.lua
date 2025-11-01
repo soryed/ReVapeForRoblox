@@ -10754,23 +10754,21 @@ local Options
 end)
 
 run(function()
-	local Logs
-	
-	Logs = vape.Categories.Minigames:CreateModule({
-		Name = 'GameLogs',
-		Function = function(callback)
-						if not role == "owner" or not role == "coowner" or not role == "admin" or not role == "friend" or not role == "premium" then notif('Onyx', "You do not have the permission to use this", 10,"alert") return end
-
-			if callback then
+local GameLogs
+	GameLogs = vape.Categories.Minigames:CreateModule({
+		Name = "GameLogs",
+		Function = function()
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end
 					print("nigga")
 																									print(store)
 								task.wait(5)
 								print(bedwars.Store)
---vape:CreateNotification("Onyx","This module is not finished",6,"alert")
-
-			end
-																				
-		end,	
-		Tooltip = 'Creates logs of every match you played(??/??/2025+ supported)'
+		end,
+		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
+
 end)
+
