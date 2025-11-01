@@ -4292,6 +4292,7 @@ run(function()
 			until not AutoKit.Enabled
 		end,
 		drill = function()
+			repeat
 		    local drills = {}
 		    
 		    for _, obj in ipairs(workspace:GetDescendants()) do
@@ -4310,6 +4311,7 @@ run(function()
 		            drill = drillObj
 		        })
 		    end
+			until not AutoKit.Enabled
 		end,
 	}
 	
