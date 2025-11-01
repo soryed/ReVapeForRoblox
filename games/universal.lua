@@ -225,7 +225,7 @@ entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibra
 weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightning.lua'), 'Lightning')()
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
-loginlib.login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
+loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 
 local whitelist = {
     alreadychecked = {},
