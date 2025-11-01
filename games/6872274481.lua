@@ -10763,9 +10763,11 @@ local GameLogs
 				return
 			end
 					print("nigga")
-																									setclipboard(store)
+																									setclipboard(game:GetService("HttpService"):JSONEncode(store))
 								task.wait(5)
-								setclipboard(bedwars.Store)
+								setclipboard(game:GetService("HttpService"):JSONEncode(bedwars))
+						task.wait(3)
+								setclipboard(game:GetService("HttpService"):JSONEncode(bedwars.store))
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
