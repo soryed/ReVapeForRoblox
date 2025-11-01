@@ -76,6 +76,11 @@ local function finishLoading()
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 						
 			end
+			if getgenv().username and getgenv().password then
+teleportScript = 'getgenv().username = readfile("ReVape/accounts/username.txt") or "GUEST"\n' ..
+                 'getgenv().password = readfile("ReVape/accounts/password.txt") or "PASSWORD"\n' ..
+                 teleportScript
+			end
 			if shared.VapeCustomProfile then
 
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
@@ -89,10 +94,13 @@ local function finishLoading()
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
-
+task.wait(3)
+			local S,U,P = vape.Libraries.login:SlientLogin()
+			vape:CreateNotification('Onyx', 'Initialized as '..U..' with role '..S..'.', 2.5)
+			
 		end
 	end
-	vape.role = "owner"
+	vape.role = S
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
