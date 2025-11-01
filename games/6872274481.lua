@@ -10793,10 +10793,12 @@ run(function()
 
                 if leaderboard then
                     for mode, data in pairs(leaderboard) do
-                        local wins = data.wins or 0
+                        local wins = data.wins or 0																
                         local losses = data.losses or 0
+						local ties = data.ties or 0
                         local matches = data.matches or (wins + losses)
                         local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
+						local earlyleaves = data.earlyLeaves or 0
                         local bedBreaks = data.bedBreaks or 0
                         local finalKills = data.finalKills or 0
 
@@ -10811,7 +10813,9 @@ run(function()
                                 Winrate = string.format("%.2f%%", winrate),
                                 Wins = wins,
                                 Losses = losses,
+								Ties = ties,
                                 Matches = matches,
+								EarlyLeaves = earlyleaves,
                                 BedBreaks = bedBreaks,
                                 FinalKills = finalKills
                             }
@@ -10848,9 +10852,6 @@ run(function()
                 		vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
 					end
             elseif TypeData.Value == "full" then
-               -- local json = http:JSONEncode(bedwars.Store:getState())
-               -- writefile("ReVape/profiles/PlayerDataJSON.txt", json)
-               -- vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
 
 				if Clean then
 					local json = http:JSONEncode(bedwars.Store:getState())
@@ -10888,3 +10889,5 @@ run(function()
         Tooltip = "Cleans up the JSON file"
     })
 end)
+
+
