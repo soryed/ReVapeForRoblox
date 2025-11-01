@@ -10770,6 +10770,7 @@ end)
 run(function()
     local TypeData
     local PlayerData
+    local includeEmptyMatches
 
     PlayerData = vape.Categories.Minigames:CreateModule({
         Name = "PlayerData",
@@ -10777,30 +10778,35 @@ run(function()
             if TypeData.Value == "important" then
                 local stats = {}
                 local store = bedwars.Store:getState()
-
                 local leaderboard = store and store.Leaderboard and store.Leaderboard.queues
+
                 if leaderboard then
                     for mode, data in pairs(leaderboard) do
                         local wins = data.wins or 0
                         local losses = data.losses or 0
                         local matches = data.matches or (wins + losses)
                         local winrate = (wins + losses > 0) and math.floor((wins / (wins + losses)) * 100) or 0
-                        
-                        stats[mode] = {
-                            Wins = wins,
-                            Losses = losses,
-                            Matches = matches,
-                            Winrate = winrate .. "%"
-                        }
+
+                        -- skip empty ones unless toggle is on
+                        if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
+                            stats[mode] = {
+                                Wins = wins,
+                                Losses = losses,
+                                Matches = matches,
+                                Winrate = winrate .. "%"
+                            }
+                        end
                     end
                 end
 
                 local json = game:GetService("HttpService"):JSONEncode(stats)
                 writefile("ReVape/profiles/PlayerData.txt", json)
+                vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
 
             elseif TypeData.Value == "full" then
                 local json = game:GetService("HttpService"):JSONEncode(bedwars.Store:getState())
                 writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+                vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
             end
         end,
         Tooltip = "Creates a file that has your data"
@@ -10810,4 +10816,11 @@ run(function()
         Name = "Type",
         List = {"important", "full"}
     })
+
+    includeEmptyMatches = PlayerData:CreateToggle({
+        Name = "EmptyMatches",
+        Default = false,
+        Tooltip = "ONLY FOR IMPORTANT TYPE (adds 0 stats matches to your file)"
+    })
 end)
+
