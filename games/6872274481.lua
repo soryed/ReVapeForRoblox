@@ -10763,9 +10763,9 @@ local GameLogs
 				return
 			end
 					print("nigga")
-																									print(store)
+																									setclipboard(store)
 								task.wait(5)
-								print(bedwars.Store)
+								setclipboard(bedwars.Store)
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
