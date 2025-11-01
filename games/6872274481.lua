@@ -3971,15 +3971,8 @@ run(function()
 	
 	local AutoKitFunctions = {
 		defender = function()
-			repeat
-			local KnitClient = Knit
-			
-			local controller = KnitClient.Controllers.DefenderKitController
-			while not controller do
-			    task.wait(0.1)
-			    controller = KnitClient.Controllers.DefenderKitController
-			end
-			
+			repeat			
+			local controller = require(lplr.PlayerScripts.TS.controllers.game.bedwars.kit.kits.defender['defender-kit-controller']),
 			while not next(controller.currentSchematic) do
 			    task.wait(0.1)
 			end
