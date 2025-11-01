@@ -10762,12 +10762,11 @@ local GameLogs
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
-					print("nigga")
-																									setclipboard(game:GetService("HttpService"):JSONEncode(store))
-								task.wait(5)
-								setclipboard(game:GetService("HttpService"):JSONEncode(bedwars))
-						task.wait(3)
-								setclipboard(game:GetService("HttpService"):JSONEncode(bedwars.store))
+GameLogs:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+						print(store.matchState)
+					end
+				end))
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
