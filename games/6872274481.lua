@@ -10763,7 +10763,11 @@ run(function()
 
 			if callback then
 vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+	print(store)
+								task.wait(5)
+								print(bedwars.Store)
 			end
+																				
 		end,	
 		Tooltip = 'Creates logs of every match you played(??/??/2025+ supported)'
 	})
