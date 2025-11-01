@@ -1,4 +1,3 @@
-print("nigga")
 repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
@@ -45,8 +44,7 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local login = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-print(login)
+
 local function finishLoading()
 
 	vape.Init = nil
@@ -79,10 +77,11 @@ local function finishLoading()
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 						
 			end
-			if getgenv().username and getgenv().password then
-teleportScript = 'getgenv().username = readfile("ReVape/accounts/username.txt") or "GUEST"\n' ..
-                 'getgenv().password = readfile("ReVape/accounts/password.txt") or "PASSWORD"\n' ..
-                 teleportScript
+			if getgenv().username then
+				teleportScript = `getgenv().username = {getgenv().username}\n`.. teleportScript
+			end
+			if getgenv().password then
+				teleportScript = `getgenv().username = {getgenv().password}\n`.. teleportScript
 			end
 			if shared.VapeCustomProfile then
 
@@ -97,11 +96,9 @@ teleportScript = 'getgenv().username = readfile("ReVape/accounts/username.txt") 
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
-task.wait(3)
-			login:Login()
+
 		end
 	end
-	vape.role = S
 end
 
 if not isfile('ReVape/profiles/gui.txt') then
@@ -115,7 +112,6 @@ if not isfolder('ReVape/assets/'..gui) then
 end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
-print(vape)
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
