@@ -5288,7 +5288,7 @@ run(function()
 	task.spawn(function()
 		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
 		if vape.Loaded and not StaffDetector.Enabled then
-			StaffDetector:Toggle()
+			StaffDetector:Toggle(getgenv().UseNormalStaffDetector)
 		end
 	end)
 end)
@@ -9188,6 +9188,9 @@ end
 	Default = false,
 	Tooltip = 'all this does is keep track of every mod/spectators has joined you with a date'
    })
+if getgenv().UseNormalStaffDetector then
+StaffDetector:Toggle(false)
+end
 end)
 --]]
 
