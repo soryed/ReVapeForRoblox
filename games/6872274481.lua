@@ -4077,16 +4077,17 @@ run(function()
 					if text:IsA("TextLabel") then
 						local txt = string.lower(text.Text)
 						if string.find(txt, "teleport") then
-							local events = game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents")
-							if events and events:FindFirstChild("Events") and events.Events:FindFirstChild("useAbility") then
-								events.Events.useAbility:FireServer("HATTER_TELEPORT")
+							local eventsFolder = game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events")
+							if eventsFolder and eventsFolder:FindFirstChild("useAbility") then
+								eventsFolder.useAbility:FireServer("HATTER_TELEPORT")
+								vape:CreateNotification("Autokit", "Used HATTER_TELEPORT", 5)
 							else
-								vape:CreateNotification('Autokit','teleport event not found!','warning',10)
+								vape:CreateNotification("Autokit", "Teleport event not found", "warning", 10)
 							end
 						end
 					end
 				end
-				task.wait() 
+				task.wait(0.25)
 			until not AutoKit.Enabled
 		end,
   		mage = function()
