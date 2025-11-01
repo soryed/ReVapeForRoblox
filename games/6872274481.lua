@@ -4067,12 +4067,11 @@ run(function()
                     local secret = {
                       ["secret"] = v:GetAttribute("TomeSecret")
                      }
-                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)
-
-            	
-					--[[bedwars.Client:Get('LearnElementTome'):SendToServer({
-	                    secret = v:GetAttribute("TomeSecret")
-	                })--]]
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)  
+                    for i, v in collectionService:GetTagged("TomeGuidingBeam") do
+                        v:Destroy()
+                    end
+                    v:Destroy()
                 end
             end
 
@@ -4084,6 +4083,10 @@ run(function()
                       ["secret"] = v:GetAttribute("TomeSecret")
                      }
                     local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)
+                    for i, v in collectionService:GetTagged("TomeGuidingBeam") do
+                        v:Destroy()
+                    end
+                    v:Destroy()
 			     end
 			end
 			task.wait()
@@ -4091,11 +4094,37 @@ run(function()
         end,
 
         pyro = function()
+		    repeat																																																										
+			local plr = entitylib.EntityPosition({
+				Range = 25,
+				Part = "RootPart",
+				Players = true,
+				Sort = sortmethods.Health
+			})
 
+			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+                game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.UseFlamethrower:InvokeServer()
+            end
+			task.wait()
+		    until not AutoKit.Enabled																																																						
         end,
 
         ['frost_hammer_kit'] = function()
+		    repeat																																																		
+            local frost, slot = getItem('frost_crystal')
+            local UFH = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.UpgradeFrostyHammer
 
+            local attributes = { "shield", "strength", "speed" }
+            local slots = { [0] = 2, [1] = 5, [2] = 12 }
+
+            for _, attr in ipairs(attributes) do
+                local value = lplr:GetAttribute(attr)
+                if slots[value] == slot then
+                    UFH:InvokeServer(attr)
+                end
+            end
+			task.wait()
+		    until not AutoKit.Enabled																																																						
         end,
 		battery = function()
 			repeat
