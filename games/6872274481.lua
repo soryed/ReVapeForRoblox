@@ -3964,51 +3964,7 @@ run(function()
 		until not AutoKit.Enabled
 	end
 	
-	local AutoKitFunctions = {
-		airbender = function()
-			repeat
-				task.wait(0.1)
-		
-				if not entitylib.isAlive then continue end
-				local root = entitylib.character.RootPart
-				if not root then continue end
-		
-				local plr = entitylib.EntityPosition({
-					Range = 25,
-					Part = "RootPart",
-					Players = true,
-					Sort = sortmethods.Health
-				})
-		
-				local plr2 = entitylib.EntityPosition({
-					Range = 31,
-					Part = "RootPart",
-					Players = true,
-					Sort = sortmethods.Health
-				})
-		
-				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-					game:GetService("ReplicatedStorage")
-						:FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events")
-						.useAbility:FireServer("airbender_tornado")
-				end
-		
-				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-					game:GetService("ReplicatedStorage")
-						:FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events")
-						.useAbility:FireServer("airbender_moving_tornado")
-		
-					task.wait(0.0025)
-		
-					local direction = (plr2.RootPart.Position - root.Position).Unit
-					local args = { [1] = { direction = direction } }
-		
-					game:GetService("ReplicatedStorage")
-						.rbxts_include.node_modules:FindFirstChild("@rbxts")
-						.net.out._NetManaged.Airbender_RequestMovingTornado:FireServer(unpack(args))
-				end
-			until not AutoKit.Enabled
-		end	,																																																								
+	local AutoKitFunctions = {																																																					
 		battery = function()
 			repeat
 				if entitylib.isAlive then
@@ -4249,13 +4205,6 @@ run(function()
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
-		nazar = function()
-		    repeat
-			game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
-
-			task.wait()
-		    until not AutoKit.Enabled
-		end,
 		void_dragon = function()
 			local oldflap = bedwars.VoidDragonController.flapWings
 			local flapped
@@ -4343,38 +4292,24 @@ run(function()
 			until not AutoKit.Enabled
 		end,
 		drill = function()
-			local db = true
-
-			while db do
-  			  local drills = {}
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj.Name == "Drill" then
-            table.insert(drills, obj)
-        end
-    end
-
-    if #drills == 0 then
-        vape:CreateNotification('No Drills founded!','All current drills were destoryed or not founded',5)
-    end
-
-    for _, drill in ipairs(drills) do
-        local args = {
-            [1] = {
-                ["drill"] = drill
-            }
-        }
-
-        game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.ExtractFromDrill:FireServer(unpack(args))
-    end
-
-	if not  AutoKit.Enabled then
-	    db = false
-	    break
-	end
-
-    task.wait()
-
-end
+		    local drills = {}
+		    
+		    for _, obj in ipairs(workspace:GetDescendants()) do
+		        if obj.Name == "Drill" then
+		            table.insert(drills, obj)
+		        end
+		    end
+		
+		    if #drills == 0 then
+		        vape:CreateNotification('No Drills found!', 'All current drills were destroyed or not found', 5)
+		        return
+		    end
+		
+		    for _, drillObj in ipairs(drills) do
+		        bedwars.Client:Get('ExtractFromDrill'):SendToServer({
+		            drill = drillObj
+		        })
+		    end
 		end,
 	}
 	
@@ -10889,5 +10824,3 @@ run(function()
         Tooltip = "Cleans up the JSON file"
     })
 end)
-
-
