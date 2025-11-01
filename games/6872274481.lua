@@ -4064,25 +4064,26 @@ run(function()
         mage = function()
             local function checkModel(v)
                 if v:IsA("Model") and v.Name == "ElementTome" then
-                           --   local v101 = {
-              --  ["secret"] = p_u_99:GetAttribute("TomeSecret")
-           -- }
-           -- local v_u_102 = bedwars.Client:Get("LearnElementTome"):CallServer(v101)
+                    local secret = {
+                      ["secret"] = v:GetAttribute("TomeSecret")
+                     }
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)
 
             	
-					bedwars.Client:Get('LearnElementTome'):SendToServer({
+					--[[bedwars.Client:Get('LearnElementTome'):SendToServer({
 	                    secret = v:GetAttribute("TomeSecret")
-	                })
+	                })--]]
                 end
             end
 
 		    repeat
             AutoKit:Clean(workspace.ChildAdded:Connect(checkModel))
-			for i, v in workspace:GetDescendants() do
+            for i, v in workspace:GetDescendants() do
 			     if v:IsA("Model") and v.Name == "ElementTome" then
-			       	bedwars.Client:Get('LearnElementTome'):SendToServer({
-	                    secret = v:GetAttribute("TomeSecret")
-	                })
+                    local secret = {
+                      ["secret"] = v:GetAttribute("TomeSecret")
+                     }
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)
 			     end
 			end
 			task.wait()
