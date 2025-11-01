@@ -3964,7 +3964,138 @@ run(function()
 		until not AutoKit.Enabled
 	end
 	
-	local AutoKitFunctions = {																																																					
+	local AutoKitFunctions = {
+		drill = function()
+			repeat
+			local root = entitylib.character.RootPart
+		    local drills = {}
+		    
+		    for _, obj in ipairs(workspace:GetDescendants()) do
+		        if obj.Name == "Drill" then
+		            table.insert(drills, obj)
+		        end
+		    end
+		
+		    if #drills == 0 then
+		        vape:CreateNotification('Autokit', 'All current drills were destroyed or not found', 5)
+		       	return
+		    end
+		
+	        for _, drillObj in ipairs(drills) do
+	            if Legit.Value then
+	                if drillObj:FindFirstChild("RootPart") then
+	                    local drillRoot = drillObj.RootPart
+	                    if (drillRoot.Position - root.Position).Magnitude <= 15 then
+	                        bedwars.Client:Get('ExtractFromDrill'):SendToServer({
+	                            drill = drillObj
+	                        })
+	                    end
+	                end
+	            else
+	                bedwars.Client:Get('ExtractFromDrill'):SendToServer({
+	                    drill = drillObj
+	                })
+	            end
+	        end
+	
+	        task.wait(0.1)
+	    until not AutoKit.Enabled
+	end,
+	airbender = function()
+		repeat
+			if not entitylib.isAlive then continue end
+			local root = entitylib.character.RootPart
+			if not root then continue end
+		
+				local plr = entitylib.EntityPosition({
+					Range = 25,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+		
+				local plr2 = entitylib.EntityPosition({
+					Range = 31,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+		
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+					game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("airbender_tornado")
+				end
+		
+				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+					local direction = (plr2.RootPart.Position - root.Position).Unit
+	
+					bedwars.Client:Get('Airbender_RequestMovingTornado'):SendToServer({
+	                    direction = direction
+	                })
+				end
+			task.wait(0.1)
+
+			until not AutoKit.Enabled
+		end,
+		nazar = function()
+		    repeat
+			game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
+			task.wait()
+		    until not AutoKit.Enabled
+		end,
+    hatter = function()
+            local function checkNofi(v)
+                if v:IsA("Frame") then
+                    for i, text in pairs(v:GetDescendants()) do
+                        if text:IsA("TextLabel") then
+                            if text.Text == string.find(text.Text,"TELEPORT") or text.Text == string.find(text.Text,"Teleport") or text.Text == string.find(text.Text,"teleport") then
+                                game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
+                            end
+                        end
+                    end
+                end
+            end
+
+		    repeat
+            AutoKit:Clean(lplr.PlayerGui.NotificationApp.ChildAdded:Connect(checkNofi))
+			task.wait()
+		    until not AutoKit.Enabled
+        end,
+
+        mage = function()
+            local function checkModel(v)
+                if v:IsA("Model") and v.Name == "ElementTome" then
+                           --   local v101 = {
+              --  ["secret"] = p_u_99:GetAttribute("TomeSecret")
+           -- }
+           -- local v_u_102 = bedwars.Client:Get("LearnElementTome"):CallServer(v101)
+
+            	
+					bedwars.Client:Get('LearnElementTome'):SendToServer({
+	                    secret = v:GetAttribute("TomeSecret")
+	                })
+                end
+            end
+
+		    repeat
+            AutoKit:Clean(workspace.ChildAdded:Connect(checkModel))
+			for i, v in workspace:GetDescendants() do
+			     if v:IsA("Model") and v.Name == "ElementTome" then
+			       	bedwars.Client:Get('LearnElementTome'):SendToServer({
+	                    secret = v:GetAttribute("TomeSecret")
+	                })
+			     end
+			end
+			task.wait()
+		    until not AutoKit.Enabled
+        end,
+
+        pyro = function()
+
+        end,
+
+        ['frost_hammer_kit'] = function()
+
+        end,
 		battery = function()
 			repeat
 				if entitylib.isAlive then
@@ -4291,42 +4422,6 @@ run(function()
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
-		drill = function()
-			repeat
-			local root = entitylib.character.RootPart
-		    local drills = {}
-		    
-		    for _, obj in ipairs(workspace:GetDescendants()) do
-		        if obj.Name == "Drill" then
-		            table.insert(drills, obj)
-		        end
-		    end
-		
-		    if #drills == 0 then
-		        vape:CreateNotification('Autokit', 'All current drills were destroyed or not found', 5)
-		       	return
-		    end
-		
-	        for _, drillObj in ipairs(drills) do
-	            if Legit.Value then
-	                if drillObj:FindFirstChild("RootPart") then
-	                    local drillRoot = drillObj.RootPart
-	                    if (drillRoot.Position - root.Position).Magnitude <= 15 then
-	                        bedwars.Client:Get('ExtractFromDrill'):SendToServer({
-	                            drill = drillObj
-	                        })
-	                    end
-	                end
-	            else
-	                bedwars.Client:Get('ExtractFromDrill'):SendToServer({
-	                    drill = drillObj
-	                })
-	            end
-	        end
-	
-	        task.wait(0.1)
-	    until not AutoKit.Enabled
-	end,
 	}
 	
 	AutoKit = vape.Categories.Utility:CreateModule({
@@ -8662,15 +8757,15 @@ run(function()
 					espadd(v.PrimaryPart, icon)
 				end
 			end
-			game.Workspace.ChildAdded:Connect(check)
-			game.Workspace.ChildRemoved:Connect(function(v)
+			KitESP:Clean(game.Workspace.ChildAdded:Connect(check))
+			KitESP:Clean(game.Workspace.ChildRemoved:Connect(function(v)
 				pcall(function()
 					if espobjs[v.PrimaryPart] then
 						espobjs[v.PrimaryPart]:Destroy()
 						espobjs[v.PrimaryPart] = nil
 					end
 				end)
-			end)
+			end))
 			for _, v in pairs(game.Workspace:GetChildren()) do
 				check(v)
 			end
@@ -9905,7 +10000,7 @@ run(function()
 
 			if callback then 
 				AutoBan:Toggle()
-				  local kits = {"berserker", "hatterr", "flower_bee", "glacial_skater",'void_dragon','card','cat'}
+				  local kits = {"berserker", "hatter", "flower_bee", "glacial_skater",'void_dragon','card','cat'}
     for _, kit in ipairs(kits) do
         for i = 0, 1 do
             local args = {kit, i}
