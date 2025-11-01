@@ -8179,8 +8179,8 @@ local Streamer
 end)
 
 run(function()
-print(loginlib)
 
---local S,U,P = loginlib.login:Login()
-			--vape.role = S
+
+local S,U,P = loginlib.login:Login()
+			vape.role = S
 end)
