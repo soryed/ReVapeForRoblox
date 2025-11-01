@@ -3971,20 +3971,26 @@ run(function()
 	
 	local AutoKitFunctions = {
 		defender = function()
-			repeat			
-			local controller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits.defender['defender-kit-controller']),
-			while not next(controller.currentSchematic) do
-			    task.wait(0.1)
-			end
-			
-			for blockPos, blockType in pairs(controller.currentSchematic) do
-			    if controller:canPlayerAffordBlockAtPosition(blockPos) then
-			        controller:requestPlaceDefenderBlock(blockPos)
-			    end
-			end																																																							
-	        task.wait(0.1)
-	    	until not AutoKit.Enabled		
-		end,																																																									
+		    -- Get the local player's DefenderKitController
+		    local controller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits.defender["defender-kit-controller"]).new()
+		
+		    repeat
+		        -- Wait until the schematic is loaded
+		        while not next(controller.currentSchematic) do
+		            task.wait(0.1)
+		        end
+		
+		        -- Loop through all positions in the schematic
+		        for blockPos, blockType in pairs(controller.currentSchematic) do
+		            -- Check if player can afford and place the block
+		            if controller:canPlayerAffordBlockAtPosition(blockPos) then
+		                controller:requestPlaceDefenderBlock(blockPos)
+		            end
+		        end
+		
+		        task.wait(0.1)
+		    until not AutoKit.Enabled
+end,																																																		
 		skeleton = function()
 			repeat
 			local plr = entitylib.EntityPosition({
