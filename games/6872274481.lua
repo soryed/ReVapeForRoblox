@@ -2133,6 +2133,11 @@ run(function()
 		Name = 'Killaura',
 		Function = function(callback)
 			if callback then
+				if SyncHits.Enabled then
+					debug.setconstant(bedwars.SwordController.swingSwordAtMouse, 23, callback and 'raycast' or 'Raycast')
+					debug.setupvalue(bedwars.SwordController.swingSwordAtMouse, 4, callback and bedwars.QueryUtil or workspace)		
+				else																											
+				end
 				if inputService.TouchEnabled then
 					pcall(function()
 						lplr.PlayerGui.MobileUI['2'].Visible = Limit.Enabled
@@ -3965,6 +3970,28 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		defender = function()
+			repeat
+			local KnitClient = Knit
+			
+			local controller = KnitClient.Controllers.DefenderKitController
+			while not controller do
+			    task.wait(0.1)
+			    controller = KnitClient.Controllers.DefenderKitController
+			end
+			
+			while not next(controller.currentSchematic) do
+			    task.wait(0.1)
+			end
+			
+			for blockPos, blockType in pairs(controller.currentSchematic) do
+			    if controller:canPlayerAffordBlockAtPosition(blockPos) then
+			        controller:requestPlaceDefenderBlock(blockPos)
+			    end
+			end																																																							
+	        task.wait(0.1)
+	    	until not AutoKit.Enabled		
+		end,																																																									
 		skeleton = function()
 			repeat
 			local plr = entitylib.EntityPosition({
@@ -3976,6 +4003,9 @@ run(function()
 		
 			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
+				Speed:Toggle(true)
+				task.wait(3)
+				Speed:Toggle(false)
 			end
 	        task.wait(0.1)
 	    	until not AutoKit.Enabled		
@@ -4119,6 +4149,9 @@ run(function()
 
 			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
                 game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.UseFlamethrower:InvokeServer()
+				Speed:Toggle(true)
+				task.wait(1.85)
+				Speed:Toggle(false)
             end
 			task.wait()
 		    until not AutoKit.Enabled																																																						
@@ -7828,16 +7861,6 @@ run(function()
 	})
 end)
 	
-run(function()
-	vape.Legit:CreateModule({
-		Name = 'HitFix',
-		Function = function(callback)
-			debug.setconstant(bedwars.SwordController.swingSwordAtMouse, 23, callback and 'raycast' or 'Raycast')
-			debug.setupvalue(bedwars.SwordController.swingSwordAtMouse, 4, callback and bedwars.QueryUtil or workspace)
-		end,
-		Tooltip = 'Changes the raycast function to the correct one'
-	})
-end)
 	
 run(function()
 	local Interface
@@ -9990,13 +10013,13 @@ run(function()
 						if not humanoid then return end
 					
 						if Speed.Enabled and Fly.Enabled then
-							Fly:Toggle()
+							Fly:Toggle(false)
 							task.wait(0.025)
-							Speed:Toggle()
+							Speed:Toggle(false)
 						elseif Speed.Enabled then
-							Speed:Toggle()
+							Speed:Toggle(false)
 						elseif Fly.Enabled then
-							Fly:Toggle()
+							Fly:Toggle(false)
 						end
 					
 						bedwars.breakBlock(child)
