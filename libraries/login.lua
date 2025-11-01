@@ -69,7 +69,7 @@ function login:Login()
         U = username
         P = password
         status = string.upper(status)
-        vape:CreateNotification("ReVape", "Logged in as "..username.." (Type '"..status.."')", 7)
+        vape:CreateNotification("Onyx", "Logged in as "..username.." (Type '"..status.."')", 7)
         saveAccountFiles(S, U, P)
     end)
 
@@ -78,7 +78,7 @@ function login:Login()
         U = "GUEST"
         P = "PASSWORD"
         saveAccountFiles(S, U, P)
-        vape:CreateNotification("ReVape", "Login failed or API is down. Continue as 'GUEST'", 7)
+        vape:CreateNotification("Onyx", "Login failed or API is down. Continue as 'GUEST'", 7)
         return "guest", "GUEST", "PASSWORD"
     end
 
