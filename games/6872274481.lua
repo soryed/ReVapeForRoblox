@@ -10759,7 +10759,7 @@ local GameLogs
 		Name = "GameLogs",
 		Function = function()
 
-	print(store.matchState)
+	print(bedwars.Store:getState())
 		end,
 		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
 	})
