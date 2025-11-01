@@ -4302,7 +4302,7 @@ run(function()
 		
 		    if #drills == 0 then
 		        vape:CreateNotification('No Drills found!', 'All current drills were destroyed or not found', 5)
-		        return
+		       	return
 		    end
 		
 		    for _, drillObj in ipairs(drills) do
