@@ -3965,6 +3965,21 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		skeleton = function()
+			repeat
+			local plr = entitylib.EntityPosition({
+				Range = 10,
+				Part = "RootPart",
+				Players = true,
+				Sort = sortmethods.Health
+			})
+		
+			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
+			end
+	        task.wait(0.1)
+	    	until not AutoKit.Enabled		
+		end,
 		drill = function()
 			repeat
 			local root = entitylib.character.RootPart
