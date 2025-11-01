@@ -8166,3 +8166,15 @@ run(function()
 	
 end)
 
+run(function()
+local Streamer
+	Streamer = vape.Categories.Minigames:CreateModule({
+		Name = "Streamer",
+		Function = function(callback)
+			vape.ToggleNotifications.Value = true
+			vape.Notifications.Value = false						
+		end,
+		Tooltip ='hides revapes modules'
+	})
+
+end)
