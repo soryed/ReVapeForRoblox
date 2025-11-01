@@ -24,6 +24,7 @@ local mainapi = {
 	Discord = "@ye40",
 	role = "",
 	SC = false,
+	HideNofis = false,
 	Windows = {}
 }
 																																																								
@@ -5328,7 +5329,7 @@ function mainapi:CreateLegit()
 	return legitapi
 end		
 function mainapi:CreateNotification(title, text, duration, type)
-  if not self.Notifications.Enabled then
+  if not self.Notifications.Enabled or self.HideNofis then
     return
   end
   task.delay(0, function()
