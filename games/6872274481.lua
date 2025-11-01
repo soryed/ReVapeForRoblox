@@ -4071,26 +4071,25 @@ run(function()
 			task.wait()
 		    until not AutoKit.Enabled
 		end,
-    hatter = function()
-            local function checkNofi(v)
-                if v:IsA("Frame") then
-                    for i, text in pairs(v:GetDescendants()) do
-                        if text:IsA("TextLabel") then
-                            if text.Text == string.find(text.Text,"TELEPORT") or text.Text == string.find(text.Text,"Teleport") or text.Text == string.find(text.Text,"teleport") then
-                                game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
-                            end
-                        end
-                    end
-                end
-            end
-
-		    repeat
-            AutoKit:Clean(lplr.PlayerGui.NotificationApp.ChildAdded:Connect(checkNofi))
-			task.wait()
-		    until not AutoKit.Enabled
-        end,
-
-        mage = function()
+		hatter = function()
+			repeat
+				for _, text in pairs(lplr.PlayerGui.NotificationApp:GetDescendants()) do
+					if text:IsA("TextLabel") then
+						local txt = string.lower(text.Text)
+						if string.find(txt, "teleport") then
+							local events = game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents")
+							if events and events:FindFirstChild("Events") and events.Events:FindFirstChild("useAbility") then
+								events.Events.useAbility:FireServer("HATTER_TELEPORT")
+							else
+								vape:CreateNotification('Autokit','teleport event not found!','warning',10)
+							end
+						end
+					end
+				end
+				task.wait() 
+			until not AutoKit.Enabled
+		end,
+  		mage = function()
             local function checkModel(v)
                 if v:IsA("Model") and v.Name == "ElementTome" then
                     local secret = {
