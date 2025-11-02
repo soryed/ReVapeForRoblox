@@ -3976,16 +3976,19 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
-		barbarian = function()
-		   		repeat
-		
-		            bedwars:dispatch({
-		                ["type"] = "KitBarbarianSetRage",
-		                ["rage"] = 1287.5200000000002
-		            })
-			        task.wait(0.1)
-			    	until not AutoKit.Enabled	
-		end,																																																									
+ember = function()
+           repeat
+    bedwars.Client:OnEvent("EmberProgress", function(p25)
+        bedwars:dispatch({
+            ["type"] = "KitEmberIncrementProgress",
+            ["progress"] = math.huge
+        })
+    end):andThen(function(p26)
+        bedwars:GiveTask(p26)
+    end)
+                        task.wait()
+                until not AutoKit.Enabled
+end,																																																									
 		void_hunter = function()
 		   	repeat
 			local plr = entitylib.EntityPosition({
@@ -10135,41 +10138,7 @@ run(function()
 		end,
 	}) 
 end)
-run(function()
-    local InfernalKill = {Enabled = false}
-    InfernalKill = vape.Categories.Exploits:CreateModule({
-        ["Name"] = "EmberExploit",
-        ["Function"] = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				InfernalKill:Toggle(false)
-													vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
-            if callback then
-                repeat
-                    wait()
-                    local tmp = getItem("infernal_saber")
-                    if tmp then
-                        local lplr = game:GetService("Players").LocalPlayer
-                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
-                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-                                local root = plr.Character.HumanoidRootPart
-                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
-                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
-                                        weapon = tmp.tool;
-                                        player = plr;
-                                        chargeTime = 0.9;
-                                    })
-                                end
-                            end
-                        end
-                    end
-                until not InfernalKill["Enabled"]
-            end
-        end,
-        ["Tooltip"] = "insta kill"
-    })
-end)
+
 
 run(function()
     local KrystalXploit = {Enabled = false}
