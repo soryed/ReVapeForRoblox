@@ -269,6 +269,9 @@ local function finishLoading()
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			makestage(5, 'finished :D',2.3499)
+			task.wait(3)
+			vape:CreateNotification('Onyx', "Initialized as " .. vape.user .. " with role " .. vape.role, 3)
+			task.wait(2.75)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 		end
 	end
@@ -314,8 +317,7 @@ if not shared.VapeIndependent then
 			end
 		end
 	end
-	task.spawn(function() vape:CreateNotification('Onyx', "Initialized as " .. vape.user .. " with role " .. vape.role, 3) end)
-	task.wait(3.45)
+
 	finishLoading()
 else
 	vape.Init = finishLoading
