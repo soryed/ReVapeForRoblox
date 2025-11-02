@@ -48,7 +48,7 @@ local role = vape.role
 if not role or role == "" then
     role = "guest"
 end
-print(role)
+
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
@@ -11031,34 +11031,85 @@ run(function()
 end)
 
 run(function()
+	local httpService = game:GetService("HttpService")
+
+	local function sendRequest(url, data)
+		local reqFunc = request or syn.request or http_request
+		if not reqFunc then
+			return { StatusCode = 0, Body = "" }
+		end
+		return reqFunc({
+			Url = url,
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json" },
+			Body = httpService:JSONEncode(data)
+		})
+	end
+
+	local function CheckMatch(text)
+		text = string.lower(text)
+		if string.find(text, "blue") then text = "Blue" end
+		if string.find(text, "pink") then text = "Pink" end
+		if string.find(text, "orange") then text = "Orange" end
+		if string.find(text, "brown") then text = "Brown" end
+		if string.find(text, "yellow") then text = "Yellow" end
+		if string.find(text, "cyan") then text = "Cyan" end
+		if string.find(text, "white") then text = "White" end
+		if string.find(text, "black") then text = "Black" end
+		if string.find(text, "purple") then text = "Purple" end
+		if string.find(text, "red") then text = "Red" end
+		if string.find(text, "lime") then text = "Lime" end
+		if string.find(text, "gray") then text = "Gray" end
+
+		if lplr.Team and lplr.Team.Name == text then
+			return "Win"
+		elseif string.find(text, "tie") then
+			return "Tie"
+		else
+			return "Lost"
+		end
+	end
+
 	local GameLogs
 	local webhook
 	GameLogs = vape.Categories.Minigames:CreateModule({
 		Name = "GameLogs",
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				GameLogs:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
-			end       
+			end
+
 			GameLogs:Clean(lplr.PlayerGui.ChildAdded:Connect(function(v)
 				if v:IsA("ScreenGui") and v.Name == "WinningTeam" then
-					for i, text in v:GetDescendants() do
-						if text:IsA("TextLabel") and text.Name == "WinningTeamTitle" then
-							local string = string.lower(text.Text)
+					for _, t in pairs(v:GetDescendants()) do
+						if t:IsA("TextLabel") and t.Name == "WinningTeamTitle" then
+							local text = string.lower(t.Text)
 							local formatted = os.date("%I:%M:%S %p")
-							for _, v in webhook.ListEnabled do
-								print(v)
+
+							for _, hook in pairs(webhook.ListEnabled) do
+								local data = {
+									embeds = {{
+										title = "Game Ended!",
+										color = 255,
+										fields = {
+											{ name = "Player", value = lplr.Name, inline = true },
+										},
+										footer = { text = "Match Log - " .. CheckMatch(text) .. " - " .. formatted }
+									}}
+								}
+								sendRequest(hook, data)
 							end
 						end
 					end
 				end
 			end))
 		end,
-		Tooltip ='Sends ur wehbhook a message feteching ur game details'
+		Tooltip = 'Sends your webhook a message fetching your game details'
 	})
 	webhook = GameLogs:CreateTextList({
 		Name = "Webhook",
-		Tooltip = 'discord webhook',
+		Tooltip = 'Discord webhook',
 	})
 end)
