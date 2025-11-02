@@ -1344,7 +1344,7 @@ run(function()
 			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Italic)
 		})
 
-		local function HandleRequest()
+		--[[local function HandleRequest()
 			local plrrr = Players:FindFirstChild(textbox.Text)
 			if not plrrr then
 				notif('Onyx', "Player does not exist ingame", 10, "alert")
@@ -1358,8 +1358,16 @@ run(function()
 			netFolder.RequestProfileData:InvokeServer(plrrr)
 
 			ViewProfiles:Toggle()
-		end
+		end--]]
+																				local function HandleRequest()
+																								local plrrr = Players:FindFirstChild(textbox.Text)
+			if not plrrr then
+				notif('Onyx', "Player does not exist ingame", 10, "alert")
+				return
+			end
+																					bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(plrrr)
 
+																				end
 		ViewProfiles:Clean(textbox.FocusLost:Connect(function(enterPressed)
 			if enterPressed then
 				HandleRequest()
@@ -1551,3 +1559,7 @@ run(function()
         Tooltip = "Cleans up the JSON file"
     })
 end)
+
+
+
+																				
