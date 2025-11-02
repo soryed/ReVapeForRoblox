@@ -2243,7 +2243,7 @@ run(function()
 									if not Swing.Enabled and AnimDelay < tick() and not LegitAura.Enabled then
 										AnimDelay = tick() + (meta.sword.respectAttackSpeedForEffects and meta.sword.attackSpeed or math.max(ChargeTime.Value, 0.11))
 										bedwars.SwordController:playSwordEffect(meta, false)
-										if meta.displayName:find(' Scythe') then
+										if meta.displayName:find('Scythe') then
 											bedwars.ScytheController:playLocalAnimation()
 										end
 
@@ -2254,22 +2254,22 @@ run(function()
 								end
 
 								if delta.Magnitude > AttackRange.Value then continue end
-								if delta.Magnitude < 14.4 and (tick() - swingCooldown) < math.max(ChargeTime.Value, 0.02) then continue end
+								if delta.Magnitude < 15.8 and (tick() - swingCooldown) < math.max(ChargeTime.Value, 0.01) then continue end
 
 								local actualRoot = v.Character.PrimaryPart
 								if actualRoot then
 									local dir = CFrame.lookAt(selfpos, actualRoot.Position).LookVector
-									local pos = selfpos + dir * math.max(delta.Magnitude - 14.399, 0)
+									local pos = selfpos + dir * math.max(delta.Magnitude - 15.249, 0)
 									swingCooldown = tick()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
-									store.attackReach = (delta.Magnitude * 100) // 1 / 100
+									store.attackReach = (delta.Magnitude * 100) // 1 / 100 + 0.4
 									store.attackReachUpdate = tick() + 1
 
-									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
+									if delta.Magnitude < 15.8 and ChargeTime.Value > 0.11 then
 										AnimDelay = tick()
 									end
 local Q = 0.5
-																																if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
+																																if SyncHit.Enabled  then Q = 0.28 else Q = 0.5 end
 									AttackRemote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = 0},
