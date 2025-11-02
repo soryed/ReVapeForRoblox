@@ -11160,7 +11160,7 @@ run(function()
                                             { name = "* Teams", value = "* "..tostring(store.Teams), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
-										footer = { text = "-# Match Logs!"}
+										footer = { text = "-# Match Logs! - Role: "..role}
 									}}
 								}
 								sendRequest(hook, data)
