@@ -315,7 +315,7 @@ if not shared.VapeIndependent then
 		end
 	end
 	task.spawn(function() vape:CreateNotification('Onyx', "Initialized as " .. vape.user .. " with role " .. vape.role, 3) end)
-	task.wait(3)
+	task.wait(3.45)
 	finishLoading()
 else
 	vape.Init = finishLoading
