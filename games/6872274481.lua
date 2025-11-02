@@ -11420,8 +11420,8 @@ local test
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-Notifications:sendInfoNotification({
-                ["message"] = "Niggas a bitch"
+            Flamework.resolveDependency("@easy-games/game-core:client/controllers/notification-controller@NotificationController"):sendInfoNotification({
+                ["message"] = "New contracts are available"
             })
 		end,
 		Tooltip ='testing announcements owner only'
