@@ -47,7 +47,38 @@ run(function()
 			return rawget(self, ind)
 		end
 	})
+	Client.Get = function(self, remoteName)
+		local call = OldGet(self, remoteName)
 
+		if remoteName == remotes.AttackEntity then
+			return {
+				instance = call.instance,
+				SendToServer = function(_, attackTable, ...)
+					local suc, plr = pcall(function()
+						return playersService:GetPlayerFromCharacter(attackTable.entityInstance)
+					end)
+
+					local selfpos = attackTable.validate.selfPosition.value
+					local targetpos = attackTable.validate.targetPosition.value
+					store.attackReach = ((selfpos - targetpos).Magnitude * 100) // 1 / 100
+					store.attackReachUpdate = tick() + 1
+
+					if Reach.Enabled or HitBoxes.Enabled then
+						attackTable.validate.raycast = attackTable.validate.raycast or {}
+						attackTable.validate.selfPosition.value += CFrame.lookAt(selfpos, targetpos).LookVector * math.max((selfpos - targetpos).Magnitude - 14.399, 0)
+					end
+
+					if suc and plr then
+						if not select(2, whitelist:get(plr)) then return end
+					end
+
+					return call:SendToServer(attackTable, ...)
+				end
+			}
+		end
+
+		return call
+	end
 	local kills = sessioninfo:AddItem('Kills')
 	local beds = sessioninfo:AddItem('Beds')
 	local wins = sessioninfo:AddItem('Wins')
@@ -56,12 +87,7 @@ run(function()
 	vape:Clean(function()
 		table.clear(bedwars)
 	end)
-		print("bedwars.Client =", bedwars.Client)
-if bedwars.Client then
-	for i,v in pairs(bedwars.Client) do
-		print("Client function:", i)
-	end
-end
+
 
 end)
 
@@ -1182,7 +1208,7 @@ run(function()
 		end,
 	})
 end)
---[[run(function()
+run(function()
 	local ViewProfiles
 	local lplr = game.Players.LocalPlayer
 	local Players = game:GetService("Players")
@@ -1355,7 +1381,7 @@ end)
 			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Italic)
 		})
 
-		local function HandleRequest()
+		--[[local function HandleRequest()
 			local plrrr = Players:FindFirstChild(textbox.Text)
 			if not plrrr then
 				notif('Onyx', "Player does not exist ingame", 10, "alert")
@@ -1369,8 +1395,24 @@ end)
 			netFolder.RequestProfileData:InvokeServer(plrrr)
 
 			ViewProfiles:Toggle()
+		end--]]
+
+		local function HandleRequest()
+			local plrrr = Players:FindFirstChild(textbox.Text)
+			if not plrrr then
+				notif('Onyx', "Player does not exist ingame", 10, "alert")
+				return
+			end
+
+			local userid = plrrr.UserId
+			local netFolder = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged
+
+			bedwars.Client:Get("NametagDataRequest"):CallServerAsync(plrrr.UserId)
+			bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
+
+			ViewProfiles:Toggle(false)
 		end
-	
+																				
 		ViewProfiles:Clean(textbox.FocusLost:Connect(function(enterPressed)
 			if enterPressed then
 				HandleRequest()
@@ -1404,7 +1446,7 @@ end)
 		end,
 		Tooltip = "Allows you to see other players' profiles"
 	})
-end)--]]
+end)
 
 run(function()
 	local SetFPS
