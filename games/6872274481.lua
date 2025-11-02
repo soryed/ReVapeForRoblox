@@ -737,7 +737,8 @@ run(function()
 		VisualizerUtils = require(lplr.PlayerScripts.TS.lib.visualizer['visualizer-utils']).VisualizerUtils,
 		WeldTable = require(replicatedStorage.TS.util['weld-util']).WeldUtil,
 		WinEffectMeta = require(replicatedStorage.TS.locker['win-effect']['win-effect-meta']).WinEffectMeta,
-		ZapNetworking = require(lplr.PlayerScripts.TS.lib.network)
+		ZapNetworking = require(lplr.PlayerScripts.TS.lib.network),
+		Notifications = Flamework.resolveDependency("@easy-games/game-core:client/controllers/notification-controller@NotificationController"),
 	}, {
 		__index = function(self, ind)
 			rawset(self, ind, Knit.Controllers[ind])
@@ -10150,29 +10151,6 @@ run(function()
 end)
 
 
-run(function()
-    local KrystalXploit = {Enabled = false}
-	local MomentumUpdate = replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate
-    KrystalXploit = vape.Categories.Exploits:CreateModule({
-        Name = "KrystalExploit",
-        Function = function(call)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				KrystalXploit:Toggle(false)
-														vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
-            if call then
-                task.spawn(function()
-                    repeat
-                        MomentumUpdate:FireServer({momentumValue = 9e9})
-                        task.wait()
-                    until not KrystalXploit.Enabled
-                end)
-            end
-        end,
-        Tooltip = "Lets you go more speed with krystal"
-    })
-end)
 
 run(function()
 	local ItemlessLongjump = {Enabled = false}
