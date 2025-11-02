@@ -10,6 +10,10 @@ local vape = shared.vape
 local entitylib = vape.Libraries.entity
 local sessioninfo = vape.Libraries.sessioninfo
 local bedwars = {}
+local role = vape.role
+if not role or role == "" then
+    role = "guest"
+end
 
 local function notif(...)
 	return vape:CreateNotification(...)
