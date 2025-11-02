@@ -1020,7 +1020,8 @@ local oldtick = tick()
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
 			store.GameEndedTime = new.Game.m or (oldtick - tick())
-			setclipboard(new.Game)
+			--store.JobID = game.J
+			setclipboard(game:GetService("HttpService"):JSONEncode(new.Game))
 			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") 
 				or game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
 			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
