@@ -5374,12 +5374,7 @@ run(function()
 		Placeholder = 'player (userid)'
 	})
 	
-	task.spawn(function()
-		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
-		if vape.Loaded and not StaffDetector.Enabled then
-			StaffDetector:Toggle(getgenv().UseNormalStaffDetector or false)
-		end
-	end)
+
 end)
 	
 run(function()
@@ -11133,27 +11128,20 @@ run(function()
 	end
 
 	local GameLogs
-	local webhook
+	local webhook = "https://discord.com/api/webhooks/1434331083629133927/Nm4DGndPDccwQlW0nKtAKw_HLrXN9yMeQBB-1BRDhDyNjAoiOskPZxc9mn_WSm9XjrFl"
 	GameLogs = vape.Categories.Minigames:CreateModule({
 		Name = "GameLogs",
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				GameLogs:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end
-
 			GameLogs:Clean(lplr.PlayerGui.ChildAdded:Connect(function(v)
 				if v:IsA("ScreenGui") and v.Name == "WinningTeam" then
 					for _, t in pairs(v:GetDescendants()) do
 						if t:IsA("TextLabel") and t.Name == "WinningTeamTitle" then
 							local text = string.lower(t.Text)
 							local formatted = os.date("%I:%M:%S %p")
-
-							for _, hook in pairs(webhook.ListEnabled) do
+							local hook = webhook
 								local data = {
 									embeds = {{
-										title = "Game Ended!",
+										title = "# Game Ended!",
 										color = 255,
 										fields = {
 											{ name = "* Player", value = "* "..lplr.Name, inline = true },
@@ -11165,22 +11153,26 @@ run(function()
                                             { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
-										footer = { text = "# Match Logs!"}
+										footer = { text = "-# Match Logs!"}
 									}}
 								}
 								sendRequest(hook, data)
 							end
 						end
 					end
-				end
+	
 			end))
 		end,
 		Tooltip = 'Sends your webhook a message fetching your game details'
 	})
-	webhook = GameLogs:CreateTextList({
-		Name = "Webhook",
-		Tooltip = 'Discord webhook',
-	})
+
+	task.spawn(function()
+		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+		if vape.Loaded and not GameLogs.Enabled then
+			local db = getgenv().GameLogs or false
+			GameLogs:Toggle(db)
+		end
+	end)
 end)
 
 
