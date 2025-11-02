@@ -3983,8 +3983,6 @@ ember = function()
             ["type"] = "KitEmberIncrementProgress",
             ["progress"] = math.huge
         })
-    end):andThen(function(p26)
-        self.autokitMaid:GiveTask(p26)
     end)
                         task.wait()
                 until not AutoKit.Enabled
