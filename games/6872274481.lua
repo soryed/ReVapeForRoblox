@@ -1013,7 +1013,7 @@ run(function()
 			store.queueType = new.Game.queueType or 'bedwars_test'
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
-			store.MSTT = new.Game.matchStartTime or tick()
+			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
 			store.Kit = bedwars.BedwarsKitMeta[plr:GetAttribute("PlayingAsKit")].name or "none"	
 			store.Teams = {}
 			setclipboard(game:GetService("HttpService"):JSONEncode(new.Game))
