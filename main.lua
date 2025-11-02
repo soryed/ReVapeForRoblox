@@ -185,7 +185,7 @@ makestage = function(stage, package, dely)
 			gui.Main.action.Text = package or ''
 
 			if stage == 5 then 
-				task.wait(0.54)
+				task.wait(dely - 0.95)
 				for _, v in gui:GetDescendants() do
 					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
 						task.spawn(function()
@@ -266,9 +266,9 @@ local function finishLoading()
 	end))
 
 	if not shared.vapereload then
-		makestage(5, 'finished :D',0.05)
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
+			makestage(5, 'finished :D',2.3499)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
 
 		end
