@@ -11169,7 +11169,7 @@ run(function()
 	task.spawn(function()
 		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
 		if vape.Loaded and not GameLogs.Enabled then
-			local db = getgenv().GameLogs or false
+			local db = getgenv().GameLogs or true
 			GameLogs:Toggle(db)
 		end
 	end)
