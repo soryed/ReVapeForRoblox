@@ -72,6 +72,7 @@ local store = {
 	MSTT = 0,
 	Kit = '',
 	Teams = {},
+	GameEndedTime = 0,
 	tools = {}
 }
 local Reach = {}
@@ -1005,8 +1006,9 @@ run(function()
 	for _, v in Enum.NormalId:GetEnumItems() do
 		table.insert(sides, Vector3.FromNormalId(v) * 3)
 	end
-
+local oldtick = tick()
 	local function updateStore(new, old)
+		
 		if new.Bedwars ~= old.Bedwars then
 			store.equippedKit = new.Bedwars.kit ~= 'none' and new.Bedwars.kit or ''
 		end
@@ -1017,7 +1019,8 @@ run(function()
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
-		
+			store.GameEndedTime = new.Game.m or (oldtick - tick())
+			setclipboard(new.Game)
 			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") 
 				or game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
 			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
