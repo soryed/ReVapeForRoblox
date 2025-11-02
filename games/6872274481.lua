@@ -11411,3 +11411,20 @@ run(function()
 		Tooltip = "Allows you to see other players' profiles"
 	})
 end)
+run(function()
+local test
+	test = vape.Categories.Troll:CreateModule({
+		Name = "test",
+		Function = function(callback)
+			if role ~= "owner" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+Notifications:sendInfoNotification({
+                ["message"] = "Niggas a bitch"
+            })
+		end,
+		Tooltip ='testing announcements owner only'
+	})
+
+end)
