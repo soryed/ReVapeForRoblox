@@ -11166,7 +11166,7 @@ run(function()
                                             { name = "* MatchStartTimeTick", value = "* "..tostring(store.MSTT), inline = true},
                                             { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
                                             { name = "* Kit", value = "* "..store.Kit, inline = true},
-                                            { name = "* Teams", value = "* "..tostring(store.Teams), inline = true},
+                                            { name = "* Teams", value = "* "..game:GetService("HttpService"):JSONEncode(tostring(store.Teams)), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
 										footer = { text = "-# Match Logs! - Username: "..user.." - Role: "..role}
