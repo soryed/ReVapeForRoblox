@@ -2354,7 +2354,7 @@ local S = 0
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 20,
+		Max = 24,
 		Default = 18,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -2363,7 +2363,7 @@ local S = 0
 	AttackRange = Killaura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 20,
+		Max = 24,
 		Default = 18,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
