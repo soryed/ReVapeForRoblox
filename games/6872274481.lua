@@ -1067,6 +1067,7 @@ run(function()
 				}
 			end
 		end
+		task.wait(0.1)
 	end
 
 	local storeChanged = bedwars.Store.changed:connect(updateStore)
