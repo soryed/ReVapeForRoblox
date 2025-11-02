@@ -3975,7 +3975,38 @@ run(function()
 		until not AutoKit.Enabled
 	end
 	
-	local AutoKitFunctions = {																																												
+	local AutoKitFunctions = {
+		barbarian = function()
+		   		repeat
+		
+		            bedwars:dispatch({
+		                ["type"] = "KitBarbarianSetRage",
+		                ["rage"] = 1287.5200000000002
+		            })
+			        task.wait(0.1)
+			    	until not AutoKit.Enabled	
+		end,																																																									
+		void_hunter = function()
+		   	repeat
+			local plr = entitylib.EntityPosition({
+				Range = 20,
+				Part = "RootPart",
+				Players = true,
+				Sort = sortmethods.Health
+				})
+				
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+		         bedwars.Client:Get("VoidHunter_MarkAbilityRequest"):SendToServer({
+		             ["originPosition"] = lplr.Character.PrimaryPart.Position,
+		             ["direction"] = workspace.CurrentCamera.CFrame.LookVector
+		         })
+		        Speed:Toggle(true)
+				task.wait(3)
+				Speed:Toggle(false)
+			end
+			 task.wait(0.1)
+			 until not AutoKit.Enabled	
+		end,																																																									
 		skeleton = function()
 			repeat
 			local plr = entitylib.EntityPosition({
