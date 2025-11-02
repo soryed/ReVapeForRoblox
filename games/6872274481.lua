@@ -2354,7 +2354,7 @@ local S = 0
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 24,
+		Max = 20,
 		Default = 18,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -2363,7 +2363,7 @@ local S = 0
 	AttackRange = Killaura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 24,
+		Max = 20,
 		Default = 18,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -11410,4 +11410,3 @@ run(function()
 		Tooltip = "Allows you to see other players' profiles"
 	})
 end)
-
