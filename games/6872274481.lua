@@ -10777,7 +10777,7 @@ local BedAlarm
 			if callback then
 																																						BedAlarm:Toggle(false)
 
-vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+vape:CreateNotification("Onyx","This module is nearly finished",6,"alert")
 			end
 		end,
 		Tooltip = "Alerts you without needing to purchase the bed alarm upgrade",
@@ -10860,7 +10860,7 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = "Automatically shoots for you with every projectile, rewrite soon",
+		Tooltip = "Automatically shoots for you with every projectile, rewrite soon does not work due to a patch",
 	})
 
 	MS = AutoShoot:CreateSlider({
@@ -11190,5 +11190,20 @@ run(function()
 	end)
 end)
 
+run(function()
+local AutoWin 
+	 AutoWin = vape.Categories.Exploits:CreateModule({
+		Name = "AutoWin",
+		Function = function(callback)
+
+			if callback then
+																																						AutoWin:Toggle(false)
+
+vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+			end
+		end,
+		Tooltip = "New Method for autowinning",
+	})
+end)
 
 
