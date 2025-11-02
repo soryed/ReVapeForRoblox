@@ -174,32 +174,33 @@ if gui.Enabled then
 	Instance.new('UIScale', gui.Main).Scale = math.max(gui.AbsoluteSize.X / 1920, 0.485)
 end;
 
-makestage = function(stage, package,dely)
+makestage = function(stage, package, dely)
 	dely = dely or 0.01
 	pcall(function()
-		task.delay(dely,function()
-		tweenService:Create(gui.Main.loadbar.fullbar, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
-			Size = stages[stage]
-		}):Play()
-		gui.Main.action.Text = package or ''
-
-		if stage == 5 then 
-			task.wait(0.54)
-				for _, v in gui:GetDescendants() do
-	for __, prop in {'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'} do
-		task.spawn(pcall, function()
-			tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
-				[prop] = 1
+		task.delay(dely, function()
+			tweenService:Create(gui.Main.loadbar.fullbar, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
+				Size = stages[stage]
 			}):Play()
-		end)
-	end
-end
-		end
 
-		end
+			gui.Main.action.Text = package or ''
+
+			if stage == 5 then 
+				task.wait(0.54)
+				for _, v in gui:GetDescendants() do
+					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
+						task.spawn(function()
+							pcall(function()
+								tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+									[prop] = 1
+								}):Play()
+							end)
+						end)
+					end
+				end
+			end
+		end)
 	end)
 end
-
 
 local function downloadFile(path, func)
 	if not isfile(path) then
