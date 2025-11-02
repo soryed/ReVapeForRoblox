@@ -64,6 +64,9 @@ local store = {
 	inventories = {},
 	matchState = 0,
 	queueType = 'bedwars_test',
+	id = '',
+	isCustom = nil,
+	MSTT = 0,
 	tools = {}
 }
 local Reach = {}
@@ -1005,6 +1008,9 @@ run(function()
 		if new.Game ~= old.Game then
 			store.matchState = new.Game.matchState
 			store.queueType = new.Game.queueType or 'bedwars_test'
+			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
+			store.isCustom = new.Game.isCustom or false
+			store.MSTT = new.Game.matchStartTime or tick()
 		end
 
 		if new.Inventory ~= old.Inventory then
@@ -11150,9 +11156,16 @@ run(function()
 										title = "Game Ended!",
 										color = 255,
 										fields = {
-											{ name = "Player", value = lplr.Name, inline = true },
+											{ name = "* Player", value = "* "..lplr.Name, inline = true },
+                                            { name = "* Team", value = "* "..lplr.Team.Name, inline = true},
+                                            { name = "* MatchID", value = "* "..store.id, inline = true},
+                                            { name = "* QueueType", value = "* "..store.queueType, inline = true},
+                                            { name = "* IsCustomGame", value = "* "..store.isCustom, inline = true},
+                                            { name = "* MatchStartTimeTick", value = "* "..store.MSTT, inline = true},
+                                            { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
+                                            { name = "* Date", value = "* "..formatted, inline = true},
 										},
-										footer = { text = "Match Log - " .. CheckMatch(text) .. " - " .. formatted }
+										footer = { text = "# Match Logs!"}
 									}}
 								}
 								sendRequest(hook, data)
