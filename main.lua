@@ -65,8 +65,6 @@ if gui.Enabled then
 		Image = 'rbxassetid://93496634716737'
 	})
 
-	-- EXIT BUTTON --
-
 	createinstance('ImageButton', {
 		Name = 'Exit',
 		Parent = gui.Main,
@@ -91,8 +89,6 @@ if gui.Enabled then
 		Image = 'rbxassetid://128518278755224',
 		ScaleType = Enum.ScaleType.Fit
 	})
-
-	-- MINIMIZE BUTTON --
 
 	createinstance('ImageButton', {
 		Name = 'Minimize',
@@ -119,8 +115,6 @@ if gui.Enabled then
 		ScaleType = Enum.ScaleType.Fit
 	})
 
-	-- VAPE LOGO --
-
 	createinstance('ImageLabel', {
 		Name = 'textvape',
 		Parent = gui.Main,
@@ -138,12 +132,10 @@ if gui.Enabled then
 		BackgroundTransparency = 1,
 		Position = UDim2.fromScale(1, 0.3),
 		Size = UDim2.fromOffset(29, 29),
-		Image = 'rbxassetid://138794287840926',
+		Image = 'rbxassetid:///14368322199',
 		ImageColor3 = Color3.fromRGB(98, 198, 158),
 		ScaleType = Enum.ScaleType.Fit
 	})
-
-	-- LOAD BAR --
 
 	createinstance('Frame', {
 		Name = 'loadbar',
@@ -163,8 +155,6 @@ if gui.Enabled then
 		Size = UDim2.new(0, 0, 1, 0),
 		ZIndex = 2
 	})
-
-	-- ACTION TEXT --
 
 	createinstance('TextLabel', {
 		Name = 'action',
@@ -258,6 +248,7 @@ local function finishLoading()
 	end))
 
 	if not shared.vapereload then
+		makestage(5, 'finished :D')
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
@@ -284,7 +275,7 @@ if identifyexecutor then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
 		return
 	end
-	if table.find({'Xeno','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
+	if table.find({'Xeno','Hydrogen','Sirhurt','Argon'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	end
 end
