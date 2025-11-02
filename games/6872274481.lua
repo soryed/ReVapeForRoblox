@@ -9792,9 +9792,8 @@ local player = Players.LocalPlayer
 PlayerLevel = vape.Categories.Exploits:CreateModule({
         Name = 'SetPlayerLevel',
 	Tooltip = "Sets your player level to 1000 (client sided)",
-        Function = function(callback)
-				notif("SetPlayerLevel", "This is client sided (only u will see the new level)", 3,"warning")
-				game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
+        Function = function()
+		game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
 	end
 })
 
@@ -10088,7 +10087,7 @@ run(function()
 											vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then return end
+			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then vape:CreateNotification("Onyx", "You are not davey this will be ignored!", 10, "alert") return end
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
