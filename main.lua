@@ -132,7 +132,7 @@ if gui.Enabled then
 		BackgroundTransparency = 1,
 		Position = UDim2.fromScale(1, 0.3),
 		Size = UDim2.fromOffset(29, 29),
-		Image = 'rbxassetid:///14368322199',
+		Image = 'rbxassetid:///14368357095',
 		ImageColor3 = Color3.fromRGB(98, 198, 158),
 		ScaleType = Enum.ScaleType.Fit
 	})
@@ -174,12 +174,29 @@ if gui.Enabled then
 	Instance.new('UIScale', gui.Main).Scale = math.max(gui.AbsoluteSize.X / 1920, 0.485)
 end;
 
-makestage = function(stage, package)
+makestage = function(stage, package,dely)
+	dely = dely or 0.01
 	pcall(function()
+		task.delay(dely,function()
 		tweenService:Create(gui.Main.loadbar.fullbar, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
 			Size = stages[stage]
 		}):Play()
 		gui.Main.action.Text = package or ''
+
+		if stage == 5 then 
+			task.wait(0.54)
+				for _, v in gui:GetDescendants() do
+	for __, prop in {'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'} do
+		task.spawn(pcall, function()
+			tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+				[prop] = 1
+			}):Play()
+		end)
+	end
+end
+		end
+
+		end
 	end)
 end
 
@@ -248,7 +265,7 @@ local function finishLoading()
 	end))
 
 	if not shared.vapereload then
-		makestage(5, 'finished :D')
+		makestage(5, 'finished :D',0.05)
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
@@ -267,9 +284,10 @@ if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
 end
 
-
+makestage(1, 'loading functions/modules.',1.95)
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
+makestage(2, 'checking executor.',3)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
@@ -281,9 +299,9 @@ if identifyexecutor then
 end
 
 if not shared.VapeIndependent then
-	makestage(3, 'downloading game packages')
+	makestage(3, 'downloading game packages.',4.86)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
-	makestage(4, 'loading all packages')
+	makestage(4, 'loading all packages.',2.45)
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
