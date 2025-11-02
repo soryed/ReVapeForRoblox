@@ -75,6 +75,7 @@ local InfiniteFly = {}
 local TrapDisabler
 local AntiFallPart
 local Speed
+local GameLogs
 local Fly
 local bedwars, remotes, sides, oldinvrender, oldSwing = {}, {}, {}
 
@@ -377,7 +378,7 @@ local function waitForChildOfType(obj, name, timeout, prop)
 		if returned and returned.Name ~= 'UpperTorso' or check < tick() then
 			break
 		end
-		task.wait()
+		task.wait(0.1)
 	until false
 	return returned
 end
@@ -671,11 +672,11 @@ run(function()
 			return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 9)
 		end)
 		if KnitInit then break end
-		task.wait()
+		task.wait(0.1)
 	until KnitInit
 
 	if not debug.getupvalue(Knit.Start, 1) then
-		repeat task.wait() until debug.getupvalue(Knit.Start, 1)
+		repeat task.wait(0.1) until debug.getupvalue(Knit.Start, 1)
 	end
 
 	local Flamework = require(replicatedStorage['rbxts_include']['node_modules']['@flamework'].core.out).Flamework
@@ -1123,7 +1124,7 @@ run(function()
 
 	task.spawn(function()
 		pcall(function()
-			repeat task.wait() until store.matchState ~= 0 or vape.Loaded == nil
+			repeat task.wait(0.1) until store.matchState ~= 0 or vape.Loaded == nil
 			if vape.Loaded == nil then return end
 			mapname = workspace:WaitForChild('Map', 5):WaitForChild('Worlds', 5):GetChildren()[1].Name
 			mapname = string.gsub(string.split(mapname, '_')[2] or mapname, '-', '') or 'Blank'
@@ -1165,7 +1166,7 @@ run(function()
 					v.Jumping = false
 				end
 			end
-			task.wait()
+			task.wait(0.1)
 		until vape.Loaded == nil
 	end)
 
@@ -1689,7 +1690,7 @@ run(function()
 		Name = 'AntiFall',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.matchState ~= 0 or (not AntiFall.Enabled)
+				repeat task.wait(0.1) until store.matchState ~= 0 or (not AntiFall.Enabled)
 				if not AntiFall.Enabled then return end
 
 				local pos, debounce = getLowGround(), tick()
@@ -2672,7 +2673,7 @@ run(function()
 			end))
 	
 			if not bedwars.AbilityController:canUseAbility('CAT_POUNCE') then
-				repeat task.wait() until bedwars.AbilityController:canUseAbility('CAT_POUNCE') or not LongJump.Enabled
+				repeat task.wait(0.1) until bedwars.AbilityController:canUseAbility('CAT_POUNCE') or not LongJump.Enabled
 			end
 	
 			if bedwars.AbilityController:canUseAbility('CAT_POUNCE') and LongJump.Enabled then
@@ -2692,7 +2693,7 @@ LongJump:Toggle()
 		end,
 		jade_hammer = function(item, _, dir)
 			if not bedwars.AbilityController:canUseAbility(item.itemType..'_jump') then
-				repeat task.wait() until bedwars.AbilityController:canUseAbility(item.itemType..'_jump') or not LongJump.Enabled
+				repeat task.wait(0.1) until bedwars.AbilityController:canUseAbility(item.itemType..'_jump') or not LongJump.Enabled
 			end
 	
 			if bedwars.AbilityController:canUseAbility(item.itemType..'_jump') and LongJump.Enabled then
@@ -2712,7 +2713,7 @@ LongJump:Toggle()
 		end,
 		wood_dao = function(item, pos, dir)
 			if (lplr.Character:GetAttribute('CanDashNext') or 0) > workspace:GetServerTimeNow() or not bedwars.AbilityController:canUseAbility('dash') then
-				repeat task.wait() until (lplr.Character:GetAttribute('CanDashNext') or 0) < workspace:GetServerTimeNow() and bedwars.AbilityController:canUseAbility('dash') or not LongJump.Enabled
+				repeat task.wait(0.1) until (lplr.Character:GetAttribute('CanDashNext') or 0) < workspace:GetServerTimeNow() and bedwars.AbilityController:canUseAbility('dash') or not LongJump.Enabled
 			end
 	
 			if LongJump.Enabled then
@@ -3928,7 +3929,7 @@ run(function()
 		Name = 'AutoBalloon',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.matchState ~= 0 or (not AutoBalloon.Enabled)
+				repeat task.wait(0.1) until store.matchState ~= 0 or (not AutoBalloon.Enabled)
 				if not AutoBalloon.Enabled then return end
 	
 				local lowestpoint = math.huge
@@ -3985,7 +3986,7 @@ run(function()
 		glacial_skater = function()
 		    repeat
 		        replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9})    
-		        task.wait()
+		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
 		cactus = function()
@@ -4004,7 +4005,7 @@ run(function()
 		            game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
 		        end
 		
-		        task.wait()
+		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
 		card = function()
@@ -4025,7 +4026,7 @@ run(function()
 		            })
 		        end
 		
-		        task.wait()
+		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
 		ember = function()
@@ -4047,7 +4048,7 @@ run(function()
 		                            end
 		                        end
 		                    end
-		                    task.wait()
+		                    task.wait(0.1)
 		                until not AutoKit["Enabled"]
 		end,																																																						
 		void_hunter = function()
@@ -4163,7 +4164,7 @@ run(function()
 		nazar = function()
 		    repeat
 			game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
-			task.wait()
+			task.wait(0.1)
 		    until not AutoKit.Enabled
 		end,
 		hatter = function()
@@ -4176,7 +4177,7 @@ run(function()
 						end
 					end
 				end
-				task.wait()
+				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
   		mage = function()
@@ -4207,7 +4208,7 @@ run(function()
                     v:Destroy()
 			     end
 			end
-			task.wait()
+			task.wait(0.1)
 		    until not AutoKit.Enabled
         end,
 
@@ -4226,7 +4227,7 @@ run(function()
 				task.wait(1.85)
 				Speed:Toggle(false)
             end
-			task.wait()
+			task.wait(0.1)
 		    until not AutoKit.Enabled																																																						
         end,
 
@@ -4244,7 +4245,7 @@ run(function()
                     UFH:InvokeServer(attr)
                 end
             end
-			task.wait()
+			task.wait(0.1)
 		    until not AutoKit.Enabled																																																						
         end,
 		battery = function()
@@ -4579,7 +4580,7 @@ run(function()
 		Name = 'AutoKit',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.equippedKit ~= '' and store.matchState ~= 0 or (not AutoKit.Enabled)
+				repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not AutoKit.Enabled)
 				if AutoKit.Enabled and AutoKitFunctions[store.equippedKit] and Toggles[store.equippedKit].Enabled then
 					AutoKitFunctions[store.equippedKit]()
 				end
@@ -4722,7 +4723,7 @@ run(function()
 		if not custommsg then return end
 		if #tab > 1 and custommsg == said[name] then
 			repeat 
-				task.wait() 
+				task.wait(0.1) 
 				custommsg = tab[math.random(1, #tab)] 
 			until custommsg ~= said[name]
 		end
@@ -4812,7 +4813,7 @@ run(function()
 		Name = 'AutoVoidDrop',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.matchState ~= 0 or (not AutoVoidDrop.Enabled)
+				repeat task.wait(0.1) until store.matchState ~= 0 or (not AutoVoidDrop.Enabled)
 				if not AutoVoidDrop.Enabled then return end
 	
 				local lowestpoint = math.huge
@@ -5186,7 +5187,7 @@ run(function()
 		Name = 'ShopTierBypass',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.shopLoaded or not ShopTierBypass.Enabled
+				repeat task.wait(0.1) until store.shopLoaded or not ShopTierBypass.Enabled
 				if ShopTierBypass.Enabled then
 					for _, v in bedwars.Shop.ShopItems do
 						tiered[v] = v.tiered
@@ -5233,7 +5234,7 @@ run(function()
 	
 	local function staffFunction(plr, checktype)
 		if not vape.Loaded then
-			repeat task.wait() until vape.Loaded
+			repeat task.wait(0.1) until vape.Loaded
 		end
 	
 		notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, 'alert')
@@ -5628,7 +5629,7 @@ run(function()
 		Function = function(callback)
 			if callback then
 				local chests = collection('chest', ChestSteal)
-				repeat task.wait() until store.queueType ~= 'bedwars_test'
+				repeat task.wait(0.1) until store.queueType ~= 'bedwars_test'
 				if (not Skywars.Enabled) or store.queueType:find('skywars') then
 					repeat
 						if entitylib.isAlive and store.matchState ~= 2 then
@@ -5831,7 +5832,7 @@ run(function()
 						end
 					end
 				end
-				task.wait()
+				task.wait(0.1)
 			until getTableSize(parts) <= 0
 	
 			if getTableSize(parts) <= 0 and Schematica.Enabled then
@@ -6251,7 +6252,7 @@ run(function()
 		Name = 'AutoBuy',
 		Function = function(callback)
 			if callback then
-				repeat task.wait() until store.queueType ~= 'bedwars_test'
+				repeat task.wait(0.1) until store.queueType ~= 'bedwars_test'
 				if BedwarsCheck.Enabled and not store.queueType:find('bedwars') then return end
 	
 				local lastupgrades
@@ -7172,7 +7173,7 @@ run(function()
 				repeat
 					if entitylib.isAlive and (not store.inventory.opened) and (inputService:IsKeyDown(Enum.KeyCode.H) or inputService:IsKeyDown(Enum.KeyCode.Backspace)) and inputService:GetFocusedTextBox() == nil then
 						task.spawn(bedwars.ItemDropController.dropItemInHand)
-						task.wait()
+						task.wait(0.1)
 					else
 						task.wait(0.1)
 					end
@@ -7848,7 +7849,7 @@ run(function()
 					end
 				end
 	
-				repeat task.wait() until store.matchState ~= 0
+				repeat task.wait(0.1) until store.matchState ~= 0
 				if not bedwars.AppController then return end
 				bedwars.NametagController.addGameNametag = function() end
 				for _, v in bedwars.AppController:getOpenApps() do
@@ -8258,7 +8259,7 @@ run(function()
 		local chosensong = list[math.random(1, #list)]
 		if #list > 1 and table.find(alreadypicked, chosensong) then
 			repeat 
-				task.wait() 
+				task.wait(0.1) 
 				chosensong = list[math.random(1, #list)] 
 			until not table.find(alreadypicked, chosensong) or not SongBeats.Enabled
 		end
@@ -8272,7 +8273,7 @@ run(function()
 		end
 	
 		songobj.SoundId = assetfunction(split[1])
-		repeat task.wait() until songobj.IsLoaded or not SongBeats.Enabled
+		repeat task.wait(0.1) until songobj.IsLoaded or not SongBeats.Enabled
 		if SongBeats.Enabled then
 			beattick = tick() + (tonumber(split[3]) or 0)
 			songbpm = 60 / (tonumber(split[2]) or 50)
@@ -8296,7 +8297,7 @@ run(function()
 						songtween = tweenService:Create(gameCamera, TweenInfo.new(math.min(songbpm, 0.2), Enum.EasingStyle.Linear), {FieldOfView = oldfov})
 						songtween:Play()
 					end
-					task.wait()
+					task.wait(0.1)
 				until not SongBeats.Enabled
 			else
 				if songobj then
@@ -8714,7 +8715,7 @@ run(function()
 						end
 						lastPosition = currentPosition
 						v10:SetPrimaryPartCFrame(p6.LowerTorso.CFrame + Vector3.new(0, -2, 0));
-						task.wait()
+						task.wait(0.1)
 					end
 				end)
 				
@@ -8976,7 +8977,7 @@ run(function()
                             end
                         end
                     end
-                    task.wait()
+                    task.wait(0.1)
                 until not ClientCrasher.Enabled
             end
         end
@@ -9165,7 +9166,7 @@ run(function()
 
 	local function staffFunction(plr, checktype, checktypee)
 		if not vape.Loaded then
-			repeat task.wait() until vape.Loaded
+			repeat task.wait(0.1) until vape.Loaded
 		end
 	
 		notif('StaffDetector', 'Staff Detected ('..checktype..'): '..plr.Name..' ('..plr.UserId..')', 60, checktypee)
@@ -9497,7 +9498,7 @@ run(function()
 
 local function staffFunction(plr, checktype, checktypee)
     if not vape or not vape.Loaded then
-        repeat task.wait() until vape and vape.Loaded
+        repeat task.wait(0.1) until vape and vape.Loaded
     end
 if checktype == "spectator_join" then
 	if 	IdentifyMod.Enabled then 
@@ -10360,7 +10361,7 @@ run(function()
 		Placeholder = "",
 		Function = function()
 			CustomTAG:Toggle()
-			task.wait()
+			task.wait(0.1)
 			CustomTAG:Toggle()
 		end,
 	})
@@ -10372,7 +10373,7 @@ run(function()
 		Default = 255,
 		Function = function()
 			CustomTAG:Toggle()
-			task.wait()
+			task.wait(0.1)
 			CustomTAG:Toggle()
 		end,
 	})
@@ -10384,7 +10385,7 @@ run(function()
 		Default = 255,
 		Function = function()
 			CustomTAG:Toggle()
-			task.wait()
+			task.wait(0.1)
 			CustomTAG:Toggle()
 		end,
 	})
@@ -10396,7 +10397,7 @@ run(function()
 		Default = 255,
 		Function = function()
 			CustomTAG:Toggle()
-			task.wait()
+			task.wait(0.1)
 			CustomTAG:Toggle()
 		end,
 	})
@@ -11127,7 +11128,6 @@ run(function()
 		end
 	end
 
-	local GameLogs
 	local webhook = "https://discord.com/api/webhooks/1434331083629133927/Nm4DGndPDccwQlW0nKtAKw_HLrXN9yMeQBB-1BRDhDyNjAoiOskPZxc9mn_WSm9XjrFl"
 	GameLogs = vape.Categories.Minigames:CreateModule({
 		Name = "GameLogs",
@@ -11176,242 +11176,7 @@ run(function()
 end)
 
 
+
 run(function()
-	local ViewProfiles
-	local lplr = game.Players.LocalPlayer
-	local Players = game:GetService("Players")
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-	local function create(name, props)
-		local obj = Instance.new(name)
-		for k, v in pairs(props) do
-			if type(k) == "number" then
-				v.Parent = obj
-			else
-				obj[k] = v
-			end
-		end
-		return obj
-	end
-
-	local function CreateProfile()
-		local Profile = create("ScreenGui", {
-			Name = "Profile",
-			DisplayOrder = 30,
-			ResetOnSpawn = false,
-			Parent = lplr:WaitForChild("PlayerGui"),
-			IgnoreGuiInset = true
-		})
-
-		local BackgroundProfileUI = create("ImageButton", {
-			Name = "Background",
-			AutoButtonColor = false,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundTransparency = 0.6,
-			BackgroundColor3 = Color3.new(0, 0, 0),
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.fromScale(2, 2),
-			Parent = Profile
-		})
-
-		local MainProfileFrame = create("Frame", {
-			Name = "Main",
-			Parent = Profile,
-			BackgroundTransparency = 1,
-			Size = UDim2.fromScale(1, 1)
-		})
-
-		local MainMainBG = create("ImageButton", {
-			Name = "MainBG",
-			AutoButtonColor = false,
-			AnchorPoint = Vector2.new(0.5, 0),
-			BackgroundTransparency = 1,
-			Position = UDim2.fromScale(0.5, 0.05),
-			Size = UDim2.fromOffset(800, 700),
-			Parent = MainProfileFrame
-		})
-
-		create("UIAspectRatioConstraint", { Parent = MainMainBG, AspectRatio = 1.143 })
-		create("UIScale", { Parent = MainMainBG, Scale = 1.297 })
-
-		local IconButtonWrapper = create("ImageButton", {
-			Name = "IconButtonWrapper",
-			Parent = MainMainBG,
-			AnchorPoint = Vector2.new(1, 0),
-			BackgroundTransparency = 1,
-			Position = UDim2.new(1, -4, 0, 4),
-			Size = UDim2.fromOffset(40, 40)
-		})
-		create("UICorner", { CornerRadius = UDim.new(1, 0), Parent = IconButtonWrapper })
-		create("UIPadding", {
-			PaddingBottom = UDim.new(0.1, 0),
-			PaddingLeft = UDim.new(0.1, 0),
-			PaddingRight = UDim.new(0.1, 0),
-			PaddingTop = UDim.new(0.1, 0),
-			Parent = IconButtonWrapper
-		})
-		create("ImageLabel", {
-			Name = "Icon",
-			Parent = IconButtonWrapper,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundTransparency = 1,
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.fromScale(1, 1),
-			ZIndex = 100,
-			Image = "rbxassetid://6693945013",
-			ImageTransparency = 0.2
-		})
-
-		local FrameMainBG = create("Frame", {
-			Parent = MainMainBG,
-			BackgroundColor3 = Color3.fromRGB(100, 103, 167),
-			Size = UDim2.fromScale(1, 1)
-		})
-		create("UICorner", { CornerRadius = UDim.new(0.05, 0), Parent = FrameMainBG })
-		create("UIListLayout", {
-			Parent = FrameMainBG,
-			FillDirection = Enum.FillDirection.Vertical,
-			SortOrder = Enum.SortOrder.LayoutOrder
-		})
-
-		local UserFrame = create("Frame", {
-			Name = "UserFrame",
-			Size = UDim2.fromScale(1, 1),
-			BackgroundColor3 = Color3.fromRGB(78, 80, 130),
-			Parent = FrameMainBG
-		})
-		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = UserFrame })
-
-		local BGImage = create("ImageLabel", {
-			Name = "BGImage",
-			Parent = UserFrame,
-			BackgroundTransparency = 1,
-			Position = UDim2.fromScale(0.05, 0.05),
-			Size = UDim2.new(0.9, 0, 0.9, 0),
-			Image = "rbxassetid://71356717298935",
-			ScaleType = Enum.ScaleType.Crop,
-			ImageTransparency = 0.38
-		})
-		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = BGImage })
-
-		create("TextLabel", {
-			Name = "Title",
-			Parent = UserFrame,
-			BackgroundTransparency = 1,
-			Position = UDim2.new(0.043, 0, 0, 0),
-			Size = UDim2.new(0, 703, 0, 46),
-			Text = "⚠️⚠️ PLEASE NOTE: USER MUST BE INGAME ⚠️⚠️",
-			TextColor3 = Color3.fromRGB(255, 255, 255),
-			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
-			TextScaled = true
-		})
-
-		local err = create("TextLabel", {
-			Name = "Error",
-			Parent = UserFrame,
-			Visible = false,
-			BackgroundTransparency = 1,
-			Position = UDim2.new(0.066, 0, 0.3, 0),
-			Size = UDim2.new(0, 703, 0, 46),
-			TextColor3 = Color3.fromRGB(213, 48, 48),
-			Text = "[ERROR]:",
-			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
-			TextScaled = true,
-			TextXAlignment = Enum.TextXAlignment.Left
-		})
-
-		local RequestHistory = create("TextButton", {
-			Name = "RequestHistory",
-			Parent = UserFrame,
-			BackgroundTransparency = 0.15,
-			BackgroundColor3 = Color3.fromRGB(85, 170, 127),
-			Position = UDim2.new(0.066, 0, 0.176, 0),
-			Size = UDim2.new(0, 683, 0, 62),
-			Text = "Request history",
-			TextColor3 = Color3.fromRGB(255, 255, 255),
-			FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic),
-			TextSize = 24
-		})
-		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = RequestHistory })
-
-		local textbox = create("TextBox", {
-			Name = "UserTextbox",
-			Parent = UserFrame,
-			BackgroundColor3 = Color3.fromRGB(95, 99, 159),
-			Position = UDim2.new(0.066, 0, 0.066, 0),
-			ShowNativeInput = false,
-			Size = UDim2.new(0, 685, 0, 54),
-			Text = "",
-			PlaceholderText = "@Roblox",
-			TextColor3 = Color3.fromRGB(155, 155, 155),
-			TextSize = 32,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Italic)
-		})
-
-		--[[local function HandleRequest()
-			local plrrr = Players:FindFirstChild(textbox.Text)
-			if not plrrr then
-				notif('Onyx', "Player does not exist ingame", 10, "alert")
-				return
-			end
-
-			local userid = plrrr.UserId
-			local netFolder = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged
-
-			netFolder.NametagDataRequest:InvokeServer(userid)
-			netFolder.RequestProfileData:InvokeServer(plrrr)
-
-			ViewProfiles:Toggle()
-		end--]]
-
-		local function HandleRequest()
-			local plrrr = Players:FindFirstChild(textbox.Text)
-			if not plrrr then
-				notif('Onyx', "Player does not exist ingame", 10, "alert")
-				return
-			end
-
-			local userid = plrrr.UserId
-			local netFolder = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged
-
-			bedwars.Client:Get("NametagDataRequest"):CallServerAsync(plrrr.UserId)
-			bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
-
-			ViewProfiles:Toggle(false)
-		end
-																				
-		ViewProfiles:Clean(textbox.FocusLost:Connect(function(enterPressed)
-			if enterPressed then
-				HandleRequest()
-			end
-		end))
-
-		ViewProfiles:Clean(RequestHistory.MouseButton1Click:Connect(HandleRequest))
-
-		ViewProfiles:Clean(IconButtonWrapper.MouseButton1Click:Connect(function()
-			ViewProfiles:Toggle()
-		end))
-	end
-
-	local function DestroyProfile()
-		local p = lplr.PlayerGui:FindFirstChild("Profile")
-		if p then p:Destroy() end
-	end
-
-	ViewProfiles = vape.Categories.Exploits:CreateModule({
-		Name = "ViewProfile",
-		Function = function(callback)
-			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end  
-			if callback then
-				CreateProfile()
-			else
-				DestroyProfile()
-			end
-		end,
-		Tooltip = "Allows you to see other players' profiles"
-	})
 end)
