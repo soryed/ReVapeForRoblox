@@ -232,4 +232,14 @@ if not shared.VapeDeveloper then
 	writefile('ReVape/profiles/commit.txt', commit)
 end
 
+for _, v in gui:GetDescendants() do
+	for __, prop in {'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'} do
+		task.spawn(pcall, function()
+			tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+				[prop] = 1
+			}):Play()
+		end)
+	end
+end
+
 return loadstring(downloadFile('ReVape/main.lua'), 'main')()
