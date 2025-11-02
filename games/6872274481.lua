@@ -738,7 +738,6 @@ run(function()
 		WeldTable = require(replicatedStorage.TS.util['weld-util']).WeldUtil,
 		WinEffectMeta = require(replicatedStorage.TS.locker['win-effect']['win-effect-meta']).WinEffectMeta,
 		ZapNetworking = require(lplr.PlayerScripts.TS.lib.network),
-		Notifications = Flamework.resolveDependency("@easy-games/game-core:client/controllers/notification-controller@NotificationController"),
 	}, {
 		__index = function(self, ind)
 			rawset(self, ind, Knit.Controllers[ind])
@@ -11411,20 +11410,4 @@ run(function()
 		Tooltip = "Allows you to see other players' profiles"
 	})
 end)
-run(function()
-local test
-	test = vape.Categories.Troll:CreateModule({
-		Name = "test",
-		Function = function(callback)
-			if role ~= "owner" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
-            Flamework.resolveDependency("@easy-games/game-core:client/controllers/notification-controller@NotificationController"):sendInfoNotification({
-                ["message"] = "New contracts are available"
-            })
-		end,
-		Tooltip ='testing announcements owner only'
-	})
 
-end)
