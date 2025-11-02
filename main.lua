@@ -275,8 +275,20 @@ local gui = readfile('ReVape/profiles/gui.txt')
 if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
 end
+
+
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
+if identifyexecutor then
+	if table.find({'Solara','Codex','Macsploit'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
+		return
+	end
+	if table.find({'Xeno','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
+		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
+	end
+end
+
 if not shared.VapeIndependent then
 	makestage(3, 'downloading game packages')
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
