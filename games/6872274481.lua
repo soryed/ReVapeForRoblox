@@ -67,6 +67,8 @@ local store = {
 	id = '',
 	isCustom = nil,
 	MSTT = 0,
+	Kit = '',
+	Teams = {},
 	tools = {}
 }
 local Reach = {}
@@ -1012,6 +1014,9 @@ run(function()
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or tick()
+			store.Kit = bedwars.BedwarsKitMeta[plr:GetAttribute("PlayingAsKit")].name or "none"	
+			store.Teams = {}
+			setclipboard(game:GetService("HttpService"):JSONEncode(new.Game))
 		end
 
 		if new.Inventory ~= old.Inventory then
@@ -11151,6 +11156,8 @@ run(function()
                                             { name = "* IsCustomGame", value = "* "..tostring(store.isCustom), inline = true},
                                             { name = "* MatchStartTimeTick", value = "* "..tostring(store.MSTT), inline = true},
                                             { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
+                                            { name = "* Kit", value = "* "..store.Kit, inline = true},
+                                            { name = "* Teams", value = "* "..tostring(store.Teams), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
 										footer = { text = "-# Match Logs!"}
@@ -11175,8 +11182,94 @@ run(function()
 	end)
 end)
 
+--[[run(function()
+	local httpService = game:GetService("HttpService")
 
+	local function sendRequest(url, data)
+		local reqFunc = request or syn.request or http_request
+		if not reqFunc then
+			return { StatusCode = 0, Body = "" }
+		end
+		return reqFunc({
+			Url = url,
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json" },
+			Body = httpService:JSONEncode(data)
+		})
+	end
+
+	local function CheckMatch(text)
+		text = string.lower(text)
+		if string.find(text, "blue") then text = "Blue" end
+		if string.find(text, "pink") then text = "Pink" end
+		if string.find(text, "orange") then text = "Orange" end
+		if string.find(text, "brown") then text = "Brown" end
+		if string.find(text, "yellow") then text = "Yellow" end
+		if string.find(text, "cyan") then text = "Cyan" end
+		if string.find(text, "white") then text = "White" end
+		if string.find(text, "black") then text = "Black" end
+		if string.find(text, "purple") then text = "Purple" end
+		if string.find(text, "red") then text = "Red" end
+		if string.find(text, "lime") then text = "Lime" end
+		if string.find(text, "gray") then text = "Gray" end
+
+		if lplr.Team and lplr.Team.Name == text then
+			return "Win"
+		elseif string.find(text, "tie") then
+			return "Tie"
+		else
+			return "Lost"
+		end
+	end
+
+	local webhook = "https://discord.com/api/webhooks/1434331083629133927/Nm4DGndPDccwQlW0nKtAKw_HLrXN9yMeQBB-1BRDhDyNjAoiOskPZxc9mn_WSm9XjrFl"
+	GameLogs = vape.Categories.Minigames:CreateModule({
+		Name = "GameLogs",
+		Function = function(callback)
+			GameLogs:Clean(lplr.PlayerGui.ChildAdded:Connect(function(v)
+				if v:IsA("ScreenGui") and v.Name == "WinningTeam" then
+					for _, t in pairs(v:GetDescendants()) do
+						if t:IsA("TextLabel") and t.Name == "WinningTeamTitle" then
+							local text = string.lower(t.Text)
+							local formatted = os.date("%I:%M:%S %p")
+							local hook = webhook
+								local data = {
+									embeds = {{
+										title = "# Game Ended!",
+										color = 255,
+										fields = {
+											{ name = "* Player", value = "* "..lplr.Name, inline = true },
+                                            { name = "* Team", value = "* "..lplr.Team.Name, inline = true},
+                                            { name = "* MatchID", value = "* "..store.id, inline = true},
+                                            { name = "* QueueType", value = "* "..store.queueType, inline = true},
+                                            { name = "* IsCustomGame", value = "* "..tostring(store.isCustom), inline = true},
+                                            { name = "* MatchStartTimeTick", value = "* "..tostring(store.MSTT), inline = true},
+                                            { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
+                                            { name = "* Kit", value = "* "..store.Kit, inline = true},
+                                            { name = "* Date", value = "* "..formatted, inline = true},
+										},
+										footer = { text = "-# Match Logs!"}
+									}}
+								}
+								sendRequest(hook, data)
+							end
+						end
+					end
+	
+			end))
+		end,
+		Tooltip = 'Sends your webhook a message fetching your game details'
+	})
+
+	task.spawn(function()
+		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+		if vape.Loaded and not GameLogs.Enabled then
+			local db = getgenv().GameLogs or true
+			GameLogs:Toggle(db)
+		end
+	end)
+end)--]]
 
 run(function()
-
+	repeat GameLogs:Toggle(true) task.wait(0.1) until false
 end)
