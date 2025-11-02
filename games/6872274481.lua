@@ -3977,29 +3977,74 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
-ember = function()
-                repeat
-                    
-                    local tmp = getItem("infernal_saber")
-                    if tmp then
-                        local lplr = game:GetService("Players").LocalPlayer
-                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
-                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-                                local root = plr.Character.HumanoidRootPart
-                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
-                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
-                                        weapon = tmp.tool;
-                                        player = plr;
-                                        chargeTime = 0.9;
-                                    })
-                                end
-                            end
-                        end
-                    end
-                    task.wait()
-                until not AutoKit["Enabled"]
-end,
-																																																								
+		glacial_skater = function()
+		    repeat
+		        replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9})    
+		        task.wait()
+		    until not AutoKit["Enabled"]
+		end,
+		cactus = function()
+		    repeat
+			    if not entitylib.isAlive then continue end
+				local root = entitylib.character.RootPart
+				if not root then continue end
+				
+				local plr = entitylib.EntityPosition({
+					Range = 8,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+		            game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
+		        end
+		
+		        task.wait()
+		    until not AutoKit["Enabled"]
+		end,
+		card = function()
+		    repeat
+			    if not entitylib.isAlive then continue end
+				local root = entitylib.character.RootPart
+				if not root then continue end
+				
+				local plr = entitylib.EntityPosition({
+					Range = 15,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+		          bedwars.Client:Get("AttemptCardThrow"):SendToServer({
+		                ["targetEntityInstance"] = plr.Character
+		            })
+		        end
+		
+		        task.wait()
+		    until not AutoKit["Enabled"]
+		end,
+		ember = function()
+		                repeat
+		                    
+		                    local tmp = getItem("infernal_saber")
+		                    if tmp then
+		                        local lplr = game:GetService("Players").LocalPlayer
+		                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
+		                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+		                                local root = plr.Character.HumanoidRootPart
+		                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
+		                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
+		                                        weapon = tmp.tool;
+		                                        player = plr;
+		                                        chargeTime = 0.9;
+		                                    })
+		                                end
+		                            end
+		                        end
+		                    end
+		                    task.wait()
+		                until not AutoKit["Enabled"]
+		end,																																																						
 		void_hunter = function()
 		   	repeat
 			local plr = entitylib.EntityPosition({
