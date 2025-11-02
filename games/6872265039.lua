@@ -58,7 +58,7 @@ run(function()
 	end)
 		print("bedwars.Client =", bedwars.Client)
 if bedwars.Client then
-	for i,v in pairs(bedwars.Client.Functions) do
+	for i,v in pairs(bedwars.Client) do
 		print("Client function:", i)
 	end
 end
