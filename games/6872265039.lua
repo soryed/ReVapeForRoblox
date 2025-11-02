@@ -56,6 +56,13 @@ run(function()
 	vape:Clean(function()
 		table.clear(bedwars)
 	end)
+		print("bedwars.Client =", bedwars.Client)
+if bedwars.Client then
+	for i,v in pairs(bedwars.Client.Functions) do
+		print("Client function:", i)
+	end
+end
+
 end)
 
 for _, v in vape.Modules do
@@ -1175,6 +1182,387 @@ run(function()
 		end,
 	})
 end)
+--[[run(function()
+	local ViewProfiles
+	local lplr = game.Players.LocalPlayer
+	local Players = game:GetService("Players")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+	local function create(name, props)
+		local obj = Instance.new(name)
+		for k, v in pairs(props) do
+			if type(k) == "number" then
+				v.Parent = obj
+			else
+				obj[k] = v
+			end
+		end
+		return obj
+	end
+
+	local function CreateProfile()
+		local Profile = create("ScreenGui", {
+			Name = "Profile",
+			DisplayOrder = 30,
+			ResetOnSpawn = false,
+			Parent = lplr:WaitForChild("PlayerGui"),
+			IgnoreGuiInset = true
+		})
+
+		local BackgroundProfileUI = create("ImageButton", {
+			Name = "Background",
+			AutoButtonColor = false,
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundTransparency = 0.6,
+			BackgroundColor3 = Color3.new(0, 0, 0),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(2, 2),
+			Parent = Profile
+		})
+
+		local MainProfileFrame = create("Frame", {
+			Name = "Main",
+			Parent = Profile,
+			BackgroundTransparency = 1,
+			Size = UDim2.fromScale(1, 1)
+		})
+
+		local MainMainBG = create("ImageButton", {
+			Name = "MainBG",
+			AutoButtonColor = false,
+			AnchorPoint = Vector2.new(0.5, 0),
+			BackgroundTransparency = 1,
+			Position = UDim2.fromScale(0.5, 0.05),
+			Size = UDim2.fromOffset(800, 700),
+			Parent = MainProfileFrame
+		})
+
+		create("UIAspectRatioConstraint", { Parent = MainMainBG, AspectRatio = 1.143 })
+		create("UIScale", { Parent = MainMainBG, Scale = 1.297 })
+
+		local IconButtonWrapper = create("ImageButton", {
+			Name = "IconButtonWrapper",
+			Parent = MainMainBG,
+			AnchorPoint = Vector2.new(1, 0),
+			BackgroundTransparency = 1,
+			Position = UDim2.new(1, -4, 0, 4),
+			Size = UDim2.fromOffset(40, 40)
+		})
+		create("UICorner", { CornerRadius = UDim.new(1, 0), Parent = IconButtonWrapper })
+		create("UIPadding", {
+			PaddingBottom = UDim.new(0.1, 0),
+			PaddingLeft = UDim.new(0.1, 0),
+			PaddingRight = UDim.new(0.1, 0),
+			PaddingTop = UDim.new(0.1, 0),
+			Parent = IconButtonWrapper
+		})
+		create("ImageLabel", {
+			Name = "Icon",
+			Parent = IconButtonWrapper,
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundTransparency = 1,
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(1, 1),
+			ZIndex = 100,
+			Image = "rbxassetid://6693945013",
+			ImageTransparency = 0.2
+		})
+
+		local FrameMainBG = create("Frame", {
+			Parent = MainMainBG,
+			BackgroundColor3 = Color3.fromRGB(100, 103, 167),
+			Size = UDim2.fromScale(1, 1)
+		})
+		create("UICorner", { CornerRadius = UDim.new(0.05, 0), Parent = FrameMainBG })
+		create("UIListLayout", {
+			Parent = FrameMainBG,
+			FillDirection = Enum.FillDirection.Vertical,
+			SortOrder = Enum.SortOrder.LayoutOrder
+		})
+
+		local UserFrame = create("Frame", {
+			Name = "UserFrame",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Color3.fromRGB(78, 80, 130),
+			Parent = FrameMainBG
+		})
+		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = UserFrame })
+
+		local BGImage = create("ImageLabel", {
+			Name = "BGImage",
+			Parent = UserFrame,
+			BackgroundTransparency = 1,
+			Position = UDim2.fromScale(0.05, 0.05),
+			Size = UDim2.new(0.9, 0, 0.9, 0),
+			Image = "rbxassetid://71356717298935",
+			ScaleType = Enum.ScaleType.Crop,
+			ImageTransparency = 0.38
+		})
+		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = BGImage })
+
+		create("TextLabel", {
+			Name = "Title",
+			Parent = UserFrame,
+			BackgroundTransparency = 1,
+			Position = UDim2.new(0.043, 0, 0, 0),
+			Size = UDim2.new(0, 703, 0, 46),
+			Text = "⚠️⚠️ PLEASE NOTE: USER MUST BE INGAME ⚠️⚠️",
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
+			TextScaled = true
+		})
+
+		local err = create("TextLabel", {
+			Name = "Error",
+			Parent = UserFrame,
+			Visible = false,
+			BackgroundTransparency = 1,
+			Position = UDim2.new(0.066, 0, 0.3, 0),
+			Size = UDim2.new(0, 703, 0, 46),
+			TextColor3 = Color3.fromRGB(213, 48, 48),
+			Text = "[ERROR]:",
+			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
+			TextScaled = true,
+			TextXAlignment = Enum.TextXAlignment.Left
+		})
+
+		local RequestHistory = create("TextButton", {
+			Name = "RequestHistory",
+			Parent = UserFrame,
+			BackgroundTransparency = 0.15,
+			BackgroundColor3 = Color3.fromRGB(85, 170, 127),
+			Position = UDim2.new(0.066, 0, 0.176, 0),
+			Size = UDim2.new(0, 683, 0, 62),
+			Text = "Request history",
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			FontFace = Font.new("rbxasset://fonts/families/TitilliumWeb.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic),
+			TextSize = 24
+		})
+		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = RequestHistory })
+
+		local textbox = create("TextBox", {
+			Name = "UserTextbox",
+			Parent = UserFrame,
+			BackgroundColor3 = Color3.fromRGB(95, 99, 159),
+			Position = UDim2.new(0.066, 0, 0.066, 0),
+			ShowNativeInput = false,
+			Size = UDim2.new(0, 685, 0, 54),
+			Text = "",
+			PlaceholderText = "@Roblox",
+			TextColor3 = Color3.fromRGB(155, 155, 155),
+			TextSize = 32,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Italic)
+		})
+
+		local function HandleRequest()
+			local plrrr = Players:FindFirstChild(textbox.Text)
+			if not plrrr then
+				notif('Onyx', "Player does not exist ingame", 10, "alert")
+				return
+			end
+
+			local userid = plrrr.UserId
+			local netFolder = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged
+
+			netFolder.NametagDataRequest:InvokeServer(userid)
+			netFolder.RequestProfileData:InvokeServer(plrrr)
+
+			ViewProfiles:Toggle()
+		end
+	
+		ViewProfiles:Clean(textbox.FocusLost:Connect(function(enterPressed)
+			if enterPressed then
+				HandleRequest()
+			end
+		end))
+
+		ViewProfiles:Clean(RequestHistory.MouseButton1Click:Connect(HandleRequest))
+
+		ViewProfiles:Clean(IconButtonWrapper.MouseButton1Click:Connect(function()
+			ViewProfiles:Toggle()
+		end))
+	end
+
+	local function DestroyProfile()
+		local p = lplr.PlayerGui:FindFirstChild("Profile")
+		if p then p:Destroy() end
+	end
+
+	ViewProfiles = vape.Categories.Exploits:CreateModule({
+		Name = "ViewProfile",
+		Function = function(callback)
+			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
+			if callback then
+				CreateProfile()
+			else
+				DestroyProfile()
+			end
+		end,
+		Tooltip = "Allows you to see other players' profiles"
+	})
+end)--]]
+
+run(function()
+	local SetFPS
+	local FPS
+	
+	SetFPS = vape.Categories.Utility:CreateModule({
+		Name = "SetFPS",
+		Function = function(callback)
+			
+
+			if callback then
+				setfpscap(FPS.Value)
+			else
+				setfpscap(240)
+			end
+		end,
+		Tooltip = "Removes or customizes the Frame-Per-Second limit",
+	})
+	
+	FPS = SetFPS:CreateSlider({
+		Name = "Frames Per Second",
+		Min = 0,
+		Max = 420,
+		Default = 240,
+		Function = function(value)
+			setfpscap(value)
+		end
+	})
+end)
+
+run(function()
+    local TypeData
+    local PlayerData
+    local includeEmptyMatches
+	local Clean
+    PlayerData = vape.Categories.Minigames:CreateModule({
+        Name = "PlayerData",
+        Function = function(callback)
+				   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
+	    	if not callback then return end
+
+            local http = game:GetService("HttpService")
+            local store = bedwars.Store:getState()
+
+            if TypeData.Value == "important" then
+                local stats = {}
+                local totals = {
+                    TotalWins = 0,
+                    TotalLosses = 0,
+                    TotalMatches = 0,
+                    TotalBedBreaks = 0,
+                    TotalFinalKills = 0
+                }
+
+                local leaderboard = store and store.Leaderboard and store.Leaderboard.queues
+
+                if leaderboard then
+                    for mode, data in pairs(leaderboard) do
+                        local wins = data.wins or 0																
+                        local losses = data.losses or 0
+						local ties = data.ties or 0
+                        local matches = data.matches or (wins + losses)
+                        local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
+						local earlyleaves = data.earlyLeaves or 0
+                        local bedBreaks = data.bedBreaks or 0
+                        local finalKills = data.finalKills or 0
+
+                        totals.TotalWins += wins
+                        totals.TotalLosses += losses
+                        totals.TotalMatches += matches
+                        totals.TotalBedBreaks += bedBreaks
+                        totals.TotalFinalKills += finalKills
+
+                        if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
+                            stats[mode] = {
+                                Winrate = string.format("%.2f%%", winrate),
+                                Wins = wins,
+                                Losses = losses,
+								Ties = ties,
+                                Matches = matches,
+								EarlyLeaves = earlyleaves,
+                                BedBreaks = bedBreaks,
+                                FinalKills = finalKills
+                            }
+                        end
+                    end
+                end
+
+                local achievements = {}
+                if store and store.Bedwars and store.Bedwars.achievements then
+                    for _, ach in pairs(store.Bedwars.achievements) do
+                        table.insert(achievements, ach)
+                    end
+                elseif leaderboard and leaderboard.bedwars_duels and leaderboard.bedwars_duels.obtainedAchievements then
+                    achievements = leaderboard.bedwars_duels.obtainedAchievements
+                end
+
+                local dataOut = {
+					GameModes = stats,
+                    Totals = totals,
+                    Achievements = achievements
+                }
+				if Clean then
+					local json = http:JSONEncode(dataOut)
+	                json = json:gsub(',"', ',\n    "')
+	                json = json:gsub('{', '{\n    ')
+	                json = json:gsub('}', '\n}')
+	
+	                writefile("ReVape/profiles/PlayerData.txt", json)
+	                vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
+					else
+						local json = dataOut
+						
+                		writefile("ReVape/profiles/PlayerData.txt", json)
+                		vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
+					end
+            elseif TypeData.Value == "full" then
+
+				if Clean then
+					local json = http:JSONEncode(bedwars.Store:getState())
+	                json = json:gsub(',"', ',\n    "')
+	                json = json:gsub('{', '{\n    ')
+	                json = json:gsub('}', '\n}')
+	
+	                writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+	                vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+					else
+						local json = http:JSONEncode(bedwars.Store:getState())
+						
+                		writefile("ReVape/profiles/PlayerDataJSON.txt", json)
+                		vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
+					end
+            end
+		PlayerData:Toggle()
+        end,
+        Tooltip = "Creates a file that has your data"
+    })
+
+    TypeData = PlayerData:CreateDropdown({
+        Name = "Type",
+        List = {"important", "full"}
+    })
+
+    includeEmptyMatches = PlayerData:CreateToggle({
+        Name = "EmptyMatches",
+        Default = false,
+        Tooltip = "ONLY FOR IMPORTANT TYPE (adds 0-stats matches to your file)"
+    })
+	Clean = PlayerData:CreateToggle({
+        Name = "Clean",
+        Default = true,
+        Tooltip = "Cleans up the JSON file"
+    })
+end)
+
 run(function()
 	local ViewProfiles
 	local lplr = game.Players.LocalPlayer
@@ -1348,7 +1736,7 @@ run(function()
 			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Italic)
 		})
 
-		--[[local function HandleRequest()
+		local function HandleRequest()
 			local plrrr = Players:FindFirstChild(textbox.Text)
 			if not plrrr then
 				notif('Onyx', "Player does not exist ingame", 10, "alert")
@@ -1356,22 +1744,11 @@ run(function()
 			end
 
 			local userid = plrrr.UserId
-			local netFolder = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged
+bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
 
-			netFolder.NametagDataRequest:InvokeServer(userid)
-			netFolder.RequestProfileData:InvokeServer(plrrr)
-
-			ViewProfiles:Toggle()
-		end--]]
-																				local function HandleRequest()
-																								local plrrr = Players:FindFirstChild(textbox.Text)
-			if not plrrr then
-				notif('Onyx', "Player does not exist ingame", 10, "alert")
-				return
-			end
-																					bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(plrrr)
-
-																				end
+			ViewProfiles:Toggle(false)
+		end
+	
 		ViewProfiles:Clean(textbox.FocusLost:Connect(function(enterPressed)
 			if enterPressed then
 				HandleRequest()
@@ -1406,164 +1783,5 @@ run(function()
 		Tooltip = "Allows you to see other players' profiles"
 	})
 end)
-
-run(function()
-	local SetFPS
-	local FPS
-	
-	SetFPS = vape.Categories.Utility:CreateModule({
-		Name = "SetFPS",
-		Function = function(callback)
-			
-
-			if callback then
-				setfpscap(FPS.Value)
-			else
-				setfpscap(240)
-			end
-		end,
-		Tooltip = "Removes or customizes the Frame-Per-Second limit",
-	})
-	
-	FPS = SetFPS:CreateSlider({
-		Name = "Frames Per Second",
-		Min = 0,
-		Max = 420,
-		Default = 240,
-		Function = function(value)
-			setfpscap(value)
-		end
-	})
-end)
-
-run(function()
-    local TypeData
-    local PlayerData
-    local includeEmptyMatches
-	local Clean
-    PlayerData = vape.Categories.Minigames:CreateModule({
-        Name = "PlayerData",
-        Function = function(callback)
-				   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end  
-	    	if not callback then return end
-
-            local http = game:GetService("HttpService")
-            local store = bedwars.Store:getState()
-
-            if TypeData.Value == "important" then
-                local stats = {}
-                local totals = {
-                    TotalWins = 0,
-                    TotalLosses = 0,
-                    TotalMatches = 0,
-                    TotalBedBreaks = 0,
-                    TotalFinalKills = 0
-                }
-
-                local leaderboard = store and store.Leaderboard and store.Leaderboard.queues
-
-                if leaderboard then
-                    for mode, data in pairs(leaderboard) do
-                        local wins = data.wins or 0																
-                        local losses = data.losses or 0
-						local ties = data.ties or 0
-                        local matches = data.matches or (wins + losses)
-                        local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
-						local earlyleaves = data.earlyLeaves or 0
-                        local bedBreaks = data.bedBreaks or 0
-                        local finalKills = data.finalKills or 0
-
-                        totals.TotalWins += wins
-                        totals.TotalLosses += losses
-                        totals.TotalMatches += matches
-                        totals.TotalBedBreaks += bedBreaks
-                        totals.TotalFinalKills += finalKills
-
-                        if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
-                            stats[mode] = {
-                                Winrate = string.format("%.2f%%", winrate),
-                                Wins = wins,
-                                Losses = losses,
-								Ties = ties,
-                                Matches = matches,
-								EarlyLeaves = earlyleaves,
-                                BedBreaks = bedBreaks,
-                                FinalKills = finalKills
-                            }
-                        end
-                    end
-                end
-
-                local achievements = {}
-                if store and store.Bedwars and store.Bedwars.achievements then
-                    for _, ach in pairs(store.Bedwars.achievements) do
-                        table.insert(achievements, ach)
-                    end
-                elseif leaderboard and leaderboard.bedwars_duels and leaderboard.bedwars_duels.obtainedAchievements then
-                    achievements = leaderboard.bedwars_duels.obtainedAchievements
-                end
-
-                local dataOut = {
-					GameModes = stats,
-                    Totals = totals,
-                    Achievements = achievements
-                }
-				if Clean then
-					local json = http:JSONEncode(dataOut)
-	                json = json:gsub(',"', ',\n    "')
-	                json = json:gsub('{', '{\n    ')
-	                json = json:gsub('}', '\n}')
-	
-	                writefile("ReVape/profiles/PlayerData.txt", json)
-	                vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
-					else
-						local json = dataOut
-						
-                		writefile("ReVape/profiles/PlayerData.txt", json)
-                		vape:CreateNotification("PlayerData", "Created PlayerData.txt file at profiles", 10)
-					end
-            elseif TypeData.Value == "full" then
-
-				if Clean then
-					local json = http:JSONEncode(bedwars.Store:getState())
-	                json = json:gsub(',"', ',\n    "')
-	                json = json:gsub('{', '{\n    ')
-	                json = json:gsub('}', '\n}')
-	
-	                writefile("ReVape/profiles/PlayerDataJSON.txt", json)
-	                vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
-					else
-						local json = http:JSONEncode(bedwars.Store:getState())
-						
-                		writefile("ReVape/profiles/PlayerDataJSON.txt", json)
-                		vape:CreateNotification("PlayerData", "Created PlayerData.json file at profiles", 10)
-					end
-            end
-		PlayerData:Toggle()
-        end,
-        Tooltip = "Creates a file that has your data"
-    })
-
-    TypeData = PlayerData:CreateDropdown({
-        Name = "Type",
-        List = {"important", "full"}
-    })
-
-    includeEmptyMatches = PlayerData:CreateToggle({
-        Name = "EmptyMatches",
-        Default = false,
-        Tooltip = "ONLY FOR IMPORTANT TYPE (adds 0-stats matches to your file)"
-    })
-	Clean = PlayerData:CreateToggle({
-        Name = "Clean",
-        Default = true,
-        Tooltip = "Cleans up the JSON file"
-    })
-end)
-
-
 
 																				
