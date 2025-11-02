@@ -293,11 +293,11 @@ shared.vape = vape
 makestage(2, 'checking executor.',3)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
+		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
 		return
 	end
 	if table.find({'Xeno','Hydrogen','Sirhurt','Volcano'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
+		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	end
 end
 
