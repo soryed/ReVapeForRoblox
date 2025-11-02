@@ -10438,6 +10438,7 @@ local AutoReport
 		end,
 		Tooltip = "Automatically reports everyone in the game",
 	})
+	AutoReport:Toggle(false)
 end)
 
 --[[run(function()
