@@ -1013,16 +1013,28 @@ run(function()
 
 		if new.Game ~= old.Game then
 			store.matchState = new.Game.matchState
-			store.queueType = new.Game.queueType or 'bedwars_test'
+			store.queueType = new.Game.queueType or "bedwars_test"
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
-			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") or   game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
+		
+			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") 
+				or game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
 			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
 			store.Kit = (kitMeta and kitMeta.name) or "none"
-			store.Teams = {}
-			setclipboard(game:GetService("HttpService"):JSONEncode(new.Game))
-		end
+		
+				store.Teams = {}
+				if new.Game.teams then
+					for _, team in ipairs(new.Game.teams) do
+						local members = {}
+						for _, member in pairs(team.members) do
+							table.insert(members, member.displayName or member.name)
+						end
+						store.Teams[team.name or "Unknown"] = members
+					end
+				end
+			end
+
 
 		if new.Inventory ~= old.Inventory then
 			local newinv = (new.Inventory and new.Inventory.observedInventory or {inventory = {}})
