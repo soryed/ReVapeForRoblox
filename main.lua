@@ -114,7 +114,9 @@ end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 if not shared.VapeIndependent then
+	makestage(3, 'downloading game packages')
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
+	makestage(4, 'loading all packages')
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
