@@ -317,6 +317,7 @@ if not shared.VapeIndependent then
 	end
 	
 	finishLoading()
+	print("nigga")
 else
 	vape.Init = finishLoading
 	return vape
