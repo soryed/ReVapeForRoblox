@@ -73,6 +73,7 @@ local store = {
 	Kit = '',
 	Teams = {},
 	GameEndedTime = 0,
+	JobID = '',
 	tools = {}
 }
 local Reach = {}
@@ -1019,9 +1020,8 @@ local oldtick = tick()
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
-			store.GameEndedTime = new.Game.m or (oldtick - tick())
-			--store.JobID = game.J
-			setclipboard(game:GetService("HttpService"):JSONEncode(new.Game))
+			store.GameEndedTime = new.Game.endTime or (oldtick - tick())
+			store.JobID = game.JobId or string.lower(game:GetService("HttpService"):GenerateGUID(false))
 			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") 
 				or game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
 			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
@@ -11170,6 +11170,8 @@ run(function()
                                             { name = "* MatchStartTimeTick", value = "* "..tostring(store.MSTT), inline = true},
                                             { name = "* MatchState", value = "* "..CheckMatch(text), inline = true},
                                             { name = "* Kit", value = "* "..store.Kit, inline = true},
+                                            { name = "* GameEndedTime", value = "* "..tostring(GameEndedTime), inline = true},
+                                            { name = "* JobID", value = "* "..store.JobID, inline = true},
                                             --{ name = "* Teams", value = "* "..game:GetService("HttpService"):JSONEncode(tostring(store.Teams)), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
