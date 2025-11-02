@@ -3977,16 +3977,28 @@ run(function()
 	
 	local AutoKitFunctions = {
 ember = function()
-           repeat
-    bedwars.Client:OnEvent("EmberProgress", function(p25)
-        bedwars:dispatch({
-            ["type"] = "KitEmberIncrementProgress",
-            ["progress"] = math.huge
-        })
-    end)
-                        task.wait()
-                until not AutoKit.Enabled
-end,																																																									
+                repeat
+                    
+                    local tmp = getItem("infernal_saber")
+                    if tmp then
+                        local lplr = game:GetService("Players").LocalPlayer
+                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
+                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                                local root = plr.Character.HumanoidRootPart
+                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
+                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
+                                        weapon = tmp.tool;
+                                        player = plr;
+                                        chargeTime = 0.9;
+                                    })
+                                end
+                            end
+                        end
+                    end
+                    task.wait()
+                until not AutoKit["Enabled"]
+end,
+																																																								
 		void_hunter = function()
 		   	repeat
 			local plr = entitylib.EntityPosition({
