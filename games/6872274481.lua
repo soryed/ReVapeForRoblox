@@ -8856,7 +8856,9 @@ run(function()
         Name = 'Client Crasher',
         Function = function(callback)
     			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				ClientCrasher:Toggle(false)
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					
 				return
 			end       
 	if callback then
@@ -9638,7 +9640,8 @@ end
         Name = 'StaffDetectorV2',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				StaffDetector:Toggle(false)
+							vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             if callback then
@@ -9919,7 +9922,8 @@ run(function()
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				KitRender:Toggle(false)
+										vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             if callback then
@@ -9977,7 +9981,8 @@ run(function()
         Tooltip = "makes your cannon faster lol",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				BetterDavey:Toggle(false)
+											vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then return end
@@ -10038,7 +10043,8 @@ run(function()
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
 				   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+			MatchHistory:Toggle(false)
+												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 
@@ -10058,7 +10064,8 @@ run(function()
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				AutoBan:Toggle(false)
+													vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then 
@@ -10103,7 +10110,8 @@ run(function()
         ["Name"] = "EmberExploit",
         ["Function"] = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				InfernalKill:Toggle(false)
+													vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             if callback then
@@ -10139,7 +10147,8 @@ run(function()
         Name = "KrystalExploit",
         Function = function(call)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				KrystalXploit:Toggle(false)
+														vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             if call then
@@ -10192,7 +10201,8 @@ run(function()
 		Function = function()
 			if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				Desync:Toggle(false)
+																vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 																						vape:CreateNotification('Onyx', "Note setfflag does not work for every supported executor now, this function just throws an error for now",10,"alert")
@@ -10243,7 +10253,8 @@ run(function()
 		Name = "CustomTag",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				CustomTAG:Toggle(false)
+																	vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -10364,7 +10375,8 @@ local AutoReport
 		Name = "AutoReport",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				AutoReport:Toggle(false)
+																						vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -10404,7 +10416,8 @@ run(function()
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				AutoQueue:Toggle(false)
+																							vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -10497,7 +10510,8 @@ run(function()
         Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel',
         Function = function(enabled)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				QueueDisplayEnhancer:Toggle(false)
+																								vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             QueueDisplayConfig.ActiveState = enabled
@@ -10544,6 +10558,8 @@ local ReportStatus
 		Function = function(callback)
 
 			if callback then
+																														ReportStatus:Toggle(false)
+
 vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 			end
 		end,
@@ -10615,7 +10631,8 @@ end
 		Name = "Clutch",
 		Function = function(callback)
 		   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+			Clutch:Toggle(false)
+																															vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -10686,6 +10703,8 @@ local BedAlarm
 		Function = function(callback)
 
 			if callback then
+																																						BedAlarm:Toggle(false)
+
 vape:CreateNotification("Onyx","This module is not finished",6,"alert")
 			end
 		end,
@@ -10704,7 +10723,8 @@ run(function()
 		Name = "AutoShoot",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				AutoShoot:Toggle(false)
+																																	vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 
@@ -10768,7 +10788,7 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = "Automatically shoots for you with every projectile",
+		Tooltip = "Automatically shoots for you with every projectile, rewrite soon",
 	})
 
 	MS = AutoShoot:CreateSlider({
@@ -10854,7 +10874,8 @@ local Options
 		Name = "Funny",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				Funny:Toggle(false)
+																																			vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
 
@@ -10879,18 +10900,6 @@ local Options
 	})
 end)
 
-run(function()
-local GameLogs
-	GameLogs = vape.Categories.Minigames:CreateModule({
-		Name = "GameLogs",
-		Function = function()
-vape:CreateNotification("Onyx","This module is not finished",6,"alert")
-
-		end,
-		Tooltip ='Creates logs of every match you played(??/??/2025+ supported)'
-	})
-
-end)
 
 run(function()
     local TypeData
@@ -10901,7 +10910,8 @@ run(function()
         Name = "PlayerData",
         Function = function(callback)
 			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				PlayerData:Toggle(false)
+																																				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 	    	if not callback then return end
@@ -11018,4 +11028,37 @@ run(function()
         Default = true,
         Tooltip = "Cleans up the JSON file"
     })
+end)
+
+run(function()
+	local GameLogs
+	local webhook
+	GameLogs = vape.Categories.Minigames:CreateModule({
+		Name = "GameLogs",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				GameLogs:Toggle(false)
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			GameLogs:Clean(lplr.PlayerGui.ChildAdded:Connect(function(v)
+				if v:IsA("ScreenGui") and v.Name == "WinningTeam" then
+					for i, text in v:GetDescendants() do
+						if text:IsA("TextLabel") and text.Name == "WinningTeamTitle" then
+							local string = string.lower(text.Text)
+							local formatted = os.date("%I:%M:%S %p")
+							for _, v in webhook.ListEnabled do
+								print(v)
+							end
+						end
+					end
+				end
+			end))
+		end,
+		Tooltip ='Sends ur wehbhook a message feteching ur game details'
+	})
+	webhook = GameLogs:CreateTextList({
+		Name = "Webhook",
+		Tooltip = 'discord webhook',
+	})
 end)
