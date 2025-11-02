@@ -217,6 +217,7 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
+local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 
 local function finishLoading()
 
@@ -270,7 +271,9 @@ local function finishLoading()
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			makestage(5, 'finished :D',2.3499)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
-
+local S,U,P = loginlib:Login()
+			vape.role = S
+			vape.user = U
 		end
 	end
 end
