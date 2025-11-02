@@ -10369,7 +10369,31 @@ run(function()
 	})
 end)
 
+
 run(function()
+local AutoReport 
+	 AutoReport = vape.Categories.Exploits:CreateModule({
+		Name = "AutoReport",
+		Function = function(callback)
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				AutoReport:Toggle(false)
+																						vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			if callback then
+
+				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
+					if v ~= game.Players.LocalPlayer then
+					bedwars.Client:Get("ReportPlayer"):SendToServer(v)	
+					end
+				end
+			end
+		end,
+		Tooltip = "Automatically reports everyone in the game",
+	})
+end)
+
+--[[run(function()
 local AutoReport 
 	 AutoReport = vape.Categories.Exploits:CreateModule({
 		Name = "AutoReport",
@@ -10403,7 +10427,7 @@ local AutoReport
 		end,
 		Tooltip = "Automatically reports everyone in the game(sliently)",
 	})
-end)
+end)--]]
 
 
 
