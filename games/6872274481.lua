@@ -1017,7 +1017,7 @@ run(function()
 			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
 			store.isCustom = new.Game.isCustom or false
 			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
-			local kitAttr = plr:GetAttribute("PlayingAsKit") or  plr:GetAttribute("PlayingAsKits")
+			local kitAttr = plr:GetAttribute("PlayingAsKits") or  plr:GetAttribute("PlayingAsKit")
 			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
 			store.Kit = (kitMeta and kitMeta.name) or "none"
 			store.Teams = {}
