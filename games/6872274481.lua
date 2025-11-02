@@ -50,7 +50,7 @@ if not role or role == "" then
     role = "guest"
 end
 if not user or user == "" then
-    role = "GUEST"
+    user = "GUEST"
 end
 local store = {
 	attackReach = 0,
@@ -11163,7 +11163,7 @@ run(function()
                                             { name = "* Teams", value = "* "..tostring(store.Teams), inline = true},
                                             { name = "* Date", value = "* "..formatted, inline = true},
 										},
-										footer = { text = "-# Match Logs! - Role: "..role}
+										footer = { text = "-# Match Logs! - Username: "..user.." - Role: "..role}
 									}}
 								}
 								sendRequest(hook, data)
