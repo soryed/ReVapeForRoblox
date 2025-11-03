@@ -197,7 +197,7 @@ makestage = function(stage, package, dely)
 
 			gui.Main.action.Text = package or ''
 
-			if stage == 5 then 
+			if stage == 10 then 
 				task.wait(dely - 0.95)
 				for _, v in gui:GetDescendants() do
 					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
@@ -300,6 +300,7 @@ if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
 end
 makestage(1, 'loading functions/modules.', 1.96)
+task.wait(2)
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 makestage(2, 'checking executor support.', 1)
@@ -307,7 +308,7 @@ task.wait(1)
 makestage(3, 'validating executor functions.', 1)
 task.wait(1)
 makestage(4, 'analyzing supported environment.', 1)
-task.wait(1)
+task.wait(2)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
@@ -324,6 +325,7 @@ task.wait(2)
 
 if not shared.VapeIndependent then
 	makestage(7, 'downloading game packages.', 2.34)
+	task.wait(2.5)
 	makestage(8, 'verifying game packages.', 2.34)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
