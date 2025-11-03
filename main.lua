@@ -282,7 +282,7 @@ local function finishLoading()
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
 			makestage(10, 'finished :D', 0.85)
-			task.wait(1)
+			task.wait(3)
 			vape:CreateNotification('Onyx', "Initialized as " .. vape.user .. " with role " .. vape.role, 3)
 			task.wait(2.75)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
@@ -303,8 +303,11 @@ makestage(1, 'loading functions/modules.', 1.96)
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 makestage(2, 'checking executor support.', 1)
+task.wait(1)
 makestage(3, 'validating executor functions.', 1)
+task.wait(1)
 makestage(4, 'analyzing supported environment.', 1)
+task.wait(1)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
@@ -315,6 +318,7 @@ if identifyexecutor then
 	end
 end
 makestage(5, 'checking for updates.', 1.17)
+task.wait(1)
 makestage(6, 'fetching latest version.', 1.17)
 task.wait(2)
 
