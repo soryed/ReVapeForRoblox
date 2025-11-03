@@ -11726,8 +11726,8 @@ local History
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-bedwars.Client:Get("RequestProfileData"):CallServerAsync(lplr)
-		end,
+bedwars.Client:Get("SendMatchHistoryToPlayer")
+			end,
 		Tooltip ='new method for seeing history, owner only'
 	})
 
