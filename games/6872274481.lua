@@ -11694,3 +11694,25 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 end)
 
 
+run(function()
+local SpeedExploit
+local speedmutiple
+	SpeedExploit = vape.Categories.Exploits:CreateModule({
+		Name = "SpeedExploit",
+		Function = function(callback)
+			if role ~= "owner" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			bedwars.SprintController:getMovementStatusModifier():addModifier({
+            	["moveSpeedMultiplier"] =speedmutiple.Value
+        })
+		end,
+		Tooltip ='Testing speed exploit owner only perms'
+	})
+	speedmutiple = SpeedExploit:CreateSlider({
+		Name = "Speed",
+		Min = 1,
+		Max = 10,
+	})
+end)
