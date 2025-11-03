@@ -324,12 +324,22 @@ local IVM = false
 task.spawn(function()
 	if not CV ~= UV then IVM = true else IVM = false end
 end)
-print(IVM)
 if IVM then
 		makestage(5, 'verison miss-match currentVerison-.'..CV, 1)
 task.wait(1.2)
 				makestage(5, 'restarting...', .8)
 		task.wait(.95)
+	for _, v in gui:GetDescendants() do
+					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
+						task.spawn(function()
+							pcall(function()
+								tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+									[prop] = 1
+								}):Play()
+							end)
+						end)
+					end
+				end
 				shared.vapereload = true
 		if shared.VapeDeveloper then
 
