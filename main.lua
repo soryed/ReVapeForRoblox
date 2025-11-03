@@ -206,14 +206,6 @@ local stages = {
 	UDim2.new(0, 240, 1, 0),
 }
 
---[[local stages = {
-	UDim2.new(0, 50, 1, 0),
-	UDim2.new(0, 100, 1, 0),
-	UDim2.new(0, 160, 1, 0),
-	UDim2.new(0, 200, 1, 0),
-	UDim2.new(0, 240, 1, 0)
-}--]]
-
 local createinstance = function(class, properties)
 	local res = Instance.new(class)
 	
@@ -482,11 +474,19 @@ if identifyexecutor then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	end
 end
-makestage(5, 'checking for updates.', 1.17)
-task.wait(1)
-makestage(6, 'fetching latest version.', .8)
-task.wait(.8)
+local CV = vape.Version or "0.0.1"
+local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
+local IVM = false
+task.spawn(function()
+	if not CV == UV then IVM = true else IVM = false end
+end)
 
+if IVM then
+		vape:CreateNotification("Onyx","Verison Miss-Match Reinject please!",5,"warning") 
+	else
+		
+
+	end
 if not shared.VapeIndependent then
 	makestage(7, 'downloading game packages.', 2.34)
 	task.wait(2.5)
