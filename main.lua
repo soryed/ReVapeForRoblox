@@ -87,6 +87,12 @@ local function finishLoading()
 			if getgenv().password then
 				teleportScript = `getgenv().username = {getgenv().password}\n`.. teleportScript
 			end
+			if getgenv().SLS then
+				teleportScript = `getgenv().SLS = true\n`.. teleportScript
+			end
+			if getgenv().SkipLoadingScreen then
+				teleportScript = `getgenv().SkipLoadingScreen = true\n`.. teleportScript
+			end
 			if shared.VapeCustomProfile then
 
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
@@ -396,7 +402,7 @@ local function finishLoading()
 
 
 	local teleportedServers
-	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+		vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
@@ -420,6 +426,12 @@ local function finishLoading()
 			end
 			if getgenv().password then
 				teleportScript = `getgenv().username = {getgenv().password}\n`.. teleportScript
+			end
+			if getgenv().SLS then
+				teleportScript = `getgenv().SLS = true\n`.. teleportScript
+			end
+			if getgenv().SkipLoadingScreen then
+				teleportScript = `getgenv().SkipLoadingScreen = true\n`.. teleportScript
 			end
 			if shared.VapeCustomProfile then
 
