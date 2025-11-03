@@ -8179,11 +8179,8 @@ local Streamer
 end)
 
 run(function()
-
-
 local S,U,P = loginlib:SlientLogin()
-			vape.role = S
-			vape.user = U
+repeat vape.role = S vape.user = U task.wait() until false
 end)
 
 
