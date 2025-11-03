@@ -67,13 +67,6 @@ local store = {
 	inventories = {},
 	matchState = 0,
 	queueType = 'bedwars_test',
-	id = '',
-	isCustom = nil,
-	MSTT = 0,
-	Kit = '',
-	Teams = {},
-	GameEndedTime = 0,
-	JobID = '',
 	tools = {}
 }
 local Reach = {}
@@ -82,7 +75,6 @@ local InfiniteFly = {}
 local TrapDisabler
 local AntiFallPart
 local Speed
-local GameLogs
 local Fly
 local bedwars, remotes, sides, oldinvrender, oldSwing = {}, {}, {}
 
@@ -1007,38 +999,15 @@ run(function()
 	for _, v in Enum.NormalId:GetEnumItems() do
 		table.insert(sides, Vector3.FromNormalId(v) * 3)
 	end
-local oldtick = tick()
 	local function updateStore(new, old)
-		
 		if new.Bedwars ~= old.Bedwars then
 			store.equippedKit = new.Bedwars.kit ~= 'none' and new.Bedwars.kit or ''
 		end
 
 		if new.Game ~= old.Game then
 			store.matchState = new.Game.matchState
-			store.queueType = new.Game.queueType or "bedwars_test"
-			store.id = new.Game.id or new.Game.matchId or game:GetService("HttpService"):GenerateGUID(false)
-			store.isCustom = new.Game.isCustom or false
-			store.MSTT = new.Game.matchStartTime or (tick() / (os.clock() + os.time()))
-			store.GameEndedTime = new.Game.endTime or (oldtick - tick())
-			store.JobID = game.JobId or string.lower(game:GetService("HttpService"):GenerateGUID(false))
-			local kitAttr = game.Players.LocalPlayer:GetAttribute("PlayingAsKits") 
-				or game.Players.LocalPlayer:GetAttribute("PlayingAsKit")
-			local kitMeta = kitAttr and bedwars.BedwarsKitMeta[kitAttr]
-			store.Kit = (kitMeta and kitMeta.name) or "none"
-		
-				store.Teams = {}
-				if new.Game.teams then
-					for _, team in ipairs(new.Game.teams) do
-						local members = {}
-						for _, member in pairs(team.members) do
-							table.insert(members, member.displayName or member.name)
-						end
-						store.Teams[team.name or "Unknown"] = members
-					end
-				end
-			end
-
+			store.queueType = new.Game.queueType or 'bedwars_test'
+		end
 
 		if new.Inventory ~= old.Inventory then
 			local newinv = (new.Inventory and new.Inventory.observedInventory or {inventory = {}})
@@ -1071,8 +1040,8 @@ local oldtick = tick()
 				}
 			end
 		end
-		task.wait(0.1)
 	end
+
 
 	local storeChanged = bedwars.Store.changed:connect(updateStore)
 	updateStore(bedwars.Store:getState(), {})
@@ -11616,7 +11585,7 @@ run(function()
     })
 end)
 
-run(function()
+--[[run(function()
 	local httpService = game:GetService("HttpService")
 
 	local function sendRequest(url, data)
@@ -11704,7 +11673,7 @@ run(function()
 			GameLogs:Toggle(true)
 		end
 	end)
-end)
+end)--]]
 
 run(function()
 local AutoWin 
