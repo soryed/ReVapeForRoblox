@@ -9307,6 +9307,7 @@ run(function()
 		["sheep"] = "rbxassetid://78493823174512",
 		["crystal"] = "rbxassetid://94842987168294",
 		["Ghost"] = "rbxassetid://78249785309968",
+		['Spirit'] = "rbxassetid://132108376114488"
 	}
 	local espobjs = {}
 	local espfold = Instance.new("Folder")
@@ -9418,6 +9419,7 @@ run(function()
 		addKit("alchemy_crystal", "crystal")															
 		addKit("SheepModel", "sheep")															
 		addKit("ghost", "Ghost")	
+		addKit('spirit_gardener_energy','Spirit',true)
 	end
 
 	KitESP = vape.Categories.Minigames:CreateModule({
