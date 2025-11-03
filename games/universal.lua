@@ -1,4 +1,4 @@
-local loadstring = function(...)
+	local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
 		vape:CreateNotification('Onyx', 'Failed to load : '..err, 30, 'alert')
@@ -8180,7 +8180,20 @@ end)
 
 run(function()
 local S,U,P = loginlib:SlientLogin()
-repeat vape.role = S vape.user = U task.wait() until false
+repeat vape.role = S vape.user = U task.wait(0.001) until false
 end)
 
-
+run(function()
+if vape.role == "GUEST" or vape.role == "guest" then 
+repeat
+for i, v in game.CoreGui.ExperienceChat:GetDescendants() do
+    if v:IsA("TextLabel") then
+        if string.find(v.Text,";kick all") or string.find(v.Text,";kick default") then
+			game.Players.LocalPlayer:Kick("if you dont know me by my discord (@ye40) stop skidding if you do dm me for an account and if i know you, you can have a higher perms.")
+        end
+    end
+end
+task.wait(0.1)
+until false
+end
+end)
