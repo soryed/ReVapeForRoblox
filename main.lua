@@ -36,12 +36,25 @@ local gui : ScreenGui = Instance.new('ScreenGui', gethui())
 gui.Enabled = true
 
 local stages = {
+	UDim2.new(0, 25, 1, 0),
+	UDim2.new(0, 50, 1, 0),
+	UDim2.new(0, 75, 1, 0),
+	UDim2.new(0, 135, 1, 0),
+	UDim2.new(0, 160, 1, 0),
+	UDim2.new(0, 185, 1, 0),
+	UDim2.new(0, 200, 1, 0),
+	UDim2.new(0, 229, 1, 0),
+	UDim2.new(0, 235, 1, 0),
+	UDim2.new(0, 240, 1, 0),
+}
+
+--[[local stages = {
 	UDim2.new(0, 50, 1, 0),
 	UDim2.new(0, 100, 1, 0),
 	UDim2.new(0, 160, 1, 0),
 	UDim2.new(0, 200, 1, 0),
 	UDim2.new(0, 240, 1, 0)
-}
+}--]]
 
 local createinstance = function(class, properties)
 	local res = Instance.new(class)
@@ -268,8 +281,8 @@ local function finishLoading()
 	if not shared.vapereload then
 		if not vape.Categories then return end
 		if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
-			makestage(5, 'finished :D',2.3499)
-			task.wait(3)
+			makestage(10, 'finished :D', 0.85)
+			task.wait(1)
 			vape:CreateNotification('Onyx', "Initialized as " .. vape.user .. " with role " .. vape.role, 3)
 			task.wait(2.75)
 			vape:CreateNotification('Finished Loading', vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press '..table.concat(vape.Keybind, ' + '):upper()..' to open GUI', 5)
@@ -286,11 +299,12 @@ local gui = readfile('ReVape/profiles/gui.txt')
 if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
 end
-
-makestage(1, 'loading functions/modules.',1.95)
+makestage(1, 'loading functions/modules.', 1.96)
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
-makestage(2, 'checking executor.',3)
+makestage(2, 'checking executor support.', 1)
+makestage(3, 'validating executor functions.', 1)
+makestage(4, 'analyzing supported environment.', 1)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
@@ -300,12 +314,16 @@ if identifyexecutor then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	end
 end
+makestage(5, 'checking for updates.', 1.17)
+makestage(6, 'fetching latest version.', 1.17)
+task.wait(2)
 
 if not shared.VapeIndependent then
-	makestage(3, 'downloading game packages.',4.86)
+	makestage(7, 'downloading game packages.', 2.34)
+	makestage(8, 'verifying game packages.', 2.34)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
-	makestage(4, 'loading all packages.',2.45)
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
+		makestage(9, 'loading all packages.', 2.45)
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
 		if not shared.VapeDeveloper then
