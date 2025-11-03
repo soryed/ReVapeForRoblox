@@ -11716,3 +11716,20 @@ local speedmutiple
 		Max = 10,
 	})
 end)
+
+run(function()
+local History
+	History = vape.Categories.Exploits:CreateModule({
+		Name = "History",
+		Function = function(callback)
+			if role ~= "owner"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+bedwars.Client:Get("RequestProfileData"):CallServerAsync(lplr)
+		end,
+		Tooltip ='new method for seeing history, owner only'
+	})
+
+end)
+
