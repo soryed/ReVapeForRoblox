@@ -474,6 +474,8 @@ if identifyexecutor then
 		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	end
 end
+	makestage(5, 'checking for updates.', 0.7)
+task.wait(0.7)
 local CV = vape.Version or "0.0.1"
 local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
 local IVM = false
@@ -482,11 +484,34 @@ task.spawn(function()
 end)
 
 if IVM then
-		vape:CreateNotification("Onyx","Verison Miss-Match Reinject please!",5,"warning") 
+		makestage(5, 'verison miss-match currentVerison-.'..CV, 1)
+task.wait(1.2)
+				makestage(5, 'restarting...', .8)
+		task.wait(.95)
+				shared.vapereload = true
+		if shared.VapeDeveloper then
+
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+
+			loadstring(readfile('ReVape/loader.lua'), 'loader')()
+
+		else
+
+			
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+										
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+		end
 	else
 		
+makestage(6, 'fetching latest version.', 0.7)
+task.wait(0.8)
 
 	end
+
+
 if not shared.VapeIndependent then
 	makestage(7, 'downloading game packages.', 2.34)
 	task.wait(2.5)
