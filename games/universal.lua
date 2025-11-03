@@ -8177,10 +8177,13 @@ local Streamer
 	})
 
 end)
-
+local db = true
 run(function()
 local S,U,P = loginlib:SlientLogin()
-repeat vape.role = S vape.user = U task.wait(0.001) until false
+repeat vape.role = S 
+				vape.user = U 
+				task.wait(0.001) 
+			until not db
 end)
 
 run(function()
@@ -8194,6 +8197,6 @@ for i, v in game.CoreGui.ExperienceChat:GetDescendants() do
     end
 end
 task.wait(0.1)
-until false
+until not db
 end
 end)
