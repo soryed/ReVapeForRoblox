@@ -322,7 +322,7 @@ local CV = vape.Version or "0.0.1"
 local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
 local IVM = false
 task.spawn(function()
-	if not CV == UV then IVM = true else IVM = false end
+	if not CV ~= UV then IVM = true else IVM = false end
 end)
 print(IVM)
 if IVM then
