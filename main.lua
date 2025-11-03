@@ -322,10 +322,10 @@ local CV = vape.Version or "0.0.1"
 local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
 local IVM = false
 task.spawn(function()
-	if not CV ~= UV then IVM = true else IVM = false end
+	if CV ~= UV then IVM = true else IVM = false end
 end)
 if IVM then
-		makestage(5, 'verison miss-match currentVerison-.'..CV, 1)
+		makestage(5, 'verison miss-match currentVerison - '..CV, 1)
 task.wait(1.2)
 				makestage(5, 'restarting...', .8)
 		task.wait(.95)
