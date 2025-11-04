@@ -23,7 +23,7 @@ task.spawn(function()
 		vape.role = role
 		vape.user = user
 	end
-end
+end)
 local function notif(...)
 	return vape:CreateNotification(...)
 end
