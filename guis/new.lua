@@ -2649,15 +2649,21 @@ function mainapi:CreateGUI()
 	settingsversion.Size = UDim2.new(1, 0, 0, 16)
 	settingsversion.Position = UDim2.new(0, 0, 1, -16)
 	settingsversion.BackgroundTransparency = 1
-	settingsversion.Text = 'Vape '..mainapi.Version..' '..(
-		isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
-	)..' '
+	settingsversion.Text = 'Onyx '..mainapi.Version..' '..(
+	isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
+)..' | '..mainapi.user..' ('..mainapi.role..')'
 	settingsversion.TextColor3 = color.Dark(uipallet.Text, 0.43)
 	settingsversion.TextXAlignment = Enum.TextXAlignment.Right
 	settingsversion.TextSize = 10
 	settingsversion.FontFace = uipallet.Font
 	settingsversion.Parent = settingspane
 	addCorner(settingspane)
+
+	settingsversion.TextColor3 = color.Dark(uipallet.Text, 0.43)
+	settingsversion.TextXAlignment = Enum.TextXAlignment.Right
+	settingsversion.TextSize = 10
+	settingsversion.FontFace = uipallet.Font
+	settingsversion.Parent = settingspane
 	local settingschildren = Instance.new('Frame')
 	settingschildren.Name = 'Children'
 	settingschildren.Size = UDim2.new(1, 0, 1, -57)
