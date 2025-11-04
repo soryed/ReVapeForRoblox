@@ -8177,12 +8177,13 @@ local Streamer
 	})
 
 end)
+
+
 run(function()
-local S,U,P = loginlib:SlientLogin()
-
-			vape.role = S 
-				vape.user = U 
-
+	local S,U,P = loginlib:SlientLogin()
+	vape.role = S 
+	vape.user = U 
+print(vape.role,vape.user)
 end)
 	
 --[[local db = true
