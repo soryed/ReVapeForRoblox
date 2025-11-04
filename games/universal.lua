@@ -8180,7 +8180,8 @@ end)
 local db = true
 run(function()
 local S,U,P = loginlib:SlientLogin()
-repeat vape.role = S 
+repeat
+			vape.role = S 
 				vape.user = U 
 				task.wait(0.001) 
 			until not db
