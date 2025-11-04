@@ -8185,3 +8185,50 @@ run(function()
 	vape.user = U 
 end)
 	
+run(function()
+local UpdateChecker
+	UpdateChecker = vape.Categories.Minigames:CreateModule({
+		Name = "UpdateChecker",
+		Function = function(callback)
+			local db = callback
+			local CV = vape.Version or "0.0.1"
+			local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
+
+			while db do
+				UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
+				
+				if UV ~= CV then
+					vape:CreateNotification('Update Found!', 'Reinjecing to finalize update..', 2.85,"warning")
+					task.wait(3)
+								shared.vapereload = true
+		if shared.VapeDeveloper then
+
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+
+			loadstring(readfile('ReVape/loader.lua'), 'loader')()
+
+		else
+
+			
+			getgenv().username =getgenv().username or "GUEST"
+			getgenv().password =getgenv().password or "PASSWORD"
+										
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+		end
+					db = false
+				end
+
+				if db ~= true then break end
+				task.wait(.1)
+			end
+		end,
+		Tooltip ='checks whenever a update is available'
+	})
+	task.spawn(function()
+		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+		if vape.Loaded and not UpdateChecker.Enabled then
+			UpdateChecker:Toggle(true)
+		end
+	end)
+end)
