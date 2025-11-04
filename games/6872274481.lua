@@ -44,14 +44,9 @@ local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
-local role = vape.role
-local user = vape.user
-if not role or role == "" then
-    role = "guest"
-end
-if not user or user == "" then
-    user = "GUEST"
-end
+local role = vape.role or "guest"
+local user = vape.user or "GUEST"
+
 
 local store = {
 	attackReach = 0,
