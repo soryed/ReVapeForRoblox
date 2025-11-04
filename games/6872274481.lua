@@ -57,7 +57,7 @@ task.spawn(function()
 		vape.role = role
 		vape.user = user
 	end
-end
+end)
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
