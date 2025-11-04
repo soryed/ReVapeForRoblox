@@ -6,12 +6,12 @@ end
 local vape = shared.vape
 local httpService = game:GetService('HttpService')
 local api = "https://vapeclient.fsl58.workers.dev"
-local username = getgenv().username or "GUEST"
-local password = getgenv().password or "PASSWORD"
+local username = ""
+local password = ""
 
 if getgenv().TestAccount then
-    local username = "GUEST"
-local password = "PASSWORD"
+     username = "GUEST"
+     password = "PASSWORD"
 else
      username = getgenv().username or "GUEST"
      password = getgenv().password or "PASSWORD"
