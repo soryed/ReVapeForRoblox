@@ -8186,53 +8186,44 @@ run(function()
 end)
 	
 run(function()
-local UpdateChecker
-	UpdateChecker = vape.Categories.Minigames:CreateModule({
-		Name = "UpdateChecker",
-		Function = function(callback)
-			local db = callback
-			local CV = vape.Version or "0.0.1"
-			local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
-								CV = tostring(CV):match("^%s*(.-)%s*$")
-UV = tostring(UV):match("^%s*(.-)%s*$")
-			while db do
+    local UpdateChecker
+    UpdateChecker = vape.Categories.Minigames:CreateModule({
+        Name = "UpdateChecker",
+        Function = function(callback)
+            local db = callback
+            local CV = tostring(vape.Version or "0.0.1"):match("^%s*(.-)%s*$") 
 
-				UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
-				
-				if UV == CV then
+            while db do
+                local UV = tostring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")):match("^%s*(.-)%s*$")
 
-			else
-									vape:CreateNotification('Update Found!', 'Reinjecing to finalize update..', 2.85,"warning")
-					task.wait(3)
-								shared.vapereload = true
-		if shared.VapeDeveloper then
+                if UV ~= CV then
+                    vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, "warning")
+                    task.wait(3)
+                    shared.vapereload = true
 
-			getgenv().username =getgenv().username or "GUEST"
-			getgenv().password =getgenv().password or "PASSWORD"
+                    getgenv().username = getgenv().username or "GUEST"
+                    getgenv().password = getgenv().password or "PASSWORD"
 
-			loadstring(readfile('ReVape/loader.lua'), 'loader')()
+                    if shared.VapeDeveloper then
+                        loadstring(readfile('ReVape/loader.lua'), 'loader')()
+                    else
+                        loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
+                    end
 
-		else
+                    db = false
+                end
 
-			
-			getgenv().username =getgenv().username or "GUEST"
-			getgenv().password =getgenv().password or "PASSWORD"
-										
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
-		end
-					db = false
-				end
+                if not db then break end
+                task.wait(0.1)
+            end
+        end,
+        Tooltip = 'Checks whenever an update is available'
+    })
 
-				if db ~= true then break end
-				task.wait(.1)
-			end
-		end,
-		Tooltip ='checks whenever a update is available'
-	})
-	task.spawn(function()
-		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
-		if vape.Loaded and not UpdateChecker.Enabled then
-			UpdateChecker:Toggle(true)
-		end
-	end)
+    task.spawn(function()
+        repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+        if vape.Loaded and not UpdateChecker.Enabled then
+            UpdateChecker:Toggle(true)
+        end
+    end)
 end)
