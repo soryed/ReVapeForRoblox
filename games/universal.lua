@@ -8196,7 +8196,8 @@ run(function()
                 local UV =tonumber(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")) or 0
 
                 if UV ~= CV then
-					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..", 2.85, "warning")
+					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
+
 
 
                     task.wait(3)
