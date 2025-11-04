@@ -556,12 +556,33 @@ makestage(4, 'analyzing supported environment.', .5)
 task.wait(.5)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
-		return
+		--vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
+		makestage(4, 'executor not support.', .5)
+			task.wait(.55)
+					makestage(4, 'uninjecting.', .85)
+			task.wait(.9)
+			task.spawn(function() 
+for _, v in gui:GetDescendants() do
+					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
+						task.spawn(function()
+							pcall(function()
+								tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+									[prop] = 1
+								}):Play()
+							end)
+						end)
+					end
+				end
+		end)
+			vape:Uninject()
+
+			return
 	end
 	if table.find({'Xeno','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
-		vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
-	end
+		--vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
+	makestage(4, 'executor is support, may cause some issues.', .5)
+			task.wait(.5)
+		end
 end
 	makestage(5, 'checking for updates.', 0.7)
 task.wait(0.7)
