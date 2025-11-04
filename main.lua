@@ -81,7 +81,23 @@ if gui.Enabled then
 		Image = 'rbxassetid://110629770884920',
 		ScaleType = Enum.ScaleType.Fit
 	})
-	print(Exit.Name,Exit)
+	Exit.MouseButton1Click:Connect(function()
+		task.spawn(function() 
+for _, v in gui:GetDescendants() do
+					for __, prop in ipairs({'BackgroundTransparency', 'ImageTransparency', 'TextTransparency'}) do
+						task.spawn(function()
+							pcall(function()
+								tweenService:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+									[prop] = 1
+								}):Play()
+								task.wait(1.5)
+								v:Destory()
+							end)
+						end)
+					end
+				end
+		end)
+	end)
 	createinstance('ImageLabel', {
 		Name = 'Icon',
 		Parent = gui.Main.Exit,
