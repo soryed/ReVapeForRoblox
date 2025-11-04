@@ -70,7 +70,7 @@ if gui.Enabled then
 		Image = 'rbxassetid://93496634716737'
 	})
 
-	createinstance('ImageButton', {
+	local Exit = createinstance('ImageButton', {
 		Name = 'Exit',
 		Parent = gui.Main,
 		BackgroundTransparency = 1,
@@ -81,7 +81,7 @@ if gui.Enabled then
 		Image = 'rbxassetid://110629770884920',
 		ScaleType = Enum.ScaleType.Fit
 	})
-
+	print(Exit.Name,Exit)
 	createinstance('ImageLabel', {
 		Name = 'Icon',
 		Parent = gui.Main.Exit,
