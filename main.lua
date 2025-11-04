@@ -137,6 +137,9 @@ end
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
+	vape.SVT.Text = 'Onyx '..vape.Version..' '..(
+	isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
+)..' | '..vape.user..' ('..vape.role..')'
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
