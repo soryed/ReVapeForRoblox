@@ -27,7 +27,6 @@ local mainapi = {
 	SC = false,
 	HideNofis = false,
 	Windows = {},
-	SVT = nil,
 }
 																																																								
 
@@ -2652,8 +2651,7 @@ function mainapi:CreateGUI()
 	settingsversion.BackgroundTransparency = 1
 	settingsversion.Text = 'Onyx '..mainapi.Version..' '..(
 	isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
-)..' | '..mainapi.user..' ('..mainapi.role..')'
-	mainapi.SVT = settingsverison						
+)			
 	settingsversion.TextColor3 = color.Dark(uipallet.Text, 0.43)
 	settingsversion.TextXAlignment = Enum.TextXAlignment.Right
 	settingsversion.TextSize = 10
