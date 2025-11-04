@@ -52,6 +52,12 @@ end
 if not user or user == "" then
     user = "GUEST"
 end
+task.spawn(function()
+	while task.wait(0.1) do
+		vape.role = role
+		vape.user = user
+	end
+end
 local store = {
 	attackReach = 0,
 	attackReachUpdate = tick(),
