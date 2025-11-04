@@ -18,12 +18,7 @@ end
 if not user or user == "" then
     user = "GUEST"
 end
-task.spawn(function()
-	while task.wait(0.1) do
-		vape.role = role
-		vape.user = user
-	end
-end)
+
 local function notif(...)
 	return vape:CreateNotification(...)
 end
