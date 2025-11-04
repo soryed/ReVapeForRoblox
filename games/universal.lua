@@ -8191,13 +8191,14 @@ run(function()
         Name = "UpdateChecker",
         Function = function(callback)
             local db = callback
-            local CV = tostring(vape.Version or "0.0.1"):match("^%s*(.-)%s*$") 
-
+            local CV = tonumber(vape.Version) or 0
             while db do
-                local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison?t="..tick())
+                local UV =tonumber(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")) or 0
 
                 if UV ~= CV then
-                    vape:CreateNotification('Update Found!', 'Reinjecting to finalize update.. [UV]:'..UV.."[CV]:"..CV, 2.85, "warning")
+					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..", 2.85, "warning")
+
+
                     task.wait(3)
                     shared.vapereload = true
 
