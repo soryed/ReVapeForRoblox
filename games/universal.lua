@@ -8197,8 +8197,10 @@ local UpdateChecker
 			while db do
 				UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
 				
-				if UV ~= CV then
-					vape:CreateNotification('Update Found!', 'Reinjecing to finalize update..', 2.85,"warning")
+				if UV == CV then
+
+			else
+									vape:CreateNotification('Update Found!', 'Reinjecing to finalize update..', 2.85,"warning")
 					task.wait(3)
 								shared.vapereload = true
 		if shared.VapeDeveloper then
