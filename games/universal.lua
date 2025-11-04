@@ -8177,7 +8177,15 @@ local Streamer
 	})
 
 end)
-local db = true
+run(function()
+local S,U,P = loginlib:SlientLogin()
+
+			vape.role = S 
+				vape.user = U 
+
+end)
+	
+--[[local db = true
 run(function()
 local S,U,P = loginlib:SlientLogin()
 repeat
@@ -8201,3 +8209,4 @@ task.wait(0.1)
 until not db
 end
 end)
+--]]
