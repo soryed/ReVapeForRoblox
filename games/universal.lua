@@ -8194,7 +8194,8 @@ run(function()
             local CV = tostring(vape.Version or "0.0.1"):match("^%s*(.-)%s*$") 
 
             while db do
-                local UV = tostring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")):match("^%s*(.-)%s*$")
+                local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison?t="..tick())
+
 
                 if UV ~= CV then
                     vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, "warning")
