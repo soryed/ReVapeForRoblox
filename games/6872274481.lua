@@ -4474,6 +4474,40 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		berserker = function()
+			local mapCFrames = workspace:FindFirstChild("MapCFrames")
+			local teamid = lplr.Character:GetAttribute("Team")
+		
+			if AutoKit.Enabled then
+				if mapCFrames then
+					for _, obj in pairs(mapCFrames:GetChildren()) do
+						if obj:IsA("CFrameValue") and string.match(obj.Name, "_bed") then
+							if not string.match(obj.Name, teamid .. "_bed") then
+								local part = Instance.new("Part")
+								part.Transparency = 1
+								part.CanCollide = false
+								part.Anchored = true
+								part.Size = Vector3.new(64, 64, 64)
+								part.CFrame = obj.Value
+								part.Parent = workspace
+								part.Name = "AutoKitRagnarPart"
+								part.Touched:Connect(function(v)
+									if v.Parent.Name == lplr.Name then
+										game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('berserker_rage')
+									end
+								end)
+							end
+						end
+					end
+				end
+			else
+				for i,v in workspace:GetChildren() do
+					if v:IsA("BasePart") and v.Name == "AutoKitRagnarPart" then
+					v:Destory()
+					end
+				end
+			end
+		end,																																																								
 		glacial_skater = function()
 		    repeat
 		        replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9})    
@@ -4506,7 +4540,7 @@ run(function()
 				if not root then continue end
 				
 				local plr = entitylib.EntityPosition({
-					Range = 15,
+					Range = 20,
 					Part = "RootPart",
 					Players = true,
 					Sort = sortmethods.Health
@@ -11444,7 +11478,7 @@ local Options
 				end
 			end
 		end,
-		Tooltip = ":troll: doesnt work for some reason ill do a rewrite on it"
+		Tooltip = ":troll: rewrite soon"
 	})
 
 	Options = Funny:CreateDropdown({
