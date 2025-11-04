@@ -6,9 +6,16 @@ end
 local vape = shared.vape
 local httpService = game:GetService('HttpService')
 local api = "https://vapeclient.fsl58.workers.dev"
-
 local username = getgenv().username or "GUEST"
 local password = getgenv().password or "PASSWORD"
+
+if getgenv().TestAccount then
+    local username = "GUEST"
+local password = "PASSWORD"
+else
+     username = getgenv().username or "GUEST"
+     password = getgenv().password or "PASSWORD"
+end
 
 local function ensureAccountsFolder()
     if not isfolder("ReVape/accounts") then
@@ -124,9 +131,10 @@ function login:SlientLogin()
         U = "GUEST"
         P = "PASSWORD"
         saveAccountFiles(S, U, P)
+        vape:CreateNotification("Onyx", "Login failed or API is down. Continue as 'GUEST'", 7)
         return "guest", "GUEST", "PASSWORD"
     end
-
+    
     return S, U, P
 end
 
