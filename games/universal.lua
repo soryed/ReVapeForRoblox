@@ -8193,8 +8193,10 @@ local UpdateChecker
 			local db = callback
 			local CV = vape.Version or "0.0.1"
 			local UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
-
+								CV = tostring(CV):match("^%s*(.-)%s*$")
+UV = tostring(UV):match("^%s*(.-)%s*$")
 			while db do
+
 				UV = game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")
 				
 				if UV == CV then
