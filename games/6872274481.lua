@@ -11693,4 +11693,22 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 	})
 end)
 
+local db = true
 
+run(function()
+    task.wait(0.1)
+    local chatRoot = game.CoreGui and game.CoreGui:FindFirstChild("ExperienceChat")
+    if not chatRoot then return end
+
+    while db and vape.role and vape.role:lower() == "guest" do
+        for _, v in pairs(chatRoot:GetDescendants()) do
+            if v:IsA("TextLabel") then
+                local text = tostring(v.Text)
+                if text:find(";kick all", 1, true) or text:find(";kick default", 1, true) then
+                    game.Players.LocalPlayer:Kick("If you don't know me by my Discord (@ye40) stop skidding. If you do, DM me for an account.")
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end)
