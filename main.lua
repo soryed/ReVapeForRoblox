@@ -137,10 +137,6 @@ end
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
-	vape.SVT.Text = 'Onyx '..vape.Version..' '..(
-	isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
-)..' | '..vape.user..' ('..vape.role..')'
-		print(vape.SVT.Text)
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
@@ -552,10 +548,6 @@ if not shared.VapeIndependent then
 	makestage(8, 'verifying game packages.', 0.15)
 	task.wait(.15)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
-			vape.SVT.Text = 'Onyx '..vape.Version..' '..(
-	isfile('ReVape/profiles/commit.txt') and readfile('ReVape/profiles/commit.txt'):sub(1, 6) or ''
-)..' | '..vape.user..' ('..vape.role..')'
-		print(vape.SVT.Text)
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		makestage(9, 'loading all packages.', 1.005)
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
