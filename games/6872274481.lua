@@ -11739,8 +11739,7 @@ bedwars.PartyController:leaveParty()
 	})
 end)
 
-local db = true
-
+--[[
 run(function()
     task.wait(0.1)
     local chatRoot = game.CoreGui and game.CoreGui:FindFirstChild("ExperienceChat")
@@ -11758,3 +11757,4 @@ run(function()
         task.wait(0.1)
     end
 end)
+--]]
