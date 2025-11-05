@@ -10784,7 +10784,7 @@ run(function()
 	})
 end)
 
-run(function()
+--[[run(function()
 	local TAG
 	local CustomTAG
 	local R, G, B
@@ -10927,7 +10927,7 @@ run(function()
 			CustomTAG:Toggle()
 		end,
 	})
-end)
+end)--]]
 
 
 run(function()
