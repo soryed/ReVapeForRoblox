@@ -11723,6 +11723,22 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 	})
 end)
 
+run(function()
+local LP 
+	 LP = vape.Categories.Exploits:CreateModule({
+		Name = "LeaveParty",
+		Function = function(callback)
+
+			if callback then
+																																						LP:Toggle(false)
+
+bedwars.PartyController:leaveParty()
+			end
+		end,
+		Tooltip = "Makes u leave ur current party",
+	})
+end)
+
 local db = true
 
 run(function()
@@ -11730,7 +11746,7 @@ run(function()
     local chatRoot = game.CoreGui and game.CoreGui:FindFirstChild("ExperienceChat")
     if not chatRoot then return end
 
-    while db and vape.role and vape.role:lower() == "guest" do
+    while db and role and role == "guest" do
         for _, v in pairs(chatRoot:GetDescendants()) do
             if v:IsA("TextLabel") then
                 local text = tostring(v.Text)
