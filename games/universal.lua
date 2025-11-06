@@ -8230,38 +8230,3 @@ run(function()
     end)
 end)
 
-run(function()
-    local DexExplorer
-	local options
-    DexExplorer = vape.Categories.Utility:CreateModule({
-        Name = "DexExplorer",
-        Function = function()
-			DexExplorer:Toggle(false)
-			if options.Value == "V5(Dex+)" then 
-			loadstring(game:HttpGet("https://github.com/AZYsGithub/DexPlusPlus/releases/latest/download/out.lua"))() 
-			elseif options.Value == "V4" then 
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua"))() 
-			elseif options.Value == "V2" then 
-			loadstring(game:HttpGet("https://obj.wearedevs.net/2/scripts/Dex%20Explorer.lua"))()  
-			end
-        end,
-        Tooltip = 'Loads Dex Explorer to the current game'
-    })
-options = DexExplorer:CreateDropdown({
-	Name = "Options",
-	List = {'V5(Dex+)','V4','V2'}
-})
-end)
-
-run(function()
-    local InfiniteYield
-    InfiniteYield = vape.Categories.Utility:CreateModule({
-        Name = "InfiniteYield",
-        Function = function()
-			InfiniteYield:Toggle(false)
-			loadstring(game:HttpGet("https://obj.wearedevs.net/2/scripts/Infinite%20Yield.lua"))()
-        end,
-        Tooltip = 'Loads Infinite Yield to the current game'
-    })
-
-end)
