@@ -4150,66 +4150,56 @@ local S = 0
 			table.insert(methods, i)
 		end
 	end
-
-if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-	SwingRange = Killaura:CreateSlider({
-		Name = 'Swing range',
-		Min = 1,
-		Max = 18,
-		Default = 18,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	AttackRange = Killaura:CreateSlider({
-		Name = 'Attack range',
-		Min = 1,
-		Max = 18,
-		Default = 18,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	ChargeTime = Killaura:CreateSlider({
-		Name = 'Swing time',
-		Min = 0,
-		Max = 1,
-		Default = 0.3,
-		Decimal = 100
-	})
-			SyncHit = {Enabled = false}
-else
-	SwingRange = Killaura:CreateSlider({
-		Name = 'Swing range',
-		Min = 1,
-		Max = 32,
-		Default = 18,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	AttackRange = Killaura:CreateSlider({
-		Name = 'Attack range',
-		Min = 1,
-		Max = 32,
-		Default = 18,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	ChargeTime = Killaura:CreateSlider({
-		Name = 'Swing time',
-		Min = 0,
-		Max = 1,
-		Default = 0.3,
-		Decimal = 100
-	})
+local MaxRange = 0
+if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+	MaxRange = 18
+SyncHit = {Enabled = false}
+elseif role == "premium" then
+	MaxRange = 24
 		SyncHit = Killaura:CreateToggle({
 		Name = 'Sync Hit-Time',
 		Tooltip = "Synchronize's ur hit time",
 		Default = false
 	})
+elseif role == "friend" or role == "admin" or role == "coowner" or role == "owner" then
+	MaxRange = 32
+		SyncHit = Killaura:CreateToggle({
+		Name = 'Sync Hit-Time',
+		Tooltip = "Synchronize's ur hit time",
+		Default = false
+	})
+else
+	MaxRange = 18
+SyncHit = {Enabled = false}
 end
+
+
+
+	SwingRange = Killaura:CreateSlider({
+		Name = 'Swing range',
+		Min = 1,
+		Max = MaxRange,
+		Default = 18,
+		Suffix = function(val)
+			return val == 1 and 'stud' or 'studs'
+		end
+	})
+	AttackRange = Killaura:CreateSlider({
+		Name = 'Attack range',
+		Min = 1,
+		Max = MaxRange,
+		Default = 18,
+		Suffix = function(val)
+			return val == 1 and 'stud' or 'studs'
+		end
+	})
+	ChargeTime = Killaura:CreateSlider({
+		Name = 'Swing time',
+		Min = 0,
+		Max = 1,
+		Default = 0.3,
+		Decimal = 100
+	})
 
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
