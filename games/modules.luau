@@ -4930,18 +4930,3 @@ bedwars.PartyController:leaveParty()
 		Tooltip = "Makes u leave ur current party",
 	})
 end)
-
-run(function()
-local HackerDetector 
-	 HackerDetector = vape.Categories.Exploits:CreateModule({
-		Name = "HackerDetector",
-		Function = function(callback)
-
-			if callback then
-				vape:CreateNotification("Onyx","This module is not finished",10,"alert")
-			end
-		end,
-		Tooltip = "Reports to you whenever an skidder in the same server",
-	})
-end)
-
