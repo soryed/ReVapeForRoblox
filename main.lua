@@ -173,6 +173,7 @@ end
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
+	loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
@@ -640,6 +641,7 @@ if not shared.VapeIndependent then
 	makestage(8, 'verifying game packages.', 0.15)
 	task.wait(.15)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
+	loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		makestage(9, 'loading all packages.', 1.005)
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
