@@ -4931,8 +4931,6 @@ bedwars.PartyController:leaveParty()
 	})
 end)
 
-end
-
 run(function()
 local HackerDetector 
 	 HackerDetector = vape.Categories.Exploits:CreateModule({
