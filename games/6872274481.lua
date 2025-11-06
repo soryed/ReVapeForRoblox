@@ -8716,7 +8716,7 @@ run(function()
 		if AutoEnable.Value then
 		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
 		if vape.Loaded and not ShopTierBypass.Enabled then
-			if lplr:GetAttribute("PlayingAsKits") == "berserker" then 
+			if not lplr:GetAttribute("PlayingAsKits") == "berserker" then 
 			ShopTierBypass:Toggle(true)
 			else
 				ShopTierBypass:Toggle(false)
