@@ -1202,7 +1202,7 @@ run(function()
     })
 end)
 elseif game.PlaceId == 8560631822 or game.PlaceId == 8444591321 or game.PlaceId == 6872274481 then
-    local run = function(func)
+local run = function(func)
 	func()
 end
 local cloneref = cloneref or function(obj)
@@ -4836,3 +4836,100 @@ bedwars.PartyController:leaveParty()
 		Tooltip = "Makes u leave ur current party",
 	})
 end)
+
+run(function()
+	local Desync
+	local Type
+	local AutoSend
+	local AutoSendLength
+	local oldphys, oldsend
+	local enabled
+	Desync = vape.Categories.Exploits:CreateModule({
+		Name = 'Desync',
+		Function = function(callback)
+						if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				Desync:Toggle(false)
+																vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			if callback then
+				local teleported
+				Desync:Clean(lplr.OnTeleport:Connect(function()
+					setfflag('PhysicsSenderMaxBandwidthBps', '38760')
+					setfflag('DataSenderRate', '60')
+					teleported = true
+				end))
+	
+				repeat
+					local physicsrate, senderrate = '0', Type.Value == 'All' and '-1' or '60'
+					if AutoSend.Enabled and tick() % (AutoSendLength.Value + 0.1) > AutoSendLength.Value then
+						physicsrate, senderrate = '38760', '60'
+					end
+	
+					if physicsrate ~= oldphys or senderrate ~= oldsend then
+						setfflag('PhysicsSenderMaxBandwidthBps', physicsrate)
+						setfflag('DataSenderRate', senderrate)
+						oldphys, oldsend = physicsrate, senderrate
+					end
+	
+					task.wait(0.03)
+				until (not Desync.Enabled and not teleported)
+			else
+				if setfflag then
+					setfflag('PhysicsSenderMaxBandwidthBps', '38760')
+					setfflag('DataSenderRate', '60')
+				end
+				oldphys, oldsend = nil, nil
+			end
+		end,
+		Tooltip = 'Note this will ban you for client modifications.'
+	})
+	Type = Desync:CreateDropdown({
+		Name = 'Type',
+		List = {'Movement Only', 'All'},
+		Tooltip = 'Movement Only - Only chokes movement packets\nAll - Chokes remotes & movement'
+	})
+	AutoSend = Desync:CreateToggle({
+		Name = 'Auto send',
+		Function = function(callback)
+			AutoSendLength.Object.Visible = callback
+		end,
+		Tooltip = 'Automatically send packets in intervals'
+	})
+	AutoSendLength = Desync:CreateSlider({
+		Name = 'Send threshold',
+		Min = 0,
+		Max = 1,
+		Decimal = 100,
+		Darker = true,
+		Visible = false,
+		Suffix = function(val)
+			return val == 1 and 'second' or 'seconds'
+		end
+	})
+
+		
+--[[	Desync = vape.Categories.Exploits:CreateModule({
+		Name = "Desync",
+		Function = function()
+
+																						vape:CreateNotification('Onyx', "Note setfflag does not work for every supported executor now, this function just throws an error for now",10,"alert")
+		setfflag("FFlagDebugGraphicsPreferD3D11","True")
+		setfflag("FLogNetwork","7")
+		setfflag("FFlagHandleAltEnterFullscreenManually","False")
+		setfflag("DFFlagPlayerHumanoidPropertyUpdateRestrict","False")
+		setfflag("DFIntDebugDefaultTargetWorldStepsPerFrame","-2147483648")
+		setfflag("DFIntDebugSendDistInSteps","-2147483648")
+		setfflag("DFIntMaxMissedWorldStepsRemembered","-2147483648")
+		setfflag("DFIntWorldStepMax","-2147483648")
+		end,
+		Tooltip = "",
+	})--]]
+	enabled = Desync:CreateToggle({
+        Name = 'Enabled',
+        Default = false,
+        Tooltip = 'Enables so you can use desync fflag method'
+	})
+end)
+end
