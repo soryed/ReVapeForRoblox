@@ -86,6 +86,10 @@ task.spawn(function()
 			Main = Color3.fromRGB(200, 200, 200),
 			Text = Color3.fromRGB(26, 25, 26),
 		},
+		["New Light"] = {
+			Main = Color3.fromRGB(185, 185, 185),
+			Text = Color3.fromRGB(42,41,42),
+		},
 		["Dark"] = {
 			Main = Color3.fromRGB(26, 25, 26),
 		},
@@ -6101,7 +6105,7 @@ mainapi.Blur = guipane:CreateToggle({
 })
 mainapi.Theme = guipane:CreateDropdown({
 	Name = 'Theme',
-	List =  {"Light","Dark","New Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green","Summer","Fall","Spring","Halloween","Christmas"},
+	List =  {"Light","New Light","Dark","New Dark","Light Red","Light Blue","Light Yellow","Darkish Blue","Light Green","Summer","Fall","Spring","Halloween","Christmas"},
 	Function = function(v,m)
 			if m then 
 			mainapi:SWITCHTHEMECOLOR(v)
@@ -7117,7 +7121,9 @@ task.spawn(function()
 	if data == "Light" then
 		uipallet.Main = Color3.fromRGB(200, 200, 200)
 		uipallet.Text = Color3.fromRGB(26, 25, 26)
-
+	elseif data == "New Light" then
+		uipallet.Main = Color3.fromRGB(185, 185, 185)
+		uipallet.Text = Color3.fromRGB(42,41,42)
 	elseif data == "Dark" then
 		uipallet.Main = Color3.fromRGB(26, 25, 26)
 elseif data == "New Dark" then
