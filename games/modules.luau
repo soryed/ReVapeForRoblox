@@ -1527,6 +1527,23 @@ local function hotbarSwitch(slot)
 	return false
 end
 
+local function hotbarSwitchV2(slot)
+	if slot and store.inventory.hotbarSlot ~= slot then
+		local args = {
+		    [1] = {
+		        ["hand"] = slot
+		    }
+		}
+		
+		game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.SetInvItem:InvokeServer(unpack(args))
+		vapeEvents.InventoryChanged.Event:Wait()
+		return true
+	end
+	return false
+end
+
+
+
 local function isFriend(plr, recolor)
 	if vape.Categories.Friends.Options['Use friends'].Enabled then
 		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
@@ -4502,13 +4519,13 @@ run(function()
 								task.wait(0.15)
 								local selected = store.inventory.hotbarSlot
 								for _, v in getProj() do
-									if hotbarSwitch(v) then
+print(v)
 										task.wait(MS.Value / 1000)
 										mouse1click()
 										task.wait(MS.Value / 1000)
-									end
+
 								end
-								hotbarSwitch(selected)
+								--hotbarSwitchV2(selected)
 								shooting = false
 							end
 						end)
