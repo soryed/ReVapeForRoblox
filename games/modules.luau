@@ -4502,7 +4502,8 @@ run(function()
 		end
 		return Projs
 	end
-	
+								local aa = getProj()
+print(aa)
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
@@ -4511,9 +4512,10 @@ run(function()
 				bedwars.ProjectileController.createLocalProjectile = function(...)
 					local source, data, proj = ...
 					print(proj)
-					if source and (proj == 'arrow' or proj == 'fireball') and not shooting then
+					if source and not shooting then
 						task.spawn(function()
 							local bows = getProj()
+print(bows)
 							if #bows > 0 then
 								shooting = true
 								task.wait(0.15)
