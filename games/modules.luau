@@ -4515,11 +4515,8 @@ run(function()
 	end
 
 	local aa = getProj()
-	local projNames = {}
-	for _, v in ipairs(aa) do
-		table.insert(projNames, v.Name)
-	end
-	print("Projectiles found:", table.concat(projNames, ", "))
+	
+	print("Projectiles found:",aa)
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
