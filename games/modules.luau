@@ -4495,10 +4495,21 @@ run(function()
 	local AutoShoot
 	local shooting, old = false
 	local MS
-	local function getProj()
+	--[[local function getProj()
 		local Projs = {}
 		for i, v in store.inventory.hotbar do
 			if v.item and v.item.itemType:find('crossbow') and i ~= (store.inventory.hotbarSlot + 1) then table.insert(Projs, i - 1) end
+		end
+		return Projs
+	end--]]
+
+	local function getProj()
+		local Projs = {}
+		local hotbarFolder = replicatedStorage:WaitForChild("Inventories"):WaitForChild(lplr.Name)
+
+		if hotbarFolder then
+			if hotbarFolder:FindFirstChild('wood_crossbow') then table.insert(Projs,hotbarFolder:FindFirstChild('wood_crossbow')) end
+			if hotbarFolder:FindFirstChild('snowball') then table.insert(Projs,hotbarFolder:FindFirstChild('snowball')) end
 		end
 		return Projs
 	end
