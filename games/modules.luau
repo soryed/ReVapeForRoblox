@@ -4508,13 +4508,18 @@ run(function()
 		local hotbarFolder = replicatedStorage:WaitForChild("Inventories"):WaitForChild(lplr.Name)
 
 		if hotbarFolder then
-			if hotbarFolder:FindFirstChild('wood_crossbow') then table.insert(Projs,hotbarFolder:FindFirstChild('wood_crossbow')) end
-			if hotbarFolder:FindFirstChild('snowball') then table.insert(Projs,hotbarFolder:FindFirstChild('snowball')) end
+			if hotbarFolder:FindFirstChild('wood_crossbow') then table.insert(Projs, hotbarFolder:FindFirstChild('wood_crossbow')) end
+			if hotbarFolder:FindFirstChild('snowball') then table.insert(Projs, hotbarFolder:FindFirstChild('snowball')) end
 		end
 		return Projs
 	end
-								local aa = getProj()
-print(game:GetService("HttpService"):JSONEncode(aa))
+
+	local aa = getProj()
+	local projNames = {}
+	for _, v in ipairs(aa) do
+		table.insert(projNames, v.Name)
+	end
+	print("Projectiles found:", table.concat(projNames, ", "))
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
