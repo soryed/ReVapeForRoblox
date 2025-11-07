@@ -4476,7 +4476,7 @@ vape:CreateNotification("Onyx","This module is nearly finished",6,"alert")
 end)
 run(function()
 	local shooting, old = false
-	
+	local MS
 	local function getProj()
 		local Projs = {}
 		for i, v in store.inventory.hotbar do
