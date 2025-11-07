@@ -4475,6 +4475,7 @@ vape:CreateNotification("Onyx","This module is nearly finished",6,"alert")
 	})
 end)
 run(function()
+	local AutoShoot
 	local shooting, old = false
 	local MS
 	local function getProj()
@@ -4485,7 +4486,7 @@ run(function()
 		return Projs
 	end
 	
-	vape.Categories.Utility:CreateModule({
+	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
 			if callback then
