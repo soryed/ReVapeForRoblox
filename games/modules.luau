@@ -4493,7 +4493,7 @@ run(function()
 				old = bedwars.ProjectileController.createLocalProjectile
 				bedwars.ProjectileController.createLocalProjectile = function(...)
 					local source, data, proj = ...
-					setclipboard(game:GetService("HttpService"):JSONEncode(source),game:GetService("HttpService"):JSONEncode(data),game:GetService("HttpService"):JSONEncode(proj))
+					print(proj)
 					if source and (proj == 'arrow' or proj == 'fireball') and not shooting then
 						task.spawn(function()
 							local bows = getProj()
