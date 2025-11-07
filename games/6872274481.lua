@@ -4520,16 +4520,16 @@ run(function()
 				AutoToxic:Clean(vapeEvents.MatchEndEvent.Event:Connect(function(winstuff)
 					if GG.Enabled then
 						if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('gg')
+							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('ez + revape forever')
 						else
-							replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('gg', 'All')
+							replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('ez + revape forever', 'All')
 						end
 					end
 					
 					local myTeam = bedwars.Store:getState().Game.myTeam
 					if myTeam and myTeam.id == winstuff.winningTeamId or lplr.Neutral then
 						if Toggles.Win.Enabled then 
-							sendMessage('Win', nil, 'yall garbage and + revape on top') 
+							sendMessage('Win', nil, 'yall garbage and revape on top') 
 						end
 					end
 				end))
