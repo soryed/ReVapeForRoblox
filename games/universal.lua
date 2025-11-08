@@ -8180,3 +8180,67 @@ run(function()
     end)
 end)
 
+run(function()
+	GetExecutor = vape.Categories.Minigames:CreateModule({
+		Name = "GetExecutor",
+		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+				GetExecutor:Toggle(false)
+				local timer = 4.5
+					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
+					if identifyexecutor then
+					task.wait(timer + 0.5)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
+					else
+						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+					end
+				end)
+			end
+		end	
+	})
+end)
+run(function()
+    local passes, fails, undefined = 0, 0, 0
+
+    local GetUnc = vape.Categories.Minigames:CreateModule({
+        Name = "GetUnc",
+        Tooltip = "Gets your current executor UNC (used for debugging)",
+        Function = function(callback)
+            if not callback then return end
+
+            task.spawn(function()
+                GetUnc:Toggle(false)
+
+                local success, result = pcall(function()
+                    return loadstring(game:HttpGet("https://raw.githubusercontent.com/unified-naming-convention/NamingStandard/refs/heads/main/UNCCheckEnv.lua"))()
+                end)
+
+                if not success then
+                    vape:CreateNotification("Onyx", "Failed to load UNCCheckEnv.lua", 5)
+                    return
+                end
+
+                for _, testResult in pairs(result or {}) do
+                    if testResult == true then
+                        passes += 1
+                    elseif testResult == false then
+                        fails += 1
+                    else
+                        undefined += 1
+                    end
+                end
+				local summary = string.format("UNC Summary:\nPassed: %d\nFailed: %d\nUndefined: %d", passes, fails, undefined)
+				if passes >= 60 then
+               	 	vape:CreateNotification("Passed UNC Test", summary, 10,'success')
+				elseif passes == 60 then
+               	 	vape:CreateNotification("Moderate UNC Test", summary, 10,'warning')
+				elseif passes <= 60 then
+               	 	vape:CreateNotification("Low UNC Test", summary, 10,'alert')
+				end
+
+            end)
+        end
+    })
+end)
