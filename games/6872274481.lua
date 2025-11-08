@@ -2820,7 +2820,7 @@ run(function()
 	local old
 	
 	local ProjectileAimbot = vape.Categories.Combat:CreateModule({
-		Name = 'slientaim',
+		Name = 'SilentAim',
 		Function = function(callback)
 			if callback then
 				old = bedwars.ProjectileController.calculateImportantLaunchValues
