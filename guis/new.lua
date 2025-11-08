@@ -20,7 +20,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.47',
+	Version = '0.48',
 	Discord = "@ye40",
 	role = "",
 	user = "",
@@ -191,6 +191,7 @@ local getcustomassets = {
 	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
 	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
 	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
+	['ReVape/assets/new/success.png'] = 'rbxassetid://83757060395888',
 }
 
 local isfile = isfile or function(file)
@@ -5422,7 +5423,7 @@ if mainapi.SC then
     progress.Position = UDim2.new(0, 3, 1, -4)
     progress.ZIndex = 5
     progress.BackgroundColor3 = type == 'alert' and Color3.fromRGB(250, 50, 56)
-      or type == 'warning' and Color3.fromRGB(236, 129, 43)
+      or type == 'warning' and Color3.fromRGB(236, 129, 43)  or type == 'success' and Color3.fromRGB(0, 255, 140)
       or Color3.fromRGB(220, 220, 220)
     progress.BorderSizePixel = 0
     progress.Parent = notification
