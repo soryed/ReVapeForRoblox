@@ -9039,7 +9039,9 @@ task.defer(function()
 
 	local rate = tostring(math.round(passes / (passes + fails) * 100))
 	local outOf = tostring(passes .. " out of " .. (passes + fails))
-				local summary = string.format("UNC Summary: Passed: %d Failed: %d Undefined: %d Rate: %d", rate, fails, undefined,outOf)
+local f = tostring(fails)
+local ud = tostring(undefined)
+				local summary = string.format("UNC Summary: Passed: %d Failed: %d Undefined: %d Rate: %d", rate, f, ud,outOf)
 				if passes >= 60 then
                	 	vape:CreateNotification("Passed UNC Test", summary, 10,'success')
 				elseif passes == 60 then
