@@ -8203,7 +8203,6 @@ run(function()
 end)
 
 run(function()
-    local passes, fails, undefined = 0, 0, 0
  local GetUnc
      GetUnc = vape.Categories.Minigames:CreateModule({
         Name = "GetUnc",
@@ -8213,6 +8212,7 @@ run(function()
 
             task.spawn(function()
                 GetUnc:Toggle(false)
+    local passes, fails, undefined = 0, 0, 0
 
 local running = 0
 
