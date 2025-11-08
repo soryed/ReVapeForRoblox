@@ -149,7 +149,7 @@ run(function()
 					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
 					if identifyexecutor then
 					task.wait(timer + 0.5)
-						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
 					else
 						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
 					end
