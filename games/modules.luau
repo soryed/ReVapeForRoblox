@@ -1655,6 +1655,10 @@ local function joinQueue()
 	end
 end
 
+local function lobby()
+	game.ReplicatedStorage.rbxts_include.node_modules['@rbxts'].net.out._NetManaged.TeleportToLobby:FireServer()
+end
+
 local kitorder = {
 	hannah = 5,
 	spirit_assassin = 4,
@@ -5675,6 +5679,7 @@ run(function()
 		})
 	end
 end)
+
 run(function()
 local AG
 	AG = vape.Categories.AltFarm:CreateModule({
@@ -5684,7 +5689,12 @@ local AG
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-			game.ReplicatedStorage.rbxts_include.node_modules['@rbxts'].net.out._NetManaged.TeleportToLobby:FireServer()
+				AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+						lobby()
+					end
+				end))
+				AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(lobby))
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
 	})
