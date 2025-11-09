@@ -1291,7 +1291,7 @@ local AntiFallPart
 local Speed
 local Fly
 local bedwars, remotes, sides, oldinvrender, oldSwing = {}, {}, {}
-local MatchHistory
+
 local function addBlur(parent)
 	local blur = Instance.new('ImageLabel')
 	blur.Name = 'Blur'
@@ -3576,7 +3576,7 @@ end)
 
 
 run(function() 
-	
+	local MatchHistory
 	MatchHistory = vape.Categories.AltFarm:CreateModule({
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
@@ -5695,7 +5695,15 @@ local AG
 				AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
 					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
 if RH.Value == true then
-MatchHistory:Toggle(true)
+			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				lobby()
+			end       
+
+				local TeleportService = game:GetService("TeleportService")
+				local data = TeleportService:GetLocalPlayerTeleportData()
+				AG:Clean(game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data))
+			
 else
 lobby()
 end
