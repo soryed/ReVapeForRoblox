@@ -5915,7 +5915,7 @@ run(function()
 					if v == Players.LocalPlayer then continue end
 					if tostring(v:GetAttribute("Disguised")) == "true" then
 						v:SetAttribute("Disguised", false)
-						InfoNotification("Remove Disguises", "Disabled streamer mode for "..tostring(v.Name).."!", 3)
+						notif("Remove Disguises", "Disabled streamer mode for "..tostring(v.Name).."!", 3)
 						table.insert(self.disguises, v)
 					end
 				end
@@ -5923,7 +5923,7 @@ run(function()
 				for i,v in pairs(self.disguises) do
 					if tostring(v:GetAttribute("Disguised")) ~= "true" then
 						v:SetAttribute("Disguised", true)
-						InfoNotification("Remove Disguises", "Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
+						notif("Remove Disguises", "Re - enabled Streamer mode for "..tostring(v.Name).."!", 2)
 					end
 				end
 				table.clear(self.disguises)
