@@ -147,9 +147,9 @@ local QueueTypes
 				return
 			end       
 			if QueueTypes.Value == "duels" then 
-				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('')
+				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('bedwars_duels')
 			elseif QueueTypes.Value == "1v1s" then 
-				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('')
+				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('winstreak_1v1')
 			end
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
