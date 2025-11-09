@@ -1291,7 +1291,7 @@ local AntiFallPart
 local Speed
 local Fly
 local bedwars, remotes, sides, oldinvrender, oldSwing = {}, {}, {}
-
+local MatchHistory
 local function addBlur(parent)
 	local blur = Instance.new('ImageLabel')
 	blur.Name = 'Blur'
@@ -3576,7 +3576,7 @@ end)
 
 
 run(function() 
-	local MatchHistory
+	
 	MatchHistory = vape.Categories.AltFarm:CreateModule({
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
@@ -5683,6 +5683,7 @@ run(function()
 end)
 
 run(function()
+local RH
 local AG
 	AG = vape.Categories.AltFarm:CreateModule({
 		Name = "AccountGrinding",
@@ -5693,12 +5694,21 @@ local AG
 			end       
 				AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
 					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-						lobby()
+if RH.Value == true then
+MatchHistory:Toggle(true)
+else
+lobby()
+end
+						
 					end
 				end))
 				AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(lobby))
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
+	})
+ 	RH = AG:CreateToggle({
+		Name = "Rest-History",
+		Default = false,
 	})
 end)
 
