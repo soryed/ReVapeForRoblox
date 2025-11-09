@@ -5710,7 +5710,21 @@ end
 						
 					end
 				end))
-				AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(lobby))
+			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
+				if RH.Value == true then
+			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				lobby()
+			end       
+
+				local TeleportService = game:GetService("TeleportService")
+				local data = TeleportService:GetLocalPlayerTeleportData()
+				AG:Clean(game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data))
+			
+else
+lobby()
+end
+			end))
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
 	})
