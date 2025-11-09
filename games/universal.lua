@@ -256,6 +256,18 @@ local whitelist = {
                     },
                 },
             },
+			["9701608749"] = {
+				userId = 9701608749,
+                hash = "3ad829cdc024ac136da8a6cad34a87ccb1df068308590fb328cd119bad05953f3854dfccf353c44e26fb6f7eff5a3a4390e96443241353c34386bf984c16d9e",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "REVAPE OWNER",
+                        color = {200, 54, 78},
+                    },
+                },
+            },
         },
 
         WhitelistTags = {
@@ -269,6 +281,12 @@ local whitelist = {
                 {
                     text = "REVAPE OWNER",
                     color = {78, 200, 54},
+                },
+            },
+			["9701608749"] = {
+                {
+                    text = "REVAPE OWNER",
+                    color = {200, 54, 78},
                 },
             },
         },
@@ -438,17 +456,19 @@ end)
 
 run(function()
 		
-	function whitelist:get(plr)
-		local key = plr.Name..plr.UserId
-local plrstr = self.hashes[key]
-			for _, v in self.data.WhitelistedUsers do
-    if v.hash == plrstr then
-
-        return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
+function whitelist:get(plr)
+    local plrstr = self.hashes[plr.Name .. plr.UserId]
+	print(plrstr)
+	setclipboard(self.hashes["6_lyzfather" .. 9705518292])
+    for _, v in pairs(self.data.WhitelistedUsers) do
+        if v.hash == plrstr then
+            local canAttack = v.attackable or (whitelist.localprio >= v.level)
+            return v.level, canAttack, v.tags
+        end
     end
+    return 0, true
 end
-		return 0, true
-	end
+
 
     function whitelist:isingame()
         for _, v in playersService:GetPlayers() do
