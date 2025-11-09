@@ -136,6 +136,39 @@ run(function()
 end)
 
 
+run(function()
+local AG
+local QueueTypes
+	AG = vape.Categories.AltFarm:CreateModule({
+		Name = "AccountGrinding",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			if QueueTypes.Value == "duels" then 
+				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('')
+			elseif QueueTypes.Value == "1v1s" then 
+				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('')
+			end
+		end,
+		Tooltip ='Used for getting accounts having rank enabled'
+	})
+    QueueTypes = AG:CreateDropdown({
+        Name = "Type",
+        List = {'duels', '1v1s'},
+    })
+
+	task.spawn(function()
+		local db = getgenv().AG.enabled or false
+		local mode = getgenv().AG.mode or 'duels'
+		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+		if vape.Loaded and not AG.Enabled then
+			QueueTypes.Value = mode
+			AG:Toggle(db)
+		end
+	end)
+end)
 
 
 																																						
@@ -5642,5 +5675,26 @@ run(function()
 		})
 	end
 end)
+run(function()
+local AG
+	AG = vape.Categories.AltFarm:CreateModule({
+		Name = "AccountGrinding",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+			game.ReplicatedStorage.rbxts_include.node_modules['@rbxts'].net.out._NetManaged.TeleportToLobby:FireServer()
+		end,
+		Tooltip ='Used for getting accounts having rank enabled'
+	})
 
+	task.spawn(function()
+		local db = getgenv().AG.enabled or false
+		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+		if vape.Loaded and not AG.Enabled then
+			AG:Toggle(db)
+		end
+	end)
+end)
 end
