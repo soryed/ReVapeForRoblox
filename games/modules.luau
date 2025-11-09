@@ -5698,13 +5698,5 @@ local AG
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
 	})
-
-	task.spawn(function()
-		local db = getgenv().AG.enabled or false
-		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
-		if vape.Loaded and not AG.Enabled then
-			AG:Toggle(db)
-		end
-	end)
 end)
 end
