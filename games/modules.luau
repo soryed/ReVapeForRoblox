@@ -4115,8 +4115,10 @@ run(function()
 											selfPosition = {value = pos}
 										}
 									})
-								end
-
+					end
+							end
+						end
+					end
 
 					for i, v in Boxes do
 						v.Adornee = attacked[i] and attacked[i].Entity.RootPart or nil
