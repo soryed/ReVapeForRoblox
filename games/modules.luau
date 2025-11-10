@@ -1923,6 +1923,16 @@ run(function()
 	local InventoryUtil = require(replicatedStorage.TS.inventory['inventory-util']).InventoryUtil
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local OldGet, OldBreak = Client.Get
+local function safeGetProto(func, index)
+    if not func then return nil end
+    local success, proto = pcall(debug.getproto, func, index)
+    if success then
+        return proto
+    else
+        warn("function:", func, "index:", index) 
+        return nil
+    end
+end
 
 	bedwars = setmetatable({
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
@@ -3522,7 +3532,7 @@ run(function()
 
     BetterDavey = vape.Categories.Exploits:CreateModule({
         Name = "BetterDavey",
-        Tooltip = "makes your cannon faster lol",
+        Tooltip = "makes u look better with davey",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
 				BetterDavey:Toggle(false)
@@ -3560,7 +3570,7 @@ run(function()
 						elseif Fly.Enabled then
 							Fly:Toggle(false)
 						end
-					
+
 						bedwars.breakBlock(child)
 
 					
