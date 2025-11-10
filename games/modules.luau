@@ -5702,6 +5702,7 @@ run(function()
 		Name = "AccountGrinding",
 		Tooltip = "Used for getting accounts having rank enabled",
 		Function = function(callback)
+			if callback then
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
@@ -5712,13 +5713,11 @@ run(function()
 					return lobby()
 				end
 				
-				-- permission check
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 					return lobby()
 				end
 
-				-- teleport
 				local TeleportService = game:GetService("TeleportService")
 				local data = TeleportService:GetLocalPlayerTeleportData()
 				TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data)
@@ -5733,6 +5732,10 @@ run(function()
 			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
 				handleEndEvent()
 			end))
+else
+return
+end
+
 		end
 	})
 
