@@ -6433,5 +6433,5 @@ run(function()
         Function = function(val) Down.Value = val end
     })
 end)
-
+print(game:GetService('HttpService'):JSONEncode(store.tools))
 end
