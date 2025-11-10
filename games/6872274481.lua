@@ -677,6 +677,16 @@ run(function()
 	local InventoryUtil = require(replicatedStorage.TS.inventory['inventory-util']).InventoryUtil
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local OldGet, OldBreak = Client.Get
+local function safeGetProto(func, index)
+    if not func then return nil end
+    local success, proto = pcall(debug.getproto, func, index)
+    if success then
+        return proto
+    else
+        warn("function:", func, "index:", index) 
+        return nil
+    end
+end
 
 	bedwars = setmetatable({
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
