@@ -563,14 +563,20 @@ run(function()
 local player = Players.LocalPlayer
     local PlayerLevel
 	local level 
-  
+  local old
 
 PlayerLevel = vape.Categories.Exploits:CreateModule({
         Name = 'SetPlayerLevel',
 	Tooltip = "Sets your player level to 100 (client sided)",
         Function = function(callback)
+if callback then
 				notif("SetPlayerLevel", "This is client sided (only u will see the new level)", 3,"warning")
-				game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
+	old = game.Players.LocalPlayer:GettAttribute("PlayerLevel")				
+game.Players.LocalPlayer:SetAttribute("PlayerLevel", level.Value)
+else
+	game.Players.LocalPlayer:SetAttribute("PlayerLevel", old)
+	old = nil
+end
 	end
 })
 
