@@ -2194,6 +2194,7 @@ end
 			if (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) > 0.4 then
 				local breaktype = bedwars.ItemMeta[dblock.Name].block.breakType
 				local tool = store.tools[breaktype]
+print(game:GetService('HttpService'):JSONEncode(store.tools))
 				if tool then
 					switchItem(tool.tool)
 				end
@@ -6433,5 +6434,5 @@ run(function()
         Function = function(val) Down.Value = val end
     })
 end)
-print(game:GetService('HttpService'):JSONEncode(store.tools))
+
 end
