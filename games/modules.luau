@@ -5689,53 +5689,49 @@ run(function()
 end)
 
 run(function()
-local RH
-local AG
+	local RH
+	local AG
+	
 	AG = vape.Categories.AltFarm:CreateModule({
 		Name = "AccountGrinding",
+		Tooltip = "Used for getting accounts having rank enabled",
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-				AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-if RH.Value == true then
-			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				lobby()
-			end       
 
+			local function handleEndEvent()
+				if not RH.Value then
+					return lobby()
+				end
+				
+				-- permission check
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return lobby()
+				end
+
+				-- teleport
 				local TeleportService = game:GetService("TeleportService")
 				local data = TeleportService:GetLocalPlayerTeleportData()
-				AG:Clean(game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-			
-else
-lobby()
-end
-						
-					end
-				end))
-			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
-				if RH.Value == true then
-			   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				lobby()
-			end       
+				TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data)
+			end
 
-				local TeleportService = game:GetService("TeleportService")
-				local data = TeleportService:GetLocalPlayerTeleportData()
-				AG:Clean(game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-			
-else
-lobby()
-end
+			AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+				if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+					handleEndEvent()
+				end
 			end))
-		end,
-		Tooltip ='Used for getting accounts having rank enabled'
+
+			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
+				handleEndEvent()
+			end))
+		end
 	})
- 	RH = AG:CreateToggle({
-		Name = "Rest-History",
+
+	RH = AG:CreateToggle({
+		Name = "Reset History",
 		Default = false,
 	})
 end)
