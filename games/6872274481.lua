@@ -356,7 +356,7 @@ local function switchItem(tool, delayTime)
 	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
 	if check and check.Value ~= tool and tool.Parent ~= nil then
 		task.spawn(function()
-			bedwars.Client:Get(remotes.EquipItem):CallServerAsync({hand = tool})
+			bedwars.Client:Get(remotes.SetInvItem):CallServerAsync({hand = tool})
 		end)
 		check.Value = tool
 		if delayTime > 0 then
@@ -365,7 +365,6 @@ local function switchItem(tool, delayTime)
 		return true
 	end
 end
-
 local function waitForChildOfType(obj, name, timeout, prop)
 	local check, returned = tick() + timeout
 	repeat
@@ -759,7 +758,7 @@ run(function()
 		DragonEndFly = debug.getproto(Knit.Controllers.VoidDragonController.flapWings, 1),
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
 		DropItem = Knit.Controllers.ItemDropController.dropItemInHand,
-		EquipItem = debug.getproto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.equipItem, 3),
+		SetInvItem = safeGetProto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.SetInvItem, 3),
 		FireProjectile = debug.getupvalue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
 		GroundHit = Knit.Controllers.FallDamageController.KnitStart,
 		GuitarHeal = Knit.Controllers.GuitarController.performHeal,
