@@ -558,7 +558,7 @@ end
 end)
 
 
-run(function()
+--[[run(function()
   local Players = game:GetService("Players")
 local player = Players.LocalPlayer
     local PlayerLevel
@@ -589,7 +589,7 @@ level = PlayerLevel:CreateSlider({
 	    player:SetAttribute("PlayerLevel", val)
 	end
     })
-end)
+end)--]]
 run(function()
     local QueueDisplayConfig = {
         ActiveState = false,
