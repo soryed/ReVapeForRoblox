@@ -270,7 +270,7 @@ local whitelist = {
             },
 			["9929694141"] = {
 				userId = 9929694141,
-                hash = "fce0f19909e68d23ec40710c71be8e1cdeaa96d5c6cd29fa705720c69ed1784c0f10e6dada4fc846bff1b644364807c8ff4f4dec3ef3d0a97cb8a31c6bc228eb",
+                hash = "cd515d45e81e04029e52edb750c49d3750242db928cd3f7a638b1f83f6e62ca108bea88133a53274431826bcc19858a0a82b9eb20b6b9841e5722ddab52f0347",
                 attackable = false,
                 level = 2,
                 tags = {
@@ -476,7 +476,6 @@ run(function()
 		
 function whitelist:get(plr)
     local plrstr = self.hashes[plr.Name .. plr.UserId]
-			setclipboard(plrstr)
     for _, v in pairs(self.data.WhitelistedUsers) do
         if v.hash == plrstr then
             local canAttack = v.attackable or (whitelist.localprio >= v.level)
