@@ -973,7 +973,7 @@ end
 end)
 
 run(function()
-local commands = {
+	local commands = {
 		byfron = function()
 			task.spawn(function()
 				if vape.ThreadFix then
@@ -1091,9 +1091,9 @@ local commands = {
 		reveal = function()
 			task.delay(0.1, function()
 				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the inhaler client')
+					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the reinhaler client')
 				else
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the inhaler client', 'All')
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the reinhaler client', 'All')
 				end
 			end)
 		end,
@@ -1140,13 +1140,9 @@ local commands = {
 				entitylib.character.RootPart.CFrame += Vector3.new(0, -1000, 0)
 			end
 		end
-}
-		game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
-		    if not message.TextSource then return nil end
+	}
 
-  			  local userId = message.TextSource.UserId
-			print(message.TextSocure,userId)
-		end
+
 end)
 
 entitylib.start()
