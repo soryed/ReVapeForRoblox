@@ -920,6 +920,7 @@ local function handleCommand(plr, msg)
 	local func = CMDS[cmd]
 	if func then
 		task.spawn(function()
+								print("handlesing")
 			func(args, plr)
 		end)
 	end
@@ -937,10 +938,13 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
 			local lev,att = whitelist:get(GoodPlayer)
 
 			if lev >= 1 then
+											print("player is over lvl 1")
 				local lev = whitelist:get(lplr)
 				if lev == 0 then
+												print("this player is lvl 0 POORON")
 					handleCommand(lplr, msg)
 				else
+												warn("returne!")
 					return						
 				end
 			end
