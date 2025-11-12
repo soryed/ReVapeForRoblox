@@ -638,6 +638,36 @@ end
         end
     end
 
+		local function addedplayer(v, joined)
+      if self:get(v) ~= 0 then
+            if self.alreadychecked[v.UserId] then return end
+            self.alreadychecked[v.UserId] = true
+            self:hook()
+
+            if self.localprio == 0 then
+                olduninject = vape.Uninject
+                vape.Uninject = function()
+                    notif('Onyx', 'No escaping the private members :)', 10)
+                end
+
+                if joined then
+                    task.wait(10)
+                end
+
+                if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                    local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+                    local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
+                    if newchannel then
+                        newchannel:SendAsync('helloimusingrehaler')
+                    end
+                    textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
+                elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
+                end
+            end
+        end
+		end
+
     function whitelist:update(first)
 			local tttag = {}
 		local suc = pcall(function()
@@ -680,11 +710,14 @@ for _, v in pairs(whitelist.data.WhitelistedUsers) do
     end
 end
 	for _, v in playersService:GetPlayers() do
+					addedplayer(v)
 				whitelist:playeradded(v)
+					
 			end
 
 				playersService.PlayerAdded:Connect(function(v)
-					whitelist:playeradded(v)
+						addedplayer(v,true)
+					whitelist:playeradded(v,true)
 				end)
 
 				task.wait(2)
