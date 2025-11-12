@@ -916,7 +916,7 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
             tagText,
             message.PrefixText or ""
         )
-						print(props)
+		print("[Chat Tag] Applied to", userId, "=>", props.PrefixText) 
         return props
     end
     return nil
