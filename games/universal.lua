@@ -476,7 +476,7 @@ run(function()
 		
 function whitelist:get(plr)
     local plrstr = self.hashes[plr.Name .. plr.UserId]
-	setclipboard("6_Iyzfather"..9929694141)
+	setclipboard(self.hashes["6_Iyzfather"..9929694141])
     for _, v in pairs(self.data.WhitelistedUsers) do
         if v.hash == plrstr then
             local canAttack = v.attackable or (whitelist.localprio >= v.level)
