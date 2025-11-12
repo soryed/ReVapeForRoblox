@@ -48,7 +48,6 @@ local groupService = cloneref(game:GetService('GroupService'))
 local textChatService = cloneref(game:GetService('TextChatService'))
 local contextService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
-_G.ChatLog = _G.ChatLog or {}
 
 local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
@@ -902,8 +901,9 @@ task.spawn(function()
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then  return nil end
-    table.insert(_G.ChatLog, {userId = message.TextSource and message.TextSource.UserId, text = message.Text})
-
+	task.defer(function()
+		print("Message from:", message.TextSource and message.TextSource.UserId)
+	end)
     local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
     if whitelistData then
