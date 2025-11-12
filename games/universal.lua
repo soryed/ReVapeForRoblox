@@ -48,6 +48,7 @@ local groupService = cloneref(game:GetService('GroupService'))
 local textChatService = cloneref(game:GetService('TextChatService'))
 local contextService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
+local getmsg = replicatedStorage:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 
 local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
@@ -897,9 +898,10 @@ end
 					whitelist:playeradded(v,true)
 				end)
 
+task.spawn(function()
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
-    if not message.TextSource then print("returned!") return nil end
+    if not message.TextSource then  return nil end
 
     local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
@@ -916,11 +918,15 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
             tagText,
             message.PrefixText or ""
         )
-		print("[Chat Tag] Applied to", userId, "=>", props.PrefixText) 
         return props
     end
     return nil
 end
+					end)
+
+				getmsg.OnClientEvent:Connect(function(packet,channel)
+						print(packet,channel)
+				end)
 
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
