@@ -1150,6 +1150,7 @@ game:GetService("TextChatService").OnIncomingMessage:Connect(function(message)
 	if player then
 		print("From:", player.Name)
 	end
+			end)
 end)
 
 entitylib.start()
