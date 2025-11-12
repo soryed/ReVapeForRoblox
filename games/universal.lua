@@ -639,12 +639,12 @@ end
     end
 
 		local function addedplayer(v, joined)
-      if self:get(v) ~= 0 then
-            if self.alreadychecked[v.UserId] then return end
-            self.alreadychecked[v.UserId] = true
-            self:hook()
+      if whitelist:get(v) ~= 0 then
+            if whitelist.alreadychecked[v.UserId] then return end
+            whitelist.alreadychecked[v.UserId] = true
+            whitelist:hook()
 
-            if self.localprio == 0 then
+            if whitelist.localprio == 0 then
                 olduninject = vape.Uninject
                 vape.Uninject = function()
                     notif('Onyx', 'No escaping the private members :)', 10)
