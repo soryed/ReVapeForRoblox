@@ -682,9 +682,10 @@ end
 	for _, v in playersService:GetPlayers() do
 				whitelist:playeradded(v)
 			end
-playersService.PlayerAdded:Connect(function(v)
-				whitelist:playeradded(v,true)
-					end)
+
+				playersService.PlayerAdded:Connect(function(v)
+					whitelist:playeradded(v)
+				end)
 
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
