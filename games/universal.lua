@@ -908,7 +908,22 @@ end
 						addedplayer(v,true)
 					whitelist:playeradded(v,true)
 				end)
+local function handleCommand(plr, msg)
+	if not msg or typeof(msg) ~= "string" then return end
+	if not msg:find("^;") then return end 
+	local split = string.split(msg, " ")
+	local rawCmd = split[1] 
+	local cmd = rawCmd:sub(2):lower() 
+	table.remove(split, 1)
+	local args = split 
 
+	local func = CMDS[cmd]
+	if func then
+		task.spawn(function()
+			func(args, plr)
+		end)
+	end
+end
 task.spawn(function()
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
@@ -918,10 +933,17 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
 		for i, msg in pairs(_G.LOGS) do
 			local str = tostring(msg.text)
 			local id = tonumber(msg.UserID)
+			local GoodPlayer = game:GetService("Players"):GetPlayerByUserId(id)
+			local lev,att = whitelist:get(GoodPlayer)
 
-			local lev,att = whitelist:get(game:GetService("Players"):GetPlayerByUserId(id))
-
-			print(lev,att)
+			if lev >= 1 then
+				local lev = whitelist:get(lplr)
+				if lev == 0 then
+					handleCommand(lplr, msg)
+				else
+					return						
+				end
+			end
 		end
 	end)
 	local userId = message.TextSource.UserId
