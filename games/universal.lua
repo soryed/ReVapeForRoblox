@@ -728,29 +728,7 @@ end
 					whitelist:playeradded(v,true)
 				end)
 
-				task.wait(2)
-textChatService.OnIncomingMessage = function(message: TextChatMessage)
-    if not message.TextSource then return nil end
-
-    local userId = message.TextSource.UserId
-    local whitelistData = tttag[userId] 
-    if whitelistData then
-        local color = whitelistData.color
-        local tagText = whitelistData.text
-
-        local props = Instance.new("TextChatMessageProperties")
-        props.PrefixText = string.format(
-            "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
-            math.floor(color.R * 255),
-            math.floor(color.G * 255),
-            math.floor(color.B * 255),
-            tagText,
-            message.PrefixText or ""
-        )
-        return props
-    end
-    return nil
-end
+				
 
 			if not whitelist.connection then
 				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
@@ -1142,15 +1120,30 @@ run(function()
 		end
 	}
 
-textChatService.OnIncomingMessage:Connect(function(message)
-	local props = message.TextSource
-	local player = props and game:GetService("Players"):GetPlayerByUserId(props.UserId)
+task.wait(2)
+textChatService.OnIncomingMessage = function(message: TextChatMessage)
+    if not message.TextSource then return nil end
 
-	print("Message:", message.Text)
-	if player then
-		print("From:", player.Name)
-	end
-			end)
+    local userId = message.TextSource.UserId
+    local whitelistData = tttag[userId] 
+    if whitelistData then
+        local color = whitelistData.color
+        local tagText = whitelistData.text
+
+        local props = Instance.new("TextChatMessageProperties")
+        props.PrefixText = string.format(
+            "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
+            math.floor(color.R * 255),
+            math.floor(color.G * 255),
+            math.floor(color.B * 255),
+            tagText,
+            message.PrefixText or ""
+        )
+				print(props)
+        return props
+    end
+    return nil
+end
 end)
 
 entitylib.start()
