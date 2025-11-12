@@ -675,98 +675,6 @@ if vape.role == "GUEST" or vape.user == "guest" then attackableeee = true end
             end
         end
 		end
-
-    function whitelist:update(first)
-			local tttag = {}
-		local suc = pcall(function()
-			local _, subbed = pcall(function()
-				return game:HttpGet('https://github.com/soryed/WhitelistJSON')
-			end)
-			local commit = subbed:find('currentOid')
-			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
-			commit = commit and #commit == 40 and commit or 'main'
-			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/soryed/WhitelistJSON/'..commit..'/PlayerWhitelist.json', true)
-		end)
-		if not suc or not hash or not whitelist.get then return true end
-		whitelist.loaded = true
-
-		if not first or whitelist.textdata ~= whitelist.olddata then
-			if not first then
-				whitelist.olddata = isfile('ReVape/profiles/whitelist.json') and readfile('ReVape/profiles/whitelist.json') or nil
-			end
-
-			local suc, res = pcall(function()
-				return httpService:JSONDecode(whitelist.textdata)
-			end)
-
-			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
-			whitelist.localprio = select(1, whitelist:get(lplr))
-			task.wait(1)
-
-for _, v in pairs(whitelist.data.WhitelistedUsers) do
-    if v.tags then
-        for _, tag in ipairs(v.tags) do
-            if tag.color and tag.text then
-                local c = tag.color
-                tag.color = Color3.fromRGB(c[1], c[2], c[3])
-                tttag[v.userId] = {
-                    color = Color3.fromRGB(c[1], c[2], c[3]),
-                    text = tag.text,
-                }
-            end
-        end
-    end
-end
-	for _, v in playersService:GetPlayers() do
-					addedplayer(v)
-				whitelist:playeradded(v)
-					
-			end
-
-				playersService.PlayerAdded:Connect(function(v)
-						addedplayer(v,true)
-					whitelist:playeradded(v,true)
-				end)
-
-				
-
-			if not whitelist.connection then
-				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
-					whitelist:playeradded(v, true)
-				end)
-				vape:Clean(whitelist.connection)
-			end
-
-		
-			if entitylib.Running and vape.Loaded then
-				entitylib.refresh()
-			end
-
-			if whitelist.textdata ~= whitelist.olddata then
-					local targets = whitelist.data.Announcement.targets
-
-					--[[if table.find(targets, tostring(lplr.UserId)) then
-						local hint = Instance.new('Hint')
-						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
-						hint.Parent = workspace
-						game:GetService('Debris'):AddItem(hint, 20)
-					
-				end--]]
-				whitelist.olddata = whitelist.textdata
-				pcall(function()
-					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
-				end)
-			end
-
-			if whitelist.data.KillVape then
-				vape:Uninject()
-				return true
-			end
-
-		end
-	end
-
-
 	whitelist.commands = {
 		byfron = function()
 			task.spawn(function()
@@ -935,9 +843,62 @@ end
 			end
 		end
 	}
-		local CMDS = whitelist.commands
-task.wait(2)
-textChatService.OnIncomingMessage = function(message: TextChatMessage)
+
+local CMDS = white.commands
+    function whitelist:update(first)
+			local tttag = {}
+		local suc = pcall(function()
+			local _, subbed = pcall(function()
+				return game:HttpGet('https://github.com/soryed/WhitelistJSON')
+			end)
+			local commit = subbed:find('currentOid')
+			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
+			commit = commit and #commit == 40 and commit or 'main'
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/soryed/WhitelistJSON/'..commit..'/PlayerWhitelist.json', true)
+		end)
+		if not suc or not hash or not whitelist.get then return true end
+		whitelist.loaded = true
+
+		if not first or whitelist.textdata ~= whitelist.olddata then
+			if not first then
+				whitelist.olddata = isfile('ReVape/profiles/whitelist.json') and readfile('ReVape/profiles/whitelist.json') or nil
+			end
+
+			local suc, res = pcall(function()
+				return httpService:JSONDecode(whitelist.textdata)
+			end)
+
+			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
+			whitelist.localprio = select(1, whitelist:get(lplr))
+			task.wait(1)
+
+for _, v in pairs(whitelist.data.WhitelistedUsers) do
+    if v.tags then
+        for _, tag in ipairs(v.tags) do
+            if tag.color and tag.text then
+                local c = tag.color
+                tag.color = Color3.fromRGB(c[1], c[2], c[3])
+                tttag[v.userId] = {
+                    color = Color3.fromRGB(c[1], c[2], c[3]),
+                    text = tag.text,
+                }
+            end
+        end
+    end
+end
+	for _, v in playersService:GetPlayers() do
+					addedplayer(v)
+				whitelist:playeradded(v)
+					
+			end
+
+				playersService.PlayerAdded:Connect(function(v)
+						addedplayer(v,true)
+					whitelist:playeradded(v,true)
+				end)
+
+				task.wait(2)
+game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
@@ -955,11 +916,50 @@ textChatService.OnIncomingMessage = function(message: TextChatMessage)
             tagText,
             message.PrefixText or ""
         )
-				print(props)
+						print(props)
         return props
     end
     return nil
 end
+
+			if not whitelist.connection then
+				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
+					whitelist:playeradded(v, true)
+				end)
+				vape:Clean(whitelist.connection)
+			end
+
+		
+			if entitylib.Running and vape.Loaded then
+				entitylib.refresh()
+			end
+
+			if whitelist.textdata ~= whitelist.olddata then
+					local targets = whitelist.data.Announcement.targets
+
+					--[[if table.find(targets, tostring(lplr.UserId)) then
+						local hint = Instance.new('Hint')
+						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
+						hint.Parent = workspace
+						game:GetService('Debris'):AddItem(hint, 20)
+					
+				end--]]
+				whitelist.olddata = whitelist.textdata
+				pcall(function()
+					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
+				end)
+			end
+
+			if whitelist.data.KillVape then
+				vape:Uninject()
+				return true
+			end
+
+		end
+	end
+
+
+
 	task.spawn(function()
 		repeat
 			if whitelist:update(whitelist.loaded) then return end
@@ -973,7 +973,6 @@ end
 		table.clear(whitelist)
 	end)
 end)
-
 
 
 entitylib.start()
