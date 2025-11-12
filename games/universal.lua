@@ -729,7 +729,7 @@ end
 				end)
 
 				task.wait(2)
-game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
+textChatService.OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then return nil end
 
     local userId = message.TextSource.UserId
@@ -1142,7 +1142,7 @@ run(function()
 		end
 	}
 
-game:GetService("TextChatService").OnIncomingMessage:Connect(function(message)
+textChatService.OnIncomingMessage:Connect(function(message)
 	local props = message.TextSource
 	local player = props and game:GetService("Players"):GetPlayerByUserId(props.UserId)
 
