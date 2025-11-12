@@ -899,7 +899,7 @@ end
 
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
-    if not message.TextSource then return nil end
+    if not message.TextSource then print("returned!") return nil end
 
     local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
