@@ -477,7 +477,19 @@ end)
 
 
 local attackableeee = false
-
+local function flattenText(value)
+	if typeof(value) == "string" then
+		return value
+	elseif typeof(value) == "table" then
+		local parts = {}
+		for _, v in ipairs(value) do
+			table.insert(parts, flattenText(v.Text or v))
+		end
+		return table.concat(parts, "")
+	else
+		return tostring(value)
+	end
+end
 run(function()
 		
 function whitelist:get(plr)
@@ -902,7 +914,8 @@ task.spawn(function()
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then  return nil end
     table.insert(_G.LOGS, {text = message.Text})
-	print(game:GetService("HttpService"):JSONEncode(_G.LOGS))
+	local text = flattenText(game:GetService("HttpService"):JSONEncode(_G.LOGS.text))
+	print(text)
     local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
     if whitelistData then
