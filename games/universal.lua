@@ -915,8 +915,8 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
     if not message.TextSource then  return nil end
     table.insert(_G.LOGS, {text = message.Text, UserID = message.TextSource and message.TextSource.UserId})
 	task.spawn(function()
-		for i, msg in pairs(game:GetService('HttpService'):JSONEncode(_G.LOGS)) do
-			print(msg,typeof(msg))
+		for i, msg in pairs(_G.LOGS) do
+			print(i, msg.text)
 		end
 	end)
 	local userId = message.TextSource.UserId
