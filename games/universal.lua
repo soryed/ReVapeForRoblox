@@ -931,24 +931,25 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
     if not message.TextSource then  return nil end
     table.insert(_G.LOGS, {text = message.Text, UserID = message.TextSource and message.TextSource.UserId})
 	task.spawn(function()
-		for i, msg in pairs(_G.LOGS) do
-			local str = tostring(msg.text)
-			local id = tonumber(msg.UserID)
-			local GoodPlayer = game:GetService("Players"):GetPlayerByUserId(id)
-			local lev,att = whitelist:get(GoodPlayer)
+	for i, msg in pairs(_G.LOGS) do
+	local str = tostring(msg.text)
+	local id = tonumber(msg.UserID)
+	local GoodPlayer = game:GetService("Players"):GetPlayerByUserId(id)
+	local lev, att = whitelist:get(GoodPlayer)
 
-			if lev >= 1 then
-											print("player is over lvl 1")
-				local lev = whitelist:get(lplr)
-				if lev == 0 then
-												print("this player is lvl 0 POORON")
-					handleCommand(lplr, msg)
-				else
-												warn("returne!")
-					return						
-				end
-			end
+	if lev >= 1 then
+		print("player is over lvl 1")
+		local lev2 = whitelist:get(lplr)
+		if lev2 == 0 then
+			print("this player is lvl 0 POORON")
+			handleCommand(lplr, str) 
+		else
+			warn("returne!")
+			return						
 		end
+	end
+end
+
 	end)
 	local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
