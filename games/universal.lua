@@ -844,7 +844,7 @@ if vape.role == "GUEST" or vape.user == "guest" then attackableeee = true end
 		end
 	}
 
-local CMDS = white.commands
+local CMDS = whitelist.commands
     function whitelist:update(first)
 			local tttag = {}
 		local suc = pcall(function()
