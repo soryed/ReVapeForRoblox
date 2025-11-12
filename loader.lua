@@ -1,9 +1,4 @@
-local gethui = gethui or function() return game:GetService('Players').LocalPlayer.PlayerGui end
 local tweenService = game:GetService('TweenService')
-
-local gui : ScreenGui = Instance.new('ScreenGui', gethui())
-gui.Enabled = true
-
 
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
@@ -44,7 +39,6 @@ end
 
 for _, folder in {'ReVape', 'ReVape/games', 'ReVape/profiles', 'ReVape/assets', 'ReVape/libraries', 'ReVape/guis'} do
 	if not isfolder(folder) then
-		makestage(1, `downloading packages\n({folder:gsub('ReVape', '')})`)
 		makefolder(folder)
 	end
 	task.wait(0.05)
@@ -55,13 +49,11 @@ local folders = {'Revape/accounts'}
 
 for _, folder in ipairs(folders) do
     if not isfolder(folder) then
-		makestage(2, "downloading important files\n(" .. folder:gsub('Revape', '') .. ")")
         makefolder(folder)
     end
     local files = {folder .. '/username.txt', folder .. '/password.txt'}
     for _, txt in ipairs(files) do
         if not isfile(txt) then
-			makestage(2, "downloading important files\n(" .. folder:gsub('Revape', '') .. ")")
             writefile(txt, "")
         end
         task.wait(0.05)
