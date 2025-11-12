@@ -2467,13 +2467,15 @@ local function BedwarsInfoNotification(mes)
 		image = "rbxassetid://18518244636"
 	});
 end
+
 local function BedwarsErrorNotification(mes)
 	bedwars.NotificationController:sendErrorNotification({
 		message = tostring(mes),
 		image = "rbxassetid://18518244636"
 	});
 end
-
+getgenv().BIN = BedwarsInfoNotification
+getgenv().BEN = BedwarsErrorNotification
 run(function()	
 
 	NM = vape.Categories.Troll:CreateModule({
