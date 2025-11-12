@@ -415,6 +415,12 @@ for name in SpeedMethods do
 end
 
 run(function()
+	local S,U,P = loginlib:SlientLogin()
+	vape.role = S 
+	vape.user = U 
+end)
+
+run(function()
 	entitylib.getUpdateConnections = function(ent)
 		local hum = ent.Humanoid
 		return {
@@ -475,8 +481,8 @@ local attackableeee = false
 run(function()
 		
 function whitelist:get(plr)
-    local plrstr = self.hashes[plr.Name .. plr.UserId]
-    for _, v in pairs(self.data.WhitelistedUsers) do
+    local plrstr = whitelist.hashes[plr.Name .. plr.UserId]
+    for _, v in pairs(whitelist.data.WhitelistedUsers) do
         if v.hash == plrstr then
             local canAttack = v.attackable or (whitelist.localprio >= v.level)
             return v.level, canAttack, v.tags
@@ -488,7 +494,7 @@ end
 
     function whitelist:isingame()
         for _, v in playersService:GetPlayers() do
-            if self:get(v) ~= 0 then
+            if whitelist:get(v) ~= 0 then
                 return true
             end
         end
@@ -496,7 +502,7 @@ end
     end
 
 function whitelist:tag(plr, rich)
-    local plrtag, newtag = select(3, self:get(plr)) or self.customtags[plr.Name] or {}, ''
+    local plrtag, newtag = select(3, whitelist:get(plr)) or whitelist.customtags[plr.Name] or {}, ''
     if not plrtag then return '' end
     for _, v in plrtag do
         newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' 
@@ -506,9 +512,9 @@ function whitelist:tag(plr, rich)
 end
 
     function whitelist:getplayer(arg)
-        if arg == 'default' and self.localprio == 0 then return true end
-        if arg == 'private' and self.localprio == 1 then return true end
-        if arg == 'owner' and self.localprio == 2 then return true end
+        if arg == 'default' and whitelist.localprio == 0 then return true end
+        if arg == 'private' and whitelist.localprio == 1 then return true end
+        if arg == 'owner' and whitelist.localprio == 2 then return true end
         if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
         return false
     end
@@ -517,10 +523,10 @@ end
     function whitelist:process(msg, plr)
         if plr == lplr and msg == 'helloimusingrehaler' then return true end
 
-        if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
-            self.said[plr.Name] = true
+        if whitelist.localprio > 0 and not whitelist.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
+            whitelist.said[plr.Name] = true
             notif('Onyx', plr.Name..' is using revape!', 60)
-            self.customtags[plr.Name] = {{
+            whitelist.customtags[plr.Name] = {{
                 text = 'VAPE USER',
                 color = Color3.new(1, 1, 0)
             }}
@@ -531,12 +537,12 @@ end
             return true
         end
 
-        if self.localprio < self:get(plr) or plr == lplr then
+        if whitelist.localprio < whitelist:get(plr) or plr == lplr then
             local args = msg:split(' ')
             table.remove(args, 1)
-            if self:getplayer(args[1]) then
+            if whitelist:getplayer(args[1]) then
                 table.remove(args, 1)
-                for cmd, func in self.commands do
+                for cmd, func in whitelist.commands do
                     if msg:sub(1, cmd:len() + 1):lower() == ';'..cmd:lower() then
                         func(args, plr)
                         return true
@@ -549,30 +555,31 @@ end
     end
 
     function whitelist:newchat(obj, plr, skip)
-        obj.Text = self:tag(plr, true)..obj.Text
+        obj.Text = whitelist:tag(plr, true)..obj.Text
         local sub = obj.ContentText:find(': ')
         if sub then
-            if not skip and self:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
+            if not skip and whitelist:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
                 obj.Visible = false
             end
         end
     end
 
     function whitelist:hook()
-        if self.hooked then return end
-        self.hooked = true
+        if whitelist.hooked then return end
+        whitelist.hooked = true
 
         local exp = coreGui:FindFirstChild('ExperienceChat')
         if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
             if exp and exp:WaitForChild('appLayout', 5) then
-                vape:Clean(exp:FindFirstChild('RCTScrollContentView', true).ChildAdded:Connect(function(obj)
+              local view = exp:FindFirstChild('RCTScrollContentView', true)
+                vape:Clean(view.ChildAdded:Connect(function(obj)
                     local plr = playersService:GetPlayerByUserId(tonumber(obj.Name:split('-')[1]) or 0)
                     obj = obj:FindFirstChild('TextMessage', true)
                     if obj and obj:IsA('TextLabel') then
                         if plr then
-                            self:newchat(obj, plr, true)
+                            whitelist:newchat(obj, plr, true)
                             obj:GetPropertyChangedSignal('Text'):Wait()
-                            self:newchat(obj, plr)
+                            whitelist:newchat(obj, plr)
                         end
                     end
                 end))
@@ -609,12 +616,12 @@ end
 	end
     local olduninject
     function whitelist:playeradded(v, joined)
-        if self:get(v) ~= 0 then
-            if self.alreadychecked[v.UserId] then return end
-            self.alreadychecked[v.UserId] = true
-            self:hook()
-
-            if self.localprio == 0 then
+        if whitelist:get(v) ~= 0 then
+            if whitelist.alreadychecked[v.UserId] then return end
+            whitelist.alreadychecked[v.UserId] = true
+            whitelist:hook()
+if vape.role == "GUEST" or vape.user == "guest" then attackableeee = true end
+            if whitelist.localprio == 0 then
 					attackableeee = true
                 olduninject = vape.Uninject
                 vape.Uninject = function()
@@ -964,6 +971,7 @@ end
 		table.clear(whitelist)
 	end)
 end)
+
 run(function()
 local commands = {
 		byfron = function()
@@ -8375,11 +8383,7 @@ local Streamer
 end)
 
 
-run(function()
-	local S,U,P = loginlib:SlientLogin()
-	vape.role = S 
-	vape.user = U 
-end)
+
 	
 run(function()
     local UpdateChecker
