@@ -913,10 +913,13 @@ task.spawn(function()
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then  return nil end
-    table.insert(_G.LOGS, {text = message.Text})
-	local text = flattenText(game:GetService("HttpService"):JSONEncode(_G.LOGS.text))
-	print(text)
-    local userId = message.TextSource.UserId
+    table.insert(_G.LOGS, {text = message.Text, UserID = message.TextSource and message.TextSource.UserId})
+	task.spawn(function()
+		for i, msg in ipairs(_G.LOGS) do
+			print(msg,typeof(msg))
+		end
+	end)
+	local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
     if whitelistData then
         local color = whitelistData.color
