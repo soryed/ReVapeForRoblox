@@ -148,10 +148,8 @@ local QueueTypes
 			end       
 			if QueueTypes.Value == "duels" then 
 				bedwars.QueueController:joinQueue('bedwars_duels')
-				--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('')
 			elseif QueueTypes.Value == "1v1s" then 
 				bedwars.QueueController:joinQueue('winstreak_1v1')
-				--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/lobby:shared/event/lobby-events@getEvents.Events").joinQueue:FireServer('winstreak_1v1')
 			end
 		end,
 		Tooltip ='Used for getting accounts having rank enabled'
@@ -2046,7 +2044,7 @@ end
 	for i, v in remoteNames do
 		local remote = dumpRemote(debug.getconstants(v))
 		if remote == '' then
-			--notif('Onyx', 'Failed to grab remote ('..i..')', 10, 'alert')
+			notif('Onyx', 'Failed to grab remote ('..i..')', 10, 'alert')
 		end
 		remotes[i] = remote
 	end
@@ -2195,7 +2193,6 @@ end
 			if (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) > 0.4 then
 				local breaktype = bedwars.ItemMeta[dblock.Name].block.breakType
 				local tool = store.tools[breaktype]
-print(game:GetService('HttpService'):JSONEncode(store.tools))
 				if tool then
 					switchItem(tool.tool)
 				end
@@ -2464,6 +2461,19 @@ print(game:GetService('HttpService'):JSONEncode(store.tools))
 		storeChanged = nil
 	end)
 end)
+local function BedwarsInfoNotification(mes)
+	bedwars.NotificationController:sendInfoNotification({
+		message = tostring(mes),
+		image = "rbxassetid://18518244636"
+	});
+end
+local function BedwarsErrorNotification(mes)
+	bedwars.NotificationController:sendErrorNotification({
+		message = tostring(mes),
+		image = "rbxassetid://18518244636"
+	});
+end
+
 run(function()	
 
 	NM = vape.Categories.Troll:CreateModule({
