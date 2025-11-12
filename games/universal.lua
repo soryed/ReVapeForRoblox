@@ -901,9 +901,7 @@ task.spawn(function()
 				task.wait(2)
 game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
     if not message.TextSource then  return nil end
-	task.defer(function()
 		print("Message from:", message.Text and message.TextSource.UserId)
-	end)
     local userId = message.TextSource.UserId
     local whitelistData = tttag[userId] 
     if whitelistData then
