@@ -1142,7 +1142,14 @@ run(function()
 		end
 	}
 
+game:GetService("TextChatService").OnIncomingMessage:Connect(function(message)
+	local props = message.TextSource
+	local player = props and game:GetService("Players"):GetPlayerByUserId(props.UserId)
 
+	print("Message:", message.Text)
+	if player then
+		print("From:", player.Name)
+	end
 end)
 
 entitylib.start()
