@@ -5963,7 +5963,7 @@ run(function()
         Function = function(val) Down.Value = val end
     })
 end)
-runcode(function()
+run(function()
 	local transformed = false
 	local OldBedwars = {["Enabled"] = false}
 	local themeselected = {["Value"] = "OldBedwars"}
