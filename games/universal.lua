@@ -916,7 +916,12 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
     table.insert(_G.LOGS, {text = message.Text, UserID = message.TextSource and message.TextSource.UserId})
 	task.spawn(function()
 		for i, msg in pairs(_G.LOGS) do
-			print(i, msg.text)
+			local str = tostring(msg.text)
+			local id = tonumber(msg.UserID)
+
+			local lev,att = whitelist:get(game:GetService("Players"):GetPlayerByUserId(id))
+
+			print(lev,att)
 		end
 	end)
 	local userId = message.TextSource.UserId
