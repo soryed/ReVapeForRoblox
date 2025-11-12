@@ -2464,7 +2464,7 @@ end)
 local function BedwarsInfoNotification(mes)
 	bedwars.NotificationController:sendInfoNotification({
 		message = tostring(mes),
-		image = "rbxassetid://18518244636"
+		image = "rbxassetid://14399506978"
 	});
 end
 
