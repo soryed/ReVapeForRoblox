@@ -2778,7 +2778,7 @@ run(function()
 								if not ray then
 									local fallY = root.AssemblyLinearVelocity.Y
 									if SoftenDamage.Enabled then
-										fallY = math.max(fallY * 0.4, -80) 
+										fallY = -76
 									else
 										fallY = -86
 									end
@@ -2800,7 +2800,7 @@ run(function()
 							if tracked < -85 then
 								if Mode.Value == 'Packet' then
 									if SoftenDamage.Enabled then
-										groundHit:FireServer(nil, Vector3.new(0, tracked * 0.3, 0), workspace:GetServerTimeNow())
+										groundHit:FireServer(nil, Vector3.new(0, tracked * 1.05, 0), workspace:GetServerTimeNow())
 									else
 										groundHit:FireServer(nil, Vector3.new(0, tracked, 0), workspace:GetServerTimeNow())
 									end
@@ -2819,7 +2819,7 @@ run(function()
 										local ray = workspace:Blockcast(root.CFrame, Vector3.new(3, 3, 3), Vector3.new(0, (tracked * 0.1) - rootSize, 0), rayParams)
 										if ray then
 											tracked = 0
-											local newY = SoftenDamage.Enabled and -60 or -80
+											local newY = SoftenDamage.Enabled and -75 or -80
 											root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, newY, root.AssemblyLinearVelocity.Z)
 										end
 									end
