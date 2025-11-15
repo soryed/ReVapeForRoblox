@@ -95,11 +95,11 @@ local function finishLoading()
 
 
 	local teleportedServers
-		vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+		--[[vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript = [[
+			local teleportScript = 
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 
@@ -108,7 +108,7 @@ local function finishLoading()
 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-			]]
+			
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -133,7 +133,7 @@ local function finishLoading()
 			vape:Save()
 			queue_on_teleport(teleportScript)
 		end
-	end))
+	end))--]]
 
 	if not shared.vapereload then
 		if not vape.Categories then return end
