@@ -8272,7 +8272,7 @@ run(function()
             local CV = tonumber(vape.Version) or 0
             while db do
                 local UV =tonumber(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")) or 0
-
+print(UV,CV)
                 if UV ~= CV then
 					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
 
@@ -8294,7 +8294,7 @@ run(function()
                 end
 
                 if not db then break end
-                task.wait(0.1)
+                task.wait(10)
             end
         end,
         Tooltip = 'Checks whenever an update is available'
@@ -8309,6 +8309,7 @@ run(function()
 end)
 
 run(function()
+	local GetExecutor	
 	GetExecutor = vape.Categories.Minigames:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
@@ -8330,11 +8331,86 @@ run(function()
 	})
 end)
 
+local function ExecutorNames(exe)
+	local e = string.lower(exe)
+	if e == string.find(e,"zenith") then return "Zenith" end
+	if e == string.find(e,"wave") or string.find(e,"ocean") or string.find(e,"water") then return "Wave" end
+	if e == string.find(e,"volt") or string.find(e,"awp") then return "Volt" end
+	if e == string.find(e,"volcano") then return "Volcano" end
+	if e == string.find(e,"synapse z") then return "Synapse%20Z%20(Closed%20Beta)" end
+	if e == string.find(e,"velocity") then return "Velocity" end
+	if e == string.find(e,"seliware") then return "Seliware" end
+	if e == string.find(e,"swift") then return "Swift" end
+	if e == string.find(e,"valex") then return "Valex" end
+	if e == string.find(e,"potassium") then return "Potassium" end
+	if e == string.find(e,"solara") then return "Solara" end
+	if e == string.find(e,"xeno") then return "Xeno" end																																																
+	if e == string.find(e,"bunni") then return "bunni.lol" end
+	if e == string.find(e,"sirhurt") then return "Sirhurt" end	
+	if e == string.find(e,"hydrogen") then return "Hydrogen" end
+	if e == string.find(e,"macsploit") then return "Macsploit" end																																																
+	if e == string.find(e,"opinumware") then return "Opinumware" end
+	if e == string.find(e,"synapse mac") then return "Synapse%20Mac" end	
+	if e == string.find(e,"delta") then return "Delta" end	
+	if e == string.find(e,"krnl") then return "Krnl" end	
+	if e == string.find(e,"codex") then return "Codex" end	
+	if e == string.find(e,"cryptic") then return "Cryptic" end	
+	if e == string.find(e,"jjsploit") then return "Xeno" end
+	if e == "" then return "failed" end
+end
+																																															
+local function sendRequest(url)
+	 local reqFunc = request or syn.request or http_request
+	 if not reqFunc then
+	     return { StatusCode = 0, Body = "" }
+	 end
+	return reqFunc({
+	    Url = url,
+	    Method = "GET",
+	})
+end
+																																															
 run(function()
- local GetUnc
-     GetUnc = vape.Categories.Minigames:CreateModule({
-        Name = "GetUnc",
-        Tooltip = "Gets your current executor UNC (used for debugging)",
+	local website = "https://weao.xyz/api/status/exploits/"
+																																																	
+ 	local GetUnc
+	GetUnc = vape.Categories.Minigames:CreateModule({
+		Name = "GetUnc",
+		Tooltip = "Gets your current executor UNC (used for debugging) -- USED FOR KNOWN EXECUTORS",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+					GetUnc:Toggle(false)
+					local IE = identifyexecutor() or ""																																																			
+					local newURL = website..ExecutorNames(IE)
+					local JSON = sendRequest(newURL)
+					if JSON then
+																																																								
+						local passes = tonumber(JSON.uncPercentage)	
+						local summary = "sUnc: " .. tostring(JSON.suncPercentage or 0) .. "% Unc: " .. tostring(JSON.uncPercentage or 0) .."% Decompiler: " .. tostring(JSON.decompiler or false) .." Multi-Instances: " .. tostring(JSON.multiInject or false)
+						if passes >= 80 then
+							vape:CreateNotification("Passed UNC Test", summary, 10, 'success')
+						elseif passes >= 60 then
+							vape:CreateNotification("Moderate UNC Test", summary, 10, 'warning')
+						elseif passes >= 40 then
+							vape:CreateNotification("Low UNC Test", summary, 10, 'alert')
+						elseif passes < 40 then
+							vape:CreateNotification("Very Low UNC Test", summary, 10, 'alert')
+						else
+							vape:CreateNotification("No UNC Test", "0 Unc or Failed to fetch executor", 10, 'alert')
+						end
+					end																																																				
+				end)
+			end
+		end	
+	})
+end)
+
+run(function()
+ local GetUncV2
+     GetUncV2 = vape.Categories.Minigames:CreateModule({
+        Name = "GetUncV2",
+        Tooltip = "Gets your current executor UNC (used for debugging) -- USED FOR UNKNOWN EXECUTORS",
         Function = function(callback)
             if not callback then return end
 
@@ -9189,4 +9265,4 @@ end)
             end)
         end
     })
-end)
+end)--]]
