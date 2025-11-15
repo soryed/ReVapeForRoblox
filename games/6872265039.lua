@@ -228,15 +228,6 @@ local QueueTypes
         List = {'duels', '1v1s'},
     })
 
-	task.spawn(function()
-		local db = getgenv().AG or false
-		local mode = getgenv().AG.mode or 'duels'
-		repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
-		if vape.Loaded and not AG.Enabled then
-			QueueTypes.Value = mode
-			AG:Toggle(db)
-		end
-	end)
 end)
 
 
