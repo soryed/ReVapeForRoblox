@@ -938,13 +938,10 @@ game:GetService("TextChatService").OnIncomingMessage = function(message: TextCha
 	local lev, att = whitelist:get(GoodPlayer)
 
 	if lev >= 1 then
-		print("player is over lvl 1")
 		local lev2 = whitelist:get(lplr)
 		if lev2 == 0 then
-			print("this player is lvl 0 POORON")
 			handleCommand(lplr, str) 
 		else
-			warn("returne!")
 			return						
 		end
 	end
@@ -8331,90 +8328,10 @@ run(function()
 	})
 end)
 
-local function ExecutorNames(exe)
-    if not exe then return nil end
-
-    local e = exe:lower()
-
-    if e:find("zenith") then return "Zenith" end
-    if e:find("wave") or e:find("ocean") or e:find("water") then return "Wave" end
-    if e:find("volt") or e:find("awp") then return "Volt" end
-    if e:find("volcano") then return "Volcano" end
-    if e:find("synapse z") then return "Synapse%20Z%20(Closed%20Beta)" end
-    if e:find("velocity") then return "Velocity" end
-    if e:find("seliware") then return "Seliware" end
-    if e:find("swift") then return "Swift" end
-    if e:find("valex") then return "Valex" end
-    if e:find("potassium") then return "Potassium" end
-    if e:find("solara") then return "Solara" end
-    if e:find("xeno") then return "Xeno" end
-    if e:find("bunni") then return "bunni.lol" end
-    if e:find("sirhurt") then return "Sirhurt" end
-    if e:find("hydrogen") then return "Hydrogen" end
-    if e:find("macsploit") then return "Macsploit" end
-    if e:find("opinumware") then return "Opinumware" end
-    if e:find("synapse mac") then return "Synapse%20Mac" end
-    if e:find("delta") then return "Delta" end
-    if e:find("krnl") then return "Krnl" end
-    if e:find("codex") then return "Codex" end
-    if e:find("cryptic") then return "Cryptic" end
-    if e:find("jjsploit") then return "Xeno" end
-
-    return "failed"
-end
-
-																																															
-local function sendRequest(url)
-	 local reqFunc = request or syn.request or http_request
-	 if not reqFunc then
-	     return { StatusCode = 0, Body = "" }
-	 end
-	return reqFunc({
-	    Url = url,
-	    Method = "GET",
-	})
-end
-																																															
 run(function()
-	local website = "https://weao.xyz/api/status/exploits/"
-																																																	
- 	local GetUnc
-	GetUnc = vape.Categories.Minigames:CreateModule({
-		Name = "GetUnc",
-		Tooltip = "Gets your current executor UNC (used for debugging) -- USED FOR KNOWN EXECUTORS",
-		Function = function(callback)
-			if callback then
-				task.spawn(function()
-					GetUnc:Toggle(false)
-					local IE = identifyexecutor() or ""																																																			
-					local newURL = website..ExecutorNames(IE)
-					local JSON = sendRequest(newURL)
-					if JSON then
-																																																								
-						local passes = tonumber(JSON.uncPercentage)	
-						local summary = "sUnc: " .. tostring(JSON.suncPercentage or 0) .. "% Unc: " .. tostring(JSON.uncPercentage or 0) .."% Decompiler: " .. tostring(JSON.decompiler or false) .." Multi-Instances: " .. tostring(JSON.multiInject or false)
-						if passes >= 80 then
-							vape:CreateNotification("Passed UNC Test", summary, 10, 'success')
-						elseif passes >= 60 then
-							vape:CreateNotification("Moderate UNC Test", summary, 10, 'warning')
-						elseif passes >= 40 then
-							vape:CreateNotification("Low UNC Test", summary, 10, 'alert')
-						elseif passes < 40 then
-							vape:CreateNotification("Very Low UNC Test", summary, 10, 'alert')
-						else
-							vape:CreateNotification("No UNC Test", "0 Unc or Failed to fetch executor", 10, 'alert')
-						end
-					end																																																				
-				end)
-			end
-		end	
-	})
-end)
-
-run(function()
- local GetUncV2
-     GetUncV2 = vape.Categories.Minigames:CreateModule({
-        Name = "GetUncV2",
+ local GetUnc
+     GetUnc = vape.Categories.Minigames:CreateModule({
+        Name = "GetUnc",
         Tooltip = "Gets your current executor UNC (used for debugging) -- USED FOR UNKNOWN EXECUTORS",
         Function = function(callback)
             if not callback then return end
