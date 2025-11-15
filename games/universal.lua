@@ -920,7 +920,6 @@ local function handleCommand(plr, msg)
 	local func = CMDS[cmd]
 	if func then
 		task.spawn(function()
-								print("handlesing")
 			func(args, plr)
 		end)
 	end
@@ -8269,7 +8268,6 @@ run(function()
             local CV = tonumber(vape.Version) or 0
             while db do
                 local UV =tonumber(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")) or 0
-print(UV,CV)
                 if UV ~= CV then
 					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
 
@@ -8332,7 +8330,7 @@ run(function()
  local GetUnc
      GetUnc = vape.Categories.Minigames:CreateModule({
         Name = "GetUnc",
-        Tooltip = "Gets your current executor UNC (used for debugging) -- USED FOR UNKNOWN EXECUTORS",
+        Tooltip = "Gets your current executor UNC (used for debugging)",
         Function = function(callback)
             if not callback then return end
 
