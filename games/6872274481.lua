@@ -6835,7 +6835,7 @@ run(function()
 		end
 	})
 end)
-	
+	--[[
 run(function()
 	local DamageIndicator
 	local FontOption
@@ -6931,7 +6931,7 @@ run(function()
 		end
 	})
 end)
-	
+	--]]
 run(function()
 	local FOV
 	local Value
@@ -12069,6 +12069,15 @@ end)
 local function getrandomvalue(tab)
 	return #tab > 0 and tab[math.random(1, #tab)] or ''
 end
+
+local function GetEnumItems(enum)
+	local fonts = {}
+	for i,v in next, Enum[enum]:GetEnumItems() do 
+		table.insert(fonts, v.Name) 
+	end
+	return fonts
+end
+																		
 run(function()
 	local DamageIndicator = {}
 	local DamageIndicatorColorToggle = {}
