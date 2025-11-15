@@ -8332,32 +8332,37 @@ run(function()
 end)
 
 local function ExecutorNames(exe)
-	local e = string.lower(exe)
-	if e == string.find(e,"zenith") then return "Zenith" end
-	if e == string.find(e,"wave") or string.find(e,"ocean") or string.find(e,"water") then return "Wave" end
-	if e == string.find(e,"volt") or string.find(e,"awp") then return "Volt" end
-	if e == string.find(e,"volcano") then return "Volcano" end
-	if e == string.find(e,"synapse z") then return "Synapse%20Z%20(Closed%20Beta)" end
-	if e == string.find(e,"velocity") then return "Velocity" end
-	if e == string.find(e,"seliware") then return "Seliware" end
-	if e == string.find(e,"swift") then return "Swift" end
-	if e == string.find(e,"valex") then return "Valex" end
-	if e == string.find(e,"potassium") then return "Potassium" end
-	if e == string.find(e,"solara") then return "Solara" end
-	if e == string.find(e,"xeno") then return "Xeno" end																																																
-	if e == string.find(e,"bunni") then return "bunni.lol" end
-	if e == string.find(e,"sirhurt") then return "Sirhurt" end	
-	if e == string.find(e,"hydrogen") then return "Hydrogen" end
-	if e == string.find(e,"macsploit") then return "Macsploit" end																																																
-	if e == string.find(e,"opinumware") then return "Opinumware" end
-	if e == string.find(e,"synapse mac") then return "Synapse%20Mac" end	
-	if e == string.find(e,"delta") then return "Delta" end	
-	if e == string.find(e,"krnl") then return "Krnl" end	
-	if e == string.find(e,"codex") then return "Codex" end	
-	if e == string.find(e,"cryptic") then return "Cryptic" end	
-	if e == string.find(e,"jjsploit") then return "Xeno" end
-	if e == "" then return "failed" end
+    if not exe then return nil end
+
+    local e = exe:lower()
+
+    if e:find("zenith") then return "Zenith" end
+    if e:find("wave") or e:find("ocean") or e:find("water") then return "Wave" end
+    if e:find("volt") or e:find("awp") then return "Volt" end
+    if e:find("volcano") then return "Volcano" end
+    if e:find("synapse z") then return "Synapse%20Z%20(Closed%20Beta)" end
+    if e:find("velocity") then return "Velocity" end
+    if e:find("seliware") then return "Seliware" end
+    if e:find("swift") then return "Swift" end
+    if e:find("valex") then return "Valex" end
+    if e:find("potassium") then return "Potassium" end
+    if e:find("solara") then return "Solara" end
+    if e:find("xeno") then return "Xeno" end
+    if e:find("bunni") then return "bunni.lol" end
+    if e:find("sirhurt") then return "Sirhurt" end
+    if e:find("hydrogen") then return "Hydrogen" end
+    if e:find("macsploit") then return "Macsploit" end
+    if e:find("opinumware") then return "Opinumware" end
+    if e:find("synapse mac") then return "Synapse%20Mac" end
+    if e:find("delta") then return "Delta" end
+    if e:find("krnl") then return "Krnl" end
+    if e:find("codex") then return "Codex" end
+    if e:find("cryptic") then return "Cryptic" end
+    if e:find("jjsploit") then return "Xeno" end
+
+    return "failed"
 end
+
 																																															
 local function sendRequest(url)
 	 local reqFunc = request or syn.request or http_request
