@@ -4546,11 +4546,11 @@ afk = vape.Categories.Minigames:CreateModule({
 					v:Disconnect()
 				end
 	
-				for _, v in getconnections(runService.Heartbeat) do
+				--[[for _, v in getconnections(runService.Heartbeat) do
 					if type(v.Function) == 'function' and table.find(debug.getconstants(v.Function), remotes.AfkStatus) then
 						v:Disconnect()
 					end
-				end
+				end--]]
 	
 				repeat 
 				bedwars.Client:Get(remotes.AfkStatus):SendToServer({
