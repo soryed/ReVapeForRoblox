@@ -2487,16 +2487,30 @@ local function BedwarsErrorNotification(mes)
 end
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
-
+local reportedPlayers = {}
 local function TryToReport(targettedplayer,value)
+    reportedPlayers[targettedplayer] = true
 	if value == "VapeNotify" then
-		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
-		vape:CreateNotification('Onyx', "Reported '" .. targettedplayer.Name .. "'", 1, "alert")
+	    if reportedPlayers[targettedplayer] then
+	       	vape:CreateNotification('AutoReport', "You have already reported this player", 1, "warning")
+	        return
+		else
+	bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
+		vape:CreateNotification('AutoReport', "Reported '" .. targettedplayer.Name .. "'", 1, "alert")
 		task.wait(1 + math.random())
+	    end
+
+
 	elseif value == "BedwarsNotify" then
-		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
-		BedwarsInfoNotification("Reported " .. targettedplayer.Name)
-		task.wait(1 + math.random())
+	    if reportedPlayers[targettedplayer] then
+	        BedwarsErrorNotification("You have already reported this player")
+	        return
+		else
+			bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
+			BedwarsInfoNotification("Reported " .. targettedplayer.Name)
+			task.wait(1 + math.random())
+	    end
+
 	elseif value == "Hidden" then
 		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
 		task.wait(1 + math.random())
@@ -3744,7 +3758,7 @@ local Mode
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
 				AutoReport:Toggle(false)
-																						vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -3752,6 +3766,7 @@ local Mode
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
 						TryToReport(v,Mode.Value)
+						AutoReport:Toggle(false)
 					end
 				end
 			end
@@ -3762,6 +3777,7 @@ local Mode
 		Name = "Mode",
 		List= {"VapeNotify", "BedwarsNotify", "Hidden"}
 	})
+	AutoReport:Toggle(false)
 end)
 
 
