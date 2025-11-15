@@ -1,6 +1,3 @@
-local SLS = getgenv().SLS or getgenv().SkipLoadingScreen or false
-
-if SLS then
 repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
@@ -163,7 +160,6 @@ shared.vape = vape
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
-	loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
@@ -184,6 +180,7 @@ else
 end
 
 
+--[[
 else
 	repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
@@ -479,7 +476,7 @@ local function finishLoading()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript = [[
+			local teleportScript =
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 
@@ -488,7 +485,7 @@ local function finishLoading()
 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-			]]
+		
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -547,7 +544,6 @@ makestage(4, 'analyzing supported environment.', .5)
 task.wait(.5)
 if identifyexecutor then
 	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
-		--vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does not support many functions. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"alert") 
 		makestage(4, 'executor not support.', .5)
 			task.wait(.55)
 					makestage(4, 'uninjecting.', .85)
@@ -570,7 +566,6 @@ for _, v in gui:GetDescendants() do
 			return
 	end
 	if table.find({'Xeno','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
-		--vape:CreateNotification("Executor Issue","Your current executor '" .. identifyexecutor() .. "' does support SOME functions, but not all. If false detections occur, please contact me on Discord: @" ..vape.Discord,15,"warning") 
 	makestage(4, 'executor is support, may cause some issues.', .5)
 			task.wait(.5)
 		end
@@ -653,4 +648,4 @@ else
 end
 
 
-end
+	--]]
