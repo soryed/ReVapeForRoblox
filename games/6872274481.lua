@@ -12213,7 +12213,7 @@ run(function()
 			'Custom',
 			'Lunar'
 		},
-		HoverText = 'Mode to color the Damage Indicator',
+		Tooltip = 'Mode to color the Damage Indicator',
 		Value = 'Rainbow',
 		Function = function() end
 	})
@@ -12223,7 +12223,7 @@ run(function()
 			'Gradient',
 			'Paint'
 		},
-		HoverText = 'Mode to color the Damage Indicator\nwith Rainbow Color Mode',
+		Tooltip = 'Mode to color the Damage Indicator\nwith Rainbow Color Mode',
 		Value = 'Gradient',
 		Function = function() end
 	})
@@ -12234,7 +12234,7 @@ run(function()
 			'Multiple',
 			'Lunar'
 		},
-		HoverText = 'Mode to change the Damage Indicator Text',
+		Tooltip = 'Mode to change the Damage Indicator Text',
 		Value = 'Custom',
 		Function = function() end
 	})
@@ -12248,7 +12248,7 @@ run(function()
 	})
 	DamageIndicatorTextToggle = DamageIndicator:CreateToggle({
 		Name = 'Custom Text',
-		HoverText = 'random messages for the indicator',
+		Tooltip = 'random messages for the indicator',
 		Function = function(calling) pcall(function() DamageIndicatorText.Object.Visible = calling end) end
 	})
 	DamageIndicatorText = DamageIndicator:CreateTextList({
