@@ -2490,18 +2490,18 @@ getgenv().BEN = BedwarsErrorNotification
 
 local function TryToReport(targettedplayer,value)
 	if value == "VapeNotify" then
-		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
-		vape:CreateNotification('Onyx', "Reported '" .. v.Name .. "'", 1, "alert")
+		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
+		vape:CreateNotification('Onyx', "Reported '" .. targettedplayer.Name .. "'", 1, "alert")
 		task.wait(1 + math.random())
 	elseif value == "BedwarsNotify" then
-		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
-		BedwarsInfoNotification("Reported " .. v.Name)
+		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
+		BedwarsInfoNotification("Reported " .. targettedplayer.Name)
 		task.wait(1 + math.random())
 	elseif value == "Hidden" then
-		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
 		task.wait(1 + math.random())
 	else
-		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
 		task.wait(1 + math.random())
 	end
 end
