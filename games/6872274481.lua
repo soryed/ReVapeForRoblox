@@ -1257,11 +1257,11 @@ local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
 	if value == "VapeNotify" then
 	    if reportedPlayers[targettedplayer] then
-	       	vape:CreateNotification('AutoReport', "You have already reported this player", 1, "warning")
+	       	vape:CreateNotification('AutoReport', "You have already reported this player", 1, "alert")
 	        return
 		else
 	bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
-		vape:CreateNotification('AutoReport', "Reported '" .. targettedplayer.Name .. "'", 1, "alert")
+		vape:CreateNotification('AutoReport', "Reported '" .. targettedplayer.Name .. "'", 1)
 		task.wait(1 + math.random())
 	    end
 
