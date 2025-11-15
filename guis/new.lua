@@ -192,6 +192,7 @@ local getcustomassets = {
 	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
 	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
 	['ReVape/assets/new/success.png'] = 'rbxassetid://98117832989643',
+	['ReVape/assets/new/module.png'] = 'rbxassetid://88102681647746',
 }
 
 local isfile = isfile or function(file)
@@ -5895,8 +5896,8 @@ mainapi:CreateCategory({
 })
 mainapi:CreateCategory({
 	Name = 'Exploits',
-	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Icon = getcustomasset('newvape/assets/new/module.png'),
+	Size = UDim2.fromOffset(14, 14)
 })
 mainapi:CreateCategory({
 	Name = 'Troll',
