@@ -13,7 +13,12 @@ local sessioninfo = vape.Libraries.sessioninfo
 local bedwars = {}
 local role = vape.role or "guest"
 local user = vape.user or "GUEST"
-
+task.spawn(function()
+	while task.wait(.1) do
+		vape.role = role
+		vape.user = user
+	end
+end)
 
 local function notif(...)
 	return vape:CreateNotification(...)
@@ -1268,6 +1273,12 @@ local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role or "guest"
 local user = vape.user or "GUEST"
+task.spawn(function()
+	while task.wait(.1) do
+		vape.role = role
+		vape.user = user
+	end
+end)
 
 
 local store = {
@@ -2476,6 +2487,25 @@ local function BedwarsErrorNotification(mes)
 end
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
+
+local function TryToReport(targettedplayer,value)
+	if value == "VapeNotify" then
+		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		vape:CreateNotification('Onyx', "Reported '" .. v.Name .. "'", 1, "alert")
+		task.wait(1 + math.random())
+	elseif value == "BedwarsNotify" then
+		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		BedwarsInfoNotification("Reported " .. v.Name)
+		task.wait(1 + math.random())
+	elseif value == "Hidden" then
+		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		task.wait(1 + math.random())
+	else
+		bedwars.Client:Get("ReportPlayer"):SendToServer(v)
+		task.wait(1 + math.random())
+	end
+end
+
 run(function()	
 
 	NM = vape.Categories.Troll:CreateModule({
@@ -3707,7 +3737,8 @@ end)
 
 
 run(function()
-local AutoReport 
+local AutoReport = {Enabled = false}
+local Mode
 	 AutoReport = vape.Categories.Exploits:CreateModule({
 		Name = "AutoReport",
 		Function = function(callback)
@@ -3720,16 +3751,17 @@ local AutoReport
 
 				for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
 					if v ~= game.Players.LocalPlayer then
-					bedwars.Client:Get("ReportPlayer"):SendToServer(v)
-						vape:CreateNotification('Onyx', "Reported '" .. v.Name .. "'", 1, "alert")
-							task.wait(1 + math.random())
+						TryToReport(v,Mode.Value)
 					end
 				end
 			end
 		end,
 		Tooltip = "Automatically reports everyone in the game",
 	})
-	AutoReport:Toggle(false)
+ 	Mode = AutoReport:CreateDropdown({
+		Name = "Mode",
+		List= {"VapeNotify", "BedwarsNotify", "Hidden"}
+	})
 end)
 
 
@@ -5975,10 +6007,12 @@ run(function()
         Function = function(val) Down.Value = val end
     })
 end)
+
+
 run(function()
 	local transformed = false
-	local OldBedwars = {["Enabled"] = false}
-	local themeselected = {["Value"] = "OldBedwars"}
+	local OldBedwars = {Enabled = false}
+	local themeselected = {Value = "OldBedwars"}
 
 	local themefunctions = {
 		Old = function()
@@ -6435,29 +6469,29 @@ run(function()
 			end)
 		end
 	}
-
 	OldBedwars = vape.Categories.Render:CreateModule({
-		["Name"] = "GameTheme",
-		["Function"] = function(callback)
-			if callback then
+		Name = "GameTheme",
+		Function = function(callback)
+		if callback then
 				if not transformed then
 					transformed = true
-					themefunctions[themeselected["Value"]]()
+					themefunctions[themeselected.Value]()
 				else
-					OldBedwars["ToggleButton"](false)
+					OldBedwars:Toggle(false)
 				end
 			else
 				notif("GameTheme", "Disabled Next Game", 10,"warning")
 			end
 		end,
-		["ExtraText"] = function()
+		ExtraText = function()
 			return themeselected["Value"]
 		end
 	})
 	themeselected = OldBedwars:CreateDropdown({
-		["Name"] = "Theme",
-		["Function"] = function() end,
-		["List"] = {"Old", "Winter", "Halloween", "Valentines"}
+		Name = "Theme",
+		List= {"Old", "Winter", "Halloween", "Valentines"}
 	})
 end)
+else
+	return
 end
