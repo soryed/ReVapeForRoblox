@@ -9751,7 +9751,6 @@ run(function()
 
 	local aa = getProj()
 	
-	print("Projectiles found:",aa)
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
@@ -9759,7 +9758,6 @@ run(function()
 				old = bedwars.ProjectileController.createLocalProjectile
 				bedwars.ProjectileController.createLocalProjectile = function(...)
 					local source, data, proj = ...
-					print(proj)
 					if proj and not shooting then
 						task.spawn(function()
 							local bows = getProj()
@@ -9768,7 +9766,6 @@ run(function()
 								task.wait(0.15)
 								local selected = store.inventory.hotbarSlot
 								for _, v in getProj() do
-print(v)
 										task.wait(MS.Value / 1000)
 										mouse1click()
 										task.wait(MS.Value / 1000)
@@ -11672,5 +11669,265 @@ run(function()
 	themeselected = OldBedwars:CreateDropdown({
 		Name = "Theme",
 		List= {"Old", "Winter", "Halloween", "Valentines"}
+	})
+end)
+local function getrandomvalue(tab)
+	return #tab > 0 and tab[math.random(1, #tab)] or ''
+end
+run(function()
+	local DamageIndicator = {}
+	local DamageIndicatorColorToggle = {}
+	local DamageIndicatorColor = {Hue = 0, Sat = 0, Value = 0}
+	local DamageIndicatorTextToggle = {}
+	local DamageIndicatorText = {ListEnabled = {}}
+	local DamageIndicatorFontToggle = {}
+	local DamageIndicatorFont = {Value = 'GothamBlack'}
+	local DamageIndicatorTextObjects = {}
+    local DamageIndicatorMode1
+    local DamageMessages = {
+		'Pow!',
+		'Pop!',
+		'Hit!',
+		'Smack!',
+		'Bang!',
+		'Boom!',
+		'Whoop!',
+		'Damage!',
+		'-9e9!',
+		'Whack!',
+		'Crash!',
+		'Slam!',
+		'Zap!',
+		'Snap!',
+		'Thump!',
+		'Ouch!',
+		'Crack!',
+		'Bam!',
+		'Clap!',
+		'Blitz!',
+		'Crunch!',
+		'Shatter!',
+		'Blast!',
+		'Womp!',
+		'Thunk!',
+		'Zing!',
+		'Rip!',
+		'Rattle!',
+		'Kaboom!',
+		'Wack!',
+		'Boomer!',
+		'Slammer!',
+		'Powee!',
+		'Zappp!',
+		'Thunker!',
+		'Rippler!',
+		'Bap!',
+		'Bomp!',
+		'Sock!',
+		'Chop!',
+		'Sting!',
+		'Slice!',
+		'Swipe!',
+		'Punch!',
+		'Tonk!',
+		'Bonk!',
+		'Jolt!',
+		'Spike!',
+		'Pierce!',
+		'Crush!',
+		'Bruise!',
+		'Ding!',
+		'Clang!',
+		'Crashhh!',
+		'Kablam!',
+		'Zapshot!',
+	}
+	local RGBColors = {
+		Color3.fromRGB(255, 0, 0),
+		Color3.fromRGB(255, 127, 0),
+		Color3.fromRGB(255, 255, 0),
+		Color3.fromRGB(0, 255, 0),
+		Color3.fromRGB(0, 0, 255),
+		Color3.fromRGB(75, 0, 130),
+		Color3.fromRGB(148, 0, 211)
+	}
+	local orgI, mz, vz = 1, 5, 10
+    local DamageIndicatorMode = {Value = 'Rainbow'}
+	local DamageIndicatorMode2 = {Value = 'Gradient'}
+	DamageIndicator = vape.Categories.Render:CreateModule({
+		Name = 'DamageIndicator',
+		Function = function(calling)
+			if calling then
+				task.spawn(function()
+					table.insert(DamageIndicator.Connections, workspace.DescendantAdded:Connect(function(v)
+						pcall(function()
+                            if v.Name ~= 'DamageIndicatorPart' then return end
+							local indicatorobj = v:FindFirstChildWhichIsA('BillboardGui'):FindFirstChildWhichIsA('Frame'):FindFirstChildWhichIsA('TextLabel')
+							if indicatorobj then
+                                if DamageIndicatorColorToggle.Enabled then
+                                    if DamageIndicatorMode.Value == 'Rainbow' then
+                                        if DamageIndicatorMode2.Value == 'Gradient' then
+                                            indicatorobj.TextColor3 = Color3.fromHSV(tick() % mz / mz, orgI, orgI)
+                                        else
+                                            runService.Stepped:Connect(function()
+                                                orgI = (orgI % #RGBColors) + 1
+                                                indicatorobj.TextColor3 = RGBColors[orgI]
+                                            end)
+                                        end
+                                    elseif DamageIndicatorMode.Value == 'Custom' then
+                                        indicatorobj.TextColor3 = Color3.fromHSV(
+                                            DamageIndicatorColor.Hue, 
+                                            DamageIndicatorColor.Sat, 
+                                            DamageIndicatorColor.Value
+                                        )
+                                    else
+                                        indicatorobj.TextColor3 = Color3.fromRGB(127, 0, 255)
+                                    end
+                                end
+                                if DamageIndicatorTextToggle.Enabled then
+                                    if DamageIndicatorMode1.Value == 'Custom' then
+                                        local o = getrandomvalue(DamageIndicatorText.ListEnabled)
+                                        indicatorobj.Text = o ~= '' and o or indicatorobj.Text
+									elseif DamageIndicatorMode1.Value == 'Multiple' then
+										indicatorobj.Text = DamageMessages[math.random(orgI, #DamageMessages)]
+									else
+										indicatorobj.Text = 'Render Intents on top!'
+									end
+								end
+								indicatorobj.Font = DamageIndicatorFontToggle.Enabled and Enum.Font[DamageIndicatorFont.Value] or indicatorobject.Font
+							end
+						end)
+					end))
+				end)
+			end
+		end
+	})
+    DamageIndicatorMode = DamageIndicator:CreateDropdown({
+		Name = 'Color Mode',
+		List = {
+			'Rainbow',
+			'Custom',
+			'Lunar'
+		},
+		HoverText = 'Mode to color the Damage Indicator',
+		Value = 'Rainbow',
+		Function = function() end
+	})
+	DamageIndicatorMode2 = DamageIndicator:CreateDropdown({
+		Name = 'Rainbow Mode',
+		List = {
+			'Gradient',
+			'Paint'
+		},
+		HoverText = 'Mode to color the Damage Indicator\nwith Rainbow Color Mode',
+		Value = 'Gradient',
+		Function = function() end
+	})
+    DamageIndicatorMode1 = DamageIndicator:CreateDropdown({
+		Name = 'Text Mode',
+		List = {
+            'Custom',
+			'Multiple',
+			'Lunar'
+		},
+		HoverText = 'Mode to change the Damage Indicator Text',
+		Value = 'Custom',
+		Function = function() end
+	})
+	DamageIndicatorColorToggle = DamageIndicator:CreateToggle({
+		Name = 'Custom Color',
+		Function = function(calling) pcall(function() DamageIndicatorColor.Object.Visible = calling end) end
+	})
+	DamageIndicatorColor = DamageIndicator:CreateColorSlider({
+		Name = 'Text Color',
+		Function = function() end
+	})
+	DamageIndicatorTextToggle = DamageIndicator:CreateToggle({
+		Name = 'Custom Text',
+		HoverText = 'random messages for the indicator',
+		Function = function(calling) pcall(function() DamageIndicatorText.Object.Visible = calling end) end
+	})
+	DamageIndicatorText = DamageIndicator:CreateTextList({
+		Name = 'Text',
+		TempText = 'Indicator Text',
+		AddFunction = function() end
+	})
+	DamageIndicatorFontToggle = DamageIndicator:CreateToggle({
+		Name = 'Custom Font',
+		Function = function(calling) pcall(function() DamageIndicatorFont.Object.Visible = calling end) end
+	})
+	DamageIndicatorFont = DamageIndicator:CreateDropdown({
+		Name = 'Font',
+		List = GetEnumItems('Font'),
+		Function = function() end
+	})
+	DamageIndicatorColor.Object.Visible = DamageIndicatorColorToggle.Enabled
+	DamageIndicatorText.Object.Visible = DamageIndicatorTextToggle.Enabled
+	DamageIndicatorFont.Object.Visible = DamageIndicatorFontToggle.Enabled
+end)
+
+run(function()
+	local BlockIn
+	
+	local function getBedNear()
+		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
+		for _, v in collectionService:GetTagged('bed') do
+			if (localPosition - v.Position).Magnitude < 20 and v:GetAttribute('Team'..(lplr:GetAttribute('Team') or -1)..'NoBreak') then
+				return v
+			end
+		end
+	end
+	
+	local function getBlocks()
+		local blocks = {}
+		for _, item in store.inventory.inventory.items do
+			local block = bedwars.ItemMeta[item.itemType].block
+			if block then
+				table.insert(blocks, {item.itemType, block.health})
+			end
+		end
+		table.sort(blocks, function(a, b) 
+			return a[2] < b[2]
+		end)
+		return blocks
+	end
+	
+	local function getPyramid(size, grid)
+		return {
+			Vector3.new(3, 0, 0);
+			Vector3.new(0, 0, 3);
+			Vector3.new(-3, 0, 0);
+			Vector3.new(0, 0, -3);
+			Vector3.new(3, 3, 0);
+			Vector3.new(0, 3, 3);
+			Vector3.new(-3, 3, 0);
+			Vector3.new(0, 3, -3);
+			Vector3.new(0, 6, 0);
+		}
+	end
+	
+	BlockIn = vape.Categories.Blatant:CreateModule({
+		Name = 'BlockIn',
+		Function = function(callback)
+			if callback then
+				me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+				if me then
+					for i, block in getBlocks() do
+						for _, pos in getPyramid(i, 3) do
+							if not BlockIn.Enabled then break end
+							if getPlacedBlock(me + pos) then continue end
+							bedwars.placeBlock(me + pos, block[1], false)
+						end
+					end
+					if BlockIn.Enabled then 
+						BlockIn:Toggle() 
+					end
+				else
+					notif('BlockIn', 'Unable to locate me', 5)
+					BlockIn:Toggle()
+				end
+			end
+		end,
+		Tooltip = 'Automatically places strong blocks around the me.'
 	})
 end)
