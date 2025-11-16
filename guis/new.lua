@@ -1228,7 +1228,7 @@ components = {
 			Type = 'Slider',
 			Value = optionsettings.Default or optionsettings.Min,
 			Max = optionsettings.Max,
-			Index = getTableSize(api.Options)
+			Index = getTableSize(api.Options),
 		}
 		
 		local slider = Instance.new('TextButton')
@@ -1346,7 +1346,7 @@ components = {
 				and (inputObj.Position.Y - slider.AbsolutePosition.Y) > (20 * scale.Scale)
 			then
 				local newPosition = math.clamp((inputObj.Position.X - bkg.AbsolutePosition.X) / bkg.AbsoluteSize.X, 0, 1)
-				optionapi:SetValue(math.floor((optionsettings.Min + (optionsettings.Max - optionsettings.Min) * newPosition) * optionsettings.Decimal) / optionsettings.Decimal, newPosition)
+							optionapi:SetValue(math.floor((optionsettings.Min + (optionsettings.Max - optionsettings.Min) * newPosition) * optionsettings.Decimal) / optionsettings.Decimal, newPosition)
 				local lastValue = optionapi.Value
 				local lastPosition = newPosition
 		
