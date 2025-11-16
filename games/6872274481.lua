@@ -4627,7 +4627,7 @@ run(function()
 	Range = AutoSuffocate:CreateSlider({
 		Name = 'Range',
 		Min = 1,
-		Max = 45,
+		Max = 30,
 		Default = 20,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -4644,7 +4644,10 @@ run(function()
 		Min = 0,
 		Max = 1,
 		Default = 0.7,
-		Suffix = 's'
+		Suffix = 's',
+		Function = function(val)
+        Predictions.Value = val
+    end
 	})
 	SmartSpread = AutoSuffocate:CreateToggle({
 		Name = 'Smart Spread',
