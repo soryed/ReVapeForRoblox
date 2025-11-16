@@ -12298,7 +12298,7 @@ run(function()
         Name = "DamageAffect",
         Function = function(call)
 			if call then
-				connection = workspace.DescendantAdded:Connect(function(part)
+				connection = DamageAffect:Clean(workspace.DescendantAdded:Connect(function(part)
 				    if part.Name == "DamageIndicatorPart" and part:IsA("BasePart") then
 				        for i, v in part:GetDescendants() do
 				            if v:IsA("TextLabel") then
@@ -12311,7 +12311,7 @@ run(function()
 				            end
 				        end
 				    end
-				end)
+				end))
 			else
 				connection:Disconnect()
 				connection = nil
@@ -12330,4 +12330,17 @@ run(function()
 			end
 		end
 	})
+end)
+
+run(function()
+	local test
+
+    test = vape.Categories.Exploits:CreateModule({
+        Name = "test",
+        Function = function(call)
+			print('nothing')
+        end,
+        Tooltip = "Testing smt new, if u see this ignore pls",
+		Perms = "owner"
+    })
 end)
