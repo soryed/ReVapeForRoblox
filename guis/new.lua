@@ -3790,7 +3790,7 @@ function mainapi:CreateCategory(categorysettings)
 			Category = categorysettings.Name,
 			Permissions = modulesettings.Perms or "user"
 		}
-		local Perm = moduleapi.Permissions
+
 		local hovered = false
 		local modulebutton = Instance.new('TextButton')
 		modulebutton.Name = modulesettings.Name
@@ -3810,78 +3810,67 @@ function mainapi:CreateCategory(categorysettings)
 		gradient.Parent = modulebutton
 		local modulechildren = Instance.new('Frame')
 		local bind = Instance.new('TextButton')
-		local permbd = Instance.new('TextButton')
-		if  moduleapi.Permissions == "user" or moduleapi.Permissions == "" then
-	permbd.Visible = false
-			addTooltip(modulebutton, modulesettings.Tooltip)
-			addTooltip(bind, 'Click to bind')
-			bind.Name = 'Bind'
-			bind.Size = UDim2.fromOffset(20, 21)
-			bind.Position = UDim2.new(1, -36, 0, 9)
-			bind.AnchorPoint = Vector2.new(1, 0)
-			bind.BackgroundColor3 = Color3.new(1, 1, 1)
-			bind.BackgroundTransparency = 0.92
-			bind.BorderSizePixel = 0
-			bind.AutoButtonColor = false
-			bind.Visible = false
-			bind.Text = ''
-			bind.Parent = button
-		else
-			permbd.Name = 'Permission'
-			permbd.Size = UDim2.fromOffset(20, 21)
-			permbd.Position = UDim2.new(1, -36, 0, 9)
-			permbd.AnchorPoint = Vector2.new(1, 0)
-			permbd.BackgroundColor3 =	Color3.new(0.8, 0.2, 0.2)
-			permbd.BackgroundTransparency = 0.35
-			permbd.BorderSizePixel = 0
-			permbd.AutoButtonColor = false
-			permbd.Visible = true
-			permbd.Text = ''	
-			Perm = moduleapi.Permissions
-									permbd.Parent = button
-print('created permission button')
-		end
-print(Perm)
+		addTooltip(modulebutton, modulesettings.Tooltip)
+		addTooltip(bind, 'Click to bind')
+		if moduleapi.Permissions == "user" then 
+		bind.Name = 'Bind'
+		bind.Size = UDim2.fromOffset(20, 21)
+		bind.Position = UDim2.new(1, -36, 0, 9)
+		bind.AnchorPoint = Vector2.new(1, 0)
+		bind.BackgroundColor3 = Color3.new(1, 1, 1)
+		bind.BackgroundTransparency = 0.92
+		bind.BorderSizePixel = 0
+		bind.AutoButtonColor = false
+		bind.Visible = false
+		bind.Text = ''
 		addCorner(bind, UDim.new(0, 4))
+	else
+		bind.Name = 'Bind'
+		bind.Size = UDim2.fromOffset(20, 21)
+		bind.Position = UDim2.new(1, -36, 0, 9)
+		bind.AnchorPoint = Vector2.new(1, 0)
+		bind.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+		bind.BackgroundTransparency = 0.35
+		bind.BorderSizePixel = 0
+		bind.AutoButtonColor = false
+		bind.Visible = true
+		bind.Text = ''
+		addCorner(bind, UDim.new(0, 4))
+		end
+		
 		local bindicon = Instance.new('ImageLabel')
 		bindicon.Name = 'Icon'
 		bindicon.Size = UDim2.fromOffset(12, 12)
 		bindicon.Position = UDim2.new(0.5, -6, 0, 5)
 		bindicon.BackgroundTransparency = 1
-		bindicon.Image = getcustomasset('ReVape/assets/new/bind.png')
+		bindicon.Image = getcustomasset('newvape/assets/new/bind.png')
 		bindicon.ImageColor3 = color.Dark(uipallet.Text, 0.43)
-		if Perm == "" or  Perm == "user" then
-		bindicon.Parent = bind 
-		else 
-		bindicon.Parent = permbd 
-		end
-
-		--bindicon.Parent = bind
+		bindicon.Parent = bind
 		local bindtext = Instance.new('TextLabel')
 		bindtext.Size = UDim2.fromScale(1, 1)
 		bindtext.Position = UDim2.fromOffset(0, 1)
 		bindtext.BackgroundTransparency = 1
 		bindtext.Visible = false
-		--bindtext.Text = ''
-		--bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43
+			if moduleapi.Permissions == "user" then 
+				bindtext.Text = ''
+		bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43)
 		bindtext.TextSize = 12
 		bindtext.FontFace = uipallet.Font
-		if  Perm == "" or Perm == "user" then 
-		bindtext.Text = '' 
-		bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43)
-		bindtext.Parent = bind 
-		else
-		bindtext.Parent = permbd
-		bindtext.Text = string.upper(moduleapi.Permissions)
-		bindtext.TextColor3 = Color3.new(0, 0, 0) 
-		end
-		--bindtext.Parent = bind
+		bindtext.Parent = bind
+	else
+				bindtext.Text =string.upper(moduleapi.Permissions)
+		bindtext.TextColor3 = Color3.new(0, 0, 0)
+		bindtext.TextSize = 12
+		bindtext.FontFace = uipallet.Font
+		bindtext.Parent = bind
+	end
+
 		local bindcover = Instance.new('ImageLabel')
 		bindcover.Name = 'Cover'
 		bindcover.Size = UDim2.fromOffset(154, 40)
 		bindcover.BackgroundTransparency = 1
 		bindcover.Visible = false
-		bindcover.Image = getcustomasset('ReVape/assets/new/bindbkg.png')
+		bindcover.Image = getcustomasset('newvape/assets/new/bindbkg.png')
 		bindcover.ScaleType = Enum.ScaleType.Slice
 		bindcover.SliceCenter = Rect.new(0, 0, 141, 40)
 		bindcover.Parent = modulebutton
@@ -3907,7 +3896,7 @@ print(Perm)
 		dots.Size = UDim2.fromOffset(3, 16)
 		dots.Position = UDim2.fromOffset(4, 12)
 		dots.BackgroundTransparency = 1
-		dots.Image = getcustomasset('ReVape/assets/new/dots.png')
+		dots.Image = getcustomasset('newvape/assets/new/dots.png')
 		dots.ImageColor3 = color.Light(uipallet.Main, 0.37)
 		dots.Parent = dotsbutton
 		modulechildren.Name = modulesettings.Name..'Children'
@@ -3994,13 +3983,13 @@ print(Perm)
 		bind.MouseEnter:Connect(function()
 			bindtext.Visible = false
 			bindicon.Visible = not bindtext.Visible
-			bindicon.Image = getcustomasset('ReVape/assets/new/edit.png')
+			bindicon.Image = getcustomasset('newvape/assets/new/edit.png')
 			if not moduleapi.Enabled then bindicon.ImageColor3 = color.Dark(uipallet.Text, 0.16) end
 		end)
 		bind.MouseLeave:Connect(function()
 			bindtext.Visible = #moduleapi.Bind > 0
 			bindicon.Visible = not bindtext.Visible
-			bindicon.Image = getcustomasset('ReVape/assets/new/bind.png')
+			bindicon.Image = getcustomasset('newvape/assets/new/bind.png')
 			if not moduleapi.Enabled then
 				bindicon.ImageColor3 = color.Dark(uipallet.Text, 0.43)
 			end
@@ -4044,9 +4033,9 @@ print(Perm)
 			bind.Visible = #moduleapi.Bind > 0 or hovered or modulechildren.Visible
 		end)
 		modulebutton.MouseButton1Click:Connect(function()
-		if bind.BackgroundColor3 ==	Color3.new(0.8, 0.2, 0.2) then
-print('role+',mainapi.role)
-		end
+			if bind.BackgroundColor3 == Color3.new(0.8, 0.2, 0.2) then
+				print('perms',mainapi.role)
+			end
 			moduleapi:Toggle()
 		end)
 		modulebutton.MouseButton2Click:Connect(function()
@@ -4124,6 +4113,7 @@ print('role+',mainapi.role)
 
 		return moduleapi
 	end
+
 
 	function categoryapi:Expand()
 		self.Expanded = not self.Expanded
