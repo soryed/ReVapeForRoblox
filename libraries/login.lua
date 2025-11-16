@@ -13,7 +13,6 @@ if getgenv().TestAccount then
      username = "GUEST"
      password = "PASSWORD"
 else
-    print(getgenv().username or "NIGGA")
      username = getgenv().username or "GUEST"
      password = getgenv().password or "PASSWORD"
     
@@ -57,7 +56,7 @@ function login:Login()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
-        print("failed to get code 200")
+            vape:CreateNotification("Onyx", "Login failed, Error Code 200. Continue as 'GUEST'", 7)
             return "guest", "GUEST", "PASSWORD"
         end
 
@@ -71,7 +70,7 @@ function login:Login()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
-                print("didnt not decode or be enough good")
+            vape:CreateNotification("Onyx", "Login failed, failed to decode or couldn't be good enough. Continue as 'GUEST'", 7)
             return "guest", "GUEST", "PASSWORD"
         end
 
