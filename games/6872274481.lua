@@ -10145,7 +10145,7 @@ run(function()
 
 	local aa = getProj()
 	
-	print("Projectiles found:",aa)
+	--print("Projectiles found:",aa)
 	AutoShoot = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoShoot',
 		Function = function(callback)
@@ -10153,7 +10153,7 @@ run(function()
 				old = bedwars.ProjectileController.createLocalProjectile
 				bedwars.ProjectileController.createLocalProjectile = function(...)
 					local source, data, proj = ...
-					print(proj)
+					--print(proj)
 					if proj and not shooting then
 						task.spawn(function()
 							local bows = getProj()
@@ -10162,7 +10162,7 @@ run(function()
 								task.wait(0.15)
 								local selected = store.inventory.hotbarSlot
 								for _, v in getProj() do
-print(v)
+--print(v)
 										task.wait(MS.Value / 1000)
 										mouse1click()
 										task.wait(MS.Value / 1000)
@@ -12294,7 +12294,6 @@ run(function()
 			if block then
 				table.insert(blocks, {item.itemType, block.health})
 			end
-						print(block,game:GetService("HttpService"):JSONEncode(block))
 		end
 		table.sort(blocks, function(a, b) 
 			return a[2] < b[2]
@@ -12341,7 +12340,7 @@ run(function()
 							if not BlockIn.Enabled then break end
 							if getPlacedBlock(me + pos) then continue end
 							bedwars.placeBlock(me + pos, block[1], false)
-							print(DP,DP.Value)
+							print(DP)
 						end
 					end
 					if BlockIn.Enabled then BlockIn:Toggle(false) end
