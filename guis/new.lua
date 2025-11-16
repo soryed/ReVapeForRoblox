@@ -3790,7 +3790,7 @@ function mainapi:CreateCategory(categorysettings)
 			Category = categorysettings.Name,
 			Permissions = modulesettings.Perms or "user"
 		}
-		local Perm = ''
+		local Perm = moduleapi.Permissions
 		local hovered = false
 		local modulebutton = Instance.new('TextButton')
 		modulebutton.Name = modulesettings.Name
