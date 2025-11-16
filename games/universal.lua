@@ -239,7 +239,7 @@ local whitelist = {
                 level = 2,
                 tags = {
                     {
-                        text = "REVAPE OWNER",
+                        text = "ONYX OWNER",
                         color = {78, 200, 54},
                     },
                 },
@@ -251,7 +251,7 @@ local whitelist = {
                 level = 2,
                 tags = {
                     {
-                        text = "REVAPE OWNER",
+                        text = "ONYX OWNER",
                         color = {78, 200, 54},
                     },
                 },
@@ -263,7 +263,7 @@ local whitelist = {
                 level = 2,
                 tags = {
                     {
-                        text = "REVAPE OWNER",
+                        text = "ONYX OWNER",
                         color = {200, 54, 78},
                     },
                 },
@@ -275,7 +275,7 @@ local whitelist = {
                 level = 2,
                 tags = {
                     {
-                        text = "REVAPE OWNER",
+                        text = "ONYX OWNER",
                         color = {200, 54, 78},
                     },
                 },
@@ -285,25 +285,25 @@ local whitelist = {
         WhitelistTags = {
             ["7756737656"] = {
                 {
-                    text = "REVAPE OWNER",
+                    text = "ONYX OWNER",
                     color = {78, 200, 54},
                 },
             },
 			["9705518292"] = {
                 {
-                    text = "REVAPE OWNER",
+                    text = "ONYX OWNER",
                     color = {78, 200, 54},
                 },
             },
 			["9701608749"] = {
                 {
-                    text = "REVAPE OWNER",
+                    text = "ONYX OWNER",
                     color = {200, 54, 78},
                 },
             },
 			["9929694141"] = {
                 {
-                    text = "REVAPE OWNER",
+                    text = "ONYX OWNER",
                     color = {200, 54, 78},
                 },
             },
@@ -537,7 +537,7 @@ end
 
         if whitelist.localprio > 0 and not whitelist.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
             whitelist.said[plr.Name] = true
-            notif('Onyx', plr.Name..' is using revape!', 60)
+            notif('Onyx', plr.Name..' is using onyx!', 60)
             whitelist.customtags[plr.Name] = {{
                 text = 'VAPE USER',
                 color = Color3.new(1, 1, 0)
@@ -6301,7 +6301,7 @@ run(function()
 				
 				local ind = 1
 				repeat
-					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'revape on top')
+					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'onyx on top')
 					if Mode.Value == 'Order' and #Lines.ListEnabled > 0 then
 						message = Lines.ListEnabled[ind] or Lines.ListEnabled[1]
 						ind = (ind % #Lines.ListEnabled) + 1
@@ -8251,7 +8251,7 @@ local Streamer
 		Function = function(callback)
 			vape.HideNofis = callback
 		end,
-		Tooltip ='hides revapes modules'
+		Tooltip ='hides onyx\'s modules'
 	})
 
 end)
