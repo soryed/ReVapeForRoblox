@@ -380,6 +380,7 @@ local function switchItem(tool)
 		return true
 	end
 end
+getgenv().SI = switchItem
 
 local function waitForChildOfType(obj, name, timeout, prop)
 	local check, returned = tick() + timeout
