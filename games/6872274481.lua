@@ -12069,210 +12069,6 @@ run(function()
 	})
 end)
 
-local function getrandomvalue(tab)
-	return #tab > 0 and tab[math.random(1, #tab)] or ''
-end
-
-local function GetEnumItems(enum)
-	local fonts = {}
-	for i,v in next, Enum[enum]:GetEnumItems() do 
-		table.insert(fonts, v.Name) 
-	end
-	return fonts
-end
-																		
-run(function()
-	local DamageIndicator = {}
-	local DamageIndicatorColorToggle = {}
-	local DamageIndicatorColor = {Hue = 0, Sat = 0, Value = 0}
-	local DamageIndicatorTextToggle = {}
-	local DamageIndicatorText = {ListEnabled = {}}
-	local DamageIndicatorFontToggle = {}
-	local DamageIndicatorFont = {Value = 'GothamBlack'}
-	local DamageIndicatorTextObjects = {}
-    local DamageIndicatorMode1
-    local DamageMessages = {
-		'Pow!',
-		'Pop!',
-		'Hit!',
-		'Smack!',
-		'Bang!',
-		'Boom!',
-		'Whoop!',
-		'Damage!',
-		'-9e9!',
-		'Whack!',
-		'Crash!',
-		'Slam!',
-		'Zap!',
-		'Snap!',
-		'Thump!',
-		'Ouch!',
-		'Crack!',
-		'Bam!',
-		'Clap!',
-		'Blitz!',
-		'Crunch!',
-		'Shatter!',
-		'Blast!',
-		'Womp!',
-		'Thunk!',
-		'Zing!',
-		'Rip!',
-		'Rattle!',
-		'Kaboom!',
-		'Wack!',
-		'Boomer!',
-		'Slammer!',
-		'Powee!',
-		'Zappp!',
-		'Thunker!',
-		'Rippler!',
-		'Bap!',
-		'Bomp!',
-		'Sock!',
-		'Chop!',
-		'Sting!',
-		'Slice!',
-		'Swipe!',
-		'Punch!',
-		'Tonk!',
-		'Bonk!',
-		'Jolt!',
-		'Spike!',
-		'Pierce!',
-		'Crush!',
-		'Bruise!',
-		'Ding!',
-		'Clang!',
-		'Crashhh!',
-		'Kablam!',
-		'Zapshot!',
-	}
-	local RGBColors = {
-		Color3.fromRGB(255, 0, 0),
-		Color3.fromRGB(255, 127, 0),
-		Color3.fromRGB(255, 255, 0),
-		Color3.fromRGB(0, 255, 0),
-		Color3.fromRGB(0, 0, 255),
-		Color3.fromRGB(75, 0, 130),
-		Color3.fromRGB(148, 0, 211)
-	}
-	local orgI, mz, vz = 1, 5, 10
-    local DamageIndicatorMode = {Value = 'Rainbow'}
-	local DamageIndicatorMode2 = {Value = 'Gradient'}
-	DamageIndicator = vape.Categories.Render:CreateModule({
-		Name = 'DamageIndicator',
-		Function = function(calling)
-			if calling then
-				task.spawn(function()
-					table.insert(DamageIndicator.Connections, workspace.DescendantAdded:Connect(function(v)
-						pcall(function()
-                            if v.Name ~= 'DamageIndicatorPart' then return end
-							local indicatorobj = v:FindFirstChildWhichIsA('BillboardGui'):FindFirstChildWhichIsA('Frame'):FindFirstChildWhichIsA('TextLabel')
-							if indicatorobj then
-                                if DamageIndicatorColorToggle.Enabled then
-                                    if DamageIndicatorMode.Value == 'Rainbow' then
-                                        if DamageIndicatorMode2.Value == 'Gradient' then
-                                            indicatorobj.TextColor3 = Color3.fromHSV(tick() % mz / mz, orgI, orgI)
-                                        else
-                                            runService.Stepped:Connect(function()
-                                                orgI = (orgI % #RGBColors) + 1
-                                                indicatorobj.TextColor3 = RGBColors[orgI]
-                                            end)
-                                        end
-                                    elseif DamageIndicatorMode.Value == 'Custom' then
-                                        indicatorobj.TextColor3 = Color3.fromHSV(
-                                            DamageIndicatorColor.Hue, 
-                                            DamageIndicatorColor.Sat, 
-                                            DamageIndicatorColor.Value
-                                        )
-                                    else
-                                        indicatorobj.TextColor3 = Color3.fromRGB(127, 0, 255)
-                                    end
-                                end
-                                if DamageIndicatorTextToggle.Enabled then
-                                    if DamageIndicatorMode1.Value == 'Custom' then
-                                        local o = getrandomvalue(DamageIndicatorText.ListEnabled)
-                                        indicatorobj.Text = o ~= '' and o or indicatorobj.Text
-									elseif DamageIndicatorMode1.Value == 'Multiple' then
-										indicatorobj.Text = DamageMessages[math.random(orgI, #DamageMessages)]
-									else
-										indicatorobj.Text = 'Render Intents on top!'
-									end
-								end
-								indicatorobj.Font = DamageIndicatorFontToggle.Enabled and Enum.Font[DamageIndicatorFont.Value] or indicatorobject.Font
-							end
-						end)
-					end))
-				end)
-			end
-		end
-	})
-    DamageIndicatorMode = DamageIndicator:CreateDropdown({
-		Name = 'Color Mode',
-		List = {
-			'Rainbow',
-			'Custom',
-			'Lunar'
-		},
-		Tooltip = 'Mode to color the Damage Indicator',
-		Value = 'Rainbow',
-		Function = function() end
-	})
-	DamageIndicatorMode2 = DamageIndicator:CreateDropdown({
-		Name = 'Rainbow Mode',
-		List = {
-			'Gradient',
-			'Paint'
-		},
-		Tooltip = 'Mode to color the Damage Indicator\nwith Rainbow Color Mode',
-		Value = 'Gradient',
-		Function = function() end
-	})
-    DamageIndicatorMode1 = DamageIndicator:CreateDropdown({
-		Name = 'Text Mode',
-		List = {
-            'Custom',
-			'Multiple',
-			'Lunar'
-		},
-		Tooltip = 'Mode to change the Damage Indicator Text',
-		Value = 'Custom',
-		Function = function() end
-	})
-	DamageIndicatorColorToggle = DamageIndicator:CreateToggle({
-		Name = 'Custom Color',
-		Function = function(calling) pcall(function() DamageIndicatorColor.Object.Visible = calling end) end
-	})
-	DamageIndicatorColor = DamageIndicator:CreateColorSlider({
-		Name = 'Text Color',
-		Function = function() end
-	})
-	DamageIndicatorTextToggle = DamageIndicator:CreateToggle({
-		Name = 'Custom Text',
-		Tooltip = 'random messages for the indicator',
-		Function = function(calling) pcall(function() DamageIndicatorText.Object.Visible = calling end) end
-	})
-	DamageIndicatorText = DamageIndicator:CreateTextList({
-		Name = 'Text',
-		TempText = 'Indicator Text',
-		AddFunction = function() end
-	})
-	DamageIndicatorFontToggle = DamageIndicator:CreateToggle({
-		Name = 'Custom Font',
-		Function = function(calling) pcall(function() DamageIndicatorFont.Object.Visible = calling end) end
-	})
-	DamageIndicatorFont = DamageIndicator:CreateDropdown({
-		Name = 'Font',
-		List = GetEnumItems('Font'),
-		Function = function() end
-	})
-	DamageIndicatorColor.Object.Visible = DamageIndicatorColorToggle.Enabled
-	DamageIndicatorText.Object.Visible = DamageIndicatorTextToggle.Enabled
-	DamageIndicatorFont.Object.Visible = DamageIndicatorFontToggle.Enabled
-end)
-
 run(function()
     local BlockIn
     local PD
@@ -12380,4 +12176,122 @@ run(function()
         Default = 3,
         Suffix = "ms"
     })
+end)
+
+
+run(function()
+    local DamageAffect = {Enabled = false}
+    local connection
+	local Fonts
+	local DamageMessages = {
+		'Pow!',
+		'Pop!',
+		'Hit!',
+		'Smack!',
+		'Bang!',
+		'Boom!',
+		'Whoop!',
+		'Damage!',
+		'-9e9!',
+		'Whack!',
+		'Crash!',
+		'Slam!',
+		'Zap!',
+		'Snap!',
+		'Thump!',
+		'Ouch!',
+		'Crack!',
+		'Bam!',
+		'Clap!',
+		'Blitz!',
+		'Crunch!',
+		'Shatter!',
+		'Blast!',
+		'Womp!',
+		'Thunk!',
+		'Zing!',
+		'Rip!',
+		'Rattle!',
+		'Kaboom!',
+		'Wack!',
+		'Boomer!',
+		'Slammer!',
+		'Powee!',
+		'Zappp!',
+		'Thunker!',
+		'Rippler!',
+		'Bap!',
+		'Bomp!',
+		'Sock!',
+		'Chop!',
+		'Sting!',
+		'Slice!',
+		'Swipe!',
+		'Punch!',
+		'Tonk!',
+		'Bonk!',
+		'Jolt!',
+		'Spike!',
+		'Pierce!',
+		'Crush!',
+		'Bruise!',
+		'Ding!',
+	    'Clang!',
+		'Crashhh!',
+		'Kablam!',
+		'Zapshot!',
+	}
+	
+	local RGBColors = {
+		Color3.fromRGB(255, 0, 0),
+		Color3.fromRGB(255, 127, 0),
+		Color3.fromRGB(255, 255, 0),
+		Color3.fromRGB(0, 255, 0),
+		Color3.fromRGB(0, 0, 255),
+		Color3.fromRGB(75, 0, 130),
+		Color3.fromRGB(148, 0, 211)
+	}
+	
+	local function randomizer(tbl)
+	    if not typeof(tbl) == "table" then return end
+	    local index = math.random(1,#tbl)
+	    local value = tbl[index]
+	    return value,index
+	end
+
+    DamageAffect = vape.Categories.Render:CreateModule({
+        Name = "DamageAffect",
+        Function = function(call)
+			if call then
+				connection = workspace.DescendantAdded:Connect(function(part)
+				    if part.Name == "DamageIndicatorPart" and part:IsA("BasePart") then
+				        for i, v in part:GetDescendants() do
+				            if v:IsA("TextLabel") then
+				                local txt = randomizer(DamageMessages)
+				                local clr = randomizer(RGBColors)
+				
+				                v.Text = txt
+				                v.TextColor3 = clr
+				            end
+				        end
+				    end
+				end)
+			else
+				connection:Disconnect()
+				connection = nil
+			end
+        end,
+        Tooltip = "Customizes Damage Affects"
+    })
+
+	Fonts = DamageAffect:CreateFont({
+		Name = 'Font',
+		Blacklist = 'Arial',
+		Function = function()
+			if DamageAffect.Enabled then
+				DamageAffect:Toggle()
+				DamageAffect:Toggle()
+			end
+		end
+	})
 end)
