@@ -3825,7 +3825,7 @@ function mainapi:CreateCategory(categorysettings)
 			bind.AutoButtonColor = false
 			bind.Visible = false
 			bind.Text = ''
-		
+			bind.Parent = button
 		else
 			permbd.Name = 'Permission'
 			permbd.Size = UDim2.fromOffset(20, 21)
@@ -3838,6 +3838,7 @@ function mainapi:CreateCategory(categorysettings)
 			permbd.Visible = true
 			permbd.Text = ''	
 			Perm = moduleapi.Permissions
+									permbd.Parent = button
 print('created permission button')
 		end
 print(Perm)
