@@ -8292,7 +8292,7 @@ run(function()
                 task.wait(10)
             end
         end,
-        Tooltip = 'Checks whenever an update is available'
+        Tooltip = 'Checks whenever an update is available, useful when important updates are coming'
     })
 
     task.spawn(function()
