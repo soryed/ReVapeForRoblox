@@ -3909,7 +3909,7 @@ function mainapi:CreateCategory(categorysettings)
 		bindcovertext.Visible = false
 		divider.Visible = false
 		bindicon.Visible = false
-		bind.Name = 'Permission'
+		bind.Name = 'Bind'
 		bind.Size = UDim2.fromOffset(97, 21)
 		bind.Position = UDim2.new(1, -36, 0, 9)
 		bind.AnchorPoint = Vector2.new(1, 0)
