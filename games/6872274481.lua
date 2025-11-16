@@ -12274,107 +12274,104 @@ run(function()
 end)
 
 run(function()
-	local BlockIn
-	local PD
-	local UseBlacklisted_Blocks
-	local blacklisted
-	local function getBedNear()
-		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
-		for _, v in collectionService:GetTagged('bed') do
-			if (localPosition - v.Position).Magnitude < 20 and v:GetAttribute('Team'..(lplr:GetAttribute('Team') or -1)..'NoBreak') then
-				return v
-			end
-		end
-	end
-	
-	local function getBlocks()
-		local blocks = {}
-		for _, item in store.inventory.inventory.items do
-			local block = bedwars.ItemMeta[item.itemType].block
-			if block then
-				table.insert(blocks, {item.itemType, block.health})
-			end
-		end
-		table.sort(blocks, function(a, b) 
-			return a[2] < b[2]
-		end)
-		return blocks
-	end
-	
-	--[[local function getPyramid(size, grid)
-		return {
-			Vector3.new(3, 0, 0);
-			Vector3.new(0, 0, 3);
-			Vector3.new(-3, 0, 0);
-			Vector3.new(0, 0, -3);
-			Vector3.new(3, 3, 0);
-			Vector3.new(0, 3, 3);
-			Vector3.new(-3, 3, 0);
-			Vector3.new(0, 3, -3);
-			Vector3.new(0, 6, 0);
-		}
-	end--]]
+    local BlockIn
+    local PD
+    local UseBlacklisted_Blocks
+    local blacklisted
 
-	local function getPyramid(size, grid)
-	    return {
-	        Vector3.new(3, 0, 0),
-	        Vector3.new(0, 0, 3),
-	        Vector3.new(-3, 0, 0),
-	        Vector3.new(0, 0, -3),
-	        Vector3.new(3, 3, 0),
-	        Vector3.new(0, 3, 3),
-	        Vector3.new(-3, 3, 0),
-	        Vector3.new(0, 3, -3),
-	        Vector3.new(0, 6, 0),
-	        Vector3.new(0, -3, 0)
-	    }
-	end
+    local function getBedNear()
+        local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
+        for _, v in collectionService:GetTagged("bed") do
+            if (localPosition - v.Position).Magnitude < 20 
+                and v:GetAttribute("Team" .. (lplr:GetAttribute("Team") or -1) .. "NoBreak")
+            then
+                return v
+            end
+        end
+    end
 
-																											
-	BlockIn = vape.Categories.Blatant:CreateModule({
-		Name = 'BlockIn',
-		Function = function(callback)
-			if callback then
-				local me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+    local function getBlocks()
+        local blocks = {}
 
-				 if not me then
-	        		notif('BlockIn', 'Unable to locate me', 5, "warning")
-	            	BlockIn:Toggle(false)
-	            	return
-	        	end
-	
-		        local item = getBlocks()
-		        if not item or #item == 0 then
-		            notif('BlockIn', 'No blocks found in inventory!', 5, "warning")
-		            BlockIn:Toggle(false)
-		            return
-		        end
-				if me then
-				    for i, block in ipairs(item) do
-				        for _, pos in ipairs(getPyramid(i, 3)) do
-				            if not BlockIn.Enabled then break end
-				
-				            local targetPos = me + pos
-				            if getPlacedBlock(targetPos) then continue end
-				
-				            bedwars.placeBlock(targetPos, block[1], false)
-				            task.wait(PD.Value / 100)
-				        end
-				    end
-				
-				    if BlockIn.Enabled then 
-				        BlockIn:Toggle(false)
-				    end
-				end
-		end,
-		Tooltip = 'Automatically places strong blocks around the me.'
-	})
+        for _, item in store.inventory.inventory.items do
+            local block = bedwars.ItemMeta[item.itemType].block
+            if block then
+                table.insert(blocks, { item.itemType, block.health })
+            end
+        end
 
-	PD = BlockIn:CreateSlider({
-		Name = "Place Delay",
-		Min = 1,
-		Max = 5,
-		Default = 3,
-		Suffix = "ms"
-	})
+        table.sort(blocks, function(a, b)
+            return a[2] < b[2]
+        end)
+
+        return blocks
+    end
+
+    local function getPyramid(size, grid)
+        return {
+            Vector3.new(3, 0, 0),
+            Vector3.new(0, 0, 3),
+            Vector3.new(-3, 0, 0),
+            Vector3.new(0, 0, -3),
+            Vector3.new(3, 3, 0),
+            Vector3.new(0, 3, 3),
+            Vector3.new(-3, 3, 0),
+            Vector3.new(0, 3, -3),
+            Vector3.new(0, 6, 0),
+            Vector3.new(0, -3, 0),
+        }
+    end
+
+    BlockIn = vape.Categories.Blatant:CreateModule({
+        Name = "BlockIn",
+        Tooltip = "Automatically places strong blocks around the me.",
+        Function = function(callback)
+            if not callback then 
+                return 
+            end
+
+            local me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+            if not me then
+                notif("BlockIn", "Unable to locate me", 5, "warning")
+                BlockIn:Toggle(false)
+                return
+            end
+
+            local item = getBlocks()
+            if not item or #item == 0 then
+                notif("BlockIn", "No blocks found in inventory!", 5, "warning")
+                BlockIn:Toggle(false)
+                return
+            end
+
+            for i, block in ipairs(item) do
+                for _, pos in ipairs(getPyramid(i, 3)) do
+                    if not BlockIn.Enabled then 
+                        break 
+                    end
+
+                    local targetPos = me + pos
+                    if getPlacedBlock(targetPos) then 
+                        continue 
+                    end
+
+                    bedwars.placeBlock(targetPos, block[1], false)
+
+                    task.wait(PD.Value / 100)
+                end
+            end
+
+            if BlockIn.Enabled then
+                BlockIn:Toggle(false)
+            end
+        end
+    })
+
+    PD = BlockIn:CreateSlider({
+        Name = "Place Delay",
+        Min = 1,
+        Max = 5,
+        Default = 3,
+        Suffix = "ms"
+    })
 end)
