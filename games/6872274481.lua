@@ -12374,7 +12374,7 @@ run(function()
 		Name = "Place Delay",
 		Min = 1,
 		Max = 5,
-		Default = 1,
+		Default = 3,
 		Suffix = "ms"
 	})
 end)
