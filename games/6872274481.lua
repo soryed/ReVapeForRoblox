@@ -12355,6 +12355,7 @@ run(function()
                         continue 
                     end
 					for i=0,8,1 do
+						print(i)
 					    task.defer(bedwars.placeBlock, targetPos, block[1])
 						task.wait(PD.Value / 100)
 					end
