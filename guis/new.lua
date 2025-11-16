@@ -3788,7 +3788,7 @@ function mainapi:CreateCategory(categorysettings)
 			ExtraText = modulesettings.ExtraText,
 			Name = modulesettings.Name,
 			Category = categorysettings.Name,
-			Permissions = categorysettings.Perms or "user"
+			Permissions = modulesettings.Perms or "user"
 		}
 		local Perm = ''
 		local hovered = false
