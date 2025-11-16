@@ -12318,7 +12318,7 @@ run(function()
             Vector3.new(-3, 3, 0),
             Vector3.new(0, 3, -3),
             Vector3.new(0, 6, 0),
-            Vector3.new(0, -3, 0),
+            Vector3.new(0, -2.8, 0),
         }
     end
 
@@ -12343,7 +12343,14 @@ run(function()
                 BlockIn:Toggle(false)
                 return
             end
-
+			local function fastPlace(targetPos, blockType,delay)
+			    task.spawn(function()
+			        if not getPlacedBlock(targetPos) then
+			            bedwars.placeBlock(targetPos, blockType, false)
+			            task.wait(delay)
+			        end
+			    end)
+			end
             for i, block in ipairs(item) do
                 for _, pos in ipairs(getPyramid(i, 3)) do
                     if not BlockIn.Enabled then 
@@ -12355,9 +12362,7 @@ run(function()
                         continue 
                     end
 
-                    bedwars.placeBlock(targetPos, block[1], false)
-
-                    task.wait(PD.Value / 100)
+        			fastPlace(root.Position + pos, block[1],(PD.Value / 1000))
                 end
             end
 
