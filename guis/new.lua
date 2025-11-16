@@ -3929,12 +3929,33 @@ function mainapi:CreateCategory(categorysettings)
 		bindtext.TextSize = 12
 		bindtext.FontFace = uipallet.Font
 		bindtext.Parent = bind
+	
+		bindcover.Name = 'Cover'
+		bindcover.Size = UDim2.fromOffset(154, 40)
+		bindcover.BackgroundTransparency = 1
+		bindcover.Visible = false
+		bindcover.Image = getcustomasset('newvape/assets/new/bindbkg.png')
+		bindcover.ScaleType = Enum.ScaleType.Slice
+		bindcover.SliceCenter = Rect.new(0, 0, 141, 40)
+		bindcover.Parent = modulebutton
+		
+		bindcovertext.Name = 'Text'
+		bindcovertext.Size = UDim2.new(1, -10, 1, -3)
+		bindcovertext.BackgroundTransparency = 1
+		bindcovertext.Text = 'PRESS A KEY TO BIND'
+		bindcovertext.TextColor3 = uipallet.Text
+		bindcovertext.TextSize = 11
+		bindcovertext.FontFace = uipallet.Font
+		bindcovertext.Parent = bindcover
+		bind.Parent = modulebutton
+		
 		dotsbutton.Name = 'Dots'
 		dotsbutton.Size = UDim2.fromOffset(25, 40)
 		dotsbutton.Position = UDim2.new(1, -25, 0, 0)
 		dotsbutton.BackgroundTransparency = 1
 		dotsbutton.Text = ''
 		dotsbutton.Parent = modulebutton
+		
 		dots.Name = 'Dots'
 		dots.Size = UDim2.fromOffset(3, 16)
 		dots.Position = UDim2.fromOffset(4, 12)
@@ -3942,6 +3963,27 @@ function mainapi:CreateCategory(categorysettings)
 		dots.Image = getcustomasset('newvape/assets/new/dots.png')
 		dots.ImageColor3 = color.Light(uipallet.Main, 0.37)
 		dots.Parent = dotsbutton
+		modulechildren.Name = modulesettings.Name..'Children'
+		modulechildren.Size = UDim2.new(1, 0, 0, 0)
+		modulechildren.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
+		modulechildren.BorderSizePixel = 0
+		modulechildren.Visible = false
+		modulechildren.Parent = children
+		moduleapi.Children = modulechildren
+		
+		windowlist.SortOrder = Enum.SortOrder.LayoutOrder
+		windowlist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		windowlist.Parent = modulechildren
+		divider.Name = 'Divider'
+		divider.Size = UDim2.new(1, 0, 0, 1)
+		divider.Position = UDim2.new(0, 0, 1, -1)
+		divider.BackgroundColor3 = Color3.new(0.19, 0.19, 0.19)
+		divider.BackgroundTransparency = 0.52
+		divider.BorderSizePixel = 0
+		divider.Visible = false
+		divider.Parent = modulebutton
+		modulesettings.Function = modulesettings.Function or function() end
+		addMaid(moduleapi)
 	end
 
 		function moduleapi:SetBind(tab, mouse)
