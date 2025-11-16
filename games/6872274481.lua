@@ -9338,7 +9338,7 @@ end)
 
 
 
-run(function()
+--[[run(function()
 local AutoReport = {Enabled = false}
 local Mode
 	 AutoReport = vape.Categories.Exploits:CreateModule({
@@ -9366,7 +9366,7 @@ local Mode
 		List= {"VapeNotify", "BedwarsNotify", "Hidden"}
 	})
 	AutoReport:Toggle(false)
-end)
+end)--]]
 
 
 run(function()
