@@ -12325,7 +12325,7 @@ run(function()
 			if callback then
 				me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
 				if me then
-					for i, block in do
+					for i, block in item do
 						for _, pos in getPyramid(i, 3) do
 							if not BlockIn.Enabled then break end
 							if getPlacedBlock(me + pos) then continue end
