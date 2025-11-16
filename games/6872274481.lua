@@ -10343,7 +10343,7 @@ run(function()
 		end
 
 				local wool = store.inventory.inventory.items
-print(wool)
+print(game:GetService("HttpService"):JSONEncode(wool))
 		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
