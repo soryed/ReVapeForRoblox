@@ -4645,10 +4645,7 @@ run(function()
 		Max = 1,
 		Default = 0.7,
 		Suffix = 's',
-		Function = function(val)
-				print(val)
-        Predictions.Value = val
-    end
+		Decimal = 100
 	})
 	print(Predictions,game:GetService("HttpService"):JSONEncode(Predictions))
 	SmartSpread = AutoSuffocate:CreateToggle({
