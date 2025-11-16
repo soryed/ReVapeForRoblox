@@ -3787,9 +3787,10 @@ function mainapi:CreateCategory(categorysettings)
 			Index = getTableSize(mainapi.Modules),
 			ExtraText = modulesettings.ExtraText,
 			Name = modulesettings.Name,
-			Category = categorysettings.Name
+			Category = categorysettings.Name,
+			Permissions = categorysettings.Perms or "user"
 		}
-
+		local Perm = ''
 		local hovered = false
 		local modulebutton = Instance.new('TextButton')
 		modulebutton.Name = modulesettings.Name
@@ -3809,18 +3810,32 @@ function mainapi:CreateCategory(categorysettings)
 		gradient.Parent = modulebutton
 		local modulechildren = Instance.new('Frame')
 		local bind = Instance.new('TextButton')
-		addTooltip(modulebutton, modulesettings.Tooltip)
-		addTooltip(bind, 'Click to bind')
-		bind.Name = 'Bind'
-		bind.Size = UDim2.fromOffset(20, 21)
-		bind.Position = UDim2.new(1, -36, 0, 9)
-		bind.AnchorPoint = Vector2.new(1, 0)
-		bind.BackgroundColor3 = Color3.new(1, 1, 1)
-		bind.BackgroundTransparency = 0.92
-		bind.BorderSizePixel = 0
-		bind.AutoButtonColor = false
-		bind.Visible = false
-		bind.Text = ''
+		if not moduleapi.Permissions == "user" or moduleapi.Permissions == "" then
+			bind.Name = 'Bind'
+			bind.Size = UDim2.fromOffset(20, 21)
+			bind.Position = UDim2.new(1, -36, 0, 9)
+			bind.AnchorPoint = Vector2.new(1, 0)
+			bind.BackgroundColor3 =	Color3.new(0.8, 0.2, 0.2)
+			bind.BackgroundTransparency = 0.92
+			bind.BorderSizePixel = 0
+			bind.AutoButtonColor = false
+			bind.Visible = false
+			bind.Text = string.upper(moduleapi.Permissions)	
+			Perm = moduleapi.Permissions
+		else
+			addTooltip(modulebutton, modulesettings.Tooltip)
+			addTooltip(bind, 'Click to bind')
+			bind.Name = 'Bind'
+			bind.Size = UDim2.fromOffset(20, 21)
+			bind.Position = UDim2.new(1, -36, 0, 9)
+			bind.AnchorPoint = Vector2.new(1, 0)
+			bind.BackgroundColor3 = Color3.new(1, 1, 1)
+			bind.BackgroundTransparency = 0.92
+			bind.BorderSizePixel = 0
+			bind.AutoButtonColor = false
+			bind.Visible = false
+			bind.Text = ''
+		end
 		addCorner(bind, UDim.new(0, 4))
 		local bindicon = Instance.new('ImageLabel')
 		bindicon.Name = 'Icon'
@@ -4008,6 +4023,9 @@ function mainapi:CreateCategory(categorysettings)
 			bind.Visible = #moduleapi.Bind > 0 or hovered or modulechildren.Visible
 		end)
 		modulebutton.MouseButton1Click:Connect(function()
+		if bind.BackgroundColor3 ==	Color3.new(0.8, 0.2, 0.2) then
+print('role+',mainapi.role)
+		end
 			moduleapi:Toggle()
 		end)
 		modulebutton.MouseButton2Click:Connect(function()
