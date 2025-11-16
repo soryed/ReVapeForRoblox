@@ -4646,9 +4646,11 @@ run(function()
 		Default = 0.7,
 		Suffix = 's',
 		Function = function(val)
+				print(val)
         Predictions.Value = val
     end
 	})
+	print(Predictions,game:GetService("HttpService"):JSONEncode(Predictions))
 	SmartSpread = AutoSuffocate:CreateToggle({
 		Name = 'Smart Spread',
 		Default = true,
