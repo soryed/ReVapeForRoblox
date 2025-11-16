@@ -12275,7 +12275,7 @@ end)
 
 run(function()
 	local BlockIn
-	
+	local PlaceDelay
 	local function getBedNear()
 		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
 		for _, v in collectionService:GetTagged('bed') do
@@ -12313,17 +12313,26 @@ run(function()
 			Vector3.new(0, 6, 0);
 		}
 	end
-	local item =  getBlocks()
-	if not item or item == nil or item == {} then
-		vape:CreateNotification("BlockIn", "No blocks found in inventory!", 5, "warning")
-		return
-	end
-		
+
 	BlockIn = vape.Categories.Blatant:CreateModule({
 		Name = 'BlockIn',
 		Function = function(callback)
 			if callback then
-				me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+				local me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+
+				 if not me then
+	        		notif('BlockIn', 'Unable to locate me', 5, "warning")
+	            	BlockIn:Toggle(false)
+	            	return
+	        	end
+	
+		        local item = getBlocks()
+		        if not item or #item == 0 then
+		            notif('BlockIn', 'No blocks found in inventory!', 5, "warning")
+		            BlockIn:Toggle(false)
+		            return
+		        end
+
 				if me then
 					for i, block in item do
 						for _, pos in getPyramid(i, 3) do
@@ -12332,12 +12341,6 @@ run(function()
 							bedwars.placeBlock(me + pos, block[1], false)
 						end
 					end
-					if BlockIn.Enabled then 
-						BlockIn:Toggle(false) 
-					end
-				else
-					notif('BlockIn', 'Unable to locate me', 5,"warning")
-					BlockIn:Toggle(false)
 				end
 			end
 		end,
