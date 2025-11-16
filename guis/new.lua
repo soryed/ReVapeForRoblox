@@ -3907,8 +3907,7 @@ function mainapi:CreateCategory(categorysettings)
 	else
 		bindcover.Visible = false
 		bindcovertext.Visible = false
-		windowlist.Visible = false
-		divier.Visible = false
+		divider.Visible = false
 		bindicon.Visible = false
 		bind.Name = 'Permission'
 		bind.Size = UDim2.fromOffset(97, 21)
