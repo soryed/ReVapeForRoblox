@@ -12301,7 +12301,7 @@ run(function()
 		return blocks
 	end
 	
-	local function getPyramid(size, grid)
+	--[[local function getPyramid(size, grid)
 		return {
 			Vector3.new(3, 0, 0);
 			Vector3.new(0, 0, 3);
@@ -12313,8 +12313,24 @@ run(function()
 			Vector3.new(0, 3, -3);
 			Vector3.new(0, 6, 0);
 		}
+	end--]]
+
+	local function getPyramid(size, grid)
+	    return {
+	        Vector3.new(3, 0, 0),
+	        Vector3.new(0, 0, 3),
+	        Vector3.new(-3, 0, 0),
+	        Vector3.new(0, 0, -3),
+	        Vector3.new(3, 3, 0),
+	        Vector3.new(0, 3, 3),
+	        Vector3.new(-3, 3, 0),
+	        Vector3.new(0, 3, -3),
+	        Vector3.new(0, 6, 0),
+	        Vector3.new(0, -3, 0)
+	    }
 	end
 
+																											
 	BlockIn = vape.Categories.Blatant:CreateModule({
 		Name = 'BlockIn',
 		Function = function(callback)
@@ -12333,28 +12349,32 @@ run(function()
 		            BlockIn:Toggle(false)
 		            return
 		        end
-
 				if me then
-					for i, block in item do
-						for _, pos in getPyramid(i, 3) do
-							if not BlockIn.Enabled then break end
-							if getPlacedBlock(me + pos) then continue end
-							bedwars.placeBlock(me + pos, block[1], false)
-							print(DP)
-						end
-					end
-					if BlockIn.Enabled then BlockIn:Toggle(false) end
+				    for i, block in ipairs(item) do
+				        for _, pos in ipairs(getPyramid(i, 3)) do
+				            if not BlockIn.Enabled then break end
+				
+				            local targetPos = me + pos
+				            if getPlacedBlock(targetPos) then continue end
+				
+				            bedwars.placeBlock(targetPos, block[1], false)
+				            task.wait(PD.Value / 100)
+				        end
+				    end
+				
+				    if BlockIn.Enabled then 
+				        BlockIn:Toggle(false)
+				    end
 				end
-			end
 		end,
 		Tooltip = 'Automatically places strong blocks around the me.'
 	})
 
-	PD = BlockIn:CreateTwoSlider({
-		Name = 'Place Delay',
+	PD = BlockIn:CreateSlider({
+		Name = "Place Delay",
 		Min = 1,
 		Max = 5,
-		DefaultMin = 1,
-		DefaultMax = 5
+		Default = 1,
+		Suffix = "ms"
 	})
 end)
