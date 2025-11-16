@@ -366,9 +366,10 @@ local function roundPos(vec)
 	return Vector3.new(math.round(vec.X / 3) * 3, math.round(vec.Y / 3) * 3, math.round(vec.Z / 3) * 3)
 end
 
-local function switchItem(tool, delayTime)
-	delayTime = delayTime or 0.05
+local function switchItem(tool)
+	delayTime 0.05
 	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
+	print(check)
 	if check and check.Value ~= tool and tool.Parent ~= nil then
 		task.spawn(function()
 			bedwars.Client:Get(remotes.SetInvItem):CallServerAsync({hand = tool})
