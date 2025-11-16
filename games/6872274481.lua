@@ -1965,8 +1965,8 @@ run(function()
 		List = {'Sword', 'Player'},
 		Function = function()
 			if HitBoxes.Enabled then
-				HitBoxes:Toggle()
-				HitBoxes:Toggle()
+				HitBoxes:Toggle(false)
+				HitBoxes:Toggle(true)
 			end
 		end,
 		Tooltip = 'Sword - Increases the range around you to hit entities\nPlayer - Increases the players hitbox'
@@ -12313,7 +12313,12 @@ run(function()
 			Vector3.new(0, 6, 0);
 		}
 	end
-
+	local item =  getBlocks()
+	if not item or item == nil or item == {} then
+		vape:CreateNotification("BlockIn", "No blocks found in inventory!", 5, "warning")
+		return
+	end
+		
 	BlockIn = vape.Categories.Blatant:CreateModule({
 		Name = 'BlockIn',
 		Function = function(callback)
@@ -12328,11 +12333,11 @@ run(function()
 						end
 					end
 					if BlockIn.Enabled then 
-						BlockIn:Toggle() 
+						BlockIn:Toggle(false) 
 					end
 				else
-					notif('BlockIn', 'Unable to locate me', 5)
-					BlockIn:Toggle()
+					notif('BlockIn', 'Unable to locate me', 5,"warning")
+					BlockIn:Toggle(false)
 				end
 			end
 		end,
