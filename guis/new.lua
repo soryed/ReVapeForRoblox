@@ -3778,7 +3778,7 @@ function mainapi:CreateCategory(categorysettings)
 	windowlist.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	windowlist.Parent = children
 
-		function categoryapi:CreateModule(modulesettings)
+	function categoryapi:CreateModule(modulesettings)
 		mainapi:Remove(modulesettings.Name)
 		local moduleapi = {
 			Enabled = false,
@@ -3787,8 +3787,7 @@ function mainapi:CreateCategory(categorysettings)
 			Index = getTableSize(mainapi.Modules),
 			ExtraText = modulesettings.ExtraText,
 			Name = modulesettings.Name,
-			Category = categorysettings.Name,
-			Permissions = modulesettings.Perms or "user"
+			Category = categorysettings.Name
 		}
 
 		local hovered = false
@@ -3810,16 +3809,6 @@ function mainapi:CreateCategory(categorysettings)
 		gradient.Parent = modulebutton
 		local modulechildren = Instance.new('Frame')
 		local bind = Instance.new('TextButton')
-		local bindcover = Instance.new('ImageLabel')
-		local bindcovertext = Instance.new('TextLabel')
-		local dotsbutton = Instance.new('TextButton')
-		local dots = Instance.new('ImageLabel')
-		local windowlist = Instance.new('UIListLayout')	
-		local divider = Instance.new('Frame')
-		local bindicon = Instance.new('ImageLabel')
-		local bindtext = Instance.new('TextLabel')
-
-		if moduleapi.Permission  == "user" then
 		addTooltip(modulebutton, modulesettings.Tooltip)
 		addTooltip(bind, 'Click to bind')
 		bind.Name = 'Bind'
@@ -3833,6 +3822,7 @@ function mainapi:CreateCategory(categorysettings)
 		bind.Visible = false
 		bind.Text = ''
 		addCorner(bind, UDim.new(0, 4))
+		local bindicon = Instance.new('ImageLabel')
 		bindicon.Name = 'Icon'
 		bindicon.Size = UDim2.fromOffset(12, 12)
 		bindicon.Position = UDim2.new(0.5, -6, 0, 5)
@@ -3840,6 +3830,7 @@ function mainapi:CreateCategory(categorysettings)
 		bindicon.Image = getcustomasset('newvape/assets/new/bind.png')
 		bindicon.ImageColor3 = color.Dark(uipallet.Text, 0.43)
 		bindicon.Parent = bind
+		local bindtext = Instance.new('TextLabel')
 		bindtext.Size = UDim2.fromScale(1, 1)
 		bindtext.Position = UDim2.fromOffset(0, 1)
 		bindtext.BackgroundTransparency = 1
@@ -3849,7 +3840,7 @@ function mainapi:CreateCategory(categorysettings)
 		bindtext.TextSize = 12
 		bindtext.FontFace = uipallet.Font
 		bindtext.Parent = bind
-		
+		local bindcover = Instance.new('ImageLabel')
 		bindcover.Name = 'Cover'
 		bindcover.Size = UDim2.fromOffset(154, 40)
 		bindcover.BackgroundTransparency = 1
@@ -3858,7 +3849,7 @@ function mainapi:CreateCategory(categorysettings)
 		bindcover.ScaleType = Enum.ScaleType.Slice
 		bindcover.SliceCenter = Rect.new(0, 0, 141, 40)
 		bindcover.Parent = modulebutton
-		
+		local bindcovertext = Instance.new('TextLabel')
 		bindcovertext.Name = 'Text'
 		bindcovertext.Size = UDim2.new(1, -10, 1, -3)
 		bindcovertext.BackgroundTransparency = 1
@@ -3868,14 +3859,14 @@ function mainapi:CreateCategory(categorysettings)
 		bindcovertext.FontFace = uipallet.Font
 		bindcovertext.Parent = bindcover
 		bind.Parent = modulebutton
-		
+		local dotsbutton = Instance.new('TextButton')
 		dotsbutton.Name = 'Dots'
 		dotsbutton.Size = UDim2.fromOffset(25, 40)
 		dotsbutton.Position = UDim2.new(1, -25, 0, 0)
 		dotsbutton.BackgroundTransparency = 1
 		dotsbutton.Text = ''
 		dotsbutton.Parent = modulebutton
-		
+		local dots = Instance.new('ImageLabel')
 		dots.Name = 'Dots'
 		dots.Size = UDim2.fromOffset(3, 16)
 		dots.Position = UDim2.fromOffset(4, 12)
@@ -3890,10 +3881,11 @@ function mainapi:CreateCategory(categorysettings)
 		modulechildren.Visible = false
 		modulechildren.Parent = children
 		moduleapi.Children = modulechildren
-		
+		local windowlist = Instance.new('UIListLayout')
 		windowlist.SortOrder = Enum.SortOrder.LayoutOrder
 		windowlist.HorizontalAlignment = Enum.HorizontalAlignment.Center
 		windowlist.Parent = modulechildren
+		local divider = Instance.new('Frame')
 		divider.Name = 'Divider'
 		divider.Size = UDim2.new(1, 0, 0, 1)
 		divider.Position = UDim2.new(0, 0, 1, -1)
@@ -3904,87 +3896,6 @@ function mainapi:CreateCategory(categorysettings)
 		divider.Parent = modulebutton
 		modulesettings.Function = modulesettings.Function or function() end
 		addMaid(moduleapi)
-	else
-		bindcover.Visible = false
-		bindcovertext.Visible = false
-		divider.Visible = false
-		bindicon.Visible = false
-		bind.Name = 'Bind'
-		bind.Size = UDim2.fromOffset(97, 21)
-		bind.Position = UDim2.new(1, -36, 0, 9)
-		bind.AnchorPoint = Vector2.new(1, 0)
-		bind.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
-		bind.BackgroundTransparency = 0.35
-		bind.BorderSizePixel = 0
-		bind.AutoButtonColor = false
-		bind.Visible = true
-		bind.Text = ''
-		addCorner(bind, UDim.new(0, 4))
-		bindtext.Size = UDim2.fromScale(1, 1)
-		bindtext.Position = UDim2.fromOffset(0, 1)
-		bindtext.BackgroundTransparency = 1
-		bindtext.Visible = true
-		bindtext.Text = string.upper(moduleapi.Permissions)
-		bindtext.TextColor3 = Color3.new(0,0,0)
-		bindtext.TextSize = 12
-		bindtext.FontFace = uipallet.Font
-		bindtext.Parent = bind
-	
-		bindcover.Name = 'Cover'
-		bindcover.Size = UDim2.fromOffset(154, 40)
-		bindcover.BackgroundTransparency = 1
-		bindcover.Visible = false
-		bindcover.Image = getcustomasset('newvape/assets/new/bindbkg.png')
-		bindcover.ScaleType = Enum.ScaleType.Slice
-		bindcover.SliceCenter = Rect.new(0, 0, 141, 40)
-		bindcover.Parent = modulebutton
-		
-		bindcovertext.Name = 'Text'
-		bindcovertext.Size = UDim2.new(1, -10, 1, -3)
-		bindcovertext.BackgroundTransparency = 1
-		bindcovertext.Text = 'PRESS A KEY TO BIND'
-		bindcovertext.TextColor3 = uipallet.Text
-		bindcovertext.TextSize = 11
-		bindcovertext.FontFace = uipallet.Font
-		bindcovertext.Parent = bindcover
-		bind.Parent = modulebutton
-		
-		dotsbutton.Name = 'Dots'
-		dotsbutton.Size = UDim2.fromOffset(25, 40)
-		dotsbutton.Position = UDim2.new(1, -25, 0, 0)
-		dotsbutton.BackgroundTransparency = 1
-		dotsbutton.Text = ''
-		dotsbutton.Parent = modulebutton
-		
-		dots.Name = 'Dots'
-		dots.Size = UDim2.fromOffset(3, 16)
-		dots.Position = UDim2.fromOffset(4, 12)
-		dots.BackgroundTransparency = 1
-		dots.Image = getcustomasset('newvape/assets/new/dots.png')
-		dots.ImageColor3 = color.Light(uipallet.Main, 0.37)
-		dots.Parent = dotsbutton
-		modulechildren.Name = modulesettings.Name..'Children'
-		modulechildren.Size = UDim2.new(1, 0, 0, 0)
-		modulechildren.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
-		modulechildren.BorderSizePixel = 0
-		modulechildren.Visible = false
-		modulechildren.Parent = children
-		moduleapi.Children = modulechildren
-		
-		windowlist.SortOrder = Enum.SortOrder.LayoutOrder
-		windowlist.HorizontalAlignment = Enum.HorizontalAlignment.Center
-		windowlist.Parent = modulechildren
-		divider.Name = 'Divider'
-		divider.Size = UDim2.new(1, 0, 0, 1)
-		divider.Position = UDim2.new(0, 0, 1, -1)
-		divider.BackgroundColor3 = Color3.new(0.19, 0.19, 0.19)
-		divider.BackgroundTransparency = 0.52
-		divider.BorderSizePixel = 0
-		divider.Visible = false
-		divider.Parent = modulebutton
-		modulesettings.Function = modulesettings.Function or function() end
-		addMaid(moduleapi)
-	end
 
 		function moduleapi:SetBind(tab, mouse)
 			if tab.Mobile then
@@ -4097,9 +4008,6 @@ function mainapi:CreateCategory(categorysettings)
 			bind.Visible = #moduleapi.Bind > 0 or hovered or modulechildren.Visible
 		end)
 		modulebutton.MouseButton1Click:Connect(function()
-			if bind.BackgroundColor3 == Color3.new(0.8, 0.2, 0.2) then
-				print('perms',mainapi.role)
-			end
 			moduleapi:Toggle()
 		end)
 		modulebutton.MouseButton2Click:Connect(function()
