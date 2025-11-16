@@ -13,8 +13,10 @@ if getgenv().TestAccount then
      username = "GUEST"
      password = "PASSWORD"
 else
+    print(getgenv().username or "NIGGA")
      username = getgenv().username or "GUEST"
      password = getgenv().password or "PASSWORD"
+    
 end
 
 local function ensureAccountsFolder()
@@ -55,6 +57,7 @@ function login:Login()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
+        print("failed to get code 200")
             return "guest", "GUEST", "PASSWORD"
         end
 
@@ -68,6 +71,7 @@ function login:Login()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
+                print("didnt not decode or be enough good")
             return "guest", "GUEST", "PASSWORD"
         end
 
@@ -102,6 +106,7 @@ function login:SlientLogin()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
+        print("failed to get code 200")
             return "guest", "GUEST", "PASSWORD"
         end
 
@@ -115,6 +120,7 @@ function login:SlientLogin()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
+                print("didnt not decode or be enough good")
             return "guest", "GUEST", "PASSWORD"
         end
 
@@ -131,10 +137,10 @@ function login:SlientLogin()
         U = "GUEST"
         P = "PASSWORD"
         saveAccountFiles(S, U, P)
-        vape:CreateNotification("Onyx", "Login failed or API is down. Continue as 'GUEST'", 7)
+       print("Login failed or API is down. Continue as 'GUEST'")
         return "guest", "GUEST", "PASSWORD"
     end
-    
+
     return S, U, P
 end
 
