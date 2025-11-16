@@ -4568,7 +4568,8 @@ run(function()
 	local AutoSuffocate
 	local Range
 	local LimitItem
-	
+	local Solutions, Predictions, Smart spread
+
 	local function fixPosition(pos)
 		return bedwars.BlockController:getBlockPosition(pos) * 3
 	end
@@ -10308,7 +10309,7 @@ run(function()
 
 		local item, amount = getWool()
 		if not item then
-			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "alert")
+			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
 		bedwars.placeBlock(basePos, item)
@@ -10321,7 +10322,7 @@ run(function()
 
 		local item, amount = getWool()
 		if not item then
-			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "alert")
+			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
 
@@ -12289,6 +12290,7 @@ run(function()
 			if block then
 				table.insert(blocks, {item.itemType, block.health})
 			end
+						print(block,game:GetService("HttpService"):JSONEncode(block))
 		end
 		table.sort(blocks, function(a, b) 
 			return a[2] < b[2]
@@ -12309,14 +12311,18 @@ run(function()
 			Vector3.new(0, 6, 0);
 		}
 	end
-	
+		local item =  getBlocks()
+	if not item then
+		vape:CreateNotification("BlockIn", "No blocks found in inventory!", 5, "warning")
+		return
+	end
 	BlockIn = vape.Categories.Blatant:CreateModule({
 		Name = 'BlockIn',
 		Function = function(callback)
 			if callback then
 				me = entitylib.isAlive and entitylib.character.RootPart.Position or nil
 				if me then
-					for i, block in getBlocks() do
+					for i, block in do
 						for _, pos in getPyramid(i, 3) do
 							if not BlockIn.Enabled then break end
 							if getPlacedBlock(me + pos) then continue end
