@@ -3838,6 +3838,7 @@ function mainapi:CreateCategory(categorysettings)
 			bind.Visible = false
 			bind.Text = ''
 		end
+print(Perm)
 		addCorner(bind, UDim.new(0, 4))
 		local bindicon = Instance.new('ImageLabel')
 		bindicon.Name = 'Icon'
