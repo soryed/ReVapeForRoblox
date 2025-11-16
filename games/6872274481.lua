@@ -4568,7 +4568,9 @@ run(function()
 	local AutoSuffocate
 	local Range
 	local LimitItem
-	local Solutions, Predictions, Smart spread
+	local Solutions 
+	local Predictions
+	local SmartSpread
 
 	local function fixPosition(pos)
 		return bedwars.BlockController:getBlockPosition(pos) * 3
@@ -12311,11 +12313,7 @@ run(function()
 			Vector3.new(0, 6, 0);
 		}
 	end
-		local item =  getBlocks()
-	if not item then
-		vape:CreateNotification("BlockIn", "No blocks found in inventory!", 5, "warning")
-		return
-	end
+
 	BlockIn = vape.Categories.Blatant:CreateModule({
 		Name = 'BlockIn',
 		Function = function(callback)
