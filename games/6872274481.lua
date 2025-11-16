@@ -12331,16 +12331,3 @@ run(function()
 		end
 	})
 end)
-
-run(function()
-	local test
-
-    test = vape.Categories.Exploits:CreateModule({
-        Name = "test",
-        Function = function(call)
-			print('nothing')
-        end,
-        Tooltip = "Testing smt new, if u see this ignore pls",
-		Perms = "owner"
-    })
-end)
