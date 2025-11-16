@@ -4568,10 +4568,12 @@ run(function()
 	local AutoSuffocate
 	local Range
 	local LimitItem
-	local Solutions 
+	local Solutions
 	local Predictions
 	local SmartSpread
 	local SwitchToItem
+	local prediction = loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/libraries/prediction.lua"))()
+
 	local function fixPosition(pos)
 		return bedwars.BlockController:getBlockPosition(pos) * 3
 	end
@@ -4581,42 +4583,49 @@ run(function()
 		Function = function(callback)
 			if callback then
 				repeat
-					local item = store.hand.toolType == 'block' and store.hand.tool.Name or not LimitItem.Enabled and getWool()
-	
+					local item = store.hand.toolType == 'block' and store.hand.tool.Name and getWool()
 					if item then
 						local plrs = entitylib.AllPosition({
 							Part = 'RootPart',
 							Range = Range.Value,
 							Players = true
 						})
-	
 						for _, ent in plrs do
 							local needPlaced = {}
-	
-							for _, side in Enum.NormalId:GetEnumItems() do
-								side = Vector3.fromNormalId(side)
-								if side.Y ~= 0 then continue end
-	
-								side = fixPosition(ent.RootPart.Position + side * 2)
-								if not getPlacedBlock(side) then
-									table.insert(needPlaced, side)
-								end
-							end
-	
-							if #needPlaced < 3 then
-								table.insert(needPlaced, fixPosition(ent.Head.Position))
-								table.insert(needPlaced, fixPosition(ent.RootPart.Position - Vector3.new(0, 1, 0)))
-	
-								for _, pos in needPlaced do
+							local maxSolutions = Solutions.Value
+
+							local offsetPositions = SmartSpread.Enabled and {
+								Vector3.new(1,0,0), Vector3.new(-1,0,0),
+								Vector3.new(0,0,1), Vector3.new(0,0,-1)
+							} or {Vector3.zero}
+
+							for _, off in pairs(offsetPositions) do
+								for _, side in Enum.NormalId:GetEnumItems() do
+									if side.Y ~= 0 then continue end
+									if #needPlaced >= maxSolutions then break end
+									local pos = fixPosition(ent.RootPart.Position + Vector3.fromNormalId(side) * 2 + off)
 									if not getPlacedBlock(pos) then
-										task.spawn(bedwars.placeBlock, pos, item)
-										break
+										table.insert(needPlaced, pos)
 									end
+								end
+								if #needPlaced >= maxSolutions then break end
+							end
+
+							if #needPlaced < maxSolutions then
+								table.insert(needPlaced, fixPosition(ent.Head.Position))
+								table.insert(needPlaced, fixPosition(ent.RootPart.Position - Vector3.new(0,1,0)))
+							end
+
+							local predictionTime = Predictions.Value
+							for i, pos in ipairs(needPlaced) do
+								if not getPlacedBlock(pos) then
+									local predictedPos = prediction.Predict(pos, predictionTime) or pos
+									if SwitchToItem.Enabled then switchItem(item) else end
+									task.spawn(bedwars.placeBlock, predictedPos, item)
 								end
 							end
 						end
 					end
-	
 					task.wait(0.09)
 				until not AutoSuffocate.Enabled
 			end
@@ -4629,15 +4638,13 @@ run(function()
 		Min = 1,
 		Max = 30,
 		Default = 20,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
+		Suffix = function(val) return val == 1 and 'stud' or 'studs' end
 	})
 	Solutions = AutoSuffocate:CreateSlider({
 		Name = 'Solutions',
 		Min = 1,
 		Max = 10,
-		Default = 6,
+		Default = 6
 	})
 	Predictions = AutoSuffocate:CreateSlider({
 		Name = 'Predictions',
@@ -4647,13 +4654,8 @@ run(function()
 		Suffix = 's',
 		Decimal = 100
 	})
-	print(Predictions,game:GetService("HttpService"):JSONEncode(Predictions))
 	SmartSpread = AutoSuffocate:CreateToggle({
 		Name = 'Smart Spread',
-		Default = true,
-	})							
-	LimitItem = AutoSuffocate:CreateToggle({
-		Name = 'Limit to Items',
 		Default = true
 	})
 	SwitchToItem = AutoSuffocate:CreateToggle({
@@ -4661,6 +4663,7 @@ run(function()
 		Default = true
 	})
 end)
+
 	
 run(function()
 	local AutoTool
@@ -12180,6 +12183,7 @@ run(function()
 							task.wait(PD.Value / 100)																													
 						end
 					end)
+					switchItem(item)
 					repeat
     					task.spawn(bedwars.placeBlock, targetPos, block[1])
    						task.wait(PD.Value / 100)
@@ -12296,6 +12300,7 @@ run(function()
 				
 				                v.Text = txt
 				                v.TextColor3 = clr
+								--v.FontFace = Fonts.Value
 				            end
 				        end
 				    end
