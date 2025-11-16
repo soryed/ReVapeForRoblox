@@ -12326,7 +12326,7 @@ run(function()
         Name = "BlockIn",
         Tooltip = "Automatically places strong blocks around the me.",
         Function = function(callback)
-			local counted_blocks = 0
+			local number = 0
             if not callback then 
                 return 
             end
@@ -12354,12 +12354,16 @@ run(function()
 			        if getPlacedBlock(targetPos) then 
 			            continue 
 			        end
-			
-			        for i = 0, 8 do
-			            print(i)
-			            task.defer(bedwars.placeBlock, targetPos, block[1])
-			            task.wait(PD.Value / 100)
-			        end
+					task.spawn(function()
+						for i=0,8 do
+					    	number = i
+							task.wait(PD.Value / 100)																													
+						end
+					end)
+					repeat
+    					task.spawn(bedwars.placeBlock, targetPos, block[1])
+   						task.wait(PD.Value / 100)
+    				until number == 8
 			    end
 			end
 			
