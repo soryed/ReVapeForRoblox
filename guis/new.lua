@@ -3850,14 +3850,20 @@ function mainapi:CreateCategory(categorysettings)
 		bindtext.Size = UDim2.fromScale(1, 1)
 		bindtext.Position = UDim2.fromOffset(0, 1)
 		bindtext.BackgroundTransparency = 1
-		bindtext.Visible = false
 			if moduleapi.Permissions == "user" then 
+				bindtext.Visible = false
+
 				bindtext.Text = ''
 		bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43)
 		bindtext.TextSize = 12
 		bindtext.FontFace = uipallet.Font
 		bindtext.Parent = bind
 	else
+				bindtext.Visible = true
+				bind.Visible = true
+				bindtext.Visible = true
+				bindicon.Visible = false
+				bind.Size = UDim2.fromOffset(math.max(getfontsize(bindtext.Text, bindtext.TextSize, bindtext.Font).X + 10, 20), 21)
 				bindtext.Text =string.upper(moduleapi.Permissions)
 		bindtext.TextColor3 = Color3.new(0, 0, 0)
 		bindtext.TextSize = 12
