@@ -12275,7 +12275,9 @@ end)
 
 run(function()
 	local BlockIn
-	local PlaceDelay
+	local PD
+	local UseBlacklisted_Blocks
+	local blacklisted
 	local function getBedNear()
 		local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
 		for _, v in collectionService:GetTagged('bed') do
@@ -12339,11 +12341,21 @@ run(function()
 							if not BlockIn.Enabled then break end
 							if getPlacedBlock(me + pos) then continue end
 							bedwars.placeBlock(me + pos, block[1], false)
+							print(DP,DP.Value)
 						end
 					end
+					if BlockIn.Enabled then BlockIn:Toggle(false) end
 				end
 			end
 		end,
 		Tooltip = 'Automatically places strong blocks around the me.'
+	})
+
+	PD = BlockIn:CreateTwoSlider({
+		Name = 'Place Delay',
+		Min = 1,
+		Max = 5,
+		DefaultMin = 1,
+		DefaultMax = 5
 	})
 end)
