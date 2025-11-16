@@ -3846,7 +3846,11 @@ function mainapi:CreateCategory(categorysettings)
 		bindicon.BackgroundTransparency = 1
 		bindicon.Image = getcustomasset('ReVape/assets/new/bind.png')
 		bindicon.ImageColor3 = color.Dark(uipallet.Text, 0.43)
-		if not Perm == "" or not Perm == "user" then bindicon.Parent = bind else bindicon.Parent = permbd end
+		if Perm == "" or  Perm == "user" then
+		bindicon.Parent = bind 
+		else 
+		bindicon.Parent = permbd 
+		end
 
 		--bindicon.Parent = bind
 		local bindtext = Instance.new('TextLabel')
@@ -3858,7 +3862,15 @@ function mainapi:CreateCategory(categorysettings)
 		--bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43
 		bindtext.TextSize = 12
 		bindtext.FontFace = uipallet.Font
-		if not Perm == "" or not Perm == "user" then bindtext.Text = '' bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43) bindtext.Parent = bind else bindtext.Parent = permbd bindtext.Text = string.upper(moduleapi.Permissions) bindtext.TextColor3 = Color3.new(0, 0, 0) end
+		if  Perm == "" or Perm == "user" then 
+		bindtext.Text = '' 
+		bindtext.TextColor3 = color.Dark(uipallet.Text, 0.43)
+		bindtext.Parent = bind 
+		else
+		bindtext.Parent = permbd
+		bindtext.Text = string.upper(moduleapi.Permissions)
+		bindtext.TextColor3 = Color3.new(0, 0, 0) 
+		end
 		--bindtext.Parent = bind
 		local bindcover = Instance.new('ImageLabel')
 		bindcover.Name = 'Cover'
