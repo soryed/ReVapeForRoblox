@@ -10341,6 +10341,8 @@ run(function()
 			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
+print(item.tool or "nothing")
+print(item)
 		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
