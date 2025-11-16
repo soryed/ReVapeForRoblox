@@ -3894,10 +3894,10 @@ run(function()
 			if callback then
 				AutoToxic:Clean(vapeEvents.BedwarsBedBreak.Event:Connect(function(bedTable)
 					if Toggles.BedDestroyed.Enabled and bedTable.brokenBedTeam.id == lplr:GetAttribute('Team') then
-						sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'how dare you >:( + revape on top | <obj>')
+						sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'why would you bed break me <obj> onyx will obviously diff you xd')
 					elseif Toggles.Bed.Enabled and bedTable.player.UserId == lplr.UserId then
 						local team = bedwars.QueueMeta[store.queueType].teams[tonumber(bedTable.brokenBedTeam.id)]
-						sendMessage('Bed', team and team.displayName:lower() or 'white', 'nice bed + revape on top | <obj>')
+						sendMessage('Bed', team and team.displayName:lower() or 'white', 'nice bed btw, switch to onyx forever on top | <obj>')
 					end
 				end))
 				AutoToxic:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
@@ -3908,26 +3908,26 @@ run(function()
 						if killed == lplr then
 							if (not dead) and killer ~= lplr and Toggles.Death.Enabled then
 								dead = true
-								sendMessage('Death', (killer.DisplayName or killer.Name), 'ur trash + revape on top forever :( | <obj>')
+								sendMessage('Death', (killer.DisplayName or killer.Name), 'ur trash btw and onyx on top forever :( | <obj>')
 							end
 						elseif killer == lplr and Toggles.Kill.Enabled then
-							sendMessage('Kill', (killed.DisplayName or killed.Name), 'revape on top | <obj>')
+							sendMessage('Kill', (killed.DisplayName or killed.Name), 'you should switch to onyx my friend named | <obj>')
 						end
 					end
 				end))
 				AutoToxic:Clean(vapeEvents.MatchEndEvent.Event:Connect(function(winstuff)
 					if GG.Enabled then
 						if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('ez + revape forever')
+							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('ez + onyx forever')
 						else
-							replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('ez + revape forever', 'All')
+							replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('ez and onyx forever', 'All')
 						end
 					end
 					
 					local myTeam = bedwars.Store:getState().Game.myTeam
 					if myTeam and myTeam.id == winstuff.winningTeamId or lplr.Neutral then
 						if Toggles.Win.Enabled then 
-							sendMessage('Win', nil, 'yall garbage and revape on top') 
+							sendMessage('Win', nil, 'yall garbage and onyx on top') 
 						end
 					end
 				end))
@@ -4571,7 +4571,7 @@ run(function()
 	local Solutions 
 	local Predictions
 	local SmartSpread
-
+	local SwitchToItem
 	local function fixPosition(pos)
 		return bedwars.BlockController:getBlockPosition(pos) * 3
 	end
@@ -4623,6 +4623,7 @@ run(function()
 		end,
 		Tooltip = 'Places blocks on nearby confined entities'
 	})
+
 	Range = AutoSuffocate:CreateSlider({
 		Name = 'Range',
 		Min = 1,
@@ -4632,8 +4633,29 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
+	Solutions = AutoSuffocate:CreateSlider({
+		Name = 'Solutions',
+		Min = 1,
+		Max = 10,
+		Default = 6,
+	})
+	Predictions = AutoSuffocate:CreateSlider({
+		Name = 'Predictions',
+		Min = 0,
+		Max = 1,
+		Default = 0.7,
+		Suffix = 's'
+	})
+	SmartSpread = AutoSuffocate:CreateToggle({
+		Name = 'Smart Spread',
+		Default = true,
+	})							
 	LimitItem = AutoSuffocate:CreateToggle({
 		Name = 'Limit to Items',
+		Default = true
+	})
+	SwitchToItem = AutoSuffocate:CreateToggle({
+		Name = 'Switch To Item',
 		Default = true
 	})
 end)
