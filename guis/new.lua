@@ -3811,20 +3811,8 @@ function mainapi:CreateCategory(categorysettings)
 		local modulechildren = Instance.new('Frame')
 		local bind = Instance.new('TextButton')
 		local permbd = Instance.new('TextButton')
-		if not moduleapi.Permissions == "user" or moduleapi.Permissions == "" then
-			permbd.Name = 'Permission'
-			permbd.Size = UDim2.fromOffset(20, 21)
-			permbd.Position = UDim2.new(1, -36, 0, 9)
-			permbd.AnchorPoint = Vector2.new(1, 0)
-			permbd.BackgroundColor3 =	Color3.new(0.8, 0.2, 0.2)
-			permbd.BackgroundTransparency = 0.35
-			permbd.BorderSizePixel = 0
-			permbd.AutoButtonColor = false
-			permbd.Visible = true
-			permbd.Text = ''	
-			Perm = moduleapi.Permissions
-		else
-			permbd.Visible = false
+		if  moduleapi.Permissions == "user" or moduleapi.Permissions == "" then
+	permbd.Visible = false
 			addTooltip(modulebutton, modulesettings.Tooltip)
 			addTooltip(bind, 'Click to bind')
 			bind.Name = 'Bind'
@@ -3837,6 +3825,20 @@ function mainapi:CreateCategory(categorysettings)
 			bind.AutoButtonColor = false
 			bind.Visible = false
 			bind.Text = ''
+		
+		else
+			permbd.Name = 'Permission'
+			permbd.Size = UDim2.fromOffset(20, 21)
+			permbd.Position = UDim2.new(1, -36, 0, 9)
+			permbd.AnchorPoint = Vector2.new(1, 0)
+			permbd.BackgroundColor3 =	Color3.new(0.8, 0.2, 0.2)
+			permbd.BackgroundTransparency = 0.35
+			permbd.BorderSizePixel = 0
+			permbd.AutoButtonColor = false
+			permbd.Visible = true
+			permbd.Text = ''	
+			Perm = moduleapi.Permissions
+print('created permission button')
 		end
 print(Perm)
 		addCorner(bind, UDim.new(0, 4))
