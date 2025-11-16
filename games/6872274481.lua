@@ -12183,7 +12183,8 @@ run(function()
 							task.wait(PD.Value / 100)																													
 						end
 					end)
-					switchItem(item)
+					local woolitem,amount = getWool()
+					switchItem(woolitem)
 					repeat
     					task.spawn(bedwars.placeBlock, targetPos, block[1])
    						task.wait(PD.Value / 100)
