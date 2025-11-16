@@ -12354,11 +12354,7 @@ run(function()
                     if getPlacedBlock(targetPos) then 
                         continue 
                     end
- task.spawn(function()
-                    bedwars.placeBlock(targetPos, block[1])
-
-                    task.wait(PD.Value / 1000)
-										end)
+       				 task.defer(bedwars.placeBlock, targetPos, block[1])
                 end
             end
 
