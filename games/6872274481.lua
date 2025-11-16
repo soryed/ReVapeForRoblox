@@ -12344,26 +12344,28 @@ run(function()
                 BlockIn:Toggle(false)
                 return
             end
-            for i, block in ipairs(item) do
-                for _, pos in ipairs(getPyramid(i, 3)) do
-                    if not BlockIn.Enabled then 
-                        break 
-                    end
-
-                    local targetPos = me + pos
-                    if getPlacedBlock(targetPos) then 
-                        continue 
-                    end
-					for i=0,8,1 do
-						print(i)
-					    task.defer(bedwars.placeBlock, targetPos, block[1])
-						task.wait(PD.Value / 100)
-					end
-					if BlockIn.Enabled then
-               	 		BlockIn:Toggle(false)
-            		end						
-                end
-            end
+			for i, block in ipairs(item) do
+			    for _, pos in ipairs(getPyramid(i, 3)) do
+			        if not BlockIn.Enabled then 
+			            break 
+			        end
+			
+			        local targetPos = me + pos
+			        if getPlacedBlock(targetPos) then 
+			            continue 
+			        end
+			
+			        for i = 0, 8 do
+			            print(i)
+			            task.defer(bedwars.placeBlock, targetPos, block[1])
+			            task.wait(PD.Value / 100)
+			        end
+			    end
+			end
+			
+			if BlockIn.Enabled then
+			    BlockIn:Toggle(false)
+			end
         end
     })
 
