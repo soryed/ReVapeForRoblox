@@ -10342,9 +10342,10 @@ run(function()
 			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
-
+		local wool = bedwars.ItemMeta[dblock.Name].block.breakType
+				local tool = store.tools[breaktype]
 				local wool = store.inventory.inventory.items
-print(game:GetService("HttpService"):JSONEncode(wool))
+print(game:GetService("HttpService"):JSONEncode(bedwars.ItemMeta))
 		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
