@@ -10342,7 +10342,7 @@ run(function()
 			return
 		end
 
-				local wool = store.inventory.inventory.items.itemType
+				local wool = store.inventory.inventory.items
 print(wool)
 		switchItem(item)
 		bedwars.placeBlock(basePos, item)
