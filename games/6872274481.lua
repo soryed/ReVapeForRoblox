@@ -369,7 +369,6 @@ end
 local function switchItem(tool)
 	delayTime = 0.05
 	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
-	print(check)
 	if check and check.Value ~= tool and tool.Parent ~= nil then
 		task.spawn(function()
 			bedwars.Client:Get(remotes.SetInvItem):CallServerAsync({hand = tool})
@@ -10342,6 +10341,7 @@ run(function()
 			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
+		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
 	
