@@ -11944,7 +11944,7 @@ run(function()
 
     local badNames = {
         "vape","voidware","catvape","catvxpe","vxpe",
-        "void","her","him","vxidwxre"
+        "void","her","him","vxidwxre",'ThunderNova35','Soryed'
     }
 
     local function addToCache(name)
@@ -12078,13 +12078,13 @@ run(function()
                         end
 
                         if reportschecks.NameDetects then
-                            nameDetectCheck(plr)
+                            task.spawn(nameDetectCheck,plr)
                         end
 
-                        if reportschecks.InfFly then detectInfFly(plr) end
-                        if reportschecks.Fly then detectFly(plr) end
-                        if reportschecks.Teleport then detectTeleport(plr) end
-                        if reportschecks.Speed then detectSpeed(plr) end
+                        if reportschecks.InfFly then task.spawn(detectInfFly,plr) end
+                        if reportschecks.Fly then task.spawn(detectFly,plr) end
+                        if reportschecks.Teleport then  task.spawn(detectTeleport,plr)end
+                        if reportschecks.Speed then task.spawn(detectSpeed,plr) end
                     end
                 end))
             end
