@@ -11950,7 +11950,7 @@ end)
     }
 
     local function addToCache(name)
-        if cachedExploiters[name] then return end
+        if cachedExploiters[name] then end
         cachedExploiters[name] = true
         appendfile(exploitersPath, name.."\n")
     end
@@ -11964,7 +11964,6 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
             if string.find(lower, bad, 1, true) then
                 addToCache(player.Name)
                 vape:CreateNotification("Onyx", player.Name.." flagged for suspicious name", 8, "alert")
-                return
             end
         end
     end
@@ -11974,10 +11973,10 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 	
 	local function detectInfFly(player)
 	    local char = player.Character
-	    if not char then return end
+	    if not char then end
 	
 	    local hum = char:FindFirstChildWhichIsA("Humanoid")
-	    if not hum then return end
+	    if not hum then end
 	
 	    local currentState = hum:GetState()
 	    if currentState == Enum.HumanoidStateType.Jumping then
@@ -11998,11 +11997,11 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 
     local function detectFly(player)
         local char = player.Character
-        if not char then return end
+        if not char then end
         local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
+        if not root then end
         local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum then return end
+        if not hum then end
 
         local p = root.Position
         local old = posStore[player]
@@ -12024,9 +12023,9 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 
     local function detectTeleport(player)
         local char = player.Character
-        if not char then return end
+        if not char then end
         local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
+        if not root then end
 
         local p = root.Position
         local old = lastPos[player]
@@ -12047,19 +12046,17 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 
     local function detectSpeed(player)
         local char = player.Character
-        if not char then return end
+        if not char then end
         local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
+        if not root then end
         local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum then return end
+        if not hum then end
 
         local velo = root.AssemblyLinearVelocity
         local horizontal = Vector3.new(velo.X, 0, velo.Z).Magnitude
 
         if hum:GetState() == Enum.HumanoidStateType.FallingDown
-        or hum:GetState() == Enum.HumanoidStateType.Freefall then
-            return
-        end
+        or hum:GetState() == Enum.HumanoidStateType.Freefall then end
 
         if horizontal > 28 then 
             vape:CreateNotification("Onyx", player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8, "alert")
