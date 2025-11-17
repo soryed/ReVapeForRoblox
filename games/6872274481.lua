@@ -371,7 +371,7 @@ local function switchItem(tool)
 	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
 	if check and check.Value ~= tool and tool.Parent ~= nil then
 		task.spawn(function()
-			bedwars.Client:Get(remotes.SetInvItem):CallServerAsync({hand = tool})
+			bedwars.Client:Get('SetInvItem'):CallServerAsync({hand = tool})
 		end)
 		check.Value = tool
 		if delayTime > 0 then
@@ -11853,6 +11853,17 @@ end)
 
 run(function()
 	local HackerDetector 
+	local reportschecks = {
+	Cache = true,
+	InfFly= true,
+	Fly= true,
+	Teleport= true,
+	Speed= true,
+	Nuker= true,
+	Invisible= true,
+	AntiHit= true,
+	NameDetects= false,
+	}
 	HackerDetector = vape.Categories.Utility:CreateModule({
 		Name = "HackerDetector",
 		Function = function(callback)
