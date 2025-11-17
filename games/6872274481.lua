@@ -4569,12 +4569,7 @@ run(function()
 	local AutoSuffocate
 	local Range
 	local LimitItem
-	local Solutions
-	local Predictions
-	local SmartSpread
-	local SwitchToItem
-	local prediction = loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/libraries/prediction.lua"))()
-
+	
 	local function fixPosition(pos)
 		return bedwars.BlockController:getBlockPosition(pos) * 3
 	end
@@ -4584,87 +4579,62 @@ run(function()
 		Function = function(callback)
 			if callback then
 				repeat
-					local item = store.hand.toolType == 'block' and store.hand.tool.Name and getWool()
+					local item = store.hand.toolType == 'block' and store.hand.tool.Name or not LimitItem.Enabled and getWool()
+	
 					if item then
 						local plrs = entitylib.AllPosition({
 							Part = 'RootPart',
 							Range = Range.Value,
 							Players = true
 						})
+	
 						for _, ent in plrs do
 							local needPlaced = {}
-							local maxSolutions = Solutions.Value
-
-							local offsetPositions = SmartSpread.Enabled and {
-								Vector3.new(1,0,0), Vector3.new(-1,0,0),
-								Vector3.new(0,0,1), Vector3.new(0,0,-1)
-							} or {Vector3.zero}
-
-							for _, off in pairs(offsetPositions) do
-								for _, side in Enum.NormalId:GetEnumItems() do
-									if side.Y ~= 0 then continue end
-									if #needPlaced >= maxSolutions then break end
-									local pos = fixPosition(ent.RootPart.Position + Vector3.fromNormalId(side) * 2 + off)
-									if not getPlacedBlock(pos) then
-										table.insert(needPlaced, pos)
-									end
+	
+							for _, side in Enum.NormalId:GetEnumItems() do
+								side = Vector3.fromNormalId(side)
+								if side.Y ~= 0 then continue end
+	
+								side = fixPosition(ent.RootPart.Position + side * 2)
+								if not getPlacedBlock(side) then
+									table.insert(needPlaced, side)
 								end
-								if #needPlaced >= maxSolutions then break end
 							end
-
-							if #needPlaced < maxSolutions then
+	
+							if #needPlaced < 3 then
 								table.insert(needPlaced, fixPosition(ent.Head.Position))
-								table.insert(needPlaced, fixPosition(ent.RootPart.Position - Vector3.new(0,1,0)))
-							end
-
-							local predictionTime = Predictions.Value
-							for i, pos in ipairs(needPlaced) do
-								if not getPlacedBlock(pos) then
-									local predictedPos = prediction.Predict(pos, predictionTime) or pos
-									if SwitchToItem.Enabled then switchItem(item) else end
-									task.spawn(bedwars.placeBlock, predictedPos, item)
+								table.insert(needPlaced, fixPosition(ent.RootPart.Position - Vector3.new(0, 1, 0)))
+	
+								for _, pos in needPlaced do
+									if not getPlacedBlock(pos) then
+										task.spawn(bedwars.placeBlock, pos, item)
+										break
+									end
 								end
 							end
 						end
 					end
+	
 					task.wait(0.09)
 				until not AutoSuffocate.Enabled
 			end
 		end,
 		Tooltip = 'Places blocks on nearby confined entities'
 	})
-
 	Range = AutoSuffocate:CreateSlider({
 		Name = 'Range',
 		Min = 1,
-		Max = 30,
+		Max = 20,
 		Default = 20,
-		Suffix = function(val) return val == 1 and 'stud' or 'studs' end
+		Suffix = function(val)
+			return val == 1 and 'stud' or 'studs'
+		end
 	})
-	Solutions = AutoSuffocate:CreateSlider({
-		Name = 'Solutions',
-		Min = 1,
-		Max = 10,
-		Default = 6
-	})
-	Predictions = AutoSuffocate:CreateSlider({
-		Name = 'Predictions',
-		Min = 0,
-		Max = 1,
-		Default = 0.7,
-		Suffix = 's',
-		Decimal = 100
-	})
-	SmartSpread = AutoSuffocate:CreateToggle({
-		Name = 'Smart Spread',
-		Default = true
-	})
-	SwitchToItem = AutoSuffocate:CreateToggle({
-		Name = 'Switch To Item',
+	LimitItem = AutoSuffocate:CreateToggle({
+		Name = 'Limit to Items',
 		Default = true
 	})
 end)
-
 	
 run(function()
 	local AutoTool
@@ -10557,6 +10527,23 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 		Tooltip = "New Method for autowinning",
 	})
 end)
+
+run(function()
+local MutipleKits 
+	 MutipleKits = vape.Categories.AltFarm:CreateModule({
+		Name = "MutipleKits",
+		Function = function(callback)
+
+			if callback then
+																																						MutipleKits:Toggle(false)
+
+vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+			end
+		end,
+		Tooltip = "5v5, ranked only allows u to  have mutiple kits in a game",
+	})
+end)
+
 
 run(function()
 local LP 
