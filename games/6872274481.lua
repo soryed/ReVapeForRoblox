@@ -12067,7 +12067,7 @@ run(function()
         Function = function(callback)
             if callback then
                 HackerDetector:Clean(runService.Heartbeat:Connect(function()
-                    for _, plr in players:GetPlayers() do
+                    for _, plr in playersService:GetPlayers() do
                         if plr == lplr then continue end
                         local char = plr.Character
                         if not char then continue end
