@@ -11848,20 +11848,23 @@ run(function()
 		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
 	})
 end)
-
 run(function()
-	local ZephyrExploit = {Enabled = false}
-	ZephyrExploit = vape.Categories.Exploits:CreateModule({
-		Name = "ZephyrExploit",
-		Function = function(callback)
-		local zephyreffect = lplr.PlayerGui:FindFirstChild('WindWalkerEffect', true)
-		local StackTxt = zephyreffect:FindFirstChild('EffectStack', true)
-	if not callback then return end
-			if callback then
+    local ZephyrExploit = {Enabled = false}
+    ZephyrExploit = vape.Categories.Exploits:CreateModule({
+        Name = "ZephyrExploit",
+        Function = function(callback)
+            local zephyreffect = lplr.PlayerGui:FindFirstChild("WindWalkerEffect", true)
+            local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
+
+            if not callback then
+                notif("ZephyrExploit", "Disabled next game", 5, "warning")
+                return
+            end
+
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
-	
+
             bedwars.WindWalkerController.updateJump = function(StackCount, Listed)
                 if StackTxt then
                     StackTxt.Text = "5"
@@ -11895,8 +11898,7 @@ run(function()
         end,
         Tooltip = "Zephyr AntiCheat bypasser",
     })
-end)
-																																							
+end)																																							
 run(function()
 	local HackerDetector 
 	local reportschecks = {
