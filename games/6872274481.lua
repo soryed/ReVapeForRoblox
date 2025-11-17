@@ -11948,6 +11948,30 @@ end)
         "vape","voidware","catvape","catvxpe","vxpe",
         "void","her","him","vxidwxre",'ohsxnta','Soryed'
     }
+local currentplayers = {}
+local maxreports = 6
+
+local function createmsg(msg, time, player, reason)
+    time = time or 8
+
+    if not currentplayers[player] then
+        currentplayers[player] = { reports = 0, ignore = false, reasons = {} }
+    end
+
+    local pdata = currentplayers[player]
+
+    if pdata.ignore then return end
+
+    if not pdata.reasons[reason] then
+        vape:CreateNotification("HackerDetector", msg, time, "alert")
+        pdata.reports = pdata.reports + 1
+        pdata.reasons[reason] = true
+    end
+
+    if pdata.reports >= maxreports then
+        pdata.ignore = true
+    end
+end
 
     local function addToCache(name)
         if cachedExploiters[name] then end
@@ -11962,7 +11986,7 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
         for _, bad in ipairs(badNames) do
             if string.find(lower, bad, 1, true) then
                 addToCache(player.Name)
-                vape:CreateNotification("Onyx", player.Name.." flagged for suspicious name", 8, "alert")
+				createmsg(player.Name.." flagged for suspicious name", 8,player,'name')
             end
         end
     end
@@ -11984,7 +12008,7 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 	        local delta = now - last
 	
 	        if delta < 0.15 then
-	            vape:CreateNotification("Onyx", player.Name.." flagged for infinite fly", 8, "alert")
+				createmsg(player.Name.." flagged for infinite fly", 8,player,'inffly')
 	            addToCache(player.Name)
 	        end
 	
@@ -12010,7 +12034,8 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
             local vy = math.abs(root.AssemblyLinearVelocity.Y)
 
             if dy > 1.5 and vy > 35 and hum.FloorMaterial == Enum.Material.Air then
-                vape:CreateNotification("Onyx", player.Name.." flagged for flying", 8, "alert")
+				createmsg(player.Name.." flagged for flying", 8,player,'fly')
+
                 addToCache(player.Name)
             end
         end
@@ -12034,7 +12059,8 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 
             if dist > 40 then
                 if dist < 180 then
-                    vape:CreateNotification("Onyx", player.Name.." flagged for teleporting ("..math.floor(dist)..")", 8, "alert")
+				createmsg(player.Name.." flagged for teleporting ("..math.floor(dist)..")", 8,player,'tp')
+
                     addToCache(player.Name)
                 end
             end
@@ -12057,8 +12083,9 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
         if hum:GetState() == Enum.HumanoidStateType.FallingDown
         or hum:GetState() == Enum.HumanoidStateType.Freefall then end
 
-        if horizontal > 28 then 
-            vape:CreateNotification("Onyx", player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8, "alert")
+        if horizontal > 28 then
+				createmsg(player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8,player,'speed')
+
             addToCache(player.Name)
         end
     end
@@ -12073,7 +12100,7 @@ local c
                         if not char then print('no char') end
 
                         if reportschecks.Cache and cachedExploiters[plr.Name] then
-                            vape:CreateNotification("Onyx", plr.Name.." was previously flagged", 4, "alert")
+							createmsg(plr.Name.." was previously flagged", 8,player,'cache')
                         end
 
                         if reportschecks.NameDetects then
