@@ -11866,7 +11866,7 @@ run(function()
 				Speed:Toggle(true)
 				vape:CreateNotification("Onyx","Anti-Cheat bypasser enabled! keep speed on for this, and can u also use fly!",10,"success")
 				StackCount = 5
-				p46 = {doubleJumpActive = false}
+				Listed = {doubleJumpActive = false}
 				if StackCount >= 5 and not Listed.doubleJumpActive then
 		        Listed.doubleJumpActive = true
 		    local v48 = bedwars.JumpHeightController:getJumpModifier():addModifier({
@@ -11878,6 +11878,7 @@ run(function()
 		else
 			notif('ZephyrExploit', 'Disabled next game', 5, 'warning')						
 			end	
+				end
 		end,
 		Tooltip = "Zephyr AntiCheat bypasser",
 	})
