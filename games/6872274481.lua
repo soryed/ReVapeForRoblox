@@ -12066,13 +12066,13 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
             addToCache(player.Name)
         end
     end
-
+local c 
     HackerDetector = vape.Categories.Utility:CreateModule({
         Name = "HackerDetector",
-
         Function = function(callback)
+	print(callback)
             if callback then
-                HackerDetector:Clean(runService.Heartbeat:Connect(function()
+               c = HackerDetector:Clean(runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
                         if plr == lplr then continue end
                         local char = plr.Character
@@ -12092,9 +12092,11 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
                         if reportschecks.Speed then task.spawn(detectSpeed,plr) end
                     end
                 end))
+	else
+		c:Disconnect()
+		c = nil
             end
         end,
-
         Tooltip = "Detects when a blatant cheater is in the game with you",
     })
 end)
