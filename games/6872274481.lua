@@ -11854,6 +11854,7 @@ local ennabled = false
     ZephyrExploit = vape.Categories.Exploits:CreateModule({
         Name = "ZephyrExploit",
         Function = function(callback)
+																																													if not lplr:GetAttribute("PlayingAsKits") == "wind_walker" then notif("ZephyrExploit", "You are not 'ZEPHYR' you are not allowed to use this module", 5, "warning") ZephyrExploit:Toggle(false) return end
             local zephyreffect = lplr.PlayerGui:FindFirstChild("WindWalkerEffect", true)
             local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
 
