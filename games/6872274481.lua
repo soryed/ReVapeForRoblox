@@ -805,7 +805,7 @@ end
 		ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
 		SpawnRaven = debug.getproto(Knit.Controllers.RavenController.KnitStart, 1),
 		SummonerClawAttack = Knit.Controllers.SummonerClawHandController.attack,
-		WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 2)
+		WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 2),
 	}
 	local function dumpRemote(tab)
 		local ind
@@ -10528,21 +10528,6 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 	})
 end)
 
-run(function()
-local MutipleKits 
-	 MutipleKits = vape.Categories.Exploits:CreateModule({
-		Name = "MutipleKits",
-		Function = function(callback)
-
-			if callback then
-																																						MutipleKits:Toggle(false)
-
-vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
-			end
-		end,
-		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
-	})
-end)
 
 
 run(function()
@@ -10680,6 +10665,11 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		sorcerer = function()
+			kitCollection('AlchemyCrystal', function(v)
+				bedwars.Client:Get('CollectCollectableEntity'):SendToServer({id = v:GetAttribute('Id'),collectableName v.Name})
+			end, 18, false)
+		end,
 		berserker = function()
 			local mapCFrames = workspace:FindFirstChild("MapCFrames")
 			local teamid = lplr.Character:GetAttribute("Team")
@@ -10699,7 +10689,8 @@ run(function()
 								part.Name = "AutoKitRagnarPart"
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
-										game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('berserker_rage')
+									bedwars.AbilityController:useAbility('berserker_rage')
+									--	game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('berserker_rage')
 									end
 								end)
 							end
@@ -10733,7 +10724,9 @@ run(function()
 					Sort = sortmethods.Health
 				})
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-		            game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
+												bedwars.AbilityController:useAbility('cactus_fire')
+
+		            --game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
 		        end
 		
 		        task.wait(0.1)
@@ -10813,7 +10806,8 @@ run(function()
 			})
 		
 			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-				game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
+			bedwars.AbilityController:useAbility('skeleton_ability')
+				--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
 				Speed:Toggle(true)
 				task.wait(3)
 				Speed:Toggle(false)
@@ -10878,7 +10872,9 @@ run(function()
 				})
 		
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-					game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("airbender_tornado")
+						bedwars.AbilityController:useAbility('airbender_tornado')
+
+					--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("airbender_tornado")
 				end
 		
 				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
@@ -10894,7 +10890,9 @@ run(function()
 		end,
 		nazar = function()
 		    repeat
-			game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
+								bedwars.AbilityController:useAbility('consume_life_foce')
+
+			--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
 			task.wait(0.1)
 		    until not AutoKit.Enabled
 		end,
@@ -10904,7 +10902,9 @@ run(function()
 					if text:IsA("TextLabel") then
 						local txt = string.lower(text.Text)
 						if string.find(txt, "teleport") then
-							game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
+													bedwars.AbilityController:useAbility('HATTER_TELEPORT')
+
+							--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
 						end
 					end
 				end
@@ -11832,5 +11832,21 @@ run(function()
 				DamageAffect:Toggle()
 			end
 		end
+	})
+end)
+
+run(function()
+local MutipleKits 
+	 MutipleKits = vape.Categories.Exploits:CreateModule({
+		Name = "MutipleKits",
+		Function = function(callback)
+
+			if callback then
+																																						MutipleKits:Toggle(false)
+
+vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+			end
+		end,
+		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
 	})
 end)
