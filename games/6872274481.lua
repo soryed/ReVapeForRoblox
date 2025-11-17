@@ -11849,6 +11849,7 @@ run(function()
 	})
 end)
 run(function()
+local ennabled = false
     local ZephyrExploit = {Enabled = false}
     ZephyrExploit = vape.Categories.Exploits:CreateModule({
         Name = "ZephyrExploit",
@@ -11860,14 +11861,26 @@ run(function()
                 notif("ZephyrExploit", "Disabled next game", 5, "warning")
                 return
             end
-
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
+task.spawn(function()
+while task.wait(1) do
+if  StackTxt.Text == "0" then
+ennabled = false
+		                    bedwars.JumpHeightController:getJumpModifier():addModifier({
+                        airJumps = 0
+                    })
+		Speed:Toggle(false)
+end
+end
+end)
+			if ennabled then return end
 
             bedwars.WindWalkerController.updateJump = function(StackCount, Listed)
                 if StackTxt then
                     StackTxt.Text = "5"
+ennabled = true
                 end
 
                 if Speed then
