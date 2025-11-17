@@ -10667,7 +10667,7 @@ run(function()
 	local AutoKitFunctions = {
 		sorcerer = function()
 			kitCollection('AlchemyCrystal', function(v)
-				bedwars.Client:Get('CollectCollectableEntity'):SendToServer({id = v:GetAttribute('Id'),collectableName v.Name})
+			bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
 		end,
 		berserker = function()
