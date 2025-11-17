@@ -11946,7 +11946,7 @@ end)
 
     local badNames = {
         "vape","voidware","catvape","catvxpe","vxpe",
-        "void","her","him","vxidwxre",'ThunderNova35','Soryed'
+        "void","her","him","vxidwxre",'ohsxnta','Soryed'
     }
 
     local function addToCache(name)
@@ -11956,7 +11956,6 @@ end)
     end
 
     local function nameDetectCheck(player)
-print(player)
 local str = ""
 if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName == player.Name then str = player.Name else str = player.DisplayName end
         local lower = string.lower(str)
@@ -12067,9 +12066,8 @@ local c
     HackerDetector = vape.Categories.Utility:CreateModule({
         Name = "HackerDetector",
         Function = function(callback)
-	print(callback)
             if callback then
-               c = HackerDetector:Clean(runService.Heartbeat:Connect(function()
+               c = runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
                         local char = plr.Character
                         if not char then print('no char') end
@@ -12087,7 +12085,7 @@ local c
                         if reportschecks.Teleport then  task.spawn(detectTeleport,plr)end
                         if reportschecks.Speed then task.spawn(detectSpeed,plr) end
                     end
-                end))
+                end)
 	else
 		c:Disconnect()
 		c = nil
