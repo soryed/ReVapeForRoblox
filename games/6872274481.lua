@@ -11858,7 +11858,7 @@ run(function()
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
-bedwars.WindWalkerController.updateJump = function(p46,p47)
+--[[bedwars.WindWalkerController.updateJump = function(p46,p47)
 							p47 = 5
 							p46 = {doubleJumpActive = false}
 									    if p47 >= 5 and not p46.doubleJumpActive then
@@ -11871,8 +11871,17 @@ bedwars.WindWalkerController.updateJump = function(p46,p47)
         p46.doubleJumpActive = false
       --  p46.jumpMaid:DoCleaning()
     end
-						end
+						end--]]
 
+    bedwars.Client:OnEvent("WindWalkerSpeedUpdate", function(p31)
+						p31 = {orbCount= 5, multipler = 2}
+        v_u_17.WindWalkerOrbUpdate:fire(p31.orbCount)
+        p_u_28:updateSpeed(p31.multiplier)
+        p_u_28:updateJump(p31.orbCount)
+    end):andThen(function(p32)
+        p_u_29:GiveTask(p32)
+    end)
+				
 				Speed:Toggle(true)
 				vape:CreateNotification("Onyx","Anti-Cheat bypasser enabled! keep speed on for this, and can u also use fly!",10,"success")
 		end,
