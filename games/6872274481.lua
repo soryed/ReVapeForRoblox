@@ -7857,9 +7857,7 @@ run(function()
 			end    																																																							
 			frictionTable.Speed = callback or nil
 			updateVelocity()
-			pcall(function()
-				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
-			end)
+
 	
 			if callback then
 				Speed:Clean(runService.PreSimulation:Connect(function(dt)
@@ -11858,11 +11856,11 @@ run(function()
 		Function = function(callback)
 
 			if callback then
-				local c = nil
-			c = bedwars.SprintController:getMovementStatusModifier():addModifier({
-		        ["moveSpeedMultiplier"] = 1
-		    })
-	print(c,typeof(c))																																	
+			pcall(function()
+				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
+			end)
+				Speed:Toggle(true)
+				vape:CreateNotification("Onyx","Anti-Cheat bypasser enabled! keep speed on for this, and can u also use fly!",10,"success")
 			end
 		end,
 		Tooltip = "Zephyr AntiCheat bypasser",
