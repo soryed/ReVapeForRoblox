@@ -10530,7 +10530,7 @@ end)
 
 run(function()
 local MutipleKits 
-	 MutipleKits = vape.Categories.AltFarm:CreateModule({
+	 MutipleKits = vape.Categories.Exploits:CreateModule({
 		Name = "MutipleKits",
 		Function = function(callback)
 
@@ -10540,7 +10540,7 @@ local MutipleKits
 vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 			end
 		end,
-		Tooltip = "5v5, ranked only allows u to  have mutiple kits in a game",
+		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
 	})
 end)
 
