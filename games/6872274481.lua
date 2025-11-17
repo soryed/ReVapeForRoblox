@@ -11850,28 +11850,34 @@ run(function()
 end)
 
 run(function()
-	local ZephyrExploit 
+	local ZephyrExploit = {Enabled = false}
 	ZephyrExploit = vape.Categories.Exploits:CreateModule({
 		Name = "ZephyrExploit",
 		Function = function(callback)
+		local zephyreffect = lplr.PlayerGui:FindFirstChild('WindWalkerEffect', true)
+		local StackTxt = zephyreffect:FindFirstChild('EffectStack', true)
+	if not callback then return end
+			if callback then
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
-	bedwars.WindWalkerController.updateJump = function(p46,p47)
-							p47 = 5
-							p46 = {doubleJumpActive = false}
-									    if p47 >= 5 and not p46.doubleJumpActive then
-        p46.doubleJumpActive = true
-        local v48 = bedwars.JumpHeightController:getJumpModifier():addModifier({
-            ["airJumps"] = 2
-        })
-    elseif p47 < 5 and p46.doubleJumpActive then
-        p46.doubleJumpActive = false
-    end
-				end
-				
+			bedwars.WindWalkerController.updateJump = function(StackCount,Listed)
+				StackTxt.Text = "5"
 				Speed:Toggle(true)
 				vape:CreateNotification("Onyx","Anti-Cheat bypasser enabled! keep speed on for this, and can u also use fly!",10,"success")
+				StackCount = 5
+				p46 = {doubleJumpActive = false}
+				if StackCount >= 5 and not Listed.doubleJumpActive then
+		        Listed.doubleJumpActive = true
+		    local v48 = bedwars.JumpHeightController:getJumpModifier():addModifier({
+		        ["airJumps"] = 2
+		    })
+		    elseif StackCount < 5 and Listed.doubleJumpActive then
+		        Listed.doubleJumpActive = false
+		    end
+		else
+			notif('ZephyrExploit', 'Disabled next game', 5, 'warning')						
+			end	
 		end,
 		Tooltip = "Zephyr AntiCheat bypasser",
 	})
