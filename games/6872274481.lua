@@ -8401,7 +8401,7 @@ run(function()
             vape:CreateNotification('Onyx', "Currently fetching mods", 3)
             task.wait(4)
 
-            local HttpService = game:GetService("HttpService")
+            local HttpService = httpService
             local Players = game:GetService("Players")
 
             local Offline, InGame, Online, Studio = 0, 0, 0, 0
@@ -10316,7 +10316,7 @@ run(function()
 		local wool = bedwars.ItemMeta[dblock.Name].block.breakType
 				local tool = store.tools[breaktype]
 				local wool = store.inventory.inventory.items
-print(game:GetService("HttpService"):JSONEncode(bedwars.ItemMeta))
+print(httpService:JSONEncode(bedwars.ItemMeta))
 		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
@@ -10397,7 +10397,7 @@ run(function()
 			end       
 	    	if not callback then return end
 
-            local http = game:GetService("HttpService")
+            local http = httpService
             local store = bedwars.Store:getState()
 
             if TypeData.Value == "important" then
