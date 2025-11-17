@@ -11954,6 +11954,7 @@ run(function()
     end
 
     local function nameDetectCheck(player)
+print(player)
         local lower = string.lower(player.DisplayName)
         for _, bad in ipairs(badNames) do
             if string.find(lower, bad, 1, true) then
