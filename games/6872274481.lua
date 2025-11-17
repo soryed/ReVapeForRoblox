@@ -11852,6 +11852,24 @@ run(function()
 end)
 
 run(function()
+	local ZephyrExploit 
+	ZephyrExploit = vape.Categories.Exploits:CreateModule({
+		Name = "ZephyrExploit",
+		Function = function(callback)
+
+			if callback then
+				local c = nil
+			c = bedwars.SprintController:getMovementStatusModifier():addModifier({
+		        ["moveSpeedMultiplier"] = 1
+		    })
+	print(c,typeof(c))																																	
+			end
+		end,
+		Tooltip = "Zephyr AntiCheat bypasser",
+	})
+end)
+																																							
+run(function()
 	local HackerDetector 
 	local reportschecks = {
 	Cache = true,
