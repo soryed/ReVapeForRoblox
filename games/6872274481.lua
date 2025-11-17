@@ -11911,29 +11911,184 @@ ennabled = true
         end,
         Tooltip = "Zephyr AntiCheat bypasser",
     })
-end)																																							
-run(function()
-	local HackerDetector 
-	local reportschecks = {
-	Cache = true,
-	InfFly= true,
-	Fly= true,
-	Teleport= true,
-	Speed= true,
-	Nuker= true,
-	Invisible= true,
-	AntiHit= true,
-	NameDetects= false,
-	}
-	HackerDetector = vape.Categories.Utility:CreateModule({
-		Name = "HackerDetector",
-		Function = function(callback)
+end)		
 
-			if callback then
-				HackerDetector:Toggle(false)
-				vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
-			end
-		end,
-		Tooltip = "Detects when a blatant cheater is in the game with you",
-	})
+run(function()
+    local HackerDetector
+    local exploitersPath = "ReVape/profiles/exploiters.txt"
+
+    if not isfile(exploitersPath) then 
+        writefile(exploitersPath, "")
+    end
+
+    local reportschecks = {
+        Cache = true,
+        InfFly = true,
+        Fly = true,
+        Teleport = true,
+        Speed = true,
+        Nuker = false,
+        Invisible = false,
+        AntiHit = false,
+        NameDetects = true,
+    }
+
+    local cachedExploiters = {}
+    do
+        local content = readfile(exploitersPath)
+        for name in string.gmatch(content, "([^\n]+)") do
+            cachedExploiters[name] = true
+        end
+    end
+
+    local badNames = {
+        "vape","voidware","catvape","catvxpe","vxpe",
+        "void","her","him","vxidwxre"
+    }
+
+    local function addToCache(name)
+        if cachedExploiters[name] then return end
+        cachedExploiters[name] = true
+        appendfile(exploitersPath, name.."\n")
+    end
+
+    local function nameDetectCheck(player)
+        local lower = string.lower(player.Name .. " " .. player.DisplayName)
+        for _, bad in ipairs(badNames) do
+            if string.find(lower, bad, 1, true) then
+                addToCache(player.Name)
+                vape:CreateNotification("Onyx", player.Name.." flagged for suspicious name", 8, "alert")
+                return
+            end
+        end
+    end
+
+
+	local lastJumpTime = {}
+	
+	local function detectInfFly(player)
+	    local char = player.Character
+	    if not char then return end
+	
+	    local hum = char:FindFirstChildWhichIsA("Humanoid")
+	    if not hum then return end
+	
+	    local currentState = hum:GetState()
+	    if currentState == Enum.HumanoidStateType.Jumping then
+	        local now = tick()
+	        local last = lastJumpTime[player] or 0
+	        local delta = now - last
+	
+	        if delta < 0.15 then
+	            vape:CreateNotification("Onyx", player.Name.." flagged for infinite fly", 8, "alert")
+	            addToCache(player.Name)
+	        end
+	
+	        lastJumpTime[player] = now
+	    end
+	end
+
+    local posStore = {}
+
+    local function detectFly(player)
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+
+        local p = root.Position
+        local old = posStore[player]
+
+        if old then
+            local dy = math.abs(p.Y - old.Y)
+            local vy = math.abs(root.AssemblyLinearVelocity.Y)
+
+            if dy > 1.5 and vy > 35 and hum.FloorMaterial == Enum.Material.Air then
+                vape:CreateNotification("Onyx", player.Name.." flagged for flying", 8, "alert")
+                addToCache(player.Name)
+            end
+        end
+
+        posStore[player] = p
+    end
+
+    local lastPos = {}
+
+    local function detectTeleport(player)
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+
+        local p = root.Position
+        local old = lastPos[player]
+
+        if old then
+            local dist = (p - old).Magnitude
+
+            if dist > 40 then
+                if dist < 180 then
+                    vape:CreateNotification("Onyx", player.Name.." flagged for teleporting ("..math.floor(dist)..")", 8, "alert")
+                    addToCache(player.Name)
+                end
+            end
+        end
+
+        lastPos[player] = p
+    end
+
+    local function detectSpeed(player)
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+
+        local velo = root.AssemblyLinearVelocity
+        local horizontal = Vector3.new(velo.X, 0, velo.Z).Magnitude
+
+        if hum:GetState() == Enum.HumanoidStateType.FallingDown
+        or hum:GetState() == Enum.HumanoidStateType.Freefall then
+            return
+        end
+
+        if horizontal > 28 then 
+            vape:CreateNotification("Onyx", player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8, "alert")
+            addToCache(player.Name)
+        end
+    end
+
+    HackerDetector = vape.Categories.Utility:CreateModule({
+        Name = "HackerDetector",
+
+        Function = function(callback)
+            if callback then
+                HackerDetector:Clean(runService.Heartbeat:Connect(function()
+                    for _, plr in players:GetPlayers() do
+                        if plr == lplr then continue end
+                        local char = plr.Character
+                        if not char then continue end
+
+                        if reportschecks.Cache and cachedExploiters[plr.Name] then
+                            vape:CreateNotification("Onyx", plr.Name.." was previously flagged", 4, "alert")
+                        end
+
+                        if reportschecks.NameDetects then
+                            nameDetectCheck(plr)
+                        end
+
+                        if reportschecks.InfFly then detectInfFly(plr) end
+                        if reportschecks.Fly then detectFly(plr) end
+                        if reportschecks.Teleport then detectTeleport(plr) end
+                        if reportschecks.Speed then detectSpeed(plr) end
+                    end
+                end))
+            end
+        end,
+
+        Tooltip = "Detects when a blatant cheater is in the game with you",
+    })
 end)
