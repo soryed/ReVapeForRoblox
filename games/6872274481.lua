@@ -46,7 +46,12 @@ local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role or "guest"
 local user = vape.user or "GUEST"
-
+task.spawn(function()
+	while task.wait(.1) do
+		vape.role = role
+		vape.user = user
+	end
+end)
 
 local store = {
 	attackReach = 0,
@@ -9559,7 +9564,6 @@ run(function()
 	})
 end)
 
-local Attacking
 run(function()
 	local Killaura
 	local SyncHits
@@ -9701,7 +9705,7 @@ run(function()
 						})
 
 						if #plrs > 0 then
-							switchItem(sword.tool, 0)
+							switchItem(sword.tool)
 							local selfpos = entitylib.character.RootPart.Position
 							local localfacing = entitylib.character.RootPart.CFrame.LookVector * Vector3.new(1, 0, 1)
 
@@ -9719,7 +9723,10 @@ run(function()
 								if not Attacking then
 									Attacking = true
 									store.KillauraTarget = v
-									if not Swing.Enabled and AnimDelay < tick() and not LegitAura.Enabled then
+									if (not Swing.Enabled) and (AnimDelay < tick()) and (not LegitAura.Enabled) then
+									    if SyncHit.Enabled then
+									        AnimDelay = tick() + swingDelay
+									    end
 										AnimDelay = tick() + (meta.sword.respectAttackSpeedForEffects and meta.sword.attackSpeed or math.max(ChargeTime.Value, 0.11))
 										bedwars.SwordController:playSwordEffect(meta, false)
 										if meta.displayName:find(' Scythe') then
@@ -9733,23 +9740,26 @@ run(function()
 								end
 
 								if delta.Magnitude > AttackRange.Value then continue end
-								if delta.Magnitude < 14.4 and (tick() - swingCooldown) < math.max(ChargeTime.Value, 0.02) then continue end
+								local swingDelay = SyncHit.Enabled 
+								    and math.max(ChargeTime.Value, meta.sword.attackSpeed or 0.1)
+								    or math.max(ChargeTime.Value, 0.02)
+								
+								if delta.Magnitude < 14.4 and (tick() - swingCooldown) < swingDelay then
+								    continue
+								end
 
 								local actualRoot = v.Character.PrimaryPart
 								if actualRoot then
 									local dir = CFrame.lookAt(selfpos, actualRoot.Position).LookVector
 									local pos = selfpos + dir * math.max(delta.Magnitude - 14.399, 0)
-									swingCooldown = tick()
-									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
-									store.attackReach = (delta.Magnitude * 100) // 1 / 100
-									store.attackReachUpdate = tick() + 1
-
+									swingCooldown = tick() + swingDelay
+									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow() + swingDelay
+									store.attackReach = ((delta.Magnitude * 100) // 1) / 100
+									store.attackReachUpdate = tick() + swingDelay
 									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
 										AnimDelay = tick()
 									end
-
-local Q = 0.5
-																																if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
+																																
 									AttackRemote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = 0},
@@ -9784,9 +9794,8 @@ local Q = 0.5
 					end
 
 					--#attacked > 0 and #attacked * 0.02 or
-local S = 0
-					if SyncHit.Enabled then S = 1 / UpdateRate.Value else S = 0.75 / UpdateRate.Value end
-					task.wait(S)
+				local S = SyncHit.Enabled and (1 / UpdateRate.Value) or (0.75 / UpdateRate.Value)
+				task.wait(S)
 				until not Killaura.Enabled
 			else
 				store.KillauraTarget = nil
@@ -10328,7 +10337,6 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Disables GetPropertyChangedSignal detections for movement'
 	})
 end)
 
@@ -10342,11 +10350,6 @@ run(function()
 			vape:CreateNotification("Funny", "No wool found in inventory!", 5, "warning")
 			return
 		end
-		local wool = bedwars.ItemMeta[dblock.Name].block.breakType
-				local tool = store.tools[breaktype]
-				local wool = store.inventory.inventory.items
-print(game:GetService("HttpService"):JSONEncode(bedwars.ItemMeta))
-		switchItem(item)
 		bedwars.placeBlock(basePos, item)
 	end
 	
