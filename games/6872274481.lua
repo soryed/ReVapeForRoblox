@@ -10667,7 +10667,7 @@ run(function()
 	
 	local AutoKitFunctions = {
 		sorcerer = function()
-			kitCollection('AlchemyCrystal', function(v)
+			kitCollection('alchemy_crystal', function(v)
 			bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
 		end,
@@ -11837,17 +11837,31 @@ run(function()
 end)
 
 run(function()
-local MutipleKits 
-	 MutipleKits = vape.Categories.Exploits:CreateModule({
+	local MutipleKits 
+	MutipleKits = vape.Categories.Exploits:CreateModule({
 		Name = "MutipleKits",
 		Function = function(callback)
 
 			if callback then
-																																						MutipleKits:Toggle(false)
-
-vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+				MutipleKits:Toggle(false)
+				vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 			end
 		end,
 		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
+	})
+end)
+
+run(function()
+	local HackerDetector 
+	HackerDetector = vape.Categories.Utility:CreateModule({
+		Name = "HackerDetector",
+		Function = function(callback)
+
+			if callback then
+				HackerDetector:Toggle(false)
+				vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+			end
+		end,
+		Tooltip = "Detects when a blatant cheater is in the game with you",
 	})
 end)
