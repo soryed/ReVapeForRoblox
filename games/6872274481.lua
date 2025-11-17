@@ -11946,7 +11946,7 @@ end)
 
     local badNames = {
         "vape","voidware","catvape","catvxpe","vxpe",
-        "void","her","him","vxidwxre",'ohsxnta','Soryed'
+        "void","her","him","vxidwxre",'Soryed'
     }
 local currentplayers = {}
 local maxreports = 6
