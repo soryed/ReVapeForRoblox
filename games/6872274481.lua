@@ -11854,14 +11854,27 @@ run(function()
 	ZephyrExploit = vape.Categories.Exploits:CreateModule({
 		Name = "ZephyrExploit",
 		Function = function(callback)
-
-			if callback then
+			--print(httpService:JSONEncode(bedwars.WindWalkerController))
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
+bedwars.WindWalkerController.updateJump() function(p46,p47)
+							p47 = 5
+							p46 = {doubleJumpActive = false}
+									    if p47 >= 5 and not p46.doubleJumpActive then
+        p46.doubleJumpActive = true
+        local v48 = bedwars.JumpHeightController:getJumpModifier():addModifier({
+            ["airJumps"] = 2
+        })
+       -- p46.jumpMaid:GiveTask(v48)
+    elseif p47 < 5 and p46.doubleJumpActive then
+        p46.doubleJumpActive = false
+      --  p46.jumpMaid:DoCleaning()
+    end
+						end
+
 				Speed:Toggle(true)
 				vape:CreateNotification("Onyx","Anti-Cheat bypasser enabled! keep speed on for this, and can u also use fly!",10,"success")
-			end
 		end,
 		Tooltip = "Zephyr AntiCheat bypasser",
 	})
