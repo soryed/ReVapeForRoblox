@@ -12100,7 +12100,7 @@ local c
                         if not char then print('no char') end
 
                         if reportschecks.Cache and cachedExploiters[plr.Name] then
-							createmsg(plr.Name.." was previously flagged", 8,player,'cache')
+							createmsg(plr.Name.." was previously flagged", 8,plr,'cache')
                         end
 
                         if reportschecks.NameDetects then
