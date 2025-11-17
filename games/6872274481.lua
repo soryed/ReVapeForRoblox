@@ -11858,7 +11858,7 @@ run(function()
 			pcall(function()
 				debug.setconstant(bedwars.WindWalkerController.updateSpeed, 7, callback and 'constantSpeedMultiplier' or 'moveSpeedMultiplier')
 			end)
-bedwars.WindWalkerController.updateJump() function(p46,p47)
+bedwars.WindWalkerController.updateJump = function(p46,p47)
 							p47 = 5
 							p46 = {doubleJumpActive = false}
 									    if p47 >= 5 and not p46.doubleJumpActive then
