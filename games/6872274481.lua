@@ -11935,12 +11935,14 @@ run(function()
     }
 
     local cachedExploiters = {}
+task.spawn(function()
     do
         local content = readfile(exploitersPath)
         for name in string.gmatch(content, "([^\n]+)") do
             cachedExploiters[name] = true
         end
     end
+end)
 
     local badNames = {
         "vape","voidware","catvape","catvxpe","vxpe",
@@ -11955,7 +11957,9 @@ run(function()
 
     local function nameDetectCheck(player)
 print(player)
-        local lower = string.lower(player.DisplayName)
+local str = ""
+if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName == player.Name then str = player.Name else str = player.DisplayName end
+        local lower = string.lower(str)
         for _, bad in ipairs(badNames) do
             if string.find(lower, bad, 1, true) then
                 addToCache(player.Name)
