@@ -1253,7 +1253,7 @@ local function BedwarsErrorNotification(mes)
 end
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
-getgenv().bedwars = bedwars
+getgenv().bedwars = bedwars.Client
 local reportedPlayers = {}
 local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
