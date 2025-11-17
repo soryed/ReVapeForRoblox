@@ -12071,9 +12071,8 @@ local c
             if callback then
                c = HackerDetector:Clean(runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
-                        if plr == lplr then continue end
                         local char = plr.Character
-                        if not char then continue end
+                        if not char then print('no char') end
 
                         if reportschecks.Cache and cachedExploiters[plr.Name] then
                             vape:CreateNotification("Onyx", plr.Name.." was previously flagged", 4, "alert")
