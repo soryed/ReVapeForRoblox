@@ -11979,6 +11979,7 @@ run(function()
         if cachedExploiters[name] then end
         cachedExploiters[name] = true
         appendfile(exploitersPath, name.."\n")
+			return
     end
 
     local function nameDetectCheck(player)
