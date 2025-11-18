@@ -9092,7 +9092,7 @@ run(function()
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 				KitRender:Toggle(false)
-										vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
             if callback then
@@ -9717,8 +9717,8 @@ run(function()
 										AnimDelay = tick()
 									end
 
-local Q = 0.5
-																																if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
+									local Q = 0.5
+									if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
 									AttackRemote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = 0},
@@ -9753,7 +9753,7 @@ local Q = 0.5
 					end
 
 					--#attacked > 0 and #attacked * 0.02 or
-local S = 0
+					local S = 0
 					if SyncHit.Enabled then S = 1 / UpdateRate.Value else S = 0.75 / UpdateRate.Value end
 					task.wait(S)
 				until not Killaura.Enabled
@@ -9793,30 +9793,35 @@ local S = 0
 			table.insert(methods, i)
 		end
 	end
-local MaxRange = 0
-if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-	MaxRange = 18
-SyncHit = {Enabled = false}
-elseif role == "premium" then
-	MaxRange = 24
+	local MaxRange = 0
+	if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"  then
+		MaxRange = 14
+		SyncHit = {Enabled = false}
+	elseif role == "user" then
+		MaxRange = 24
 		SyncHit = Killaura:CreateToggle({
-		Name = 'Sync Hit-Time',
-		Tooltip = "Synchronize's ur hit time",
-		Default = false
-	})
-elseif role == "friend" or role == "admin" or role == "coowner" or role == "owner" then
-	MaxRange = 32
+			Name = 'Sync Hit-Time',
+			Tooltip = "Synchronize's ur hit time",
+			Default = false
+		})
+	elseif role == "premium" then
+		MaxRange = 24
 		SyncHit = Killaura:CreateToggle({
-		Name = 'Sync Hit-Time',
-		Tooltip = "Synchronize's ur hit time",
-		Default = false
-	})
-else
-	MaxRange = 18
-SyncHit = {Enabled = false}
-end
-
-
+			Name = 'Sync Hit-Time',
+			Tooltip = "Synchronize's ur hit time",
+			Default = false
+		})
+	elseif role == "friend" or role == "admin" or role == "coowner" or role == "owner" then
+		MaxRange = 32
+		SyncHit = Killaura:CreateToggle({
+			Name = 'Sync Hit-Time',
+			Tooltip = "Synchronize's ur hit time",
+			Default = false
+		})
+	else
+		MaxRange = 18
+		SyncHit = {Enabled = false}
+	end
 
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
@@ -10688,7 +10693,7 @@ run(function()
 								part.Name = "AutoKitRagnarPart"
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
-									bedwars.AbilityController:useAbility('berserker_rage')
+										bedwars.AbilityController:useAbility('berserker_rage')
 									--	game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('berserker_rage')
 									end
 								end)
@@ -10723,8 +10728,7 @@ run(function()
 					Sort = sortmethods.Health
 				})
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-												bedwars.AbilityController:useAbility('cactus_fire')
-
+					bedwars.AbilityController:useAbility('cactus_fire')
 		            --game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
 		        end
 		
@@ -10753,20 +10757,19 @@ run(function()
 		    until not AutoKit["Enabled"]
 		end,
 		ember = function()
-		                repeat
-		                    
-		                    local tmp = getItem("infernal_saber")
-		                    if tmp then
-		                        local lplr = game:GetService("Players").LocalPlayer
-		                        for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
-		                            if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-		                                local root = plr.Character.HumanoidRootPart
-		                                if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
-		                                    bedwars.Client:Get('HellBladeRelease'):SendToServer({
-		                                        weapon = tmp.tool;
-		                                        player = plr;
-		                                        chargeTime = 0.9;
-		                                    })
+		    repeat             
+		    	local tmp = getItem("infernal_saber")
+		    	if tmp then
+		    		local lplr = game:GetService("Players").LocalPlayer
+		    		for i, plr in pairs(game:GetService("Players"):GetPlayers()) do
+		    			if plr ~= lplr and plr.Team ~= lplr.Team and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+		    				local root = plr.Character.HumanoidRootPart
+							if (root.Position - lplr.Character.HumanoidRootPart.Position).Magnitude <= 14 then
+		   						 bedwars.Client:Get('HellBladeRelease'):SendToServer({
+		   								weapon = tmp.tool;
+		    							player = plr;
+		    							chargeTime = 0.9;
+		                            })
 		                                end
 		                            end
 		                        end
@@ -10805,7 +10808,7 @@ run(function()
 			})
 		
 			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-			bedwars.AbilityController:useAbility('skeleton_ability')
+				bedwars.AbilityController:useAbility('skeleton_ability')
 				--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
 				Speed:Toggle(true)
 				task.wait(3)
@@ -10871,8 +10874,7 @@ run(function()
 				})
 		
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
-						bedwars.AbilityController:useAbility('airbender_tornado')
-
+					bedwars.AbilityController:useAbility('airbender_tornado')
 					--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("airbender_tornado")
 				end
 		
@@ -10889,9 +10891,7 @@ run(function()
 		end,
 		nazar = function()
 		    repeat
-								bedwars.AbilityController:useAbility('consume_life_foce')
-
-			--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('consume_life_foce')
+			bedwars.AbilityController:useAbility('consume_life_foce')
 			task.wait(0.1)
 		    until not AutoKit.Enabled
 		end,
@@ -10901,8 +10901,7 @@ run(function()
 					if text:IsA("TextLabel") then
 						local txt = string.lower(text.Text)
 						if string.find(txt, "teleport") then
-													bedwars.AbilityController:useAbility('HATTER_TELEPORT')
-
+							bedwars.AbilityController:useAbility('HATTER_TELEPORT')
 							--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
 						end
 					end
@@ -11916,11 +11915,14 @@ end)
 
 run(function()
     local HackerDetector
+
     local exploitersPath = "ReVape/profiles/exploiters.txt"
 
     if not isfile(exploitersPath) then 
         writefile(exploitersPath, "")
     end
+
+	
 
     local reportschecks = {
         Cache = true,
@@ -11933,45 +11935,45 @@ run(function()
         AntiHit = false,
         NameDetects = true,
     }
-
+	
     local cachedExploiters = {}
-task.spawn(function()
-    do
-        local content = readfile(exploitersPath)
-        for name in string.gmatch(content, "([^\n]+)") do
-            cachedExploiters[name] = true
-        end
-    end
-end)
+	task.spawn(function()
+	    do
+	        local content = readfile(exploitersPath)
+	        for name in string.gmatch(content, "([^\n]+)") do
+	            cachedExploiters[name] = true
+	        end
+	    end
+	end)
 
     local badNames = {
         "vape","voidware","catvape","catvxpe","vxpe",
         "void","her","him","vxidwxre",'Soryed'
     }
-local currentplayers = {}
-local maxreports = 6
-
-local function createmsg(msg, time, player, reason)
-    time = time or 8
-
-    if not currentplayers[player] then
-        currentplayers[player] = { reports = 0, ignore = false, reasons = {} }
-    end
-
-    local pdata = currentplayers[player]
-
-    if pdata.ignore then return end
-
-    if not pdata.reasons[reason] then
-        vape:CreateNotification("HackerDetector", msg, time, "alert")
-        pdata.reports = pdata.reports + 1
-        pdata.reasons[reason] = true
-    end
-
-    if pdata.reports >= maxreports then
-        pdata.ignore = true
-    end
-end
+	local currentplayers = {}
+	local maxreports = 6
+	
+	local function createmsg(msg, time, player, reason)
+	    time = time or 8
+	
+	    if not currentplayers[player] then
+	        currentplayers[player] = { reports = 0, ignore = false, reasons = {} }
+	    end
+	
+	    local pdata = currentplayers[player]
+	
+	    if pdata.ignore then return end
+	
+	    if not pdata.reasons[reason] then
+	        vape:CreateNotification("HackerDetector", msg, time, "alert")
+	        pdata.reports = pdata.reports + 1
+	        pdata.reasons[reason] = true
+	    end
+	
+	    if pdata.reports >= maxreports then
+	        pdata.ignore = true
+	    end
+	end
 
     local function addToCache(name)
         if cachedExploiters[name] then end
@@ -11980,8 +11982,8 @@ end
     end
 
     local function nameDetectCheck(player)
-local str = ""
-if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName == player.Name then str = player.Name else str = player.DisplayName end
+		local str = ""
+		if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName == player.Name then str = player.Name else str = player.DisplayName end
         local lower = string.lower(str)
         for _, bad in ipairs(badNames) do
             if string.find(lower, bad, 1, true) then
@@ -12006,8 +12008,8 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
 	        local now = tick()
 	        local last = lastJumpTime[player] or 0
 	        local delta = now - last
-	
-	        if delta < 0.15 then
+			local vy = math.abs(root.AssemblyLinearVelocity.Y)
+	        if delta < 0.15 or vy > 35 then
 				createmsg(player.Name.." flagged for infinite fly", 8,player,'inffly')
 	            addToCache(player.Name)
 	        end
@@ -12077,15 +12079,14 @@ if player.DisplayName == "" or player.DisplayName == nil or player.DisplayName =
         local hum = char:FindFirstChildOfClass("Humanoid")
         if not hum then end
 
-        local velo = root.AssemblyLinearVelocity
-        local horizontal = Vector3.new(velo.X, 0, velo.Z).Magnitude
+        local velo = math.floor(root.AssemblyLinearVelocity.Magnitude)
+       -- local horizontal = Vector3.new(velo.X, 0, velo.Z).Magnitude
 
         if hum:GetState() == Enum.HumanoidStateType.FallingDown
-        or hum:GetState() == Enum.HumanoidStateType.Freefall then end
+        or hum:GetState() == Enum.HumanoidStateType.Freefall then return end
 
-        if horizontal > 28 then
-				createmsg(player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8,player,'speed')
-
+        if velo >= 48 then
+			createmsg(player.Name.." flagged for speed ("..math.floor(horizontal)..")", 8,player,'speed')
             addToCache(player.Name)
         end
     end
@@ -12097,7 +12098,7 @@ local c
                c = runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
                         local char = plr.Character
-                        if not char then print('no char') end
+                        if not char then end
 
                         if reportschecks.Cache and cachedExploiters[plr.Name] then
 							createmsg(plr.Name.." was previously flagged", 8,plr,'cache')
