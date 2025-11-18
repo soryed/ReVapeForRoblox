@@ -105,7 +105,7 @@ function login:SlientLogin()
             U = "GUEST"
             P = "PASSWORD"
             saveAccountFiles(S, U, P)
-        print("failed to get code 200")
+           vape:CreateNotification("Onyx", "Login failed Cloudflare is down, Error Code 200. Continue as 'GUEST'", 7)
             return "guest", "GUEST", "PASSWORD"
         end
 
