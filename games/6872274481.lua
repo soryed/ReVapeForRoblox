@@ -9724,9 +9724,18 @@ run(function()
 										    local duration = AfterSwing.Value
 										    local interval = ChargeTime.Value
 										    local start = tick()
-										
+											 if interval == 0 then interval = 0.01 end
 										    while tick() - start < duration do
-										        print('nga died lo')
+												AttackRemote:FireServer({
+													weapon = sword.tool,
+													chargedAttack = {chargeRatio = 0},
+													entityInstance = nil,
+													validate = {
+														raycast = {},
+														targetPosition = {value = actualRoot.Position},
+														selfPosition = {value = pos}
+													}
+												})
 										        task.wait(interval)
 										    end
 										end
