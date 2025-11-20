@@ -9720,17 +9720,43 @@ run(function()
 
 									local Q = 0.5
 									if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
-									AttackRemote:FireServer({
-										weapon = sword.tool,
-										chargedAttack = {chargeRatio = 0},
-										entityInstance = v.Character,
-										validate = {
-											raycast = {},
-											targetPosition = {value = actualRoot.Position},
-											selfPosition = {value = pos}
-										}
-									})
+										local function startAfterTickLoop()
+										    local duration = AfterSwing.Value
+										    local interval = ChargeTime.Value
+										    local start = tick()
+										
+										    while tick() - start < duration do
+										        print('nga died lo')
+										        task.wait(interval)
+										    end
+										end
 
+									task.spawn(function()
+										AttackRemote:FireServer({
+											weapon = sword.tool,
+											chargedAttack = {chargeRatio = 0},
+											entityInstance = v.Character,
+											validate = {
+												raycast = {},
+												targetPosition = {value = actualRoot.Position},
+												selfPosition = {value = pos}
+											}
+										})
+									end)
+								    local char = v.Character
+								    if not char then return end
+								    
+								    local hum = char:FindFirstChild("Humanoid")
+								    if not hum then return end
+								
+								    local triggered = false
+								
+								    game:GetService("RunService").Heartbeat:Connect(function()
+								        if hum.Health == 0 and not triggered then
+								            triggered = true
+								            startAfterTickLoop()
+								        end
+								    end)
 								end
 							end
 						end
@@ -9850,17 +9876,13 @@ run(function()
 		Default = 0.3,
 		Decimal = 100
 	})
-	if role == 'owner' then
-					
-				AfterSwing = Killaura:CreateSlider({
+	AfterSwing = Killaura:CreateSlider({
 		Name = 'After Swing',
 		Min = 0,
-		Max = 2,
+		Max = 3,
 		Default = 0.5,
 		Suffix = 's',
-							Tooltip = 'not finished'
 	})
-				end			
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
