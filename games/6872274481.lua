@@ -9537,6 +9537,7 @@ run(function()
 	local SwingRange
 	local AttackRange
 	local ChargeTime
+	local AfterSwing
 	local UpdateRate
 	local AngleSlider
 	local MaxTargets
@@ -9729,6 +9730,7 @@ run(function()
 											selfPosition = {value = pos}
 										}
 									})
+
 								end
 							end
 						end
@@ -9798,7 +9800,7 @@ run(function()
 		MaxRange = 14
 		SyncHit = {Enabled = false}
 	elseif role == "user" then
-		MaxRange = 24
+		MaxRange = 18
 		SyncHit = Killaura:CreateToggle({
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
@@ -9848,7 +9850,17 @@ run(function()
 		Default = 0.3,
 		Decimal = 100
 	})
-
+	if role == 'owner' then
+					
+				AfterSwing = Killaura:CreateSlider({
+		Name = 'After Swing',
+		Min = 0,
+		Max = 2,
+		Default = 0.5,
+		Suffix = 's',
+							Tooltip = 'not finished'
+	})
+				end			
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
