@@ -727,7 +727,7 @@ end
 		ClientDamageBlock = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['block-engine'].out.shared.remotes).BlockEngineRemotes.Client,
 		CombatConstant = require(replicatedStorage.TS.combat['combat-constant']).CombatConstant,
 		DamageIndicator = Knit.Controllers.DamageIndicatorController.spawnDamageIndicator,
-		DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.game.locker['kill-effect'].effects['default-kill-effect']),
+		--DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.game.locker['kill-effect'].effects['default-kill-effect']),
 		EmoteType = require(replicatedStorage.TS.locker.emote['emote-type']).EmoteType,
 		GameAnimationUtil = require(replicatedStorage.TS.animation['animation-util']).GameAnimationUtil,
 		NotificationController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/notification-controller@NotificationController'),
@@ -746,7 +746,7 @@ end
 		end,
 		HudAliveCount = require(lplr.PlayerScripts.TS.controllers.global['top-bar'].ui.game['hud-alive-player-counts']).HudAlivePlayerCounts,
 		ItemMeta = debug.getupvalue(require(replicatedStorage.TS.item['item-meta']).getItemMeta, 1),
-		KillEffectMeta = require(replicatedStorage.TS.locker['kill-effect']['kill-effect-meta']).KillEffectMeta,
+		--KillEffectMeta = require(replicatedStorage.TS.locker['kill-effect']['kill-effect-meta']).KillEffectMeta,
 		KillFeedController = Flamework.resolveDependency('client/controllers/game/kill-feed/kill-feed-controller@KillFeedController'),
 		Knit = Knit,
 		KnockbackUtil = require(replicatedStorage.TS.damage['knockback-util']).KnockbackUtil,
@@ -6967,7 +6967,7 @@ run(function()
 	})
 end)
 	
-run(function()
+--[[run(function()
 	local FPSBoost
 	local Kill
 	local Visualizer
@@ -7043,7 +7043,7 @@ run(function()
 		end,
 		Default = true
 	})
-end)
+end)--]]
 	
 run(function()
 	local HitColor
@@ -7175,7 +7175,7 @@ run(function()
 	})
 end)
 	
-run(function()
+--[[run(function()
 	local KillEffect
 	local Mode
 	local List
@@ -7339,7 +7339,7 @@ run(function()
 		end,
 		Darker = true
 	})
-end)
+end)--]]
 	
 run(function()
 	local ReachDisplay
