@@ -9789,7 +9789,6 @@ run(function()
 	})
 end)
 
-local Attacking
 run(function()
 	local Killaura
 	local SyncHits
@@ -10810,18 +10809,14 @@ vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 	})
 end)
 
-
-
 run(function()
-local LP 
+	local LP 
 	 LP = vape.Categories.Exploits:CreateModule({
 		Name = "LeaveParty",
 		Function = function(callback)
-
 			if callback then
-																																						LP:Toggle(false)
-
-bedwars.PartyController:leaveParty()
+				LP:Toggle(false)
+				bedwars.PartyController:leaveParty()
 			end
 		end,
 		Tooltip = "Makes u leave ur current party",
@@ -10842,7 +10837,7 @@ run(function()
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
 				Desync:Toggle(false)
 																vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
+				
 			end       
 			if callback then
 				local teleported
@@ -11730,8 +11725,8 @@ run(function()
 			if call then
 		   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
 			Clutch:Toggle(false)
-																															vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				
 			end      
 				Clutch:Clean(runService.Heartbeat:Connect(function()
 					if not Clutch.Enabled then
@@ -12131,11 +12126,19 @@ local ennabled = false
     ZephyrExploit = vape.Categories.Exploits:CreateModule({
         Name = "ZephyrExploit",
         Function = function(callback)
-			if not lplr:GetAttribute("PlayingAsKits") == "wind_walker" then notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") ZephyrExploit:Toggle(false) return end		
+			if not store.equippedKit == "wind_walker" then
+				notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") 
+				ZephyrExploit:Toggle(false) 
+				 
+			end		
 			
             local zephyreffect = lplr.PlayerGui:FindFirstChild("WindWalkerEffect", true)
             local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
-		if not zephyreffect then notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") ZephyrExploit:Toggle(false) end
+		if not zephyreffect then
+				notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning")
+				ZephyrExploit:Toggle(false)
+			
+			end
             if not callback then
                 notif("ZephyrExploit", "Disabled next game", 5, "warning")
                 return
@@ -12401,4 +12404,50 @@ local c
         end,
         Tooltip = "Detects when a blatant cheater is in the game with you",
     })
+end)
+										
+run(function()
+	local function hwidcreation()
+		local strings = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+		local numbers = "1234567890",
+		local symbols = "`~!@#$%^&*()-_=+,<.>?"
+		local len = 10
+	    local pool = strings .. numbers .. symbols
+	    local result = {}
+	
+	    for i = 1, len do
+	        local rand = math.random(1, #pool)
+	        result[i] = pool:sub(rand, rand)
+	    end
+	
+	    return table.concat(result)
+	end
+	
+	
+	local ResetHWID 
+	 ResetHWID = vape.Categories.Exploits:CreateModule({
+		Name = "ResetHWID",
+		Function = function(callback)
+			if callback then
+				ResetHWID:Toggle(false)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+					ResetHWID:Toggle(false)
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")       
+				end
+				local newhwid = hwidcreation()
+				setclipboard(newhwid)
+				http_request({
+				    Url = "https://vapeclient.fsl58.workers.dev/updatehwid",
+				    Method = "POST",
+				    Headers = { ["Content-Type"] = "application/json" },
+				    Body = game:GetService("HttpService"):JSONEncode({
+				        username = getgenv().username,
+				        new_hwid = newhwid
+				    })
+				})
+				vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
+			end
+		end,
+		Tooltip = "This resets ur password for ur account",
+	})
 end)
