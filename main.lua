@@ -181,7 +181,6 @@ end
 --]]
 
 
-else
 	repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
@@ -620,7 +619,6 @@ if not shared.VapeIndependent then
 	task.wait(.15)
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
-	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	loadstring(downloadFile('ReVape/libraries/announcement.lua'), 'announcement')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		makestage(9, 'loading all packages.', 1.005)
@@ -640,4 +638,3 @@ if not shared.VapeIndependent then
 else
 	vape.Init = finishLoading
 	return vape
-end
