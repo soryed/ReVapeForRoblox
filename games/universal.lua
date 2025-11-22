@@ -9211,11 +9211,13 @@ run(function()
 		Name = "ResetHWID",
 		Function = function(callback)
 			if callback then
-				ResetHWID:Toggle(false)
+				
 	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
 					ResetHWID:Toggle(false)
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")       
 				end
+				
+task.spawn(function()
 				local newhwid = hwidcreation()
 				setclipboard(newhwid)
 				http_request({
@@ -9228,6 +9230,8 @@ run(function()
 				    })
 				})
 				vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
+end)
+ResetHWID:Toggle(false)
 			end
 		end,
 		Tooltip = "This resets ur password for ur account",
