@@ -9740,20 +9740,19 @@ run(function()
 									local Q = 0.5
 									if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
 										if isClaw then
-												else
-													AttackRemote:FireServer({
-											weapon = sword.tool,
-											chargedAttack = {chargeRatio = 0},
-											entityInstance = v.Character,
-											validate = {
-												raycast = {},
-												targetPosition = {value = actualRoot.Position},
-												selfPosition = {value = pos}
-											}
+											KaidaController:request(v.Character)
+										else
+											AttackRemote:FireServer({
+												weapon = sword.tool,
+												chargedAttack = {chargeRatio = 0},
+												entityInstance = v.Character,
+												validate = {
+													raycast = {},
+													targetPosition = {value = actualRoot.Position},
+													selfPosition = {value = pos}
+												}
 										})
-												end
-										
-									
+									end
 								end
 							end
 						end
