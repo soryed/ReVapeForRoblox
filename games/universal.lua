@@ -1,5 +1,5 @@
-	local loadstring = function(...)
-	local res, err = loadstring(...)
+local loadstring = function(...)
+local res, err = loadstring(...)
 	if err and vape then
 		vape:CreateNotification('Onyx - Universal', 'Failed to load : '..err, 30, 'alert')
 	end
@@ -9189,42 +9189,9 @@ end)
 end)--]]
 
 run(function()
-	local webhook = 'https://discord.com/api/webhooks/1441819054556844062/1lXcmlNSznsjYg7KFpHiaHuRx0yU-saL0hRihNC5F37NRUlB4ifxbkh8tU9AMiD8Sysr'
-	local embed = {
-	    ["title"] = "Onyx",
-	    ["color"] = 5814783, 
-	    ["fields"] = {
-	        {
-	            ["name"] = "Username",
-	            ["value"] = Player.Name,
-	            ["inline"] = true
-	        },
-	        {
-	            ["name"] = "Job ID",
-	            ["value"] = game.JobId,
-	            ["inline"] = true
-	        }
-	    }
-	}
-	
-	local data = {
-	    ["embeds"] = {embed}
-	}
-	
-	request({
-	    Url = url,
-	    Method = "POST",
-	    Headers = {
-	        ["Content-Type"] = "application/json"
-	    },
-	    Body = HttpService:JSONEncode(data)
-	})
-end)
-
-run(function()
 	local function hwidcreation()
 		local strings = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-		local numbers = "1234567890",
+		local numbers = "1234567890"
 		local symbols = "`~!@#$%^&*()-_=+,<.>?"
 		local maxlen = 10
 	    local pool = strings .. numbers .. symbols
@@ -9266,3 +9233,38 @@ run(function()
 		Tooltip = "This resets ur password for ur account",
 	})
 end)
+
+run(function()
+	local webhook = 'https://discord.com/api/webhooks/1441819054556844062/1lXcmlNSznsjYg7KFpHiaHuRx0yU-saL0hRihNC5F37NRUlB4ifxbkh8tU9AMiD8Sysr'
+	local embed = {
+	    ["title"] = "Onyx",
+	    ["color"] = 5814783, 
+	    ["fields"] = {
+	        {
+	            ["name"] = "Username",
+	            ["value"] = Player.Name,
+	            ["inline"] = true
+	        },
+	        {
+	            ["name"] = "Job ID",
+	            ["value"] = game.JobId,
+	            ["inline"] = true
+	        }
+	    }
+	}
+	
+	local data = {
+	    ["embeds"] = {embed}
+	}
+	
+	request({
+	    Url = url,
+	    Method = "POST",
+	    Headers = {
+	        ["Content-Type"] = "application/json"
+	    },
+	    Body = HttpService:JSONEncode(data)
+	})
+end)
+
+
