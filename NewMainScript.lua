@@ -6,7 +6,7 @@ if not typeof(ARGS) == "table" then
 end
 getgenv().username = ARGS[1]
 getgenv().password = ARGS[2]
-print(getgenv().username,ARGS,ARGS[2])
+print(ARGS,ARGS[2])
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
