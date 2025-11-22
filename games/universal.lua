@@ -9211,27 +9211,51 @@ run(function()
 		Name = "ResetHWID",
 		Function = function(callback)
 			if callback then
-				
+				ResetHWID:Toggle(false)
 	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
 					ResetHWID:Toggle(false)
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")       
 				end
-				
-task.spawn(function()
 				local newhwid = hwidcreation()
 				setclipboard(newhwid)
-				http_request({
-				    Url = "https://vapeclient.fsl58.workers.dev/updatehwid",
-				    Method = "POST",
-				    Headers = { ["Content-Type"] = "application/json" },
-				    Body = game:GetService("HttpService"):JSONEncode({
-				        username = getgenv().username,
-				        new_hwid = newhwid
-				    })
-				})
-				vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
-end)
-ResetHWID:Toggle(false)
+				local HttpService = game:GetService("HttpService")
+
+local function updateHWID(username, newHWID)
+    local success, response = pcall(function()
+        return http_request({
+            Url = "https://vapeclient.fsl58.workers.dev/updatehwid",
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode({
+                username = username,
+                new_hwid = newHWID
+            })
+        })
+    end)
+
+    if not success then
+        return false, "Request failed: " .. tostring(response)
+    end
+
+    if response.StatusCode >= 200 and response.StatusCode < 300 then
+        local body = HttpService:JSONDecode(response.Body)
+        if body.success then
+            return true, body.message or "HWID updated successfully"
+        else
+            return false, body.message or "Unknown error from server"
+        end
+    else
+        return false, "HTTP Error: " .. tostring(response.StatusCode)
+    end
+end
+
+local ok, msg = updateHWID(getgenv().username, newhwid)
+if ok then
+    vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
+else
+    vape:CreateNotification("ResetHWID", "error: "..msg, 10, "waring")
+end
+				
 			end
 		end,
 		Tooltip = "This resets ur password for ur account",
