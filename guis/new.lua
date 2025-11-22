@@ -5706,6 +5706,7 @@ function mainapi:SaveOptions(object, savedoptions)
 end
 
 function mainapi:Uninject()
+if gethui():FindFirstChild('OynxUIMain') then gethui():FindFirstChild('OynxUIMain'):Destroy() end
 	mainapi:Save()
 	mainapi.Loaded = nil
 	for _, v in self.Modules do
