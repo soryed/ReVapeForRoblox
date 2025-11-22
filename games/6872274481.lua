@@ -700,7 +700,7 @@ run(function()
 	local OldGet, OldBreak = Client.Get
 local function safeGetProto(func, index)
     if not func then return nil end
-    local success, proto = pcall(debug.getproto, func, index)
+    local success, proto = pcall(safeGetProto, func, index)
     if success then
         return proto
     else
@@ -776,36 +776,36 @@ end
 	})
 
 	local remoteNames = {
-		AfkStatus = debug.getproto(Knit.Controllers.AfkController.KnitStart, 1),
+		AfkStatus = safeGetProto(Knit.Controllers.AfkController.KnitStart, 1),
 		AttackEntity = Knit.Controllers.SwordController.sendServerRequest,
 		BeePickup = Knit.Controllers.BeeNetController.trigger,
-		CannonAim = debug.getproto(Knit.Controllers.CannonController.startAiming, 5),
+		CannonAim = safeGetProto(Knit.Controllers.CannonController.startAiming, 5),
 		CannonLaunch = Knit.Controllers.CannonHandController.launchSelf,
-		ConsumeBattery = debug.getproto(Knit.Controllers.BatteryController.onKitLocalActivated, 1),
-		ConsumeItem = debug.getproto(Knit.Controllers.ConsumeController.onEnable, 1),
+		ConsumeBattery = safeGetProto(Knit.Controllers.BatteryController.onKitLocalActivated, 1),
+		ConsumeItem = safeGetProto(Knit.Controllers.ConsumeController.onEnable, 1),
 		ConsumeSoul = Knit.Controllers.GrimReaperController.consumeSoul,
-		ConsumeTreeOrb = debug.getproto(Knit.Controllers.EldertreeController.createTreeOrbInteraction, 1),
-		DepositPinata = debug.getproto(debug.getproto(Knit.Controllers.PiggyBankController.KnitStart, 2), 5),
-		DragonBreath = debug.getproto(Knit.Controllers.VoidDragonController.onKitLocalActivated, 5),
-		DragonEndFly = debug.getproto(Knit.Controllers.VoidDragonController.flapWings, 1),
+		ConsumeTreeOrb = safeGetProto(Knit.Controllers.EldertreeController.createTreeOrbInteraction, 1),
+		DepositPinata = safeGetProto(safeGetProto(Knit.Controllers.PiggyBankController.KnitStart, 2), 5),
+		DragonBreath = safeGetProto(Knit.Controllers.VoidDragonController.onKitLocalActivated, 5),
+		DragonEndFly = safeGetProto(Knit.Controllers.VoidDragonController.flapWings, 1),
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
 		DropItem = Knit.Controllers.ItemDropController.dropItemInHand,
 		SetInvItem = safeGetProto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.SetInvItem, 3),
 		FireProjectile = debug.getupvalue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
 		GroundHit = Knit.Controllers.FallDamageController.KnitStart,
 		GuitarHeal = Knit.Controllers.GuitarController.performHeal,
-		HannahKill = debug.getproto(Knit.Controllers.HannahController.registerExecuteInteractions, 1),
-		HarvestCrop = debug.getproto(debug.getproto(Knit.Controllers.CropController.KnitStart, 4), 1),
-		KaliyahPunch = debug.getproto(Knit.Controllers.DragonSlayerController.onKitLocalActivated, 1),
-		MageSelect = debug.getproto(Knit.Controllers.MageController.registerTomeInteraction, 1),
-		MinerDig = debug.getproto(Knit.Controllers.MinerController.setupMinerPrompts, 1),
+		HannahKill = safeGetProto(Knit.Controllers.HannahController.registerExecuteInteractions, 1),
+		HarvestCrop = safeGetProto(safeGetProto(Knit.Controllers.CropController.KnitStart, 4), 1),
+		KaliyahPunch = safeGetProto(Knit.Controllers.DragonSlayerController.onKitLocalActivated, 1),
+		MageSelect = safeGetProto(Knit.Controllers.MageController.registerTomeInteraction, 1),
+		MinerDig = safeGetProto(Knit.Controllers.MinerController.setupMinerPrompts, 1),
 		PickupItem = Knit.Controllers.ItemDropController.checkForPickup,
-		PickupMetal = debug.getproto(Knit.Controllers.HiddenMetalController.onKitLocalActivated, 4),
+		PickupMetal = safeGetProto(Knit.Controllers.HiddenMetalController.onKitLocalActivated, 4),
 		ReportPlayer = require(lplr.PlayerScripts.TS.controllers.global.report['report-controller']).default.reportPlayer,
-		ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
-		SpawnRaven = debug.getproto(Knit.Controllers.RavenController.KnitStart, 1),
+		ResetCharacter = safeGetProto(Knit.Controllers.ResetController.createBindable, 1),
+		SpawnRaven = safeGetProto(Knit.Controllers.RavenController.KnitStart, 1),
 		SummonerClawAttack = Knit.Controllers.SummonerClawHandController.attack,
-		WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 2),
+		WarlockTarget = safeGetProto(Knit.Controllers.WarlockStaffController.KnitStart, 2),
 	}
 	local function dumpRemote(tab)
 		local ind
@@ -1238,6 +1238,19 @@ end
 		storeChanged = nil
 	end)
 end)
+if not bedwars.Client then
+end
+local KaidaController = {}
+function KaidaController:request(target)
+	if target then 
+		return bedwars.Client:Get("SummonerClawAttackRequest"):FireServer({
+			["clientTime"] = tick(), 
+			["direction"] = (target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position - lplr.Character.HumanoidRootPart.Position).unit, 
+			["position"] = target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position
+		})
+	else return nil end
+end
+
 local function BedwarsInfoNotification(mes)
 	bedwars.NotificationController:sendInfoNotification({
 		message = tostring(mes),
@@ -9660,6 +9673,8 @@ run(function()
 					Attacking = false
 					store.KillauraTarget = nil
 					if sword then
+						if SC.Enabled and entitylib.isAlive and lplr.Character:FindFirstChild("elk") then return end
+						local isClaw = string.find(string.lower(tostring(sword and sword.itemType or "")), "summoner_claw")	
 						local plrs = entitylib.AllPosition({
 							Range = SwingRange.Value,
 							Wallcheck = Targets.Walls.Enabled or nil,
@@ -9671,6 +9686,9 @@ run(function()
 						})
 
 						if #plrs > 0 then
+							if store.equippedKit == "ember" and shared.EmberAutoKit and sword.itemType == "infernal_saber" then
+								bedwars.Client:Get(remotes.HellBladeRelease):FireServer({chargeTime = 1, player = lplr, weapon = sword.tool})
+							end
 							switchItem(sword.tool, 0)
 							local selfpos = entitylib.character.RootPart.Position
 							local localfacing = entitylib.character.RootPart.CFrame.LookVector * Vector3.new(1, 0, 1)
@@ -9720,28 +9738,9 @@ run(function()
 
 									local Q = 0.5
 									if SyncHit.Enabled  then Q = 0.35 else Q = 0.5 end
-										local function startAfterTickLoop()
-										    local duration = AfterSwing.Value
-										    local interval = ChargeTime.Value
-										    local start = tick()
-											 if interval == 0 then interval = 0.01 end
-										    while tick() - start < duration do
-												AttackRemote:FireServer({
-													weapon = sword.tool,
-													chargedAttack = {chargeRatio = 0},
-													entityInstance = nil,
-													validate = {
-														raycast = {},
-														targetPosition = {value = actualRoot.Position},
-														selfPosition = {value = pos}
-													}
-												})
-										        task.wait(interval)
-										    end
-										end
-
-									task.spawn(function()
-										AttackRemote:FireServer({
+										if isClaw then
+												else
+													AttackRemote:FireServer({
 											weapon = sword.tool,
 											chargedAttack = {chargeRatio = 0},
 											entityInstance = v.Character,
@@ -9751,21 +9750,9 @@ run(function()
 												selfPosition = {value = pos}
 											}
 										})
-									end)
-								    local char = v.Character
-								    if not char then return end
-								    
-								    local hum = char:FindFirstChild("Humanoid")
-								    if not hum then return end
-								
-								    local triggered = false
-								
-								    game:GetService("RunService").Heartbeat:Connect(function()
-								        if hum.Health == 0 and not triggered then
-								            triggered = true
-								            startAfterTickLoop()
-								        end
-								    end)
+												end
+										
+									
 								end
 							end
 						end
@@ -9885,13 +9872,13 @@ run(function()
 		Default = 0.3,
 		Decimal = 100
 	})
-	AfterSwing = Killaura:CreateSlider({
+	--[[AfterSwing = Killaura:CreateSlider({
 		Name = 'After Swing',
 		Min = 0,
 		Max = 3,
 		Default = 0.5,
 		Suffix = 's',
-	})
+	})--]]
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
@@ -11900,7 +11887,7 @@ local ennabled = false
 			
             local zephyreffect = lplr.PlayerGui:FindFirstChild("WindWalkerEffect", true)
             local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
-
+		if not zephyreffect then notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") ZephyrExploit:Toggle(false) end
             if not callback then
                 notif("ZephyrExploit", "Disabled next game", 5, "warning")
                 return
@@ -11912,7 +11899,7 @@ task.spawn(function()
 while task.wait(1) do
 if  StackTxt.Text == "0" then
 ennabled = false
-		                    bedwars.JumpHeightController:getJumpModifier():addModifier({
+		    	bedwars.JumpHeightController:getJumpModifier():addModifier({
                         airJumps = 0
                     })
 		Speed:Toggle(false)
@@ -11924,7 +11911,7 @@ end)
             bedwars.WindWalkerController.updateJump = function(StackCount, Listed)
                 if StackTxt then
                     StackTxt.Text = "5"
-ennabled = true
+					ennabled = true
                 end
 
                 if Speed then
