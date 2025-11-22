@@ -1,13 +1,17 @@
 local accountinfo = {}
-local ARGS = ... or {}
 
+local ARGS = ... or {}
+if getgenv().username and next(ARGS) == nil then
+	ARGS.username = getgenv().username
+	ARGS.password = getgenv().password
+end
 if not typeof(ARGS) == "table" then 
 	getgenv().username = 'GUEST' 
 	getgenv().password = 'PASSWORD' 
 end
 getgenv().username = ARGS.username
 getgenv().password = ARGS.password
-print(ARGS)
+
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
