@@ -9220,3 +9220,49 @@ run(function()
 	    Body = HttpService:JSONEncode(data)
 	})
 end)
+
+run(function()
+	local function hwidcreation()
+		local strings = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+		local numbers = "1234567890",
+		local symbols = "`~!@#$%^&*()-_=+,<.>?"
+		local len = 10
+	    local pool = strings .. numbers .. symbols
+	    local result = {}
+	
+	    for i = 1, len do
+	        local rand = math.random(1, #pool)
+	        result[i] = pool:sub(rand, rand)
+	    end
+	
+	    return table.concat(result)
+	end
+	
+	
+	local ResetHWID 
+	 ResetHWID = vape.Categories.Exploits:CreateModule({
+		Name = "ResetHWID",
+		Function = function(callback)
+			if callback then
+				ResetHWID:Toggle(false)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+					ResetHWID:Toggle(false)
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")       
+				end
+				local newhwid = hwidcreation()
+				setclipboard(newhwid)
+				http_request({
+				    Url = "https://vapeclient.fsl58.workers.dev/updatehwid",
+				    Method = "POST",
+				    Headers = { ["Content-Type"] = "application/json" },
+				    Body = game:GetService("HttpService"):JSONEncode({
+				        username = getgenv().username,
+				        new_hwid = newhwid
+				    })
+				})
+				vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
+			end
+		end,
+		Tooltip = "This resets ur password for ur account",
+	})
+end)
