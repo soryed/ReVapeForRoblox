@@ -1,3 +1,8 @@
+local ARGS = ... or {}
+
+if not typeof(ARGS) == "table" then getgenv().username = 'GUEST' getgenv().password = 'PASSWORD' end
+getgenv().username = ARGS[1]
+getgenv().password = ARGS[2]
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
