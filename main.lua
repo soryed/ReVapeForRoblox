@@ -217,7 +217,7 @@ local tweenService = game:GetService('TweenService')
 
 local gui : ScreenGui = Instance.new('ScreenGui', gethui())
 gui.Enabled = true
-
+gui.Name = "OynxUIMain"
 local stages = {
 	UDim2.new(0, 25, 1, 0),
 	UDim2.new(0, 50, 1, 0),
