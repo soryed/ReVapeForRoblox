@@ -1,4 +1,4 @@
-local annc
+local annc = {}
 print('not finished twinny')
 
 local function create(name, props)
