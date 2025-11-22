@@ -1,6 +1,10 @@
 local accountinfo = {}
 
 local ARGS = ... or {}
+if ARGS.Refresh then
+	delfolder('ReVape')
+end
+
 if getgenv().username  and next(ARGS) == nil then
 	ARGS.username = getgenv().username
 	ARGS.password = getgenv().password
