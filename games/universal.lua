@@ -9188,3 +9188,27 @@ end)
     })
 end)--]]
 
+--[[run(function()
+	local Annoucement
+	local Type
+	local Color
+	local Timer
+	local Message
+	local Settings
+	Annoucement = vape.Categories.Minigames:CreateModule({
+		Name = "Annoucement",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+
+		end,
+		Tooltip ='Sends a annoucement'
+	})
+	Message = Annoucement:CreateDropdown({
+		Name = "Type",
+		List = {'Server', 'Global'},
+	})
+	Type = Annoucement:Create
+end)--]]
