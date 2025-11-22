@@ -1,7 +1,7 @@
 	local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
-		vape:CreateNotification('Onyx', 'Failed to load : '..err, 30, 'alert')
+		vape:CreateNotification('Onyx - Universal', 'Failed to load : '..err, 30, 'alert')
 	end
 	return res
 end
@@ -9226,11 +9226,11 @@ run(function()
 		local strings = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 		local numbers = "1234567890",
 		local symbols = "`~!@#$%^&*()-_=+,<.>?"
-		local len = 10
+		local maxlen = 10
 	    local pool = strings .. numbers .. symbols
 	    local result = {}
 	
-	    for i = 1, len do
+	    for i = 1, maxlen do
 	        local rand = math.random(1, #pool)
 	        result[i] = pool:sub(rand, rand)
 	    end
