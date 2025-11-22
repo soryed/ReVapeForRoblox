@@ -9248,7 +9248,7 @@ local ok, msg = updateHWID(getgenv().username, newhwid)
 if ok then
     vape:CreateNotification("ResetHWID", "Your HWID has been reset. Your new password has been copied to your clipboard", 10, "success")
 else
-    vape:CreateNotification("ResetHWID", "error: "..msg, 10, "waring")
+    vape:CreateNotification("ResetHWID", "error: "..msg, 10, "warning")
 end
 				
 		end,
