@@ -9442,11 +9442,11 @@ run(function()
 						elseif Fly.Enabled then
 							Fly:Toggle(false)
 						end
-				local breaktype = bedwars.ItemMeta[block.Name].block.breakType
-				local tool = store.tools[breaktype]
-				if tool then
-					switchItem(tool.tool)
-				end
+						local breaktype = bedwars.ItemMeta[block.Name].block.breakType
+						local tool = store.tools[breaktype]
+						if tool then
+							switchItem(tool.tool)
+						end
 						bedwars.breakBlock(child)
 
 					
