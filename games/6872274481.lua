@@ -9569,6 +9569,7 @@ run(function()
 	local AnimationSpeed
 	local AnimationTween
 	local Limit
+	local SC = {Enabled = false}
 	local LegitAura = {}
 	local Particles, Boxes = {}, {}
 	local anims, AnimDelay, AnimTween, armC0 = vape.Libraries.auraanims, tick()
