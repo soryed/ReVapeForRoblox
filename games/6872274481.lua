@@ -9408,7 +9408,7 @@ run(function()
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
 				BetterDavey:Toggle(false)
-											vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if not game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKits") == "davey" or game:GetService("Players").LocalPlayer:GetAttribute("PlayingAsKit") == "davey" then vape:CreateNotification("Onyx", "You are not davey this will be ignored!", 10, "alert") return end
@@ -9442,7 +9442,11 @@ run(function()
 						elseif Fly.Enabled then
 							Fly:Toggle(false)
 						end
-
+				local breaktype = bedwars.ItemMeta[block.Name].block.breakType
+				local tool = store.tools[breaktype]
+				if tool then
+					switchItem(tool.tool)
+				end
 						bedwars.breakBlock(child)
 
 					
