@@ -9210,12 +9210,7 @@ run(function()
 	 ResetHWID = vape.Categories.Exploits:CreateModule({
 		Name = "ResetHWID",
 		Function = function(callback)
-			if callback then
 				ResetHWID:Toggle(false)
-	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-					ResetHWID:Toggle(false)
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")       
-				end
 				local newhwid = hwidcreation()
 				setclipboard(newhwid)
 				local HttpService = game:GetService("HttpService")
@@ -9256,7 +9251,6 @@ else
     vape:CreateNotification("ResetHWID", "error: "..msg, 10, "waring")
 end
 				
-			end
 		end,
 		Tooltip = "This resets ur password for ur account",
 	})
