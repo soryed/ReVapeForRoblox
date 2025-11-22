@@ -10,7 +10,7 @@ local function create(name, props)
 end
 
 
-function annc:Announce(TYPE,Title,Time,Setting,Color)
+function annc:Announce(TYPE,Message,Title,Time,Setting,Color)
   
 end
 
