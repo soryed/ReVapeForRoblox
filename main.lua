@@ -1,4 +1,4 @@
-repeat task.wait() until game:IsLoaded()
+--[[repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
 if identifyexecutor then
@@ -95,7 +95,7 @@ local function finishLoading()
 
 
 	local teleportedServers
-		--[[vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+		vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
@@ -133,7 +133,7 @@ local function finishLoading()
 			vape:Save()
 			queue_on_teleport(teleportScript)
 		end
-	end))--]]
+	end))
 
 	if not shared.vapereload then
 		if not vape.Categories then return end
@@ -178,9 +178,9 @@ else
 	vape.Init = finishLoading
 	return vape
 end
+--]]
 
 
---[[
 else
 	repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
@@ -476,7 +476,7 @@ local function finishLoading()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript =
+			local teleportScript =[[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 
@@ -485,7 +485,7 @@ local function finishLoading()
 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-		
+				]]
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -543,7 +543,7 @@ task.wait(.5)
 makestage(4, 'analyzing supported environment.', .5)
 task.wait(.5)
 if identifyexecutor then
-	if table.find({'Solara','Codex','Macsploit','Nihon','Argon'}, ({identifyexecutor()})[1]) then
+	if table.find({'Solara','Codex','Macsploit','Nihon','Argon','Xeno'}, ({identifyexecutor()})[1]) then
 		makestage(4, 'executor not support.', .5)
 			task.wait(.55)
 					makestage(4, 'uninjecting.', .85)
@@ -565,7 +565,7 @@ for _, v in gui:GetDescendants() do
 
 			return
 	end
-	if table.find({'Xeno','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
+	if table.find({'Delta','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
 	makestage(4, 'executor is support, may cause some issues.', .5)
 			task.wait(.5)
 		end
@@ -630,6 +630,7 @@ if not shared.VapeIndependent then
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		makestage(9, 'loading all packages.', 1.005)
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
+		loadstring(readfile('ReVape/games/modules.luau'), 'modules')(...)
 	else
 		if not shared.VapeDeveloper then
 			local suc, res = pcall(function()
@@ -646,6 +647,3 @@ else
 	vape.Init = finishLoading
 	return vape
 end
-
-
-	--]]
