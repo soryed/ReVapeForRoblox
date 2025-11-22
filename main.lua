@@ -475,16 +475,14 @@ local function finishLoading()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript =[[
+			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
-
-					loadstring(readfile('ReVape/loader.lua'), 'loader')()
+					loadstring(readfile('newvape/loader.lua'), 'loader')()
 				else
-
-					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
+					loadstring(game:HttpGet('https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-				]]
+			]]
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -638,3 +636,4 @@ if not shared.VapeIndependent then
 else
 	vape.Init = finishLoading
 	return vape
+end
