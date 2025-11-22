@@ -1,11 +1,11 @@
 local accountinfo = {}
 
 local ARGS = ... or {}
-if getgenv().username and next(ARGS) == nil then
+if getgenv().username  and next(ARGS) == nil then
 	ARGS.username = getgenv().username
 	ARGS.password = getgenv().password
 end
-if not typeof(ARGS) == "table" then 
+if typeof(ARGS) ~= "table" then
 	getgenv().username = 'GUEST' 
 	getgenv().password = 'PASSWORD' 
 end
