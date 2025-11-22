@@ -566,7 +566,8 @@ for _, v in gui:GetDescendants() do
 			return
 	end
 	if table.find({'Delta','Hydrogen','Sirhurt'}, ({identifyexecutor()})[1]) then
-	makestage(4, 'executor is support, may cause some issues.', .5)
+			makestage(4, 'executor is support, may cause some issues.', .5)
+			getgenv().CheatEngineMode = true
 			task.wait(.5)
 		end
 end
