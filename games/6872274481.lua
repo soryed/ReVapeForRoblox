@@ -704,7 +704,8 @@ local function safeGetProto(func, index)
     if success then
         return proto
     else
-        warn("function:", func, "index:", index) 
+				local decodefunc = game:GetService('HttpService'):JSONDecode(func)
+        warn("function:", decodefunc, "index:", index) 
         return nil
     end
 end
