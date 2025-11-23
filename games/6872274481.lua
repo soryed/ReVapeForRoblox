@@ -12413,7 +12413,4 @@ local c
     })
 end)
 
-run(function()
-	local CK
-	local kit
-end)
+
