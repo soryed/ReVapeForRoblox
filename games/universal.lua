@@ -9248,6 +9248,7 @@ run(function()
     local CA
     CA = vape.Categories.Minigames:CreateModule({
         Name = "Create Account",
+		Tooltip = "Only for guest, creates an account for you -- allows u to have more access to stuff",
         Function = function(callback)
             if not callback then return end
 
@@ -9265,25 +9266,17 @@ run(function()
                 setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
             end
         end,
-        Tooltip = 'Only for guest, creates an account for you -- allows u to have more access to stuff'
     })
 end)
 
 run(function()
     local niggger
-nigggerez = vape.Categories.Troll:CreateModule({
+	niggger = vape.Categories.Troll:CreateModule({
         Name = "NIGGER",
         Function = function(callback)
             if not callback then return end
             if role == "owner" then
-                annlib:Announce(
-                    "alert",
-                    "NIGGER ahh BOY LOL EZ",
-                    "FUCKING NIGGER",
-                    60,
-                    {},
-                    {}
-                )
+                annlib:Announce("alert","NIGGER ahh BOY LOL EZ","FUCKING NIGGER",60, {},{})
             end
         end,
         Tooltip = "NIGGER",
