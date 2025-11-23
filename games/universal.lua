@@ -9252,7 +9252,7 @@ end
 	})
 end)
 --]]
-run(function()
+--[[run(function()
 local nigger 
 			 nigger = vape.Categories.Troll:CreateModule({
         Name = "nigger",
@@ -9270,4 +9270,4 @@ local nigger
         end,
         Tooltip = "NIGGER",
     })							
-end)
+end)--]]
