@@ -11445,12 +11445,12 @@ run(function()
 			end, 6, true)
 		end,
 		pinata = function()
-			--[[kitCollection(lplr.Name..':pinata', function(v)
+			kitCollection(lplr.Name..':pinata', function(v)
 				if getItem('candy') then
-					bedwars.Client:Get(remotes.DepositPinata):CallServer(v)
+					bedwars.Client:Get('DepositCoins'):CallServer(v)
 				end
-			end, 6, true)--]]
-			local userid = lplr.UserId
+			end, 6, true)
+		--[[	local userid = lplr.UserId
 			local plrsp 
 			pinataConnection = workspace.DescendantAdded:Connect(function(p)
 			    if p:IsA("BasePart") and p.Name == "pinata" then
@@ -11477,7 +11477,7 @@ run(function()
 			end
 			task.wait(0.1)
 			until not AutoKit.Enabled
-			if not AutoKit.Enabled then pinataConnection:Disconnection() end
+			if not AutoKit.Enabled then pinataConnection:Disconnection() end--]]
 		end,
 		spirit_assassin = function()
 			kitCollection('EvelynnSoul', function(v)
