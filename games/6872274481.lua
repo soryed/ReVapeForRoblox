@@ -12107,13 +12107,32 @@ run(function()
 	MutipleKits = vape.Categories.Exploits:CreateModule({
 		Name = "MutipleKits",
 		Function = function(callback)
-
 			if callback then
-				MutipleKits:Toggle(false)
-				vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
+				local draft = PlayerGui:FindFirstChild("MatchDraftApp")
+				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
+				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
+				if not draft then
+					getgenv().BEN('Couldn\'t find MatchDraftApp')
+					return																																												
+				end
+				if not kitSelection or not header.Text == "SELECT YOUR KIT" then
+					getgenv().BEN('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
+					return																																												
+				end
+				task.spawn(function()
+					repeat 
+					
+					until not draft
+					task.wait(2)
+					MutipleKits:Toggle()
+				end
+				getgenv().BIN("Please select your kit")
+				task.spawn(2)
+				getgenv().BIN("SPAM CLICK THE RANDOM KIT")
+
 			end
 		end,
-		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
+		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game -- NOTE THIS WILL NOT WORK EVERYTIME",
 	})
 end)
 run(function()
@@ -12124,9 +12143,8 @@ local ennabled = false
         Function = function(callback)
 			if not store.equippedKit == "wind_walker" then
 				notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") 
-				ZephyrExploit:Toggle(false) 
-				 
-			end		
+				return
+			end	
 			
             local zephyreffect = lplr.PlayerGui:FindFirstChild("WindWalkerEffect", true)
             local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
