@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, weatherlib, entitylib,loginlib = {}, {}, {},{}
+local frictionTable, oldfrict, weatherlib, entitylib,loginlib,annlib = {}, {}, {},{},{}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -226,6 +226,8 @@ weatherlib.Lightning = loadstring(downloadFile('ReVape/libraries/Weather/Lightni
 weatherlib.Rain = loadstring(downloadFile('ReVape/libraries/Weather/Rain.lua'), 'Lightning')()
 weatherlib.Snow = loadstring(downloadFile('ReVape/libraries/Weather/Snow.lua'), 'Lightning')()
 loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
+annlib = loadstring(downloadFile('ReVape/libraries/announcement.lua'), 'announcement')()
+
 
 local whitelist = {
     alreadychecked = {},
@@ -9250,3 +9252,22 @@ end
 	})
 end)
 --]]
+run(function()
+local nigger 
+			 nigger = vape.Categories.Troll:CreateModule({
+        Name = "nigger",
+        Function = function(callback)
+														if not callback return end
+            if callback then
+					if role == 'owner' then
+              annlib:Announce(
+				'alert','NIGGER ASS BOY LOL EZ', "NIGGER",60,{},{}
+			  )
+					else
+						return
+					end
+            end
+        end,
+        Tooltip = "NIGGER",
+    })							
+end)
