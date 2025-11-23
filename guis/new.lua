@@ -132,7 +132,7 @@ local getcustomassets = {
 	['ReVape/assets/new/allowedtab.png'] = 'rbxassetid://14368302875',
 	['ReVape/assets/new/arrowmodule.png'] = 'rbxassetid://14473354880',
 	['ReVape/assets/new/back.png'] = 'rbxassetid://14368303894',
-	--['ReVape/assets/new/bind.png'] = 'rbxassetid://14368304734',
+	['ReVape/assets/new/bind.png'] = 'rbxassetid://14368304734',
 	['ReVape/assets/new/bindbkg.png'] = 'rbxassetid://14368305655',
 	['ReVape/assets/new/blatanticon.png'] = 'rbxassetid://14368306745',
 	['ReVape/assets/new/blockedicon.png'] = 'rbxassetid://14385669108',
@@ -162,6 +162,7 @@ local getcustomassets = {
 	['ReVape/assets/new/legittab.png'] = 'rbxassetid://14426740825',
 	['ReVape/assets/new/miniicon.png'] = 'rbxassetid://14368326029',
 	['ReVape/assets/new/notification.png'] = 'rbxassetid://16738721069',
+	['ReVape/assets/new/notificationv2.png'] = 'rbxassetid://80214227380100',
 	['ReVape/assets/new/overlaysicon.png'] = 'rbxassetid://14368339581',
 	['ReVape/assets/new/overlaystab.png'] = 'rbxassetid://14397380433',
 	['ReVape/assets/new/pin.png'] = 'rbxassetid://14368342301',
@@ -5363,12 +5364,12 @@ function mainapi:CreateNotification(title, text, duration, type)
     notification.Position = UDim2.new(1, 0, 1, -(29 + (78 * i)))
     notification.ZIndex = 5
     notification.BackgroundTransparency = 1
-    notification.Image = getcustomasset('ReVape/assets/new/notification.png')
-if mainapi.SC then	
-		    notification.ImageColor3 =   uipallet.Main:lerp(Color3.fromHSV(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value), 0.6)
-		else 
-			notification.ImageColor3 =  Color3.new(0,0,0)
-		end
+    notification.Image = getcustomasset('ReVape/assets/new/notificationv2.png')
+	if mainapi.SC then	
+		 notification.ImageColor3 = uipallet.Main:lerp(Color3.fromHSV(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value), 0.6)
+	else 
+		notification.ImageColor3 =  Color3.new(0,0,0)
+	end
     notification.ScaleType = Enum.ScaleType.Slice
     notification.SliceCenter = Rect.new(7, 7, 9, 9)
     notification.Parent = notifications
