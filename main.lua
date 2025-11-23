@@ -1,4 +1,4 @@
---[[repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
 if identifyexecutor then
@@ -99,7 +99,7 @@ local function finishLoading()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript = 
+			local teleportScript = [[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 
@@ -108,7 +108,7 @@ local function finishLoading()
 
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-			
+			]]
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -159,6 +159,8 @@ vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 
 if not shared.VapeIndependent then
+		loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
+	loadstring(downloadFile('ReVape/libraries/announcement.lua'), 'announcement')()
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
@@ -178,7 +180,7 @@ else
 	vape.Init = finishLoading
 	return vape
 end
---]]
+--[[
 
 
 	repeat task.wait() until game:IsLoaded()
@@ -475,14 +477,14 @@ local function finishLoading()
 				
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript = [[
+			local teleportScript = 
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 					loadstring(readfile('newvape/loader.lua'), 'loader')()
 				else
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
-				end
-			]]
+end
+			
 			if shared.VapeDeveloper then
 
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
@@ -637,3 +639,4 @@ else
 	vape.Init = finishLoading
 	return vape
 end
+--]]
