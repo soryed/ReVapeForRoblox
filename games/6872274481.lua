@@ -1507,6 +1507,8 @@ local function BedwarsErrorNotification(mes)
 		image = "rbxassetid://18518244636"
 	});
 end
+getgenv().BIN = BedwarsInfoNotification
+getgenv().BEN = BedwarsErrorNotification
 local reportedPlayers = {}
 local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
