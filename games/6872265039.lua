@@ -1280,7 +1280,7 @@ run(function()
     })
 end)
 
-run(function()
+--[[run(function()
 	local CK
 	local kit
 
@@ -1518,3 +1518,4 @@ run(function()
 		Placeholder = lplr:GetAttribute("PlayingAsKits"),
 	})
 end)
+--]]
