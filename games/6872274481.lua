@@ -1029,7 +1029,7 @@ end
 		ConsumeItem = safeGetProto(Knit.Controllers.ConsumeController.onEnable, 1),
 		ConsumeSoul = Knit.Controllers.GrimReaperController.consumeSoul,
 		ConsumeTreeOrb = safeGetProto(Knit.Controllers.EldertreeController.createTreeOrbInteraction, 1),
-		DepositPinata = safeGetProto(safeGetProto(Knit.Controllers.PiggyBankController.KnitStart, 2), 5),
+		DepositPinata = safeGetProto(Knit.Controllers.PiggyBankController.KnitStart, 5),
 		DragonBreath = safeGetProto(Knit.Controllers.VoidDragonController.onKitLocalActivated, 5),
 		DragonEndFly = safeGetProto(Knit.Controllers.VoidDragonController.flapWings, 1),
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
@@ -1074,7 +1074,6 @@ end
 
 	Client.Get = function(self, remoteName)
 		local call = OldGet(self, remoteName)
-
 		if remoteName == remotes.AttackEntity then
 			return {
 				instance = call.instance,
@@ -11452,24 +11451,24 @@ run(function()
 				end
 			end, 6, true)--]]
 			local userid = lplr.UserId
-			local plrsp = nil
+			local plrsp 
 			pinataConnection = workspace.DescendantAdded:Connect(function(p)
 			    if p:IsA("BasePart") and p.Name == "pinata" then
 			        if p:GetAttribute("PlacedByUserId") == userid then
 						 plrsp = p 
 						if getItem('candy') then
-							bedwars.Client:Get(remotes.DepositPinata):CallServer(plrsp)
+							bedwars.Client:Get('DepositCoins'):CallServer(plrsp)
 						end
 			        end
 			    end
 			end)
-			local plrrsp = nil
+			local plrrsp
 			for i, p in workspace:GetDescendants() do
 			    if p:IsA("BasePart") and p.Name == "pinata" then
 			        if p:GetAttribute("PlacedByUserId") == userid then
 			            plrrsp = p 
 						if getItem('candy') then
-							bedwars.Client:Get(remotes.DepositPinata):CallServer(plrrsp)
+							bedwars.Client:Get('DepositCoins'):CallServer(plrrsp)
 						end
 			        end
 			    end
