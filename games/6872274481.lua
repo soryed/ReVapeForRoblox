@@ -12111,16 +12111,16 @@ run(function()
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
 				if not draft then
-					--BedwarsErrorNotification('Couldn\'t find MatchDraftApp')
+					getgenv().BEN("Couldn't find MatchDraftApp")
 					return																																												
 				end
 				if not kitSelection or not header.Text == "SELECT YOUR KIT" then
-					--BedwarsErrorNotification('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
+					getgenv().BEN("Couldn't find Kit Selection, you must be in Kit Selection mode")
 					return																																												
 				end
-				--BedwarsInfoNotification("Please select your kit")
+				getgenv().BIN("Please select your kit")
 				task.spawn(2)
-				--BedwarsInfoNotification("SPAM CLICK THE RANDOM KIT")
+				getgenv().BIN("SPAM CLICK THE RANDOM KIT")
 
 			end
 		end,
