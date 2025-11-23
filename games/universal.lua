@@ -9214,7 +9214,7 @@ end)--]]
 end)--]]
 
 
-run(function()
+--[[run(function()
 	local function password()
 	local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	local Numbers = "1234567890"
@@ -9249,3 +9249,4 @@ end
 		Tooltip ='Only for guest, creates an account for you -- allows u to have more access to stuff'
 	})
 end)
+--]]
