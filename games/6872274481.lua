@@ -1004,7 +1004,7 @@ end
 		Roact = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts']['roact'].src),
 		RuntimeLib = require(replicatedStorage['rbxts_include'].RuntimeLib),
 		SoundList = require(replicatedStorage.TS.sound['game-sound']).GameSound,
-		SoundManager = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).SoundManager,
+		--SoundManager = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).SoundManager,
 		Store = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
 		TeamUpgradeMeta = debug.getupvalue(require(replicatedStorage.TS.games.bedwars['team-upgrade']['team-upgrade-meta']).getTeamUpgradeMetaForQueue, 6),
 		UILayers = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
@@ -2791,7 +2791,7 @@ run(function()
 			local shoot = bedwars.ItemMeta[item.itemType].projectileSource.launchSound
 			shoot = shoot and shoot[math.random(1, #shoot)] or nil
 			if shoot then
-				bedwars.SoundManager:playSound(shoot)
+				--bedwars.SoundManager:playSound(shoot)
 			end
 		end
 	end
@@ -3322,7 +3322,7 @@ run(function()
 												local shoot = itemMeta.launchSound
 												shoot = shoot and shoot[math.random(1, #shoot)] or nil
 												if shoot then
-													bedwars.SoundManager:playSound(shoot)
+													--bedwars.SoundManager:playSound(shoot)
 												end
 											end
 										end)
@@ -4337,13 +4337,13 @@ run(function()
 										itemDrop = v
 									}):andThen(function(suc)
 										if suc and bedwars.SoundList then
-											bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
+											--bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
 											local sound = bedwars.ItemMeta[v.Name].pickUpOverlaySound
 											if sound then
-												bedwars.SoundManager:playSound(sound, {
+												--[[bedwars.SoundManager:playSound(sound, {
 													position = v.Position,
 													volumeMultiplier = 0.9
-												})
+												})--]]
 											end
 										end
 									end)
@@ -5593,7 +5593,7 @@ run(function()
 			shopId = id
 		}):andThen(function(suc)
 			if suc then
-				bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
+			--	bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
 				bedwars.Store:dispatch({
 					type = 'BedwarsAddItemPurchased',
 					itemType = item.itemType
@@ -7762,7 +7762,7 @@ run(function()
 	})
 end)
 	
-run(function()
+--[[run(function()
 	local SoundChanger
 	local List
 	local soundlist = {}
@@ -7795,13 +7795,13 @@ run(function()
 			for _, entry in List.ListEnabled do
 				local split = entry:split('/')
 				local id = bedwars.SoundList[split[1]]
-				if id and #split > 1 then
+				--[[if id and #split > 1 then
 					soundlist[id] = split[2]:find('rbxasset') and split[2] or isfile(split[2]) and assetfunction(split[2]) or ''
-				end
+				end--]
 			end
 		end
 	})
-end)
+end)--]]
 	
 run(function()
 	local UICleanup
@@ -9442,11 +9442,7 @@ run(function()
 						elseif Fly.Enabled then
 							Fly:Toggle(false)
 						end
-						local breaktype = bedwars.ItemMeta[block.Name].block.breakType
-						local tool = store.tools[breaktype]
-						if tool then
-							switchItem(tool.tool)
-						end
+
 						bedwars.breakBlock(child)
 
 					
@@ -11352,7 +11348,7 @@ run(function()
 			kitCollection('HarvestableCrop', function(v)
 				if bedwars.Client:Get(remotes.HarvestCrop):CallServer({position = bedwars.BlockController:getBlockPosition(v.Position)}) then
 					bedwars.GameAnimationUtil:playAnimation(lplr.Character, bedwars.AnimationType.PUNCH)
-					bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
+					--bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
 				end
 			end, 10, false)
 		end,
