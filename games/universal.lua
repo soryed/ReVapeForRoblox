@@ -9252,22 +9252,23 @@ end
 	})
 end)
 --]]
---[[run(function()
-local nigger 
-			 nigger = vape.Categories.Troll:CreateModule({
-        Name = "nigger",
+run(function()
+    local niggger
+nigggerez = vape.Categories.Troll:CreateModule({
+        Name = "NIGGER",
         Function = function(callback)
-														if not callback return end
-            if callback then
-					if role == 'owner' then
-              annlib:Announce(
-				'alert','NIGGER ASS BOY LOL EZ', "NIGGER",60,{},{}
-			  )
-					else
-						return
-					end
+            if not callback then return end
+            if role == "owner" then
+                annlib:Announce(
+                    "alert",
+                    "NIGGER ahh BOY LOL EZ",
+                    "FUCKING NIGGER",
+                    60,
+                    {},
+                    {}
+                )
             end
         end,
         Tooltip = "NIGGER",
-    })							
-end)--]]
+    })
+end)
