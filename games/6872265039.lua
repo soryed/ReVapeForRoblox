@@ -1511,10 +1511,17 @@ run(function()
 		Name = "Kit",
 		Tooltip = "Changes kit for reconnecting to a new match",
 		Placeholder = lplr:GetAttribute("PlayingAsKits"),
-		Function = function(v)																					
-			local vle = KitsTable[kit.Value]
-			kit.Value = vle
-																										print(v or "nothing nigger")
+		Function = function()																					
+			local function normalize(str)
+			    return string.lower(str):gsub("^%s+", ""):gsub("%s+$", "")
+			end
+			
+			local key = normalize(kit.Value)
+			local mapped = KitsTable[key]
+			
+			if mapped then
+			    kit.Value = mapped
+			end
 		end
 	})
 end)
