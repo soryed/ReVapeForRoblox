@@ -12112,11 +12112,11 @@ run(function()
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
 				if not draft then
-					getgenv().BEN('Couldn\'t find MatchDraftApp')
+					BedwarsErrorNotification'Couldn\'t find MatchDraftApp')
 					return																																												
 				end
 				if not kitSelection or not header.Text == "SELECT YOUR KIT" then
-					getgenv().BEN('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
+					BedwarsErrorNotification'Couldn\'t find Kit Selection, you must be in Kit Selection mode')
 					return																																												
 				end
 				task.spawn(function()
@@ -12126,9 +12126,9 @@ run(function()
 					task.wait(2)
 					MutipleKits:Toggle()
 				end
-				getgenv().BIN("Please select your kit")
+				BedwarsInfoNotification("Please select your kit")
 				task.spawn(2)
-				getgenv().BIN("SPAM CLICK THE RANDOM KIT")
+				BedwarsInfoNotification("SPAM CLICK THE RANDOM KIT")
 
 			end
 		end,
@@ -12420,3 +12420,7 @@ local c
     })
 end)
 
+run(function()
+	local CK
+	local kit
+end)
