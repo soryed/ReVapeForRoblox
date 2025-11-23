@@ -175,7 +175,7 @@ local function getItem(itemName, inv)
 end
 
 local function getRoactRender(func)
-	return safeGetValue(safeGetValue(safeGetValue(func, 3).render, 2).render, 1)
+	return debug.getupvalue(debug.getupvalue(debug.getupvalue(func, 3).render, 2).render, 1)
 end
 
 local function getSword()
@@ -928,43 +928,31 @@ run(function()
 	local KnitInit, Knit
 	repeat
 		KnitInit, Knit = pcall(function()
-			return safeGetValue(require(lplr.PlayerScripts.TS.knit).setup, 9)
+			return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 9)
 		end)
 		if KnitInit then break end
 		task.wait(0.1)
 	until KnitInit
 
-	if not safeGetValue(Knit.Start, 1) then
-		repeat task.wait(0.1) until safeGetValue(Knit.Start, 1)
+	if not debug.getupvalue(Knit.Start, 1) then
+		repeat task.wait(0.1) until debug.getupvalue(Knit.Start, 1)
 	end
 
 	local Flamework = require(replicatedStorage['rbxts_include']['node_modules']['@flamework'].core.out).Flamework
 	local InventoryUtil = require(replicatedStorage.TS.inventory['inventory-util']).InventoryUtil
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local OldGet, OldBreak = Client.Get
-	local function safeGetProto(func, index)
-	    if not func then return nil end
-	    local success, proto = pcall(safeGetProto, func, index)
-	    if success then
-	        return proto
-	    else
-	        warn("function:", func, "index:", index, " | getproto") 
-	        return nil
-	    end
-	end
+local function safeGetProto(func, index)
+    if not func then return nil end
+    local success, proto = pcall(safeGetProto, func, index)
+    if success then
+        return proto
+    else
+        warn("function:", func, "index:", index) 
+        return nil
+    end
+end
 
-	local function safeGetValue(func, index)
-	    if not func then return nil end
-	    local success, proto = pcall(safeGetValue, func, index)
-	    if success then
-	        return proto
-	    else
-	        warn("function:", func, "index:", index, " | getupvalue") 
-	        return nil
-	    end
-	end
-
-		
 	bedwars = setmetatable({
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
 		AnimationType = require(replicatedStorage.TS.animation['animation-type']).AnimationType,
@@ -976,7 +964,7 @@ run(function()
 		BlockController = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['block-engine'].out).BlockEngine,
 		BlockEngine = require(lplr.PlayerScripts.TS.lib['block-engine']['client-block-engine']).ClientBlockEngine,
 		BlockPlacer = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['block-engine'].out.client.placement['block-placer']).BlockPlacer,
-		BowConstantsTable = safeGetValue(Knit.Controllers.ProjectileController.enableBeam, 8),
+		BowConstantsTable = debug.getupvalue(Knit.Controllers.ProjectileController.enableBeam, 8),
 		ClickHold = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out.client.ui.lib.util['click-hold']).ClickHold,
 		Client = Client,
 		ClientConstructor = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts'].net.out.client),
@@ -1001,7 +989,7 @@ run(function()
 			}
 		end,
 		HudAliveCount = require(lplr.PlayerScripts.TS.controllers.global['top-bar'].ui.game['hud-alive-player-counts']).HudAlivePlayerCounts,
-		ItemMeta = safeGetValue(require(replicatedStorage.TS.item['item-meta']).getItemMeta, 1),
+		ItemMeta = debug.getupvalue(require(replicatedStorage.TS.item['item-meta']).getItemMeta, 1),
 		--KillEffectMeta = require(replicatedStorage.TS.locker['kill-effect']['kill-effect-meta']).KillEffectMeta,
 		KillFeedController = Flamework.resolveDependency('client/controllers/game/kill-feed/kill-feed-controller@KillFeedController'),
 		Knit = Knit,
@@ -1018,7 +1006,7 @@ run(function()
 		SoundList = require(replicatedStorage.TS.sound['game-sound']).GameSound,
 		SoundManager = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).SoundManager,
 		Store = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
-		TeamUpgradeMeta = safeGetValue(require(replicatedStorage.TS.games.bedwars['team-upgrade']['team-upgrade-meta']).getTeamUpgradeMetaForQueue, 6),
+		TeamUpgradeMeta = debug.getupvalue(require(replicatedStorage.TS.games.bedwars['team-upgrade']['team-upgrade-meta']).getTeamUpgradeMetaForQueue, 6),
 		UILayers = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
 		VisualizerUtils = require(lplr.PlayerScripts.TS.lib.visualizer['visualizer-utils']).VisualizerUtils,
 		WeldTable = require(replicatedStorage.TS.util['weld-util']).WeldUtil,
@@ -1047,7 +1035,7 @@ run(function()
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
 		DropItem = Knit.Controllers.ItemDropController.dropItemInHand,
 		SetInvItem = safeGetProto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.SetInvItem, 3),
-		FireProjectile = safeGetValue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
+		FireProjectile = debug.getupvalue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
 		GroundHit = Knit.Controllers.FallDamageController.KnitStart,
 		GuitarHeal = Knit.Controllers.GuitarController.performHeal,
 		HannahKill = safeGetProto(Knit.Controllers.HannahController.registerExecuteInteractions, 1),
@@ -1454,7 +1442,7 @@ run(function()
 			setthreadidentity(2)
 
 			bedwars.Shop = require(replicatedStorage.TS.games.bedwars.shop['bedwars-shop']).BedwarsShop
-			bedwars.ShopItems = safeGetValue(safeGetValue(bedwars.Shop.getShopItem, 1), 2)
+			bedwars.ShopItems = debug.getupvalue(debug.getupvalue(bedwars.Shop.getShopItem, 1), 2)
 			bedwars.Shop.getShopItem('iron_sword', lplr)
 
 			setthreadidentity(old)
@@ -1466,7 +1454,7 @@ run(function()
 				until vape.Loaded == nil or bedwars.AppController:isAppOpen('BedwarsItemShopApp')
 
 				bedwars.Shop = require(replicatedStorage.TS.games.bedwars.shop['bedwars-shop']).BedwarsShop
-				bedwars.ShopItems = safeGetValue(safeGetValue(bedwars.Shop.getShopItem, 1), 2)
+				bedwars.ShopItems = debug.getupvalue(debug.getupvalue(bedwars.Shop.getShopItem, 1), 2)
 				store.shopLoaded = true
 			end)
 		end
@@ -3726,10 +3714,6 @@ run(function()
 	NameTags = vape.Categories.Render:CreateModule({
 		Name = 'NameTags',
 		Function = function(callback)
-					if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				NameTags:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			if callback then
 				methodused = DrawingToggle.Enabled and 'Drawing' or 'Normal'
 				if Removed[methodused] then
@@ -4504,10 +4488,6 @@ run(function()
 	Scaffold = vape.Categories.Utility:CreateModule({
 		Name = 'Scaffold',
 		Function = function(callback)
-					if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				Scaffold:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			if label then
 				label.Visible = callback
 			end
@@ -6547,7 +6527,7 @@ run(function()
 				end
 	
 				bedwars.ClickHold.showProgress = function(self)
-					local roact = safeGetValue(oldshowprogress, 1)
+					local roact = debug.getupvalue(oldshowprogress, 1)
 					local countdown = roact.mount(roact.createElement('ScreenGui', {}, { roact.createElement('Frame', {
 						[roact.Ref] = self.wrapperRef,
 						Size = UDim2.new(),
@@ -7123,7 +7103,7 @@ run(function()
 	local Anchor
 	local Stroke
 	local suc, tab = pcall(function()
-		return safeGetValue(bedwars.DamageIndicator, 2)
+		return debug.getupvalue(bedwars.DamageIndicator, 2)
 	end)
 	tab = suc and tab or {}
 	local oldvalues, oldfont = {}
@@ -7441,10 +7421,10 @@ run(function()
 		DefaultOpacity = 0.8,
 		Function = function(hue, sat, val, opacity)
 			local func = oldinvrender or HotbarOpenInventory.render
-			modifyconstant(safeGetValue(HotbarApp, 23).render, 51, tonumber(Color3.fromHSV(hue, sat, val):ToHex(), 16))
-			modifyconstant(safeGetValue(HotbarApp, 23).render, 58, tonumber(Color3.fromHSV(hue, sat, math.clamp(val > 0.5 and val - 0.2 or val + 0.2, 0, 1)):ToHex(), 16))
-			modifyconstant(safeGetValue(HotbarApp, 23).render, 54, 1 - opacity)
-			modifyconstant(safeGetValue(HotbarApp, 23).render, 55, math.clamp(1.2 - opacity, 0, 1))
+			modifyconstant(debug.getupvalue(HotbarApp, 23).render, 51, tonumber(Color3.fromHSV(hue, sat, val):ToHex(), 16))
+			modifyconstant(debug.getupvalue(HotbarApp, 23).render, 58, tonumber(Color3.fromHSV(hue, sat, math.clamp(val > 0.5 and val - 0.2 or val + 0.2, 0, 1)):ToHex(), 16))
+			modifyconstant(debug.getupvalue(HotbarApp, 23).render, 54, 1 - opacity)
+			modifyconstant(debug.getupvalue(HotbarApp, 23).render, 55, math.clamp(1.2 - opacity, 0, 1))
 			modifyconstant(func, 31, tonumber(Color3.fromHSV(hue, sat, val):ToHex(), 16))
 			modifyconstant(func, 32, math.clamp(1.2 - opacity, 0, 1))
 			modifyconstant(func, 34, tonumber(Color3.fromHSV(hue, sat, math.clamp(val > 0.5 and val - 0.2 or val + 0.2, 0, 1)):ToHex(), 16))
@@ -7911,8 +7891,8 @@ run(function()
 		Name = 'Resize Health',
 		Function = function(callback)
 			modifyconstant(HotbarApp, 60, callback and 1 or nil)
-			modifyconstant(safeGetValue(HotbarApp, 15).render, 30, callback and 1 or nil)
-			modifyconstant(safeGetValue(HotbarApp, 23).tweenPosition, 16, callback and 0 or nil)
+			modifyconstant(debug.getupvalue(HotbarApp, 15).render, 30, callback and 1 or nil)
+			modifyconstant(debug.getupvalue(HotbarApp, 23).tweenPosition, 16, callback and 0 or nil)
 		end,
 		Default = true
 	})
@@ -7920,7 +7900,7 @@ run(function()
 		Name = 'No Hotbar Numbers',
 		Function = function(callback)
 			local func = oldinvrender or HotbarOpenInventory.render
-			modifyconstant(safeGetValue(HotbarApp, 23).render, 90, callback and 0 or nil)
+			modifyconstant(debug.getupvalue(HotbarApp, 23).render, 90, callback and 0 or nil)
 			modifyconstant(func, 71, callback and 0 or nil)
 		end,
 		Default = true
@@ -9563,10 +9543,6 @@ run(function()
 	ItemlessLongjump = vape.Categories.Blatant:CreateModule({
 		Name = "ItemlessLongjump",
 		Function = function(call)
-					if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				ItemlessLongjump:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			ItemlessLongjump.Enabled = call
 			if call then
 				lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 100, 0)
@@ -9766,6 +9742,24 @@ run(function()
         end
     })
 end)
+
+run(function()
+local ReportStatus 
+	 ReportStatus = vape.Categories.Exploits:CreateModule({
+		Name = "ReportStatus",
+		Function = function(callback)
+
+			if callback then
+																														ReportStatus:Toggle(false)
+
+vape:CreateNotification("Onyx","This module is not finished",6,"alert")
+			end
+		end,
+		Tooltip = "Returns a report status of your account",
+	})
+end)
+
+
 run(function()
 	local SetFPS
 	local FPS
@@ -10072,7 +10066,7 @@ run(function()
 	end
 	local MaxRange = 0
 	if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"  then
-		MaxRange = 12
+		MaxRange = 14
 		SyncHit = {Enabled = false}
 	elseif role == "user" then
 		MaxRange = 18
@@ -10820,10 +10814,6 @@ run(function()
 	 LP = vape.Categories.Exploits:CreateModule({
 		Name = "LeaveParty",
 		Function = function(callback)
-						if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				LP:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			if callback then
 				LP:Toggle(false)
 				bedwars.PartyController:leaveParty()
@@ -11495,7 +11485,6 @@ run(function()
 						direction = shootDir,
 						clientTime = workspace:GetServerTimeNow()
 					})
-					mouse1click()
 				end
 	
 				task.wait(0.1)
@@ -11592,10 +11581,6 @@ run(function()
 	AutoKit = vape.Categories.Utility:CreateModule({
 		Name = 'AutoKit',
 		Function = function(callback)
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				AutoKit:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			if callback then
 				repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not AutoKit.Enabled)
 				if AutoKit.Enabled and AutoKitFunctions[store.equippedKit] and Toggles[store.equippedKit].Enabled then
@@ -11738,10 +11723,11 @@ run(function()
 		Name = 'Clutch',
 		Function = function(call)
 			if call then
-		   		if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-					Clutch:Toggle(false)
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				end      
+		   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+			Clutch:Toggle(false)
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				
+			end      
 				Clutch:Clean(runService.Heartbeat:Connect(function()
 					if not Clutch.Enabled then
 						return
@@ -11825,10 +11811,6 @@ run(function()
     Antihit = vape.Categories.Blatant:CreateModule({
         Name = "AntiHit",
         Function = function(call)
-							if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				Antihit:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
             if call then
                 task.spawn(function()
                     while Antihit.Enabled do
@@ -11947,11 +11929,7 @@ run(function()
         Name = "BlockIn",
         Tooltip = "Automatically places strong blocks around the me.",
         Function = function(callback)
-					if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				BlockIn:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
-								local number = 0
+			local number = 0
             if not callback then 
                 return 
             end
@@ -12139,7 +12117,7 @@ run(function()
 				vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
 			end
 		end,
-		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game must be in the kit selection draft",
+		Tooltip = "5v5, ranked only allow's u to have mutiple kit's in a game",
 	})
 end)
 run(function()
@@ -12148,10 +12126,6 @@ local ennabled = false
     ZephyrExploit = vape.Categories.Exploits:CreateModule({
         Name = "ZephyrExploit",
         Function = function(callback)
-						if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				ZephyrExploit:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end 
 			if not store.equippedKit == "wind_walker" then
 				notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning") 
 				ZephyrExploit:Toggle(false) 
@@ -12403,10 +12377,6 @@ local c
     HackerDetector = vape.Categories.Utility:CreateModule({
         Name = "HackerDetector",
         Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				HackerDetector:Toggle(false)
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-			end    
             if callback then
                c = runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
@@ -12435,5 +12405,4 @@ local c
         Tooltip = "Detects when a blatant cheater is in the game with you",
     })
 end)
-
 
