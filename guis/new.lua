@@ -5376,13 +5376,13 @@ function mainapi:CreateNotification(title, text, duration, type)
     addBlur(notification, true)
     local iconshadow = Instance.new 'ImageLabel'
     iconshadow.Name = 'Icon'
-	if type == "success" then 
+	--[[if type == "success" then 
 		iconshadow.Position = UDim2.new(0.0500000007, 0, 0, 8) 
 		iconshadow.Size = UDim2.new(0,30,0,30) 
-	else
+	else--]]
   	 	iconshadow.Size = UDim2.fromOffset(60, 60)
     	iconshadow.Position = UDim2.fromOffset(-5, -8)
-	end
+	--end
     iconshadow.ZIndex = 5
     iconshadow.BackgroundTransparency = 1
     iconshadow.Image =getcustomasset('ReVape/assets/new/'..(type or 'info')..'.png')
