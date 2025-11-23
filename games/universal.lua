@@ -9232,7 +9232,7 @@ run(function()
         
         return table.concat(result)
     end
-	local username()
+	local function username()
         local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         local MaxLen = 4
         local pool = Letters
