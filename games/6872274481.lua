@@ -11462,7 +11462,7 @@ run(function()
 						end
 			        end
 			    end
-			end))
+			end)
 			local plrrsp = nil
 			for i, p in workspace:GetDescendants() do
 			    if p:IsA("BasePart") and p.Name == "pinata" then
