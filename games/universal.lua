@@ -9216,42 +9216,59 @@ end)--]]
 end)--]]
 
 
---[[run(function()
-	local function password()
-	local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	local Numbers = "1234567890"
-	local Symbols = "`~!@#$%^&*()-_=+,<.>?"
-	local MaxLen = 10
-    local pool = Letters .. Numbers .. Symbols
-    local result = {}
-
-    for i = 1, MaxLen do
-        local rand = math.random(1, #pool)
-        result[i] = pool:sub(rand, rand)
+run(function()
+    local function password()
+        local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        local Numbers = "1234567890"
+        local Symbols = "`~!@#$%^&*()-_=+,<.>?"
+        local MaxLen = 10
+        local pool = Letters .. Numbers .. Symbols
+        local result = {}
+        
+        for i = 1, MaxLen do
+            local rand = math.random(1, #pool)
+            result[i] = pool:sub(rand, rand)
+        end
+        
+        return table.concat(result)
     end
+	local username()
+        local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        local MaxLen = 4
+        local pool = Letters
+        local result = {}
+        
+        for i = 1, MaxLen do
+            local rand = math.random(1, #pool)
+            result[i] = pool:sub(rand, rand)
+        end
+        
+        return table.concat(result)
+	end
+    local CA
+    CA = vape.Categories.Minigames:CreateModule({
+        Name = "Create Account",
+        Function = function(callback)
+            if not callback then return end
 
-    return table.concat(result)
-end
-	local CA
-	CA = vape.Categories.Minigames:CreateModule({
-		Name = "Create Account",
-		Darker = true,
-		Function = function(callback)
-			local newpass = password()
-			if #newpass ~= 10 then 
-				vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur password is not fully formated and should be fixed fast!", 20, "alert")
-			else
-				task.spawn(function) 
-						vape:CreateNotification("Onyx", "You have created a new account, Your username is ("..string.sub(game.Players.LocalPlayer.Name, 1, 4)..") Your password is ("..newpass..")", 60, "success")
-						end)
-					vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
-				setclipboard('USERNAME: '..string.sub(game.Players.LocalPlayer.Name, 1, 4).."|||PASSWORD: "..newpass)
-			end
-		end,
-		Tooltip ='Only for guest, creates an account for you -- allows u to have more access to stuff'
-	})
+            local newpass = password()
+            local newuser = username()
+            if #newpass ~= 10 then 
+                vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur password is not fully formated and should be fixed fast!", 20, "alert")
+			if #newuser ~= 4 then 
+                vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur username is not fully formated and should be fixed fast!", 20, "alert")
+            else
+                task.spawn(function()
+                    vape:CreateNotification("Onyx", "You have created a new account, Your username is ("..newuser..") Your password is ("..newpass..")", 60, "success")
+                end)
+                vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
+                setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
+            end
+        end,
+        Tooltip = 'Only for guest, creates an account for you -- allows u to have more access to stuff'
+    })
 end)
---]]
+
 run(function()
     local niggger
 nigggerez = vape.Categories.Troll:CreateModule({
