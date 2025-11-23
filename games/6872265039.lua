@@ -1488,6 +1488,7 @@ run(function()
 	    ['ice demon'] = 'yeti',
 	    ['wind walker'] = 'wind_walker',
 	    ['zephyr'] = 'wind_walker',
+		[''] = 'none',
 	}
 
     CK = vape.Categories.Exploits:CreateModule({
@@ -1495,14 +1496,17 @@ run(function()
         Function = function(callback)
 			if not callback then return end
 			local name = string.lower(kit.Value)
+			local NewKit = KitsTable[name] or "none"
+				
             if callback then
                local args = {
 				    [1] = {
-				        ["kit"] = KitsTable[name]
+				        ["kit"] = NewKit
 				    }
 				}
 				
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.BedwarsActivateKit:InvokeServer(unpack(args))
+			kit.Placeholder = NewKit
             end
         end,
         Tooltip = "This is for reconnecting, you can switch ur kit with this",
