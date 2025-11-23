@@ -1507,9 +1507,6 @@ local function BedwarsErrorNotification(mes)
 		image = "rbxassetid://18518244636"
 	});
 end
-getgenv().BIN = BedwarsInfoNotification
-getgenv().BEN = BedwarsErrorNotification
-getgenv().bedwars = bedwars.Client
 local reportedPlayers = {}
 local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
@@ -12112,23 +12109,16 @@ run(function()
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
 				if not draft then
-					BedwarsErrorNotification('Couldn\'t find MatchDraftApp')
+					--BedwarsErrorNotification('Couldn\'t find MatchDraftApp')
 					return																																												
 				end
 				if not kitSelection or not header.Text == "SELECT YOUR KIT" then
-					BedwarsErrorNotification('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
+					--BedwarsErrorNotification('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
 					return																																												
 				end
-				task.spawn(function()
-					repeat 
-					
-					until not draft
-					task.wait(2)
-					MutipleKits:Toggle()
-				end
-				BedwarsInfoNotification("Please select your kit")
+				--BedwarsInfoNotification("Please select your kit")
 				task.spawn(2)
-				BedwarsInfoNotification("SPAM CLICK THE RANDOM KIT")
+				--BedwarsInfoNotification("SPAM CLICK THE RANDOM KIT")
 
 			end
 		end,
