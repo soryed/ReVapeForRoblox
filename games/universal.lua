@@ -9245,7 +9245,7 @@ run(function()
         
         return table.concat(result)
 	end
-    local CA
+    local CA = {Enabled = false}
     CA = vape.Categories.Minigames:CreateModule({
         Name = "Create Account",
 		Tooltip = "Only for guest's, creates an account for you -- allows u to have more access to stuff",
@@ -9264,6 +9264,7 @@ run(function()
                 end)
                 vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
                 setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
+				CA:Toggle(false)
             end
         end
     })
