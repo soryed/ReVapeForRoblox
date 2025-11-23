@@ -1494,7 +1494,7 @@ run(function()
         Name = "Switch Kits",
         Function = function(callback)
 			if not callback then return end
-																									local name = string.lower(kit.Value)
+			local name = string.lower(kit.Value)
             if callback then
                local args = {
 				    [1] = {
@@ -1512,11 +1512,5 @@ run(function()
 		Name = "Kit",
 		Tooltip = "Changes kit for reconnecting to a new match",
 		Placeholder = lplr:GetAttribute("PlayingAsKits"),
-		Function = function()
-		local name = string.lower(kit.Value)
-																										
-			 kit.Value = KitsTable[name]
-			kit.Placeholder = KitsTable[name]
-		end
 	})
 end)
