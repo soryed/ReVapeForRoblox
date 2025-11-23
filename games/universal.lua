@@ -9212,3 +9212,40 @@ end)--]]
 	})
 	Type = Annoucement:Create
 end)--]]
+
+
+run(function()
+	local function password()
+	local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	local Numbers = "1234567890"
+	local Symbols = "`~!@#$%^&*()-_=+,<.>?"
+	local MaxLen = 10
+    local pool = Letters .. Numbers .. Symbols
+    local result = {}
+
+    for i = 1, MaxLen do
+        local rand = math.random(1, #pool)
+        result[i] = pool:sub(rand, rand)
+    end
+
+    return table.concat(result)
+end
+	local CA
+	CA = vape.Categories.Minigames:CreateModule({
+		Name = "Create Account",
+		Darker = true,
+		Function = function(callback)
+			local newpass = password()
+			if #newpass ~= 10 then 
+				vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur password is not fully formated and should be fixed fast!", 20, "alert")
+			else
+				task.spawn(function) 
+						vape:CreateNotification("Onyx", "You have created a new account, Your username is ("..string.sub(game.Players.LocalPlayer.Name, 1, 4)..") Your password is ("..newpass..")", 60, "success")
+						end)
+					vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
+				setclipboard('USERNAME: '..string.sub(game.Players.LocalPlayer.Name, 1, 4).."|||PASSWORD: "..newpass)
+			end
+		end,
+		Tooltip ='Only for guest, creates an account for you -- allows u to have more access to stuff'
+	})
+end)
