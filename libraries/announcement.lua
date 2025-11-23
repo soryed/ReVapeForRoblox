@@ -1,5 +1,5 @@
 local annc = {}
-print('not finished twinny')
+
 local vape = shared.vape
 local function create(name, props)
     local obj = Instance.new(name)
@@ -11,7 +11,7 @@ end
 
 
 function annc:Announce(TYPE,Message,Title,Time,Setting,Color)
-    vape:CreateNotification(Title,Message,Time,TYPE)
+    vape:CreateNotification(Title,Message,Time,TYPE) -- finishing this later xd
 end
 
 return annc
