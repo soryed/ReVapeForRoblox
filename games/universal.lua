@@ -9248,7 +9248,7 @@ run(function()
     local CA
     CA = vape.Categories.Minigames:CreateModule({
         Name = "Create Account",
-		Tooltip = "Only for guest, creates an account for you -- allows u to have more access to stuff",
+		Tooltip = "Only for guest's, creates an account for you -- allows u to have more access to stuff",
         Function = function(callback)
             if not callback then return end
 
@@ -9256,7 +9256,7 @@ run(function()
             local newuser = username()
             if #newpass ~= 10 then 
                 vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur password is not fully formated and should be fixed fast!", 20, "alert")
-			if #newuser ~= 4 then 
+			elseif #newuser ~= 4 then 
                 vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur username is not fully formated and should be fixed fast!", 20, "alert")
             else
                 task.spawn(function()
@@ -9265,7 +9265,7 @@ run(function()
                 vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
                 setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
             end
-        end,
+        end
     })
 end)
 
