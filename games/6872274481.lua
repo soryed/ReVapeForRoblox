@@ -11462,7 +11462,9 @@ run(function()
 			        end
 			    end
 			end)
+																												
 			local plrrsp
+			repeat 
 			for i, p in workspace:GetDescendants() do
 			    if p:IsA("BasePart") and p.Name == "pinata" then
 			        if p:GetAttribute("PlacedByUserId") == userid then
@@ -11473,7 +11475,9 @@ run(function()
 			        end
 			    end
 			end
-										if not AutoKit.Enabled then pinataConnection:Disconnection() end
+			task.wait(0.1)
+			until not AutoKit.Enabled
+			if not AutoKit.Enabled then pinataConnection:Disconnection() end
 		end,
 		spirit_assassin = function()
 			kitCollection('EvelynnSoul', function(v)
