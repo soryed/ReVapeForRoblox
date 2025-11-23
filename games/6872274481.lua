@@ -11450,34 +11450,7 @@ run(function()
 					bedwars.Client:Get('DepositCoins'):CallServer(v)
 				end
 			end, 6, true)
-		--[[	local userid = lplr.UserId
-			local plrsp 
-			pinataConnection = workspace.DescendantAdded:Connect(function(p)
-			    if p:IsA("BasePart") and p.Name == "pinata" then
-			        if p:GetAttribute("PlacedByUserId") == userid then
-						 plrsp = p 
-						if getItem('candy') then
-							bedwars.Client:Get('DepositCoins'):CallServer(plrsp)
-						end
-			        end
-			    end
-			end)
-																												
-			local plrrsp
-			repeat 
-			for i, p in workspace:GetDescendants() do
-			    if p:IsA("BasePart") and p.Name == "pinata" then
-			        if p:GetAttribute("PlacedByUserId") == userid then
-			            plrrsp = p 
-						if getItem('candy') then
-							bedwars.Client:Get('DepositCoins'):CallServer(plrrsp)
-						end
-			        end
-			    end
-			end
-			task.wait(0.1)
-			until not AutoKit.Enabled
-			if not AutoKit.Enabled then pinataConnection:Disconnection() end--]]
+		
 		end,
 		spirit_assassin = function()
 			kitCollection('EvelynnSoul', function(v)
