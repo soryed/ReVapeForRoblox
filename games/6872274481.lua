@@ -12107,7 +12107,7 @@ run(function()
 		Name = "MutipleKits",
 		Function = function(callback)
 			if callback then
-				local draft = PlayerGui:FindFirstChild("MatchDraftApp")
+				local draft = lplr.PlayerGui:FindFirstChild("MatchDraftApp")
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
 				if not draft then
