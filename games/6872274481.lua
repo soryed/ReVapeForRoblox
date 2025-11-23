@@ -9930,7 +9930,7 @@ run(function()
 						})
 
 						if #plrs > 0 then
-							if store.equippedKit == "ember" and shared.EmberAutoKit and sword.itemType == "infernal_saber" then
+							if store.equippedKit == "ember" and sword.itemType == "infernal_saber" then
 								bedwars.Client:Get(remotes.HellBladeRelease):FireServer({chargeTime = 1, player = lplr, weapon = sword.tool})
 							end
 							switchItem(sword.tool, 0)
@@ -10919,7 +10919,7 @@ run(function()
 	local AutoKit
 	local Legit
 	local Toggles = {}
-	
+	local pinataConnection
 	local function kitCollection(id, func, range, specific)
 		local objs = type(id) == 'table' and id or collection(id, AutoKit)
 		repeat
@@ -11446,11 +11446,35 @@ run(function()
 			end, 6, true)
 		end,
 		pinata = function()
-			kitCollection(lplr.Name..':pinata', function(v)
+			--[[kitCollection(lplr.Name..':pinata', function(v)
 				if getItem('candy') then
 					bedwars.Client:Get(remotes.DepositPinata):CallServer(v)
 				end
-			end, 6, true)
+			end, 6, true)--]]
+			local userid = lplr.UserId
+			local plrsp = nil
+			pinataConnection = workspace.DescendantAdded:Connect(function(p)
+			    if p:IsA("BasePart") and p.Name == "pinata" then
+			        if p:GetAttribute("PlacedByUserId") == userid then
+						 plrsp = p 
+						if getItem('candy') then
+							bedwars.Client:Get(remotes.DepositPinata):CallServer(plrsp)
+						end
+			        end
+			    end
+			end))
+			local plrrsp = nil
+			for i, p in workspace:GetDescendants() do
+			    if p:IsA("BasePart") and p.Name == "pinata" then
+			        if p:GetAttribute("PlacedByUserId") == userid then
+			            plrrsp = p 
+						if getItem('candy') then
+							bedwars.Client:Get(remotes.DepositPinata):CallServer(plrrsp)
+						end
+			        end
+			    end
+			end
+										if not AutoKit.Enabled then pinataConnection:Disconnection() end
 		end,
 		spirit_assassin = function()
 			kitCollection('EvelynnSoul', function(v)
