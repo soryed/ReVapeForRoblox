@@ -12112,11 +12112,11 @@ run(function()
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
 				if not draft then
-					BedwarsErrorNotification'Couldn\'t find MatchDraftApp')
+					BedwarsErrorNotification('Couldn\'t find MatchDraftApp')
 					return																																												
 				end
 				if not kitSelection or not header.Text == "SELECT YOUR KIT" then
-					BedwarsErrorNotification'Couldn\'t find Kit Selection, you must be in Kit Selection mode')
+					BedwarsErrorNotification('Couldn\'t find Kit Selection, you must be in Kit Selection mode')
 					return																																												
 				end
 				task.spawn(function()
