@@ -11081,7 +11081,7 @@ run(function()
   		mage = function()
             local function checkModel(v)
                 if v:IsA("Model") and v.Name == "ElementTome" then
-                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(["secret"] = v:GetAttribute("TomeSecret"))  
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer({["secret"] = v:GetAttribute("TomeSecret")})  
                     for i, v in collectionService:GetTagged("TomeGuidingBeam") do
                         v:Destroy()
                     end
@@ -11093,7 +11093,7 @@ run(function()
             AutoKit:Clean(workspace.ChildAdded:Connect(checkModel))
             for i, v in workspace:GetDescendants() do
 			     if v:IsA("Model") and v.Name == "ElementTome" then
-                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(["secret"] = v:GetAttribute("TomeSecret"))  
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer({["secret"] = v:GetAttribute("TomeSecret")})  
                     for i, v in collectionService:GetTagged("TomeGuidingBeam") do
                         v:Destroy()
                     end
