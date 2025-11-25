@@ -12315,7 +12315,7 @@ local c
 end)
 
 if getgenv().TestMode then
-	run(function()
+--[[	run(function()
 		local Deflect
 		local DeflectTm
 	    Deflect = vape.Categories.Blatant:CreateModule({
@@ -12434,7 +12434,8 @@ if getgenv().TestMode then
 			Placeholder = 'Execute',
 			Darker = true,
 		})
-	end)
+	end)--]]
+print('test mode!')
 else
-					
+				warn('no test mode')	
 end
