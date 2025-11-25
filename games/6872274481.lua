@@ -46,7 +46,12 @@ local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role or "guest"
 local user = vape.user or "GUEST"
-
+task.spawn(function()
+	while task.wait(0.01) do
+		vape.role = role
+		vape.user = user
+	end
+end)
 
 local store = {
 	attackReach = 0,
@@ -5518,7 +5523,6 @@ run(function()
 	local Functions, id = {}
 	local Callbacks = {Custom, Functions, CustomPost}
 	local npctick = tick()
-	
 	local swords = {
 		'wood_sword',
 		'stone_sword',
@@ -5603,6 +5607,7 @@ run(function()
 	end
 	
 	local function buyUpgrade(upgradeType, currencytable)
+--[[
 		if not Upgrades.Enabled then return end
 		local upgrade = bedwars.TeamUpgradeMeta[upgradeType]
 		local currentUpgrades = bedwars.Store:getState().Bedwars.teamUpgrades[lplr:GetAttribute('Team')] or {}
@@ -5624,6 +5629,8 @@ run(function()
 		end
 	
 		return bought
+--]]
+		return
 	end
 	
 	local function buyTool(tool, tools, currencytable)
@@ -6954,8 +6961,7 @@ run(function()
 	UpdateRate = Breaker:CreateSlider({
 		Name = 'Update rate',
 		Min = 1,
-		Max = 144
-		,
+		Max = 144,
 		Default = 60,
 		Suffix = 'hz'
 	})
@@ -6977,11 +6983,11 @@ run(function()
 	})
 	LuckyBlock = Breaker:CreateToggle({
 		Name = 'Break Lucky Block',
-		Default = true
+		Default = false
 	})
 	IronOre = Breaker:CreateToggle({
 		Name = 'Break Iron Ore',
-		Default = true
+		Default = false
 	})
 	Effect = Breaker:CreateToggle({
 		Name = 'Show Healthbar & Effects',
@@ -6997,9 +7003,16 @@ run(function()
 		Default = true,
 		Darker = true
 	})
-	Animation = Breaker:CreateToggle({Name = 'Animation'})
-	SelfBreak = Breaker:CreateToggle({Name = 'Self Break'})
-	InstantBreak = Breaker:CreateToggle({Name = 'Instant Break'})
+	--[[WallCheck = Breaker:CreateToggle({
+		Name = 'Wall Check',
+		Default = false,
+	})
+	TNB = Breaker:CreateToggle({
+		Name = 'Target Nearest Block',
+		Default = true,
+		Darker = true,
+		Tooltip = 'This mines the closest block near you'
+	})--]]
 	LimitItem = Breaker:CreateToggle({
 		Name = 'Limit to items',
 		Tooltip = 'Only breaks when tools are held'
@@ -7963,8 +7976,8 @@ run(function()
 	local Rots = {}
 	local old, oldc1
 	
-	Viewmodel = vape.Legit:CreateModule({
-		Name = 'Viewmodel',
+	Viewmodel = vape.Combat:CreateModule({
+		Name = 'NoBob',
 		Function = function(callback)
 			local viewmodel = gameCamera:FindFirstChild('Viewmodel')
 			if callback then
@@ -8106,7 +8119,6 @@ run(function()
 		Name = 'Speed',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				Speed:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end    																																																							
@@ -8188,7 +8200,6 @@ run(function()
 		Name = 'Fly',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				Fly:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end    																																																							
@@ -8333,20 +8344,20 @@ run(function()
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
 			if callback then				
-				local l__TweenService__9 = game:GetService("TweenService")
+				local TweenService = game:GetService("TweenService")
 				local player = game:GetService("Players").LocalPlayer
-				local p6 = player.Character
+				local lplrrrrrrrrrrrrrrrrrrrrrrr = lplr
 				
-				if not p6 then return end
+				if not lplrrrrrrrrrrrrrrrrrrrrrrr then return end
 				
-				local v10 = game:GetService("ReplicatedStorage"):WaitForChild("Assets"):WaitForChild("Effects"):WaitForChild("NightmareEmote"):Clone();
-				asset = v10
-				v10.Parent = game.Workspace
-				lastPosition = p6.PrimaryPart and p6.PrimaryPart.Position or Vector3.new()
+				local NightmareEmote = game:GetService("ReplicatedStorage"):WaitForChild("Assets"):WaitForChild("Effects"):WaitForChild("NightmareEmote"):Clone()
+				asset = NightmareEmote
+				NightmareEmote.Parent = game.Workspace
+				lastPosition = lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart and lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart.Position or Vector3.new()
 				
 				task.spawn(function()
 					while asset ~= nil do
-						local currentPosition = p6.PrimaryPart and p6.PrimaryPart.Position
+						local currentPosition = lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart and lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart.Position
 						if currentPosition and (currentPosition - lastPosition).Magnitude > 0.1 then
 							asset:Destroy()
 							asset = nil
@@ -8354,36 +8365,36 @@ run(function()
 							break
 						end
 						lastPosition = currentPosition
-						v10:SetPrimaryPartCFrame(p6.LowerTorso.CFrame + Vector3.new(0, -2, 0));
+						NightmareEmote:SetPrimaryPartCFrame(lplrrrrrrrrrrrrrrrrrrrrrrr.LowerTorso.CFrame + Vector3.new(0, -2, 0))
 						task.wait(0.1)
 					end
 				end)
 				
-				local v11 = v10:GetDescendants();
-				local function v12(p8)
-					if p8:IsA("BasePart") then
-						p8.CanCollide = false;
-						p8.Anchored = true;
-					end;
-				end;
-				for v13, v14 in ipairs(v11) do
-					v12(v14, v13 - 1, v11);
-				end;
-				local l__Outer__15 = v10:FindFirstChild("Outer");
-				if l__Outer__15 then
-					l__TweenService__9:Create(l__Outer__15, TweenInfo.new(1.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, -1), {
-						Orientation = l__Outer__15.Orientation + Vector3.new(0, 360, 0)
-					}):Play();
-				end;
-				local l__Middle__16 = v10:FindFirstChild("Middle");
-				if l__Middle__16 then
-					l__TweenService__9:Create(l__Middle__16, TweenInfo.new(12.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, -1), {
-						Orientation = l__Middle__16.Orientation + Vector3.new(0, -360, 0)
-					}):Play();
-				end;
+				local NMDescendants = NightmareEmote:GetDescendants()
+				local function PartStuff(Prt)
+					if Prt:IsA("BasePart") then
+						Prt.CanCollide = false
+						Prt.Anchored = true
+					end
+				end
+				for i, v in ipairs(NMDescendants) do
+					PartStuff(v, i - 1, NMDescendants)
+				end
+				local Outer = NightmareEmote:FindFirstChild("Outer")
+				if Outer then
+					TweenService:Create(Outer, TweenInfo.new(1.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, -1), {
+						Orientation = Outer.Orientation + Vector3.new(0, 360, 0)
+					}):Play()
+				end
+				local Middle = NightmareEmote:FindFirstChild("Middle")
+				if Middle then
+					TweenService:Create(Middle, TweenInfo.new(12.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, -1), {
+						Orientation = Middle.Orientation + Vector3.new(0, -360, 0)
+					}):Play()
+				end
                 anim = Instance.new("Animation")
 				anim.AnimationId = "rbxassetid://9191822700"
-				anim = p6.Humanoid:LoadAnimation(anim)
+				anim = lplrrrrrrrrrrrrrrrrrrrrrrr.Humanoid:LoadAnimation(anim)
 				anim:Play()
 			else 
                 if anim then 
@@ -8550,7 +8561,6 @@ run(function()
 		Tooltip = "Specfic kits work for this module",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				KitESP:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end    
@@ -8573,7 +8583,6 @@ run(function()
 		Tooltip = "This method is patched",
         Function = function(callback)
     			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				ClientCrasher:Toggle(false)
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 					
 				return
@@ -9065,7 +9074,6 @@ end
         Name = 'StaffDetectorV2',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				StaffDetector:Toggle(false)
 							vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
@@ -9346,7 +9354,6 @@ run(function()
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				KitRender:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
@@ -9405,7 +9412,6 @@ run(function()
         Tooltip = "makes u look better with davey",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				BetterDavey:Toggle(false)
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
@@ -9466,9 +9472,8 @@ run(function()
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur history',
 		Function = function(callback)
-				   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-			MatchHistory:Toggle(false)
-												vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 
@@ -9488,8 +9493,7 @@ run(function()
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend"then
-				AutoBan:Toggle(false)
-													vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then 
@@ -9602,7 +9606,7 @@ run(function()
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				AutoQueue:Toggle(false)
+				
 																							vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
@@ -9693,10 +9697,9 @@ run(function()
     local QueueDisplayEnhancer
     QueueDisplayEnhancer = vape.Categories.Utility:CreateModule({
         Name = 'QueueMods',
-        Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel',
+        Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel xd nigger',
         Function = function(enabled)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				QueueDisplayEnhancer:Toggle(false)
 																								vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
@@ -10324,10 +10327,6 @@ run(function()
 		end,
 		Tooltip = 'Only attacks when the sword is held'
 	})
-	LegitAura = Killaura:CreateToggle({
-		Name = 'Swing only',
-		Tooltip = 'Only attacks while swinging manually'
-	})
 end)
 
 --[[run(function()
@@ -10376,92 +10375,6 @@ end
 		Tooltip = "Automatically clutches you by placing a block under your feet when falling."
 	})
 end)--]]
-
-run(function()
-
-local BedAlarm 
-	 BedAlarm = vape.Categories.Exploits:CreateModule({
-		Name = "BedAlarm",
-		Function = function(callback)
-
-			if callback then
-																																						BedAlarm:Toggle(false)
-
-vape:CreateNotification("Onyx","This module is nearly finished",6,"alert")
-			end
-		end,
-		Tooltip = "Alerts you without needing to purchase the bed alarm upgrade",
-	})
-end)
-run(function()
-	local AutoShoot
-	local shooting, old = false
-	local MS
-	--[[local function getProj()
-		local Projs = {}
-		for i, v in store.inventory.hotbar do
-			if v.item and v.item.itemType:find('crossbow') and i ~= (store.inventory.hotbarSlot + 1) then table.insert(Projs, i - 1) end
-		end
-		return Projs
-	end--]]
-
-	local function getProj()
-		local Projs = {}
-		local hotbarFolder = replicatedStorage:WaitForChild("Inventories"):WaitForChild(lplr.Name)
-
-		if hotbarFolder then
-			if hotbarFolder:FindFirstChild('wood_crossbow') then table.insert(Projs, hotbarFolder:FindFirstChild('wood_crossbow')) end
-			if hotbarFolder:FindFirstChild('snowball') then table.insert(Projs, hotbarFolder:FindFirstChild('snowball')) end
-		end
-		return Projs
-	end
-
-	local aa = getProj()
-	
-	--print("Projectiles found:",aa)
-	AutoShoot = vape.Categories.Exploits:CreateModule({
-		Name = 'AutoShoot',
-		Function = function(callback)
-			if callback then
-				old = bedwars.ProjectileController.createLocalProjectile
-				bedwars.ProjectileController.createLocalProjectile = function(...)
-					local source, data, proj = ...
-					--print(proj)
-					if proj and not shooting then
-						task.spawn(function()
-							local bows = getProj()
-							if #bows > 0 then
-								shooting = true
-								task.wait(0.15)
-								local selected = store.inventory.hotbarSlot
-								for _, v in getProj() do
---print(v)
-										task.wait(MS.Value / 1000)
-										mouse1click()
-										task.wait(MS.Value / 1000)
-
-								end
-								--hotbarSwitchV2(selected)
-								shooting = false
-							end
-						end)
-					end
-					return old(...)
-				end
-			else
-				bedwars.ProjectileController.createLocalProjectile = old
-			end
-		end,
-		Tooltip = 'Automatically shoots for you'
-	})
-	MS = AutoShoot:CreateSlider({
-		Name = "Swap Delay",
-		Min = 50,
-		Max = 1000,
-		Default = 50,
-		Suffix = "ms"
-	})
-end)
 
 --[[run(function()
 	local MS
@@ -10628,8 +10541,7 @@ local Options
 	Funny = vape.Categories.Troll:CreateModule({
 		Name = "Funny",
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				Funny:Toggle(false)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
 																																			vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
@@ -10646,7 +10558,7 @@ local Options
 				end
 			end
 		end,
-		Tooltip = ":troll: rewrite soon"
+		Tooltip = ":troll: rewrite some day when i feel like it"
 	})
 
 	Options = Funny:CreateDropdown({
@@ -10788,26 +10700,14 @@ end)
 
 
 run(function()
-local AutoWin 
-	 AutoWin = vape.Categories.Exploits:CreateModule({
-		Name = "AutoWin",
-		Function = function(callback)
-
-			if callback then
-																																						AutoWin:Toggle(false)
-
-vape:CreateNotification("Onyx","This module is NOT finished",10,"alert")
-			end
-		end,
-		Tooltip = "New Method for autowinning",
-	})
-end)
-
-run(function()
 	local LP 
 	 LP = vape.Categories.Exploits:CreateModule({
 		Name = "LeaveParty",
 		Function = function(callback)
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end   																															
 			if callback then
 				LP:Toggle(false)
 				bedwars.PartyController:leaveParty()
@@ -10829,9 +10729,8 @@ run(function()
 		Function = function(callback)
 						if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				Desync:Toggle(false)
 																vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				
+				return
 			end       
 			if callback then
 				local teleported
@@ -10961,7 +10860,6 @@ run(function()
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
 										bedwars.AbilityController:useAbility('berserker_rage')
-									--	game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('berserker_rage')
 									end
 								end)
 							end
@@ -10978,7 +10876,12 @@ run(function()
 		end,																																																								
 		glacial_skater = function()
 		    repeat
-		        replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9})    
+		       if getgenv().TestMode then
+					bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
+				else
+					replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9}) 
+				end
+		 		
 		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
@@ -10996,7 +10899,6 @@ run(function()
 				})
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 					bedwars.AbilityController:useAbility('cactus_fire')
-		            --game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('cactus_fire')
 		        end
 		
 		        task.wait(0.1)
@@ -11076,7 +10978,6 @@ run(function()
 		
 			if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 				bedwars.AbilityController:useAbility('skeleton_ability')
-				--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer('skeleton_ability')
 				Speed:Toggle(true)
 				task.wait(3)
 				Speed:Toggle(false)
@@ -11142,7 +11043,6 @@ run(function()
 		
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 					bedwars.AbilityController:useAbility('airbender_tornado')
-					--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("airbender_tornado")
 				end
 		
 				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
@@ -11158,7 +11058,10 @@ run(function()
 		end,
 		nazar = function()
 		    repeat
-			bedwars.AbilityController:useAbility('consume_life_foce')
+			if lplr.Character.Humanoid.Health <= 90 then
+				bedwars.AbilityController:useAbility('consume_life_foce')
+			else
+			end
 			task.wait(0.1)
 		    until not AutoKit.Enabled
 		end,
@@ -11169,7 +11072,6 @@ run(function()
 						local txt = string.lower(text.Text)
 						if string.find(txt, "teleport") then
 							bedwars.AbilityController:useAbility('HATTER_TELEPORT')
-							--game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility:FireServer("HATTER_TELEPORT")
 						end
 					end
 				end
@@ -11179,10 +11081,7 @@ run(function()
   		mage = function()
             local function checkModel(v)
                 if v:IsA("Model") and v.Name == "ElementTome" then
-                    local secret = {
-                      ["secret"] = v:GetAttribute("TomeSecret")
-                     }
-                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)  
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(["secret"] = v:GetAttribute("TomeSecret"))  
                     for i, v in collectionService:GetTagged("TomeGuidingBeam") do
                         v:Destroy()
                     end
@@ -11194,10 +11093,7 @@ run(function()
             AutoKit:Clean(workspace.ChildAdded:Connect(checkModel))
             for i, v in workspace:GetDescendants() do
 			     if v:IsA("Model") and v.Name == "ElementTome" then
-                    local secret = {
-                      ["secret"] = v:GetAttribute("TomeSecret")
-                     }
-                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(secret)
+                    local LET = bedwars.Client:Get("LearnElementTome"):CallServer(["secret"] = v:GetAttribute("TomeSecret"))  
                     for i, v in collectionService:GetTagged("TomeGuidingBeam") do
                         v:Destroy()
                     end
@@ -12044,6 +11940,7 @@ run(function()
 		'Crashhh!',
 		'Kablam!',
 		'Zapshot!',
+		'Oynx On top!'
 	}
 	
 	local RGBColors = {
@@ -12120,7 +12017,7 @@ run(function()
 					return																																												
 				end
 				getgenv().BIN("Please select your kit")
-				task.spawn(2)
+				task.wait(2)
 				getgenv().BIN("SPAM CLICK THE RANDOM KIT")
 
 			end
@@ -12143,8 +12040,7 @@ local ennabled = false
             local StackTxt = zephyreffect and zephyreffect:FindFirstChild("EffectStack", true)
 		if not zephyreffect then
 				notif("ZephyrExploit", "You are not 'ZEPHYR' kit, you are not allowed to use this module", 5, "warning")
-				ZephyrExploit:Toggle(false)
-			
+return			
 			end
             if not callback then
                 notif("ZephyrExploit", "Disabled next game", 5, "warning")
@@ -12384,7 +12280,12 @@ local c
     HackerDetector = vape.Categories.Utility:CreateModule({
         Name = "HackerDetector",
         Function = function(callback)
-            if callback then
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end																																																																								
+           		 if callback then
+																																																																																
                c = runService.Heartbeat:Connect(function()
                     for _, plr in playersService:GetPlayers() do
                         local char = plr.Character
@@ -12413,4 +12314,128 @@ local c
     })
 end)
 
-
+if getgenv().TestMode then
+	run(function()
+		local Deflect
+		local DeflectTm
+	    Deflect = vape.Categories.Blatant:CreateModule({
+	        Name = "Deflect",
+	        Function = function(callback)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end																																																																												
+	            if callback then
+	    
+				else
+	
+	            end
+	        end,
+	        Tooltip = "Deflect's tnt in a range",
+	    })
+		DeflectTm = Deflect:CreateToggle({
+			Name = 'Deflect Teammates',
+			Default = false,
+			Tooltip = 'Deflects ur teammates tnt'																																									
+		})																																								
+	end)
+	
+	run(function()
+		local BetterWhisper = {Enabled = false}
+		local FlyY 
+		local Fly
+		local Heal
+		local Shoot
+		local WallCheck
+	    BetterWhisper = vape.Categories.Exploits:CreateModule({
+	        Name = "BetterWhisper",
+	        Function = function(callback)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end																																																																													
+	            if callback then
+	    
+				else
+					vape:CreateNotification('BetterWhisper','Disabled next game', 8, 'warning')
+	            end
+	        end,
+	        Tooltip = "Better whisper skills xd",
+	    })
+		FlyY = BetterWhisper:CreateSlider({
+			Min = 225,
+			Max = 135,
+			Default = 180,
+			Suffix = 'Y'
+		})
+		Fly = BetterWhisper:CreateToggle({
+			Name = 'Fly',
+			Default = true,
+		})
+		Heal = BetterWhisper:CreateToggle({
+			Name = 'Heal',
+			Default = true,
+		})
+		Shoot = BetterWhisper:CreateToggle({
+			Name = 'Shoot',
+			Default = true,
+		})
+		WallCheck = BetterWhisper:CreateToggle({
+			Name = 'WallCheck',
+			Default = true,
+			Darker = true,
+		})
+	end)
+	
+	run(function()
+		local ABDU
+		local Upgrade
+	    ABDU = vape.Categories.Inventory:CreateModule({
+	        Name = "AutoBuyUpgrades",
+	        Function = function(callback)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end																																																																															
+	            if callback then
+	    
+				else
+	
+	            end
+	        end,
+	        Tooltip = "Automatically buys upgrades when you go near the shop",
+	    })
+		Upgrade = ABDU:CreateTextBox({
+			Name = 'Upgrade',
+			Placeholder = 'Generator/Damage/Armor/BedShield/BedAlarm/Etc',
+			Darker = true,
+		})																																									
+	end)
+	
+	run(function()
+		local ABE
+		local Enchant
+	    ABE = vape.Categories.Inventory:CreateModule({
+	        Name = "AutoBuyEnchant",
+	        Function = function(callback)
+	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end																																																																																
+	            if callback then
+	    
+				else
+	
+	            end
+	        end,
+	        Tooltip = "Automatically buys ur deirse enchant when you go near the enchanted table",
+	    })
+		Enchant = ABE:CreateTextBox({
+			Name = 'Enchant',
+			Placeholder = 'Execute',
+			Darker = true,
+		})
+	end)
+else
+					
+end
