@@ -12366,7 +12366,6 @@ if getgenv().TestMode then
 			Min = 225,
 			Max = 135,
 			Default = 180,
-			Suffix = 'Y'
 		})
 		Fly = BetterWhisper:CreateToggle({
 			Name = 'Fly',
