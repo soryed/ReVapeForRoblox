@@ -12363,10 +12363,11 @@ run(function()
 	        Tooltip = "Better whisper skills xd",
 	    })
 		FlyY = BetterWhisper:CreateSlider({
+			Name = 'Y-Level fly',																																																																							
 			Min = -135,
 			Max = -225,
 			Default = -180,
-		})
+		})																																																																				
 		Fly = BetterWhisper:CreateToggle({
 			Name = 'Fly',
 			Default = true,
