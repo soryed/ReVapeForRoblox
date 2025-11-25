@@ -6859,12 +6859,12 @@ run(function()
 		if not tab then return end
 		for _, v in tab do
 			if (v.Position - localPosition).Magnitude < Range.Value and bedwars.BlockController:isBlockBreakable({blockPosition = v.Position / 3}, lplr) then
-				if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
+				--if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
 				if (v:GetAttribute('BedShieldEndTime') or 0) > workspace:GetServerTimeNow() then continue end
 				if LimitItem.Enabled and not (store.hand.tool and bedwars.ItemMeta[store.hand.tool.Name].breakBlock) then continue end
 	
 				hit += 1
-				local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled)
+				local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, true, CustomHealth.Enabled and customHealthbar or nil,false)
 				if path then
 					local currentnode = target
 					for _, part in parts do
@@ -6983,11 +6983,11 @@ run(function()
 	})
 	LuckyBlock = Breaker:CreateToggle({
 		Name = 'Break Lucky Block',
-		Default = false
+		Default = true
 	})
 	IronOre = Breaker:CreateToggle({
 		Name = 'Break Iron Ore',
-		Default = false
+		Default = true
 	})
 	Effect = Breaker:CreateToggle({
 		Name = 'Show Healthbar & Effects',
