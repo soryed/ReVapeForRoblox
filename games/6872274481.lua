@@ -6736,6 +6736,7 @@ run(function()
 	})
 end)
 	
+
 run(function()
 	local Breaker
 	local Range
@@ -6789,7 +6790,7 @@ run(function()
 						Size = UDim2.new(1, 89, 1, 52),
 						Position = UDim2.fromOffset(-48, -31),
 						BackgroundTransparency = 1,
-						Image = getcustomasset('ReVape/assets/new/blur.png'),
+						Image = getcustomasset('newvape/assets/new/blur.png'),
 						ScaleType = Enum.ScaleType.Slice,
 						SliceCenter = Rect.new(52, 31, 261, 502)
 					}),
@@ -6859,12 +6860,12 @@ run(function()
 		if not tab then return end
 		for _, v in tab do
 			if (v.Position - localPosition).Magnitude < Range.Value and bedwars.BlockController:isBlockBreakable({blockPosition = v.Position / 3}, lplr) then
-				--if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
+				if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
 				if (v:GetAttribute('BedShieldEndTime') or 0) > workspace:GetServerTimeNow() then continue end
 				if LimitItem.Enabled and not (store.hand.tool and bedwars.ItemMeta[store.hand.tool.Name].breakBlock) then continue end
 	
 				hit += 1
-				local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, true, CustomHealth.Enabled and customHealthbar or nil,false)
+				local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled)
 				if path then
 					local currentnode = target
 					for _, part in parts do
@@ -6942,9 +6943,9 @@ run(function()
 		Tooltip = 'Break blocks around you automatically'
 	})
 	Range = Breaker:CreateSlider({
-		Name = 'Nuker range',
+		Name = 'Break range',
 		Min = 1,
-		Max = 50,
+		Max = 30,
 		Default = 30,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -6961,10 +6962,20 @@ run(function()
 	UpdateRate = Breaker:CreateSlider({
 		Name = 'Update rate',
 		Min = 1,
-		Max = 144,
+		Max = 120,
 		Default = 60,
 		Suffix = 'hz'
 	})
+	--[[WallCheck = Breaker:CreateToggle({
+		Name = 'Wall Check',
+		Default = false,
+	})
+	TNB = Breaker:CreateToggle({
+		Name = 'Target Nearest Block',
+		Default = true,
+		Darker = true,
+		Tooltip = 'This mines the closest block near you'
+	})--]]
 	Custom = Breaker:CreateTextList({
 		Name = 'Custom',
 		Function = function()
@@ -7003,22 +7014,15 @@ run(function()
 		Default = true,
 		Darker = true
 	})
-	--[[WallCheck = Breaker:CreateToggle({
-		Name = 'Wall Check',
-		Default = false,
-	})
-	TNB = Breaker:CreateToggle({
-		Name = 'Target Nearest Block',
-		Default = true,
-		Darker = true,
-		Tooltip = 'This mines the closest block near you'
-	})--]]
+	Animation = Breaker:CreateToggle({Name = 'Animation'})
+	SelfBreak = Breaker:CreateToggle({Name = 'Self Break'})
+	InstantBreak = Breaker:CreateToggle({Name = 'Instant Break'})
 	LimitItem = Breaker:CreateToggle({
 		Name = 'Limit to items',
 		Tooltip = 'Only breaks when tools are held'
 	})
 end)
-	
+
 run(function()
 	local BedBreakEffect
 	local Mode
