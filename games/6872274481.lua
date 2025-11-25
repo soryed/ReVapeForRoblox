@@ -12335,7 +12335,7 @@ run(function()
 	    })
 		DeflectTm = Deflect:CreateToggle({
 			Name = 'Deflect Teammates',
-			Default = false,
+			Default = true,
 			Tooltip = 'Deflects ur teammates tnt'																																									
 		})																																								
 	end)
