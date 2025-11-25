@@ -7976,7 +7976,7 @@ run(function()
 	local Rots = {}
 	local old, oldc1
 	
-	Viewmodel = vape.Combat:CreateModule({
+	Viewmodel = vape.Categories.Combat:CreateModule({
 		Name = 'NoBob',
 		Function = function(callback)
 			local viewmodel = gameCamera:FindFirstChild('Viewmodel')
