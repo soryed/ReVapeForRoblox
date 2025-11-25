@@ -12341,7 +12341,7 @@ run(function()
 	end)
 	
 	run(function()
-		local BetterWhisper = {Enabled = false}
+		local BetterWhisper 
 		local FlyY 
 		local Fly
 		local Heal
@@ -12357,15 +12357,15 @@ run(function()
 	            if callback then
 	    
 				else
-					vape:CreateNotification('BetterWhisper','Disabled next game', 8, 'warning')
+					
 	            end
 	        end,
 	        Tooltip = "Better whisper skills xd",
 	    })
 		FlyY = BetterWhisper:CreateSlider({
-			Min = 225,
-			Max = 135,
-			Default = 180,
+			Min = -225,
+			Max = -135,
+			Default = -180,
 		})
 		Fly = BetterWhisper:CreateToggle({
 			Name = 'Fly',
