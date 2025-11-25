@@ -11021,7 +11021,7 @@ run(function()
 	        task.wait(0.1)
 	    until not AutoKit.Enabled
 	end,
-	airbender = function()
+	--[[airbender = function()
 		repeat
 			if not entitylib.isAlive then continue end
 			local root = entitylib.character.RootPart
@@ -11055,7 +11055,7 @@ run(function()
 			task.wait(0.1)
 
 			until not AutoKit.Enabled
-		end,
+		end,--]]
 		nazar = function()
 		    repeat
 			if lplr.Character.Humanoid.Health <= 90 then
