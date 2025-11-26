@@ -9745,23 +9745,6 @@ run(function()
 end)
 
 run(function()
-local ReportStatus 
-	 ReportStatus = vape.Categories.Exploits:CreateModule({
-		Name = "ReportStatus",
-		Function = function(callback)
-
-			if callback then
-																														ReportStatus:Toggle(false)
-
-vape:CreateNotification("Onyx","This module is not finished",6,"alert")
-			end
-		end,
-		Tooltip = "Returns a report status of your account",
-	})
-end)
-
-
-run(function()
 	local SetFPS
 	local FPS
 	
