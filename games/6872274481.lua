@@ -10827,56 +10827,7 @@ end)
 
 
 
-run(function()
-	local RH
-	local AG
-	
-	AG = vape.Categories.AltFarm:CreateModule({
-		Name = "AccountGrinding",
-		Tooltip = "Used for getting accounts having rank enabled",
-		Function = function(callback)
-			if callback then
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
 
-			local function handleEndEvent()
-				if not RH.Value then
-					return lobby()
-				end
-				
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return lobby()
-				end
-
-				local TeleportService = game:GetService("TeleportService")
-				local data = TeleportService:GetLocalPlayerTeleportData()
-				TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data)
-			end
-
-			AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-				if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-					handleEndEvent()
-				end
-			end))
-
-			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
-				handleEndEvent()
-			end))
-else
-return
-end
-
-		end
-	})
-
-	RH = AG:CreateToggle({
-		Name = "Reset History",
-		Default = false,
-	})
-end)
 
 run(function()
 	local Clutch
@@ -12347,7 +12298,7 @@ run(function()
 	end
 end)
 
-	run(function()
+run(function()
 		local BetterWhisper 
 		local FlyY 
 		local Fly
@@ -12372,7 +12323,6 @@ end)
 					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
 											
 					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
-													print(targetplayer,"found")
 
 					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
 									while task.wait(0.1) do
@@ -12398,11 +12348,9 @@ end)
 					        if v.Name == "ServerOwl" then 
 					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
 					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
-		print(targetplayer,"added")
 					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y)   
 									while task.wait(0.1) do
 										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
-			print(Y)
 										task.spawn(function()
 												if targetplayer.Character.Humanoid.Health <=HealthHP.Value then
 													WhisperController:request(targetplayer,"Heal")
@@ -12449,9 +12397,9 @@ end)
 			Name = 'Heal',
 			Default = true,
 		})
-	end)
+end)
 	
-	run(function()
+run(function()
 		local char = lplr.Character
 		local teamID = char:GetAttribute("Team")
 		local Distance = 15
@@ -12606,8 +12554,26 @@ end)
 			Placeholder = 'Generator/Damage/Armor/BedShield/BedAlarm/Etc',
 			Darker = true,
 		})																																									
-	end)
+end)
 
-if getgenv().TestMode then								
+if getgenv().TestMode then		
+run(function()
+	local AG
+	
+	AG = vape.Categories.AltFarm:CreateModule({
+		Name = "AutoWin",
+		Tooltip = "Used for getting accounts having rank enabled",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end   
+			if callback then
+			    
+			end
+		end
+	})
+end)
+
 else
 end
