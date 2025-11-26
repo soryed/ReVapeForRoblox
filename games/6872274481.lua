@@ -12408,7 +12408,7 @@ run(function()
 	            if callback then
 	    
 				else
-	
+				vape:CreateNotification("AutoBuyUpgrades", "Disabled next game!", 6, "warning")
 	            end
 	        end,
 	        Tooltip = "Automatically buys upgrades when you go near the shop",
@@ -12432,7 +12432,7 @@ run(function()
 	            if callback then
 	    
 				else
-	
+					vape:CreateNotification("AutoBuyEnchant", "Disabled next game!", 6, "warning")
 	            end
 	        end,
 	        Tooltip = "Automatically buys an enchant when you go near the enchanted table",
