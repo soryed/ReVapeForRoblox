@@ -12466,7 +12466,7 @@ run(function()
 		if item and amount then
 			local a = getPrice(mapped,1)
 			if a >= amount then
-				bedwars.Client:Get(remote):SendToServer(mapped)
+				bedwars.Client:Get(remote):SendToServer({[1] = mapped})
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
@@ -12477,19 +12477,19 @@ run(function()
 		if item and amount then
 			local a = getPrice(mapped,1)
 			if a >= amount then
-				bedwars.Client:Get(remote):SendToServer(mapped)
+				bedwars.Client:Get(remote):SendToServer({[1] = mapped})
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
 			local a = getPrice(mapped,2)
 			if a >= amount then
-				bedwars.Client:Get(remote):SendToServer(mapped)
+				bedwars.Client:Get(remote):SendToServer({[1] = mapped})
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
 			local a = getPrice(mapped,3)
 			if a >= amount then
-				bedwars.Client:Get(remote):SendToServer(mapped)
+				bedwars.Client:Get(remote):SendToServer({[1] = mapped})
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
