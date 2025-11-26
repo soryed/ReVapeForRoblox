@@ -954,7 +954,15 @@ end
     if whitelistData then
         local color = whitelistData.color
         local tagText = whitelistData.text
-
+if tagText == nil or tagText == "" then
+	if game.Players.LocalPlayer:FindFirstChild('Tags') then
+										tagText = "["..game.Players.LocalPlayer:FindFirstChild('Tags'):FindFirstChild('0'):GetAttribute('Text').."]"
+									else
+										tagText = ''
+	end
+else
+	tagText = tagText
+end
         local props = Instance.new("TextChatMessageProperties")
         props.PrefixText = string.format(
             "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
