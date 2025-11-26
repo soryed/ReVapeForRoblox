@@ -12452,65 +12452,54 @@ run(function()
 	end
 	local function purchase(upgrade)
 	    local grade = string.lower(upgrade)
-	    local mapped = tbllist[grade] 
+	    local mapped = tbllist[grade]
 	
 	    if not mapped then
 	        getgenv().BEN("Invalid upgrade:", upgrade)
 	        return
 	    end
 	
-	    if mapped == "bed_alarm"then
-		local item,amount = getItem('diamond')
-		if item and amount then
-			local a = 2
-			if a >= amount then
-				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
-			 ABDU:Toggle(false)
-			else
-				getgenv().BEN("You do not have enough to autopurchase")
-			end
-		end
-else if mapped == "bed_shield"then
-		local item,amount = getItem('diamond')
-		if item and amount then
-			local a = 5
-			if a >= amount then
-				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
-			 ABDU:Toggle(false)
-			else
-				getgenv().BEN("You do not have enough to autopurchase")
-			end
-		end
-	    else
-	      --  remote = "RequestPurchaseTeamUpgrade"
-		local item,amount = getItem('diamond')
-		if item and amount then
-			local a = getPrice(mapped,1)
-			if a >= amount then
-				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
-			 ABDU:Toggle(false)
-			else
-				getgenv().BEN("You do not have enough to autopurchase")
-			end
-			local a = getPrice(mapped,2)
-			if a >= amount then
-				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
-		 ABDU:Toggle(false)
-			else
-				getgenv().BEN("You do not have enough to autopurchase")
-			end
-			local a = getPrice(mapped,3)
-			if a >= amount then
-				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
-		 ABDU:Toggle(false)
-			else
-				getgenv().BEN("You do not have enough to autopurchase")
-			end
-		end
+	    local item, amount = getItem("diamond")
+	    if not (item and amount) then return end
+	
+	    if mapped == "bed_alarm" then
+	        local price = 2
+	        if amount >= price then
+	            game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
+	            ABDU:Toggle(false)
+	        else
+	            getgenv().BEN("You do not have enough to autopurchase")
+	        end
+	        return
 	    end
-		
-	   
+	
+	    if mapped == "bed_shield" then
+	        local price = 5
+	        if amount >= price then
+	            game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
+	            ABDU:Toggle(false)
+	        else
+	            getgenv().BEN("You do not have enough to autopurchase")
+	        end
+	        return
+	    end
+	
+	    local currentTier = 1
+	    local price = getPrice(mapped, currentTier)
+	
+	    if not price then
+	        getgenv().BEN("No tier price found for:", mapped)
+	        return
+	    end
+	
+	    if amount >= price then
+	        game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
+	        ABDU:Toggle(false)
+	    else
+	        getgenv().BEN("You do not have enough to autopurchase")
+	    end
 	end
+
 
 	    ABDU = vape.Categories.Inventory:CreateModule({
 	        Name = "AutoBuyUpgrades",
