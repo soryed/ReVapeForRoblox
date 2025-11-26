@@ -12467,6 +12467,7 @@ run(function()
 			local a = getPrice(mapped,1)
 			if a >= amount then
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
+			 ABDU:Toggle(false)
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
@@ -12478,25 +12479,28 @@ run(function()
 			local a = getPrice(mapped,1)
 			if a >= amount then
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
+			 ABDU:Toggle(false)
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
 			local a = getPrice(mapped,2)
 			if a >= amount then
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
+		 ABDU:Toggle(false)
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
 			local a = getPrice(mapped,3)
 			if a >= amount then
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseTeamUpgrade:InvokeServer(mapped)
+		 ABDU:Toggle(false)
 			else
 				getgenv().BEN("You do not have enough to autopurchase")
 			end
 		end
 	    end
 		
-	    ABDU:Toggle(false)
+	   
 	end
 
 	    ABDU = vape.Categories.Inventory:CreateModule({
