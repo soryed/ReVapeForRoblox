@@ -12459,9 +12459,8 @@ run(function()
 	        return
 	    end
 	
-		local remote
 	    if string.find(mapped, "bed") then
-	    remote = "RequestPurchaseBedTeamUpgrade"
+print(mapped)
 		local item,amount = getItem('diamond')
 		if item and amount then
 			local a = getPrice(mapped,1)
@@ -12473,7 +12472,7 @@ run(function()
 			end
 		end
 	    else
-	        remote = "RequestPurchaseTeamUpgrade"
+	      --  remote = "RequestPurchaseTeamUpgrade"
 		local item,amount = getItem('diamond')
 		if item and amount then
 			local a = getPrice(mapped,1)
