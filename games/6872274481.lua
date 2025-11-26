@@ -1499,6 +1499,32 @@ function KaidaController:request(target)
 	else return nil end
 end
 
+local WhisperController = {}
+function WhisperController:request(target,type)
+	if type == "Heal" then
+	if target then 
+		if bedwars.AbilityController:canUseAbility('OWL_HEAL') then
+			bedwars.AbilityController:useAbility('OWL_HEAL')
+			bedwars.Client:Get("OwlActionAbilites"):FireServer({
+				["target"] = target,
+				['ability'] = 'OWL_HEAL'
+			})
+		end
+
+	else return end
+	elseif type == "Fly" then
+	if target then 
+		if bedwars.AbilityController:canUseAbility('OWL_LIFT') then
+			bedwars.AbilityController:useAbility('OWL_LIFT')
+			bedwars.Client:Get("OwlActionAbilites"):FireServer({
+				["target"] = target,
+				['ability'] = 'OWL_LIFT'
+			})
+		end
+	else return  end
+	end
+end
+
 local function BedwarsInfoNotification(mes)
 	bedwars.NotificationController:sendInfoNotification({
 		message = tostring(mes),
@@ -12352,8 +12378,9 @@ run(function()
 		local FlyY 
 		local Fly
 		local Heal
-		local Shoot
-		local WallCheck
+		local db = false
+		local connection
+		local HealthHP
 	    BetterWhisper = vape.Categories.Exploits:CreateModule({
 	        Name = "BetterWhisper",
 	        Function = function(callback)
@@ -12362,9 +12389,66 @@ run(function()
 					return
 				end																																																																													
 	            if callback then
-	    
-				else
+					db = true
+	   				local targetplayer
+					for i, v in workspace:GetDescendants() do
+						if not db then return end
+					    if v:IsA("Model") then
+					        if v.Name == "ServerOwl" then 
+					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
+					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
+					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
+									while task.wait(0.1) do
+										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
+										task.spawn(function()
+											if Heal.Value then
+												if targetplayer.Character.Humanoid.Health <=HealthHP.Value then
+													WhisperController:request(targetplayer,"Heal")
+												end
+											end
+										end)
+										if Y <= FlyY.Value then
+											if Fly.Value then
+												WhisperController:request(targetplayer,"Fly")
+											end
+										end
+										if not targetplayer.Character then break end
+									end
+					            end
+					        end
+					    end
+					end
 					
+					connection = BetterWhisper:Clean(workspace.DescendantAdded:Connect(function(v)
+					    if v:IsA("Model") then
+					        if v.Name == "ServerOwl" then 
+					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
+					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
+					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y)   
+									while task.wait(0.1) do
+										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
+										task.spawn(function()
+											if Heal.Value then
+												if targetplayer.Character.Humanoid.Health <=HealthHP.Value then
+													WhisperController:request(targetplayer,"Heal")
+												end
+											end
+										end)
+										if Y <= FlyY.Value then
+											if Fly.Value then
+												WhisperController:request(targetplayer,"Fly")
+											end
+										end
+										if not targetplayer.Character then break end
+									end
+					            end
+					        end
+					    end
+					end))
+				else
+					connection:Disconnect()
+					connection = nil
+					db = false
 	            end
 	        end,
 	        Tooltip = "Better whisper skills xd and u look like u play like therac!",
@@ -12375,7 +12459,14 @@ run(function()
 			Max = -295,
 			Default = -180,
 		
-		})																																																																				
+		})	
+		HealthHP = BetterWhisper:CreateSlider({
+			Name = 'Heal HP',																																																																							
+			Min = 1,
+			Max = 99,
+			Default = 80,
+		
+		})	
 		Fly = BetterWhisper:CreateToggle({
 			Name = 'Fly',
 			Default = true,
@@ -12384,18 +12475,12 @@ run(function()
 			Name = 'Heal',
 			Default = true,
 		})
-		Shoot = BetterWhisper:CreateToggle({
-			Name = 'Shoot',
-			Default = true,
-		})
-		WallCheck = BetterWhisper:CreateToggle({
-			Name = 'WallCheck',
-			Default = true,
-			Darker = true,
-		})
 	end)
 	
 	run(function()
+		local char = lplr.Character
+		local teamID = char:GetAttribute("Team")
+		local Distance = 15
 		local db = true
 		local ABDU
 		local Upgrade
@@ -12515,9 +12600,7 @@ run(function()
 				end																																																																															
 	            if callback then
 	    			db = true
-					local char = lplr.Character
-					local teamID = char:GetAttribute("Team")
-					local Distance = 15
+
 					while task.wait(0.5) do
 					    for i, v in workspace:GetChildren() do
 					        if v:IsA("BasePart") then
@@ -12551,24 +12634,7 @@ run(function()
 		})																																									
 	end)
 	
-	run(function()
-		local ABE
-	    ABE = vape.Categories.Inventory:CreateModule({
-	        Name = "AutoBuyEnchant",
-	        Function = function(callback)
-	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end																																																																																
-	            if callback then
-	    
-				else
-					vape:CreateNotification("AutoBuyEnchant", "Disabled next game!", 6, "warning")
-	            end
-	        end,
-	        Tooltip = "Automatically buys an enchant when you go near the enchanted table",
-	    })
-	end)
+
 									
 print('test mode!')
 else
