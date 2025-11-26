@@ -12501,7 +12501,7 @@ run(function()
 	            .rbxts_include.node_modules["@rbxts"].net.out._NetManaged
 	            .RequestPurchaseTeamUpgrade:InvokeServer(mapped)
 	
-	        ABDU:Toggle(false)
+	      --  ABDU:Toggle(false)
 	
 	        tier += 1
 	    end
