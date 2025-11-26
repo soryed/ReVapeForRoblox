@@ -12608,23 +12608,7 @@ end)
 
 
 if getgenv().TestMode then		
-run(function()
-	local AG
-	
-	AG = vape.Categories.AltFarm:CreateModule({
-		Name = "AutoWin",
-		Tooltip = "Used for getting accounts having rank enabled -- MUST HAVE YUZI",
-		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end   
-			if callback then
-			    
-			end
-		end
-	})
-end)
+
 
 else
 end
