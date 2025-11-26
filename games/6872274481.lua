@@ -8350,18 +8350,18 @@ run(function()
 			if callback then				
 				local TweenService = game:GetService("TweenService")
 				local player = game:GetService("Players").LocalPlayer
-				local lplrrrrrrrrrrrrrrrrrrrrrrr = lplr
+				local CharForNM = lplr.Character
 				
-				if not lplrrrrrrrrrrrrrrrrrrrrrrr then return end
+				if not CharForNM then return end
 				
 				local NightmareEmote = game:GetService("ReplicatedStorage"):WaitForChild("Assets"):WaitForChild("Effects"):WaitForChild("NightmareEmote"):Clone()
 				asset = NightmareEmote
 				NightmareEmote.Parent = game.Workspace
-				lastPosition = lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart and lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart.Position or Vector3.new()
+				lastPosition = CharForNM.PrimaryPart and CharForNM.PrimaryPart.Position or Vector3.new()
 				
 				task.spawn(function()
 					while asset ~= nil do
-						local currentPosition = lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart and lplrrrrrrrrrrrrrrrrrrrrrrr.PrimaryPart.Position
+						local currentPosition = CharForNM.PrimaryPart and CharForNM.PrimaryPart.Position
 						if currentPosition and (currentPosition - lastPosition).Magnitude > 0.1 then
 							asset:Destroy()
 							asset = nil
@@ -8369,7 +8369,7 @@ run(function()
 							break
 						end
 						lastPosition = currentPosition
-						NightmareEmote:SetPrimaryPartCFrame(lplrrrrrrrrrrrrrrrrrrrrrrr.LowerTorso.CFrame + Vector3.new(0, -2, 0))
+						NightmareEmote:SetPrimaryPartCFrame(CharForNM.LowerTorso.CFrame + Vector3.new(0, -2, 0))
 						task.wait(0.1)
 					end
 				end)
@@ -8398,7 +8398,7 @@ run(function()
 				end
                 anim = Instance.new("Animation")
 				anim.AnimationId = "rbxassetid://9191822700"
-				anim = lplrrrrrrrrrrrrrrrrrrrrrrr.Humanoid:LoadAnimation(anim)
+				anim = CharForNM.Humanoid:LoadAnimation(anim)
 				anim:Play()
 			else 
                 if anim then 
