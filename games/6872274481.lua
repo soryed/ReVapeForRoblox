@@ -12396,8 +12396,109 @@ run(function()
 	end)
 	
 	run(function()
+		local db = true
 		local ABDU
 		local Upgrade
+		local REMOTE = ""
+		local tbllist = {
+		    ["bed alarm"] = "bed_alarm",
+		    ["bedalarm"] = "bed_alarm",
+		    ["alarm"] = "bed_alarm",
+		
+		    ["bed shield"] = "bed_shield",
+		    ["bedshield"] = "bed_shield",
+		
+		    ["team"] = "TEAM_GENERATOR",
+		    ["gen"] = "TEAM_GENERATOR",
+		    ["team generator"] = "TEAM_GENERATOR",
+		    ["team gen"] = "TEAM_GENERATOR",
+		    ["teamgenerator"] = "TEAM_GENERATOR",
+		    ["teamgen"] = "TEAM_GENERATOR",
+		
+		    ["diamond"] = "DIAMOND_GENERATOR",
+		    ["diamond generator"] = "DIAMOND_GENERATOR",
+		    ["diamond gen"] = "DIAMOND_GENERATOR",
+		    ["diamondgen"] = "DIAMOND_GENERATOR",
+		    ["diamondgenerator"] = "DIAMOND_GENERATOR",
+		
+		    ["dim"] = "DIAMOND_GENERATOR",
+		    ["dim generator"] = "DIAMOND_GENERATOR",
+		    ["dim gen"] = "DIAMOND_GENERATOR",
+		    ["dimgenerator"] = "DIAMOND_GENERATOR",
+		    ["dimgen"] = "DIAMOND_GENERATOR",
+		
+		    ["armor"] = "ARMOR",
+		    ["arm"] = "ARMOR",
+		
+		    ["damage"] = "DAMAGE",
+		    ["dmg"] = "DAMAGE",
+	}
+	local upgradePrices = {
+	    bed_alarm = {2},
+	    bed_shield = {5},
+	
+	    TEAM_GENERATOR = {4, 8, 16},
+	    DIAMOND_GENERATOR = {4, 8, 12},
+	
+	    ARMOR = {4, 8, 18},
+	    DAMAGE = {5, 10, 20},
+	}
+
+	local function getPrice(upgradeName, currentTier)
+	    local prices = upgradePrices[upgradeName]
+	    if not prices then return nil end
+	
+	    return prices[currentTier]  
+	end
+	local function purchase(upgrade)
+	    local grade = string.lower(upgrade)
+	    local mapped = tbllist[grade] 
+	
+	    if not mapped then
+	        getgenv().BEN("Invalid upgrade:", upgrade)
+	        return
+	    end
+	
+		local remote
+	    if string.find(mapped, "bed") then
+	        remote = "RequestPurchaseBedTeamUpgrade"
+											local item,amount = getItem('diamond')
+		if item and amount then
+			local a = getPrice(mapped,1)
+			if a >= amount then
+				bedwars.Client:Get(remote):SendToServer(mapped)
+			else
+				getgenv().BEN("You do not have enough to autopurchase")
+			end
+		end
+	    else
+	        remote = "RequestPurchaseTeamUpgrade"
+		local item,amount = getItem('diamond')
+		if item and amount then
+			local a = getPrice(mapped,1)
+			if a >= amount then
+				bedwars.Client:Get(remote):SendToServer(mapped)
+			else
+				getgenv().BEN("You do not have enough to autopurchase")
+			end
+			local a = getPrice(mapped,2)
+			if a >= amount then
+				bedwars.Client:Get(remote):SendToServer(mapped)
+			else
+				getgenv().BEN("You do not have enough to autopurchase")
+			end
+			local a = getPrice(mapped,3)
+			if a >= amount then
+				bedwars.Client:Get(remote):SendToServer(mapped)
+			else
+				getgenv().BEN("You do not have enough to autopurchase")
+			end
+		end
+	    end
+		
+	    
+	end
+
 	    ABDU = vape.Categories.Inventory:CreateModule({
 	        Name = "AutoBuyUpgrades",
 	        Function = function(callback)
@@ -12406,9 +12507,32 @@ run(function()
 					return
 				end																																																																															
 	            if callback then
-	    
+	    			db = true
+					local char = lplr.Character
+					local teamID = char:GetAttribute("Team")
+					local Distance = 15
+					while task.wait(0.5) do
+					    for i, v in workspace:GetChildren() do
+					        if v:IsA("BasePart") then
+					            if v.Name == "1_upgrade_shop" then
+					                if v:GetAttribute("GeneratorTeam") == teamID then
+					                    local NewDis = (v.florist.PrimaryPart.Position - char.HumanoidRootPart.Position).Magnitude
+					                    if NewDis <= Distance then
+						                	purchase(Upgrade.Value)
+					                    else
+					                        
+					                    end
+					                else
+					                    getgenv().BEN("Cannot locate where ur upgrade shop is at")
+					                end
+					            end
+					        end
+					    end
+
+						if not db then break end
+					end
 				else
-				vape:CreateNotification("AutoBuyUpgrades", "Disabled next game!", 6, "warning")
+					db = false
 	            end
 	        end,
 	        Tooltip = "Automatically buys upgrades when you go near the shop",
