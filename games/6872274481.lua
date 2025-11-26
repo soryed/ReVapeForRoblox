@@ -12455,9 +12455,9 @@ run(function()
 	    })
 		FlyY = BetterWhisper:CreateSlider({
 			Name = 'Y-Level fly',																																																																							
-			Min = -100,
-			Max = -295,
-			Default = -180,
+			Min = -50,
+			Max = -100,
+			Default = -90,
 		
 		})	
 		HealthHP = BetterWhisper:CreateSlider({
