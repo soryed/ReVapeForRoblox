@@ -12555,6 +12555,57 @@ run(function()
 			Darker = true,
 		})																																									
 end)
+run(function()
+	local RH
+	local AG
+	
+	AG = vape.Categories.AltFarm:CreateModule({
+		Name = "AccountGrinding",
+		Tooltip = "Used for getting accounts having rank enabled",
+		Function = function(callback)
+			if callback then
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+
+			local function handleEndEvent()
+				if not RH.Value then
+					return lobby()
+				end
+				
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return lobby()
+				end
+
+				local TeleportService = game:GetService("TeleportService")
+				local data = TeleportService:GetLocalPlayerTeleportData()
+				TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data)
+			end
+
+			AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+				if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+					handleEndEvent()
+				end
+			end))
+
+			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
+				handleEndEvent()
+			end))
+else
+return
+end
+
+		end
+	})
+
+	RH = AG:CreateToggle({
+		Name = "Reset History",
+		Default = false,
+	})
+end)
+
 
 if getgenv().TestMode then		
 run(function()
