@@ -12396,7 +12396,10 @@ run(function()
 					    if v:IsA("Model") then
 					        if v.Name == "ServerOwl" then 
 					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
+											
 					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
+													print(targetplayer,"found")
+
 					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
 									while task.wait(0.1) do
 										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
@@ -12424,6 +12427,7 @@ run(function()
 					        if v.Name == "ServerOwl" then 
 					            if v:GetAttribute("Owner") == game.Players.LocalPlayer.UserId then
 					                targetplayer = game.Players:GetPlayerByUserId(v:GetAttribute("Target"))
+		print(targetplayer,"added")
 					                local Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y)   
 									while task.wait(0.1) do
 										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
