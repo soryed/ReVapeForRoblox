@@ -12434,8 +12434,8 @@ run(function()
 		    ["dmg"] = "DAMAGE",
 	}
 	local upgradePrices = {
-	    bed_alarm = {2},
-	    bed_shield = {5},
+	    bed_alarm = 2,
+	    bed_shield = 5,
 	
 	    TEAM_GENERATOR = {4, 8, 16},
 	    DIAMOND_GENERATOR = {4, 8, 12},
@@ -12459,11 +12459,21 @@ run(function()
 	        return
 	    end
 	
-	    if string.find(mapped, "bed") then
-print(mapped)
+	    if mapped == "bed_alarm"then
 		local item,amount = getItem('diamond')
 		if item and amount then
-			local a = getPrice(mapped,1)
+			local a = 2
+			if a >= amount then
+				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
+			 ABDU:Toggle(false)
+			else
+				getgenv().BEN("You do not have enough to autopurchase")
+			end
+		end
+else if mapped == "bed_shield"then
+		local item,amount = getItem('diamond')
+		if item and amount then
+			local a = 5
 			if a >= amount then
 				game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestPurchaseBedTeamUpgrade:InvokeServer(mapped)
 			 ABDU:Toggle(false)
