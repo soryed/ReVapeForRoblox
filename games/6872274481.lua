@@ -12404,16 +12404,12 @@ run(function()
 									while task.wait(0.1) do
 										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
 										task.spawn(function()
-											if Heal.Value then
 												if targetplayer.Character.Humanoid.Health <=HealthHP.Value then
 													WhisperController:request(targetplayer,"Heal")
 												end
-											end
 										end)
 										if Y <= FlyY.Value then
-											if Fly.Value then
 												WhisperController:request(targetplayer,"Fly")
-											end
 										end
 										if not targetplayer.Character then break end
 									end
@@ -12432,16 +12428,14 @@ run(function()
 									while task.wait(0.1) do
 										Y = math.floor(targetplayer.Character.HumanoidRootPart.Position.Y) 
 										task.spawn(function()
-											if Heal.Value then
 												if targetplayer.Character.Humanoid.Health <=HealthHP.Value then
 													WhisperController:request(targetplayer,"Heal")
 												end
-											end
+											
 										end)
 										if Y <= FlyY.Value then
-											if Fly.Value then
 												WhisperController:request(targetplayer,"Fly")
-											end
+											
 										end
 										if not targetplayer.Character then break end
 									end
