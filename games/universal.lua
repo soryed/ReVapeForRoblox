@@ -9285,6 +9285,7 @@ run(function()
         Function = function(callback)
             if not callback then return end
             if role == "owner" then
+																			print('alerted!')
                 annlib:Announce("alert","NIGGER ahh BOY LOL EZ","FUCKING NIGGER",60, {},{})
             end
         end,
