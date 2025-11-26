@@ -12439,7 +12439,6 @@ run(function()
 	
 	run(function()
 		local ABE
-		local Enchant
 	    ABE = vape.Categories.Inventory:CreateModule({
 	        Name = "AutoBuyEnchant",
 	        Function = function(callback)
@@ -12453,13 +12452,8 @@ run(function()
 	
 	            end
 	        end,
-	        Tooltip = "Automatically buys ur deirse enchant when you go near the enchanted table",
+	        Tooltip = "Automatically buys an enchant when you go near the enchanted table",
 	    })
-		Enchant = ABE:CreateTextBox({
-			Name = 'Enchant',
-			Placeholder = 'Execute',
-			Darker = true,
-		})
 	end)
 									
 print('test mode!')
