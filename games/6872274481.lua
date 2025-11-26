@@ -12493,16 +12493,14 @@ run(function()
 	        if not (item and amount) then break end
 	
 	        if amount < price then
-	            getgenv().BEN("Stopped: not enough for tier "..tier)
+	            getgenv().BEN("Stopped: not enough for tier or max tier: "..tier)
 	            break
 	        end
 	
 	        game:GetService("ReplicatedStorage")
 	            .rbxts_include.node_modules["@rbxts"].net.out._NetManaged
 	            .RequestPurchaseTeamUpgrade:InvokeServer(mapped)
-	
-	      --  ABDU:Toggle(false)
-	
+		
 	        tier += 1
 	    end
 	end
