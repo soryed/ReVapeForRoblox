@@ -126,6 +126,9 @@ local function finishLoading()
     if getgenv().SkipLoadingScreen then
         teleportScript = "getgenv().SkipLoadingScreen = true\n" .. teleportScript
     end
+	if getgenv().TestMode then
+        teleportScript = "getgenv().TestMode = true\n" .. teleportScript
+    end
     if shared.VapeCustomProfile then
         teleportScript = "shared.VapeCustomProfile = " .. serializeValue(shared.VapeCustomProfile) .. "\n" .. teleportScript
     end
