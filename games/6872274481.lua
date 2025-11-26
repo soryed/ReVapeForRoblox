@@ -12500,7 +12500,7 @@ run(function()
 		end
 	    end
 		
-	    
+	    ABDU:Toggle(false)
 	end
 
 	    ABDU = vape.Categories.Inventory:CreateModule({
