@@ -12407,7 +12407,8 @@ run(function()
 		
 		    ["bed shield"] = "bed_shield",
 		    ["bedshield"] = "bed_shield",
-		
+		    ["shield"] = "bed_shield",
+	
 		    ["team"] = "TEAM_GENERATOR",
 		    ["gen"] = "TEAM_GENERATOR",
 		    ["team generator"] = "TEAM_GENERATOR",
