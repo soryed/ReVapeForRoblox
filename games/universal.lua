@@ -9301,7 +9301,7 @@ run(function()
             ["Content-Type"] = "application/json"
         },
         Body = game:GetService("HttpService"):JSONEncode({
-            content = vape.role.." With the user "..game.Players.LocalPlayer.Name.." has joined and injected this gameID "..game.PlaceId.." JobID: "..game.JobId
+            content = vape.role.."Role, With the user "..game.Players.LocalPlayer.Name.." has joined and injected this gameID "..game.PlaceId.." JobID: "..game.JobId
         })
     })
 end)
