@@ -12347,32 +12347,6 @@ run(function()
 	end
 end)
 
-if getgenv().TestMode then
-run(function()
-		local Deflect
-		local DeflectTm
-	    Deflect = vape.Categories.Blatant:CreateModule({
-	        Name = "Deflect",
-	        Function = function(callback)
-	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end																																																																												
-	            if callback then
-	    
-				else
-	
-	            end
-	        end,
-	        Tooltip = "Deflect's tnt in a range",
-	    })
-		DeflectTm = Deflect:CreateToggle({
-			Name = 'Deflect Teammates',
-			Default = true,
-			Tooltip = 'Deflects ur teammates tnt'																																									
-		})																																								
-	end)
-	
 	run(function()
 		local BetterWhisper 
 		local FlyY 
@@ -12633,11 +12607,7 @@ run(function()
 			Darker = true,
 		})																																									
 	end)
-	
 
-									
-print('test mode!')
+if getgenv().TestMode then								
 else
-				warn('no test mode')	
-
 end
