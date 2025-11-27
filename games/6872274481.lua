@@ -2931,6 +2931,9 @@ LongJump:Toggle()
 				JumpSpeed = 4.5 * Value.Value
 				JumpTick = tick() + 2.4
 				Direction = Vector3.new(dir.X, 0, dir.Z).Unit
+
+
+				if
 			end
 																																	LongJump:Toggle()
 		end
@@ -13351,23 +13354,236 @@ end)
 end)
 
 if getgenv().TestMode then		
-
+	
 	run(function()
-		local AutoGloop
-		AutoGloop = vape.Categories.Combat:CreateModule({
-			Name = "AutoGloop",
+		local AutoGloopInterval
+		local AutoGloopSwitchSpeed
+		local AutoGloopWaitDelay
+		local AutoGloopRange
+		local AutoGloopFOV
+		local lastAutoGloopTime = 0
+		local autoGloopEnabled = false
+		local GloopKillauraTargetCheck
+		local FirstPersonCheck
+		
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		
+		local function leftClick()
+			pcall(function()
+				VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+				task.wait(0.05)
+				VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+			end)
+		end
+		
+		local function hasGloop()
+			local gloopItem = getItem('glue_projectile')
+			return gloopItem and gloopItem.amount > 0
+		end
+		
+		local function getGloopSlots()
+			local gloops = {}
+			for i, v in store.inventory.hotbar do
+				if v.item and v.item.itemType then
+					if v.item.itemType == 'glue_projectile' then
+						table.insert(gloops, i - 1)
+					end
+				end
+			end
+			return gloops
+		end
+		
+		local function getSwordSlot()
+			for i, v in store.inventory.hotbar do
+				if v.item and bedwars.ItemMeta[v.item.itemType] then
+					local meta = bedwars.ItemMeta[v.item.itemType]
+					if meta.sword then
+						return i - 1
+					end
+				end
+			end
+			return nil
+		end
+		
+		local function getClosestTargetDistance()
+			if not entitylib.isAlive then return math.huge end
+			
+			local myPos = entitylib.character.RootPart.Position
+			local myLook = entitylib.character.RootPart.CFrame.LookVector
+			local closestDist = math.huge
+			
+			for _, entity in entitylib.List do
+				if entity.Player == lplr then continue end
+				if not entity.Character then continue end
+				if not entity.RootPart then continue end
+				
+				if entity.Player then
+					if lplr:GetAttribute('Team') == entity.Player:GetAttribute('Team') then
+						continue
+					end
+				else
+					if not entity.Targetable then
+						continue
+					end
+				end
+				
+				local distance = (entity.RootPart.Position - myPos).Magnitude
+				if distance > AutoGloopRange.Value then continue end
+				
+				local toTarget = (entity.RootPart.Position - myPos).Unit
+				local dot = myLook:Dot(toTarget)
+				local angle = math.acos(dot)
+				local fovRad = math.rad(AutoGloopFOV.Value)
+				
+				if angle <= fovRad then
+					closestDist = math.min(closestDist, distance)
+				end
+			end
+			
+			return closestDist
+		end
+		
+		local function hasValidTarget()
+			if GloopKillauraTargetCheck.Enabled then
+				return store.KillauraTarget ~= nil
+			else
+				return getClosestTargetDistance() <= AutoGloopRange.Value
+			end
+		end
+		
+		local AutoGloop = vape.Categories.Combat:CreateModule({
+			Name = 'AutoGloop',
 			Function = function(callback)
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 					return
-				end       
-
+				end   
+				if callback then
+					autoGloopEnabled = true
+					
+					task.spawn(function()
+						repeat
+							task.wait(0.1)
+							if autoGloopEnabled and not _G.autoShootLock then
+								if not hasGloop() then
+									continue
+								end
+								
+								if FirstPersonCheck.Enabled and not isFirstPerson() then
+									continue
+								end
+								
+								if not hasValidTarget() then
+									continue
+								end
+								
+								local closestDist = getClosestTargetDistance()
+								if closestDist > 14 then
+									continue
+								end
+								
+								local currentTime = tick()
+								if (currentTime - lastAutoGloopTime) >= AutoGloopInterval.Value then
+									local gloops = getGloopSlots()
+									local swordSlot = getSwordSlot()
+									
+									if #gloops > 0 then
+										_G.autoShootLock = true
+										lastAutoGloopTime = currentTime
+										local originalSlot = store.inventory.hotbarSlot
+										
+										for _, gloopSlot in gloops do
+											if hotbarSwitch(gloopSlot) then
+												task.wait(AutoGloopSwitchSpeed.Value)
+												task.wait(AutoGloopWaitDelay.Value)
+												leftClick()
+												task.wait(0.05)
+											end
+										end
+										
+										if swordSlot then
+											hotbarSwitch(swordSlot)
+										else
+											hotbarSwitch(originalSlot)
+										end
+										
+										_G.autoShootLock = false
+									end
+								end
+							end
+						until not autoGloopEnabled
+					end)
+				else
+					autoGloopEnabled = false
+				end
 			end,
-			Tooltip ='Automatically fires a gloop at the nearest player'
+			Tooltip = 'Automatically throws gloop at close range enemies (under 12 studs)'
 		})
-
+		
+		AutoGloopInterval = AutoGloop:CreateSlider({
+			Name = 'Throw Interval',
+			Min = 0.1,
+			Max = 16,
+			Default = 0.8,
+			Decimal = 10,
+			Suffix = function(val)
+				return val == 1 and 'second' or 'seconds'
+			end,
+			Tooltip = 'How often to throw gloop'
+		})
+		
+		AutoGloopSwitchSpeed = AutoGloop:CreateSlider({
+			Name = 'Switch Delay',
+			Min = 0,
+			Max = 0.2,
+			Default = 0.05,
+			Decimal = 100,
+			Suffix = 's',
+			Tooltip = 'Delay between switching and throwing (lower = faster)'
+		})
+		
+		AutoGloopWaitDelay = AutoGloop:CreateSlider({
+			Name = 'Wait Delay',
+			Min = 0,
+			Max = 1,
+			Default = 0,
+			Decimal = 100,
+			Suffix = 's',
+			Tooltip = 'Delay before throwing (helps prevent ghosting)'
+		})
+		
+		AutoGloopRange = AutoGloop:CreateSlider({
+			Name = 'Range',
+			Min = 1,
+			Max = 30,
+			Default = 15,
+			Suffix = function(val)
+				return val == 1 and 'stud' or 'studs'
+			end,
+			Tooltip = 'Maximum range to detect targets'
+		})
+		
+		AutoGloopFOV = AutoGloop:CreateSlider({
+			Name = 'FOV',
+			Min = 1,
+			Max = 180,
+			Default = 90,
+			Tooltip = 'Field of view for target detection (1-180 degrees)'
+		})
+		
+		GloopKillauraTargetCheck = AutoGloop:CreateToggle({
+			Name = 'Require Killaura Target',
+			Default = false,
+			Tooltip = 'Only throw gloop when Killaura has a target'
+		})
+		
+		FirstPersonCheck = AutoGloop:CreateToggle({
+			Name = 'First Person Only',
+			Default = false,
+			Tooltip = 'Only works in first person mode'
+		})
 	end)
-	
+
 	run(function()
 		local AutoWin
 		AutoWin = vape.Categories.AltFarm:CreateModule({
@@ -13376,8 +13592,25 @@ if getgenv().TestMode then
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 					return
-				end       
+				end
+				if  string.find(store.hand.tool.Name,"dao") 
+				else
+					vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
+				end      
+				if store.equippedKit == "dasher" then
+					if bedwars.AbilityController:canUseAbility('dash') then
+						bedwars.AbilityController:useAbility('dash',nil,{
+							['direction'] = gameCamera.CFrame.LookVector,
+							['origin'] = lplr.Character.PrimaryPart.Position,
+							['weapon'] = store.hand.tool.Name
+						})
 
+							lplr.Character.HumanoidRootPart:ApplyImpulse(Vector3.new(348, 24, 90))
+						end
+					end
+				else
+					vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
+				end
 			end,
 			Tooltip ='Automatically wins a match for you, you must have yuzi'
 		})
@@ -13767,7 +14000,7 @@ if getgenv().TestMode then
 		end
 		
 		shared.ACMODVIEWENABLED = false
-		AC_MOD_View.moduleInstance = vape.Categories.World:CreateModule({
+		AC_MOD_View.moduleInstance = vape.Categories.Exploits:CreateModule({
 			Name = "AC MOD View",
 			Function = function(call)
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
