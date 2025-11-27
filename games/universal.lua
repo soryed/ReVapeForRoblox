@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, entitylib,loginlib,annlib = {}, {}, {},{}
+local frictionTable, oldfrict, entitylib = {}, {},{}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -222,7 +222,7 @@ end
 local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
-loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
+local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 
 
 local whitelist = {
