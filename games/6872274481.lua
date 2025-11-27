@@ -13607,14 +13607,26 @@ if getgenv().TestMode then
 		        end
 		        if store.equippedKit == "dasher" then
 		            if bedwars.AbilityController:canUseAbility("dash") then
-		
+						if not entitylib.isAlive or lplr.Character:WaitForChild("Humanoid").FloorMaterial == Enum.Material.Air then 
+							vape:CreateNotification('AutoWin', 'Recall ability not available.', 7,'warning')
+							return 
+						end
+						if not bedwars.AbilityController:canUseAbility('recall') then 
+							vape:CreateNotification('AutoWin', 'Recall ability not available.', 7,'warning')
+							return
+						end
+						bedwars.AbilityController:useAbility("recall")
+						local teleported
+						PlayerTP:Clean(lplr:GetAttributeChangedSignal('LastTeleported'):Connect(function() teleported = true end))
+						repeat task.wait() until teleported or not AutoWin.Enabled or not entitylib.isAlive
+						task.wait()
 		                bedwars.AbilityController:useAbility("dash", nil, {
 		                    direction = gameCamera.CFrame.LookVector,
 		                    origin = char.PrimaryPart.Position,
 		                    weapon = tool.Name
 		                })
 		
-		                char.HumanoidRootPart.Position = Vector3.new(348, 24, 90)
+		                char.HumanoidRootPart.Position = workspace.MapCFrames['2_bed'].Value
 		            end
 		        else
 		            vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
