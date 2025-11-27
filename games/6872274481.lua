@@ -13617,7 +13617,7 @@ if getgenv().TestMode then
 						end
 						bedwars.AbilityController:useAbility("recall")
 						local teleported
-						PlayerTP:Clean(lplr:GetAttributeChangedSignal('LastTeleported'):Connect(function() teleported = true end))
+						AutoWin:Clean(lplr:GetAttributeChangedSignal('LastTeleported'):Connect(function() teleported = true end))
 						repeat task.wait() until teleported or not AutoWin.Enabled or not entitylib.isAlive
 						task.wait()
 		                bedwars.AbilityController:useAbility("dash", nil, {
