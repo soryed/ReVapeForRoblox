@@ -13588,30 +13588,38 @@ if getgenv().TestMode then
 		local AutoWin
 		AutoWin = vape.Categories.AltFarm:CreateModule({
 			Name = "AutoWin",
-			Function = function(callback)
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end
-				if  string.find(store.hand.tool.Name,"dao") then
-				else
-					vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
-				end      
-				if store.equippedKit == "dasher" then
-					if bedwars.AbilityController:canUseAbility('dash') then
-						bedwars.AbilityController:useAbility('dash',nil,{
-							['direction'] = gameCamera.CFrame.LookVector,
-							['origin'] = lplr.Character.PrimaryPart.Position,
-							['weapon'] = store.hand.tool.Name
-						})
-
-							lplr.Character.HumanoidRootPart:ApplyImpulse(Vector3.new(348, 24, 90))
-						end
-					end
-				else
-					vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
-				end
-			end,
+		    Function = function(callback)
+		        if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+		            vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+		            return
+		        end
+		        local char = lplr.Character
+		        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+		
+		        local tool = store.hand and store.hand.tool
+		        if not tool then
+		            vape:CreateNotification("AutoWin", "You need a weapon equipped", 6, "warning")
+		            return
+		        end
+		        if not string.find(tool.Name:lower(), "dao") then
+		            vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
+		            return
+		        end
+		        if store.equippedKit == "dasher" then
+		            if bedwars.AbilityController:canUseAbility("dash") then
+		
+		                bedwars.AbilityController:useAbility("dash", nil, {
+		                    direction = gameCamera.CFrame.LookVector,
+		                    origin = char.PrimaryPart.Position,
+		                    weapon = tool.Name
+		                })
+		
+		                char.HumanoidRootPart:ApplyImpulse(Vector3.new(348, 24, 90))
+		            end
+		        else
+		            vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
+		        end
+		    end,
 			Tooltip ='Automatically wins a match for you, you must have yuzi'
 		})
 
