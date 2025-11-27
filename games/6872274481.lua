@@ -2933,7 +2933,7 @@ LongJump:Toggle()
 				Direction = Vector3.new(dir.X, 0, dir.Z).Unit
 
 
-				if
+			
 			end
 																																	LongJump:Toggle()
 		end
