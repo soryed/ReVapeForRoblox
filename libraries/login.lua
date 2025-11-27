@@ -18,6 +18,26 @@ else
     
 end
 
+local function getHardwareId() -- hwid checks finna be lit
+    local hardwareInfo = ""
+    
+    if syn and syn.crypt then
+        hardwareInfo = syn.crypt.hash(syn.crypt.random(16))
+    elseif getexecutorname then
+        hardwareInfo = getexecutorname() .. tostring(os.clock())
+    else
+        hardwareInfo = game:GetService("RbxAnalyticsService"):GetClientId() .. tostring(tick())
+    end
+    
+    local hash = ""
+    for i = 1, 32 do
+        local byte = string.byte(hardwareInfo, (i % #hardwareInfo) + 1)
+        hash = hash .. string.format("%02x", byte)
+    end
+    
+    return hash:sub(1, 16)
+end
+
 local function ensureAccountsFolder()
     if not isfolder("ReVape/accounts") then
         makefolder("ReVape/accounts")
@@ -73,7 +93,7 @@ function login:Login()
             vape:CreateNotification("Onyx", "Login failed, failed to decode or couldn't be good enough. Continue as 'GUEST'", 7)
             return "guest", "GUEST", "PASSWORD"
         end
-
+    
         status = decoded.role or "guest"
         S = status
         U = username
