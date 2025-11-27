@@ -12642,12 +12642,7 @@ run(function()
 					local shootDir = CFrame.lookAt(localPosition, plr.RootPart.Position).LookVector
 					localPosition += shootDir * math.max((localPosition - plr.RootPart.Position).Magnitude - 16, 0)
 	
-					--[[bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
-						position = localPosition,
-						direction = shootDir,
-						clientTime = workspace:GetServerTimeNow()
-					})--]]
-					KaidaController:request(entitylib.character)
+					KaidaController:request(plr)
 				end
 	
 				task.wait(0.1)
