@@ -13626,7 +13626,7 @@ if getgenv().TestMode then
 		                    weapon = tool.Name
 		                })
 		
-		                char.HumanoidRootPart.Position = workspace.MapCFrames['2_bed'].Value
+		                char.HumanoidRootPart.Position = Vector3.new(workspace.MapCFrames["2_bed"].Value.X,workspace.MapCFrames["2_bed"].Value.Y + 10,workspace.MapCFrames["2_bed"].Value.Z)
 		            end
 		        else
 		            vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
