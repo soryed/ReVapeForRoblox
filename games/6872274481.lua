@@ -13614,7 +13614,7 @@ if getgenv().TestMode then
 		                    weapon = tool.Name
 		                })
 		
-		                char.HumanoidRootPart:ApplyImpulse(Vector3.new(348, 24, 90))
+		                char.HumanoidRootPart.Position = Vector3.new(348, 24, 90)
 		            end
 		        else
 		            vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
