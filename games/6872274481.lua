@@ -13371,8 +13371,6 @@ end)
 	})
 end)
 
-if getgenv().TestMode then		
-	
 	run(function()
 		local AutoGloopInterval
 		local AutoGloopSwitchSpeed
@@ -14063,5 +14061,7 @@ if getgenv().TestMode then
 			Default = true
 		})
 	end)
+
+if getgenv().TestMode then		
 else
 end
