@@ -13593,7 +13593,7 @@ if getgenv().TestMode then
 					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 					return
 				end
-				if  string.find(store.hand.tool.Name,"dao") 
+				if  string.find(store.hand.tool.Name,"dao") then
 				else
 					vape:CreateNotification("AutoWin", "You must have yuzi kit on to use this module", 6, "warning")
 				end      
