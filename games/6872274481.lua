@@ -12283,7 +12283,7 @@ run(function()
 	        task.wait(0.1)
 	    until not AutoKit.Enabled
 	end,
-	airbender = function()  -- gonna fix ltr, why does it crashes me ??
+	airbender = function()
 		repeat
 			if not entitylib.isAlive then continue end
 			local root = entitylib.character.RootPart
@@ -12311,10 +12311,12 @@ run(function()
 		
 				if plr2 and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 					local direction = (plr2.RootPart.Position - root.Position).Unit
-	
-					bedwars.Client:Get('Airbender_RequestMovingTornado'):SendToServer({
-	                    direction = direction
-	                })
+					if bedwars.AbilityController:canUseAbility('airbender_moving_tornado') then
+						bedwars.AbilityController:useAbility('airbender_moving_tornado')
+						bedwars.Client:Get('Airbender_RequestMovingTornado'):SendToServer({
+							direction = direction
+						})
+					end
 				end
 			task.wait(0.1)
 
@@ -12843,6 +12845,27 @@ run(function()
 					end
 				end
 				
+				task.wait(0.1)
+			until not AutoKit.Enabled
+		end,
+		gun_blade = function()
+			repeat
+				if bedwars.AbilityController:canUseAbility('hand_gun') then
+					local plr = entitylib.EntityPosition({
+						Range = 10,
+						Part = 'RootPart',
+						Players = true,
+						Sort = sortmethods.Health
+					})
+	
+					if plr then
+						bedwars.AbilityController:useAbility('hand_gun')
+						bedwars.Client:Get('HandGunFireRequest'):SendToServer({
+							lookVector = gameCamera.CFrame.LookVector
+						})
+					end
+				end
+	
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
