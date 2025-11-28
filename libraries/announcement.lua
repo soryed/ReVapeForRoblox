@@ -1,4 +1,4 @@
-local annc = {} -- ALMOST FINISH YO
+local annc = {} -- FINISHED UI, TIME TO CODE THE MAIN THING
 
 local vape = shared.vape
 local function create(name, props)
@@ -15,24 +15,37 @@ local gethui = gethui or function()
 end
 
 function annc:CreateAnnc(msg,ticker,settings)
-    local gui = create("ScreenGui", {Name = NAMEOFSTUFF,Parent = gethui(),IgnoreGuiInset = true,ResetOnSpawn = false,DisplayOrder = math.huge})
-    NAMEOFSTUFF = "("..game:GetService("HttpService"):GenerateGUID(false).."||"..string.upper(game:GetService("HttpService"):GenerateGUID(true))..")"
-    local frame = create("Frame", {Name = NAMEOFSTUFF,Parent = gui,BackgroundTransparency = 1,Position = UDim2.fromScale(0,0),Size = UDim2.fromScale(1,1)})
-    NAMEOFSTUFF = "("..game:GetService("HttpService"):GenerateGUID(false).."||"..string.upper(game:GetService("HttpService"):GenerateGUID(true))..")"
-    local text = create("TextLabel", {Name = NAMEOFSTUFF,Parent = frame,BackgroundTransparency = 1,Position = UDim2.fromScale(0,-1.5),Size = UDim2.fromScale(1,0.15),TextScaled = true,FontFace = Font.fromEnum(Enum.Font.Arimo, Enum.FontWeight.Bold),TextColor3 = Color3.new(1,1,1),Text = ""})
-    task.wait(5)
-    local info = TweenInfo.new(1.5,Enum.EasingStyle.Sine)
-    local tween = game:GetService("TweenService"):Create(text, info, {Position = UDim2.fromScale(0,0)})
-    tween:Play()
-    
-    task.spawn(function()
-    	tween.Completed:Connect(function()
-    		task.wait(0.2)
-    		tween:Destroy()
-    	end)
-    end)
-    
+	local gui = create("ScreenGui", {Name = NAMEOFSTUFF,Parent = gethui(),IgnoreGuiInset = true,ResetOnSpawn = false,DisplayOrder = math.huge})
+	NAMEOFSTUFF = "("..game:GetService("HttpService"):GenerateGUID(false).."||"..string.upper(game:GetService("HttpService"):GenerateGUID(true))..")"
+	local frame = create("Frame", {Name = NAMEOFSTUFF,Parent = gui,BackgroundTransparency = 1,Position = UDim2.fromScale(0,0),Size = UDim2.fromScale(1,1)})
+	NAMEOFSTUFF = "("..game:GetService("HttpService"):GenerateGUID(false).."||"..string.upper(game:GetService("HttpService"):GenerateGUID(true))..")"
+	local text = create("TextLabel", {Name = NAMEOFSTUFF,Parent = frame,BackgroundTransparency = 1,Position = UDim2.fromScale(0,-1.5),Size = UDim2.fromScale(1,0.15),TextScaled = true,FontFace = Font.fromEnum(Enum.Font.Arimo, Enum.FontWeight.Bold),TextColor3 = Color3.new(1,1,1),Text = ""})
+	local info = TweenInfo.new(1.5,Enum.EasingStyle.Sine)
+	local tween = game:GetService("TweenService"):Create(text, info, {Position = UDim2.fromScale(0,0)})
+	tween:Play()
+	
+	task.spawn(function()
+		tween.Completed:Connect(function()
+			task.wait(0.2)
+			tween:Destroy()
+		end)
+	end)
+
+
     text.Text = "From:"..vape.user.." | "..msg
+	task.spawn(function()
+		local tween2 = game:GetService("TweenService"):Create(text, info, {Position = UDim2.fromScale(0,-1.5)})
+
+		task.spawn(function()
+			tween2.Completed:Connect(function()
+				task.wait(0.2)
+				tween2:Destroy()
+				game:GetService("Debris"):AddItem(gui,0.05)
+			end)
+		end)
+		task.wait(ticker)
+		tween2:Play()
+	end)
     if settings.Rainbow then
         task.spawn(function()
         	while gui do
@@ -86,7 +99,7 @@ function annc:Announce(stats)
     if type == "notify" then
         vape:CreateNotification(title,msg,Timer,stings)
     else
-        
+        annc:CreateAnnc(msg,Timer,stings)
     end
 end
 
