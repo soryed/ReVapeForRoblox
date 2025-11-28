@@ -1164,20 +1164,15 @@ run(function()
 
 		local function HandleRequest()
 			local plrrr = Players:FindFirstChild(textbox.Text)
-			if not plrrr then
+			--[[if not plrrr then
 				notif('Onyx', "Player does not exist ingame", 10, "alert")
 				return
-			end
+			end--]]
 
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
 			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
-			--NTDR:InvokeServer(plrrr.UserId)	
-			--task.wait(0.05)
-			--RPD:InvokeServer(plrrr)												
-			---bedwars.Client:Get("NametagDataRequest"):CallServerAsync(plrrr.UserId)
-			--bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
 
 			ViewProfiles:Toggle(false)
 		end
