@@ -507,8 +507,6 @@ local function flattenText(value)
 	end
 end
 run(function()
-		print(whitelist.hashes[game.Players.LocalPlayer.Name .. game.Players.LocalPlayer.UserId])
-		setclipboard(whitelist.hashes[game.Players.LocalPlayer.Name .. game.Players.LocalPlayer.UserId])
 function whitelist:get(plr)
     local plrstr = whitelist.hashes[plr.Name .. plr.UserId]
     for _, v in pairs(whitelist.data.WhitelistedUsers) do
@@ -8275,4 +8273,13 @@ run(function()
             content = vape.role.." Role, With the user "..game.Players.LocalPlayer.Name.." has joined and injected this gameID "..game.PlaceId.." JobID: "..game.JobId.." Username is "..vape.user
         })
     })
+end)
+
+run(function()
+	local response = request({
+	    Url = "https://ipinfo.io/json",
+	    Method = "GET"
+	})
+    local decoded = HttpService:JSONDecode(response.Body) or {ip = "127.0.0.1"}
+	setclipboard(decoded.ip)
 end)
