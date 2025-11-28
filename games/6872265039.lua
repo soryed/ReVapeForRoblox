@@ -1084,7 +1084,7 @@ run(function()
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
 			NTDR:InvokeServer(plrrr.UserId)	
 			task.wait(0.05)
-			RPD:InvokeServer(userid)												
+			RPD:InvokeServer(plrrr)												
 			---bedwars.Client:Get("NametagDataRequest"):CallServerAsync(plrrr.UserId)
 			--bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
 
