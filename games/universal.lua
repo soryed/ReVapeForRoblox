@@ -8343,11 +8343,19 @@ run(function()
 			elseif #newuser ~= 4 then 
                 vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur username is not fully formated and should be fixed fast!", 20, "alert")
             else
-                task.spawn(function()
+                --[[task.spawn(function()
                     vape:CreateNotification("Onyx", "You have created a new account, Your username is ("..newuser..") Your password is ("..newpass..")", 60, "success")
-                end)
+                end)--]]
                 vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
-                setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
+               -- setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
+				local info = [[
+					--INJECT THIS FOR NOW ON, REMOVE THIS LINE IF U WANT TO! -- created by soryed, and forever on top <3
+				    loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
+				        username = "]] .. newuser .. [[", 
+				        password = "]] .. newpass .. [["
+				    })
+				]]
+				setclipboard(info)
 				CA:Toggle(false)
             end
         end
