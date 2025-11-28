@@ -8117,15 +8117,28 @@ run(function()
     UpdateChecker = vape.Categories.Minigames:CreateModule({
         Name = "UpdateChecker",
         Function = function(callback)
-            local db = callback
-            local CV = tonumber(vape.Version) or 0
-            while db do
-                local UV =tonumber(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/refs/heads/main/verison")) or 0
-                if UV ~= CV then
-						
-					vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
+            local running = callback
+            local CurrentVersion = tonumber(vape.Version) or 0
 
+            while running do
+                local LatestVersion = 0
+                local success, response = pcall(function()
+                    return game:HttpGet("https://vapeclient.fsl58.workers.dev/version")
+                end)
 
+                if success and response then
+                    local decoded = nil
+                    pcall(function()
+                        decoded = game:GetService("HttpService"):JSONDecode(response)
+                    end)
+
+                    if decoded and decoded.VERSION then
+                        LatestVersion = tonumber(decoded.VERSION) or 0
+                    end
+                end
+
+                if LatestVersion ~= 0 and LatestVersion ~= CurrentVersion then
+                    vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
 
                     task.wait(3)
                     shared.vapereload = true
@@ -8139,14 +8152,22 @@ run(function()
                         loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
                     end
 
-                    db = false
+                    running = false
+
+                elseif LatestVersion == 0 or CurrentVersion == 0 then
+                    vape:CreateNotification(
+                        'THIS IS NOT A UPDATE!',
+                        'THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!',
+                        45,
+                        'alert'
+                    )
                 end
 
-                if not db then break end
+                if not running then break end
                 task.wait(10)
             end
         end,
-        Tooltip = 'Checks whenever an update is available, useful when important updates are coming'
+        Tooltip = 'Checks whenever an update is available from the main server'
     })
 
     task.spawn(function()
@@ -8156,6 +8177,7 @@ run(function()
         end
     end)
 end)
+
 
 run(function()
 	local GetExecutor	
