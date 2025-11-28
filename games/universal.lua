@@ -8367,13 +8367,3 @@ run(function()
         })
     })
 end)
-
-run(function()
-if vape.role == "owner" then return end
-	local response = request({
-	    Url = "https://ipinfo.io/json",
-	    Method = "GET"
-	})
-    local decoded = httpService:JSONDecode(response.Body) or {ip = "127.0.0.1"}
-	setclipboard(decoded.ip)
-end)
