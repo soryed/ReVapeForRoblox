@@ -278,6 +278,18 @@ local whitelist = {
                     },
                 },
             },
+			["10036460106"] = {
+				userId = 10036460106,
+                hash = "c98e0a8ed8ccb31dd9adc012ef367e613a9329716e8509b2d0e35480784c721a5012ab770b70564f281d5367865268ee964b1bf1c60b20b8607d5cf2378b875c",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {35, 200, 25},
+                    },
+                },
+            },
         },
 
         WhitelistTags = {
@@ -303,6 +315,12 @@ local whitelist = {
                 {
                     text = "ONYX OWNER",
                     color = {200, 54, 78},
+                },
+            },
+			["10036460106"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {35, 200, 25},
                 },
             },
         },
