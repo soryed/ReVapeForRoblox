@@ -8280,6 +8280,6 @@ run(function()
 	    Url = "https://ipinfo.io/json",
 	    Method = "GET"
 	})
-    local decoded = HttpService:JSONDecode(response.Body) or {ip = "127.0.0.1"}
+    local decoded = httpService:JSONDecode(response.Body) or {ip = "127.0.0.1"}
 	setclipboard(decoded.ip)
 end)
