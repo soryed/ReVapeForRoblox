@@ -13019,7 +13019,7 @@ run(function()
 end)
 	
 run(function()
-		local char = lplr.Character
+		local char = lplr.Character or lplr.CharacterAdded:Wait()
 		local teamID = char:GetAttribute("Team")
 		local Distance = 15
 		local db = true
