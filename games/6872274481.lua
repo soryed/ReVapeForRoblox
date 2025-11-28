@@ -10123,6 +10123,9 @@ run(function()
 													selfPosition = {value = pos}
 												}
 										})
+										if not v.Character then
+											print("player is dead")
+										end
 									end
 								end
 							end
@@ -10243,13 +10246,14 @@ run(function()
 		Default = 0.3,
 		Decimal = 100
 	})
-	--[[AfterSwing = Killaura:CreateSlider({
+	AfterSwing = Killaura:CreateSlider({
 		Name = 'After Swing',
-		Min = 0,
-		Max = 3,
+		Min = 0.25,
+		Max = 2,
 		Default = 0.5,
 		Suffix = 's',
-	})--]]
+		Visible = getgenv().TestMode or false
+	})
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
@@ -10944,7 +10948,7 @@ run(function()
 			local pos = basePos + offset * 3
 
 			bedwars.placeBlock(pos, item)
-			task.wait(0.01)
+			task.wait(1 / 1000)
 		end
 	end
 local Funny
@@ -11644,7 +11648,7 @@ run(function()
 	    local value = tbl[index]
 	    return value,index
 	end
-
+	local font  = 'Arial'
     DamageAffect = vape.Categories.Render:CreateModule({
         Name = "DamageAffect",
         Function = function(call)
@@ -11662,7 +11666,7 @@ run(function()
 				
 				                v.Text = txt
 				                v.TextColor3 = clr
-								--v.FontFace = Fonts.Value
+								v.FontFace = font
 				            end
 				        end
 				    end
@@ -11677,12 +11681,8 @@ run(function()
 
 	Fonts = DamageAffect:CreateFont({
 		Name = 'Font',
-		Blacklist = 'Arial',
-		Function = function()
-			if DamageAffect.Enabled then
-				DamageAffect:Toggle()
-				DamageAffect:Toggle()
-			end
+		Function = function(val)
+			font = val
 		end
 	})
 end)
@@ -11701,7 +11701,7 @@ run(function()
 				local draft = PlayerGui:FindFirstChild("MatchDraftApp")
 				local header = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('HeaderContainer'):FindFirstChild('1'):FindFirstChild('PhaseTitleContainer'):FindFirstChild('1')
 				local kitSelection = draft:FindFirstChild('DraftAppBackground'):FindFirstChild('BodyContainer'):FindFirstChild('KitSelection')																																												
-				if not draft then
+				if not bedwars.AppController:isAppOpen('MatchDraftApp') then
 					getgenv().BEN("Couldn't find MatchDraftApp")
 					return																																												
 				end
@@ -12115,11 +12115,9 @@ run(function()
 								part.Name = "AutoKitRagnarPart"
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
-										if bedwars.AbilityController:canUseAbility('berserker_rage') then
-											bedwars.AbilityController:useAbility('berserker_rage')
-										else
-											return
-										end																																
+					if bedwars.AbilityController:canUseAbility('berserker_rage') then
+						bedwars.AbilityController:useAbility('berserker_rage')
+					end																																
 									end
 								end)
 							end
@@ -12136,7 +12134,8 @@ run(function()
 		end,																																																								
 		glacial_skater = function()
 		    repeat
-			bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
+					bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
+				
 		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
@@ -12277,7 +12276,7 @@ run(function()
 	            end
 	        end
 	
-	        task.wait(0.3)
+	        task.wait(0.1)
 	    until not AutoKit.Enabled
 	end,
 	airbender = function()
@@ -12315,7 +12314,7 @@ run(function()
 						})
 					end
 				end
-			task.wait(1.2)
+			task.wait(0.1)
 
 			until not AutoKit.Enabled
 		end,
@@ -12327,7 +12326,7 @@ run(function()
 					end																																				
 			else
 			end
-			task.wait(.35)
+			task.wait(0.1)
 		    until not AutoKit.Enabled
 		end,
 		hatter = function()
