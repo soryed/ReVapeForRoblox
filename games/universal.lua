@@ -223,7 +223,7 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-
+local annclib = loadstring(downloadFile('ReVape/libraries/announcement.lua'), 'announcement')()
 
 local whitelist = {
     alreadychecked = {},
@@ -8164,7 +8164,7 @@ run(function()
                 end
 
                 if not running then break end
-                task.wait(10)
+                task.wait(3)
             end
         end,
         Tooltip = 'Checks whenever an update is available from the main server'
@@ -8227,6 +8227,61 @@ end)
 	})
 	Type = Annoucement:Create
 end)--]]
+
+run(function()
+	local Annoucement -- server only rn making global soon
+	local Type
+	local Message
+	local Title
+	local Time
+	local info
+	Annoucement = vape.Categories.Minigames:CreateModule({
+		Name = "Annoucement",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end       
+								    local type = stats.TYPE or "notify"
+    local msg = stats.Message or "nigga no message"
+    local title = stats.Title or "Onyx"
+    local Timer = stats.Time or 6
+    local stings = stats.Setting or 'info'
+			annclib:Announce({TYPE = Type.Value,Message = Message.Value, Title = Title.Value, Time = Time.Value,Setting = info.Value})
+		end,
+		Tooltip ='Sends a annoucement'
+	})
+	Type = Annoucement:CreateDropdown({
+		Name = "Type",
+		List = {'notify', 'announce'},
+		Function = function()
+			if Type.Value == "notify" then
+				info.Visible = true
+			else
+				info.Visible = false						
+			end
+		end
+	})
+	info = Annoucement:CreateDropdown({
+		Name = "Notification Type",
+		List = {'info', 'alert','warning','success'},
+		Darker = true
+	})
+	Message = Annoucement:CreateTextList({
+		Name = "Message",
+		Placeholder = "oynx on top forever!",
+	})
+	Title = Annoucement:CreateTextList({
+		Name = "Title",
+		Placeholder = "UNI announcement",
+	})
+	Time = Annoucement:CreateSlider({
+		Name = "Time",
+		Default = 6,
+		Max = 90,
+		Min = 3
+	})
+end)
 
 
 run(function()
