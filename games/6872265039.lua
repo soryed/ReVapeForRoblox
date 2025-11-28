@@ -1106,7 +1106,7 @@ run(function()
 		})
 		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = BGImage })
 
-		create("TextLabel", {
+		--[[create("TextLabel", {
 			Name = "Title",
 			Parent = UserFrame,
 			BackgroundTransparency = 1,
@@ -1116,7 +1116,7 @@ run(function()
 			TextColor3 = Color3.fromRGB(255, 255, 255),
 			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
 			TextScaled = true
-		})
+		})--]]
 
 		local err = create("TextLabel", {
 			Name = "Error",
@@ -1172,9 +1172,10 @@ run(function()
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
-			NTDR:InvokeServer(plrrr.UserId)	
-			task.wait(0.05)
-			RPD:InvokeServer(plrrr)												
+			bedwars.Controllers.PlayerProfileUIController:openPlayerProfile(plrrr)
+			--NTDR:InvokeServer(plrrr.UserId)	
+			--task.wait(0.05)
+			--RPD:InvokeServer(plrrr)												
 			---bedwars.Client:Get("NametagDataRequest"):CallServerAsync(plrrr.UserId)
 			--bedwars.Client:Get("RequestMatchHistory"):CallServerAsync(userid)
 
