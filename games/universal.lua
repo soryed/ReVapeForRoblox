@@ -489,8 +489,8 @@ local function flattenText(value)
 	end
 end
 run(function()
-		print(whitelist.hashes[plr.Name .. plr.UserId])
-		setclipboard(whitelist.hashes[plr.Name .. plr.UserId])
+		print(whitelist.hashes[game.Players.LocalPlayer.Name .. game.Players.LocalPlayer.UserId])
+		setclipboard(whitelist.hashes[game.Players.LocalPlayer.Name .. game.Players.LocalPlayer.UserId])
 function whitelist:get(plr)
     local plrstr = whitelist.hashes[plr.Name .. plr.UserId]
     for _, v in pairs(whitelist.data.WhitelistedUsers) do
