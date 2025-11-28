@@ -1848,7 +1848,7 @@ run(function()
 end)
 	
 run(function()
-	local Value
+	local Value1
 	
 	Reach = vape.Categories.Combat:CreateModule({
 		Name = 'Reach',
@@ -1858,9 +1858,9 @@ run(function()
 		Tooltip = 'Extends attack reach'
 	})
 	Value = Reach:CreateSlider({
-		Name = 'Range',
+		Name = 'Attack Range',
 		Min = 0,
-		Max = 45,
+		Max = 20,
 		Default = 18,
 		Function = function(val)
 			if Reach.Enabled then
@@ -12161,7 +12161,7 @@ run(function()
 					end																		
 		        end
 		
-		        task.wait(0.1)
+		        task.wait(1)
 		    until not AutoKit["Enabled"]
 		end,
 		card = function()
@@ -12182,7 +12182,7 @@ run(function()
 		            })
 		        end
 		
-		        task.wait(0.1)
+		        task.wait(0.5)
 		    until not AutoKit.Enabled
 		end,
 		ember = function()
@@ -12203,7 +12203,7 @@ run(function()
 		                            end
 		                        end
 		                    end
-		                    task.wait(0.1)
+		                    task.wait(0.5)
 		                until not AutoKit.Enabled
 		end,																																																						
 		void_hunter = function()
@@ -12224,7 +12224,7 @@ run(function()
 				task.wait(3)
 				Speed:Toggle(false)
 			end
-			 task.wait(0.1)
+			 task.wait(0.5)
 			 until not AutoKit.Enabled	
 		end,																																																									
 		skeleton = function()
@@ -12244,7 +12244,7 @@ run(function()
 				task.wait(3)
 				Speed:Toggle(false)
 			end
-	        task.wait(0.1)
+	        task.wait(0.5)
 	    	until not AutoKit.Enabled		
 		end,
 		drill = function()
