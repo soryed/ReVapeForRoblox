@@ -20,7 +20,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.56',
+	Version = '0.57',
 	Discord = "@7jqw",
 	role = "",
 	user = "",
