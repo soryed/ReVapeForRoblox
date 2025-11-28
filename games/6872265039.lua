@@ -95,7 +95,7 @@ end
 		ClickHold = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out.client.ui.lib.util['click-hold']).ClickHold,
 		Client = Client,
 		ClientConstructor = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts'].net.out.client),
-
+		PlayerProfileUIController = require(game.Players.LocalPlayer.TS.controllers.global['player-profile']['player-profile-ui-controller']),
 		EmoteType = require(replicatedStorage.TS.locker.emote['emote-type']).EmoteType,
 		GameAnimationUtil = require(replicatedStorage.TS.animation['animation-util']).GameAnimationUtil,
 		NotificationController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/notification-controller@NotificationController'),
@@ -1172,7 +1172,7 @@ run(function()
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
-			bedwars.Controllers.PlayerProfileUIController:openPlayerProfile(plrrr)
+			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
 			--NTDR:InvokeServer(plrrr.UserId)	
 			--task.wait(0.05)
 			--RPD:InvokeServer(plrrr)												
