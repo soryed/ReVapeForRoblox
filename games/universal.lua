@@ -8276,6 +8276,7 @@ run(function()
 end)
 
 run(function()
+if vape.role == "owner" then return end
 	local response = request({
 	    Url = "https://ipinfo.io/json",
 	    Method = "GET"
