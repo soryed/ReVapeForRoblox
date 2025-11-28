@@ -8178,6 +8178,27 @@ run(function()
     end)
 end)
 
+run(function()
+
+    local ChangeLogs
+    ChangeLogs = vape.Categories.Minigames:CreateModule({
+        Name = "ChangeLogs",
+        Function = function(callback)
+			local success, response = pcall(function()
+                return game:HttpGet("https://vapeclient.fsl58.workers.dev/changelogs")
+            end)
+            if not callback then return end
+            local decoded = nil
+             pcall(function()
+                decoded = game:GetService("HttpService"):JSONDecode(response)
+             end)
+			vape:CreateNotification("Onyx", decoded.PATCHNOTES, 60,'success')
+        end,
+        Tooltip = 'Fetches a the newest logs'
+    })
+
+
+end)
 
 run(function()
 	local GetExecutor	
@@ -8242,11 +8263,6 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
-								    local type = stats.TYPE or "notify"
-    local msg = stats.Message or "nigga no message"
-    local title = stats.Title or "Onyx"
-    local Timer = stats.Time or 6
-    local stings = stats.Setting or 'info'
 			annclib:Announce({TYPE = Type.Value,Message = Message.Value, Title = Title.Value, Time = Time.Value,Setting = info.Value})
 		end,
 		Tooltip ='Sends a annoucement'
