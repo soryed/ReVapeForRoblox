@@ -1106,7 +1106,7 @@ run(function()
 		})
 		create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = BGImage })
 
-		--[[create("TextLabel", {
+		create("TextLabel", {
 			Name = "Title",
 			Parent = UserFrame,
 			BackgroundTransparency = 1,
@@ -1116,7 +1116,7 @@ run(function()
 			TextColor3 = Color3.fromRGB(255, 255, 255),
 			FontFace = Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
 			TextScaled = true
-		})--]]
+		})
 
 		local err = create("TextLabel", {
 			Name = "Error",
@@ -1164,10 +1164,10 @@ run(function()
 
 		local function HandleRequest()
 			local plrrr = Players:FindFirstChild(textbox.Text)
-			--[[if not plrrr then
+			if not plrrr then
 				notif('Onyx', "Player does not exist ingame", 10, "alert")
 				return
-			end--]]
+			end
 
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
