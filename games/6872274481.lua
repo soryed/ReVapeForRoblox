@@ -12115,9 +12115,11 @@ run(function()
 								part.Name = "AutoKitRagnarPart"
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
-					if bedwars.AbilityController:canUseAbility('berserker_rage') then
-						bedwars.AbilityController:useAbility('berserker_rage')
-					end																																
+										if bedwars.AbilityController:canUseAbility('berserker_rage') then
+											bedwars.AbilityController:useAbility('berserker_rage')
+										else
+											return
+										end																																
 									end
 								end)
 							end
@@ -12134,12 +12136,7 @@ run(function()
 		end,																																																								
 		glacial_skater = function()
 		    repeat
-		       if getgenv().TestMode then
-					bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
-				else
-					replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MomentumUpdate:FireServer({momentumValue = 9e9}) 
-				end
-		 		
+			bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
 		        task.wait(0.1)
 		    until not AutoKit["Enabled"]
 		end,
@@ -12280,7 +12277,7 @@ run(function()
 	            end
 	        end
 	
-	        task.wait(0.1)
+	        task.wait(0.3)
 	    until not AutoKit.Enabled
 	end,
 	airbender = function()
@@ -12318,7 +12315,7 @@ run(function()
 						})
 					end
 				end
-			task.wait(0.1)
+			task.wait(1.2)
 
 			until not AutoKit.Enabled
 		end,
@@ -12330,7 +12327,7 @@ run(function()
 					end																																				
 			else
 			end
-			task.wait(0.1)
+			task.wait(.35)
 		    until not AutoKit.Enabled
 		end,
 		hatter = function()
