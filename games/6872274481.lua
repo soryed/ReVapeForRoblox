@@ -10647,7 +10647,7 @@ run(function()
 								for _, v in bows do
 									if hotbarSwitch(v) then
 										task.wait(0.05)
-										leftClick()
+										mouse1click()
 										task.wait(0.05)
 									end
 								end
@@ -10694,7 +10694,7 @@ run(function()
 									for _, bowSlot in bows do
 										if hotbarSwitch(bowSlot) then
 											task.wait(AutoShootSwitchSpeed.Value)
-											leftClick()
+											mouse1click()
 											task.wait(0.05)
 										end
 									end
