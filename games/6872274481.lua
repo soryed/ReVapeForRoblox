@@ -9650,7 +9650,7 @@ run(function()
                 :WaitForChild("BanKit")
                 :InvokeServer(unpack(args))--]]
 
-				bedwars.Client:Get("BanKit"):SendToServer(unpack(args))
+				bedwars.Client:Get("BanKit"):SendToServer(args)
         end
     end
 
@@ -9665,7 +9665,7 @@ run(function()
             :WaitForChild("_NetManaged")
             :WaitForChild("SelectKit")
             :InvokeServer(unpack(args))--]]
-		bedwars.Client:Get("SelectKit"):SendToServer(unpack(args))
+		bedwars.Client:Get("SelectKit"):SendToServer(args)
 
     end
 
