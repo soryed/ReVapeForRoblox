@@ -8238,7 +8238,7 @@ run(function()
 	Annoucement = vape.Categories.Minigames:CreateModule({
 		Name = "Annoucement",
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" then
+			if vape.role ~= "owner" and vape.role ~= "coowner" and vape.role ~= "admin" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
