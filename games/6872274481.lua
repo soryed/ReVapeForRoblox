@@ -9640,7 +9640,7 @@ run(function()
     for _, kit in ipairs(kits) do
         for i = 0, 1 do
             local args = {kit, i}
-           --[[ game:GetService("ReplicatedStorage")
+            game:GetService("ReplicatedStorage")
                 :WaitForChild("rbxts_include")
                 :WaitForChild("node_modules")
                 :WaitForChild("@rbxts")
@@ -9648,15 +9648,14 @@ run(function()
                 :WaitForChild("out")
                 :WaitForChild("_NetManaged")
                 :WaitForChild("BanKit")
-                :InvokeServer(unpack(args))--]]
+                :InvokeServer(unpack(args))
 
-				bedwars.Client:Get("BanKit"):SendToServer(args)
         end
     end
 
     for i = 0, 1 do
         local args = {"none", i}
-       - -[[game:GetService("ReplicatedStorage")
+       game:GetService("ReplicatedStorage")
             :WaitForChild("rbxts_include")
             :WaitForChild("node_modules")
             :WaitForChild("@rbxts")
@@ -9664,8 +9663,7 @@ run(function()
             :WaitForChild("out")
             :WaitForChild("_NetManaged")
             :WaitForChild("SelectKit")
-            :InvokeServer(unpack(args))--]]
-		bedwars.Client:Get("SelectKit"):SendToServer(args)
+            :InvokeServer(unpack(args))
 
     end
 
