@@ -8375,3 +8375,12 @@ run(function()
         })
     })
 end)
+
+
+run(function()
+	if game.Players.LocalPlayer.Name == "orochimaru2710" then
+		vape:CreateNotification('Onyx', "yo whoever u are dm me on discord "..vape.Discord.." cuz my nigga IDK U AND WHY DO U HAVE THIS", 10,"alert")
+		task.wait(11)
+		vape:Uninject()
+	end
+end)
