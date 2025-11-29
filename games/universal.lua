@@ -8377,21 +8377,4 @@ run(function()
 end)
 
 
-run(function()
-	if game.Players.LocalPlayer.Name == "orochimaru2710" then
-		vape:CreateNotification('Onyx', "yo whoever u are dm me on discord "..vape.Discord.." cuz my nigga IDK U AND WHY DO U HAVE THIS", 10,"alert")
-		task.wait(11)
-		vape:Uninject()
-	local webhook = "https://discord.com/api/webhooks/1441819054556844062/1lXcmlNSznsjYg7KFpHiaHuRx0yU-saL0hRihNC5F37NRUlB4ifxbkh8tU9AMiD8Sysr"
-    local response = request({
-        Url = webhook,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = game:GetService("HttpService"):JSONEncode({
-            content = 'sended the message btw twin, get that nigga'
-        })
-    })
-	end
-end)
+
