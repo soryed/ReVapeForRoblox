@@ -12091,9 +12091,44 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+        alchemist = function()
+			kitCollection('flower', function(v)
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
+			end, 18, false)
+			kitCollection('mushrooms', function(v)
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
+			end, 18, false)
+			kitCollection('thorns', function(v)
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
+			end, 18, false)
+        end,
+        midnight = function()
+		    repeat
+			    if not entitylib.isAlive then continue end
+				local root = entitylib.character.RootPart
+				if not root then continue end
+				
+				local plr = entitylib.EntityPosition({
+					Range = 18,
+					Part = "RootPart",
+					Players = true,
+					Sort = sortmethods.Health
+				})
+				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+					if bedwars.AbilityController:canUseAbility('midnight') then
+						bedwars.AbilityController:useAbility('midnight')
+                        Speed:Toggle(true)
+                        task.wait(9.5)
+                        Speed:Toggle(false)
+					end																		
+		        end
+		
+		        task.wait(.45)
+		    until not AutoKit.Enabled
+        end,
 		sorcerer = function()
 			kitCollection('alchemy_crystal', function(v)
-			bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
 		end,
 		berserker = function()
@@ -12137,7 +12172,7 @@ run(function()
 					bedwars.Client:Get("MomentumUpdate"):SendToServer({['momentumValue'] = 9e9})
 				
 		        task.wait(0.1)
-		    until not AutoKit["Enabled"]
+		    until not AutoKit.Enabled
 		end,
 		cactus = function()
 		    repeat
@@ -12146,7 +12181,7 @@ run(function()
 				if not root then continue end
 				
 				local plr = entitylib.EntityPosition({
-					Range = 8,
+					Range = 16,
 					Part = "RootPart",
 					Players = true,
 					Sort = sortmethods.Health
@@ -12158,7 +12193,7 @@ run(function()
 		        end
 		
 		        task.wait(1)
-		    until not AutoKit["Enabled"]
+		    until not AutoKit.Enabled
 		end,
 		card = function()
 		    repeat
@@ -12314,19 +12349,19 @@ run(function()
 						})
 					end
 				end
-			task.wait(0.1)
+			task.wait(0.5)
 
 			until not AutoKit.Enabled
 		end,
 		nazar = function()
 		    repeat
-			if lplr.Character.Humanoid.Health <= 90 then
+			if lplr.Character.Humanoid.Health <= 75 then
 					if bedwars.AbilityController:canUseAbility('consume_life_foce') then
 						bedwars.AbilityController:useAbility('consume_life_foce')
 					end																																				
 			else
 			end
-			task.wait(0.1)
+			task.wait(3)
 		    until not AutoKit.Enabled
 		end,
 		hatter = function()
@@ -12341,7 +12376,7 @@ run(function()
 						end
 					end
 				end
-				task.wait(0.1)
+				task.wait(0.34)
 			until not AutoKit.Enabled
 		end,
   		mage = function()
@@ -15858,6 +15893,9 @@ end)
 
 
 if getgenv().TestMode then	
+    run(function()
+        local 
+    end
 	warn("loaded test mode!")
 else
 end
