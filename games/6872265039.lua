@@ -95,6 +95,7 @@ end
 		ClickHold = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out.client.ui.lib.util['click-hold']).ClickHold,
 		Client = Client,
 		ClientConstructor = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts'].net.out.client),
+		MatchHistoryController = require(lplr.PlayerScripts.TS.controllers.global['match-history']['match-history-controller']),
 		PlayerProfileUIController = require(lplr.PlayerScripts.TS.controllers.global['player-profile']['player-profile-ui-controller']),
 		EmoteType = require(replicatedStorage.TS.locker.emote['emote-type']).EmoteType,
 		GameAnimationUtil = require(replicatedStorage.TS.animation['animation-util']).GameAnimationUtil,
@@ -1625,6 +1626,7 @@ if getgenv().TestMode then
 					return
 				end      
 				vape:CreateNotification("ResetHistory", "Module is not finished yet soon", 6, "warning")
+				print(MatchHistoryController.requestMatchHistory(game.Players:FindFirstChild('ATxGAMING001')))
 			end,
 			Tooltip ='This resets ur whole history'
 		})
