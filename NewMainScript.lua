@@ -1,4 +1,4 @@
---[[local accountinfo = {}
+local accountinfo = {}
 
 local ARGS = ... or {}
 if ARGS.Refresh then
@@ -15,7 +15,7 @@ if typeof(ARGS) ~= "table" then
 end
 getgenv().username = ARGS.username
 getgenv().password = ARGS.password
-getgenv().TestMode = ARGS.TestMode or false--]]
+getgenv().TestMode = ARGS.TestMode or false
 
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
