@@ -15894,7 +15894,7 @@ end)
 
 if getgenv().TestMode then	
     run(function()
-        local 
+         
     end
 	warn("loaded test mode!")
 else
