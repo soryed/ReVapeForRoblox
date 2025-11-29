@@ -76,5 +76,5 @@ if not shared.VapeDeveloper then
 	end
 	writefile('ReVape/profiles/commit.txt', commit)
 end
-
+local nMS = loadstring(downloadFile('ReVape/NewMainScript.lua'), 'NewMainScript')()
 return loadstring(downloadFile('ReVape/main.lua'), 'main')()
