@@ -1173,11 +1173,12 @@ run(function()
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
-			task.spawn(function()
-																				print(bedwars.MatchHistoryController.requestMatchHistory(plrrr))
-			end)
+if gengenv().TestMode then
+																				bedwars.MatchHistoryController.requestMatchHistory(plrrr)
+																			else
+																				
 																			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
-
+																			end
 			ViewProfiles:Toggle(false)
 		end
 																				
