@@ -221,7 +221,7 @@ run(function()
 		Tooltip = 'Automatically opens lucky crates, piston inspired!'
 	})
 end)
---[[
+
 run(function()	
 	NM = vape.Categories.Minigames:CreateModule({
 		Name = 'Nightmare Emote',
@@ -706,7 +706,7 @@ end
 end)
 
 
-run(function()
+--[[run(function()
   local Players = game:GetService("Players")
 local player = Players.LocalPlayer
     local PlayerLevel
@@ -737,7 +737,7 @@ level = PlayerLevel:CreateSlider({
 	    player:SetAttribute("PlayerLevel", val)
 	end
     })
-end)
+end)--]]
 run(function()
     local QueueDisplayConfig = {
         ActiveState = false,
@@ -1632,4 +1632,4 @@ if getgenv().TestMode then
 	end)
 	warn("loaded test mode!")
 else
-end--]]
+end
