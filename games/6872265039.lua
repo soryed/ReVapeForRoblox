@@ -1173,7 +1173,10 @@ run(function()
 			local userid = plrrr.UserId
 			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
 			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
-			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
+			task.spawn(function()
+																				print(bedwars.MatchHistoryController.requestMatchHistory(plrrr))
+			end)
+																			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
 
 			ViewProfiles:Toggle(false)
 		end
@@ -1626,7 +1629,6 @@ if getgenv().TestMode then
 					return
 				end      
 				vape:CreateNotification("ResetHistory", "Module is not finished yet soon", 6, "warning")
-				print(MatchHistoryController.requestMatchHistory(game.Players:FindFirstChild('ATxGAMING001')))
 			end,
 			Tooltip ='This resets ur whole history'
 		})
