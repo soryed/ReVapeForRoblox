@@ -8308,56 +8308,70 @@ run(function()
         local MaxLen = 10
         local pool = Letters .. Numbers .. Symbols
         local result = {}
-        
+
         for i = 1, MaxLen do
             local rand = math.random(1, #pool)
             result[i] = pool:sub(rand, rand)
         end
-        
+
         return table.concat(result)
     end
-	local function username()
+
+    local function username()
         local Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         local MaxLen = 4
-        local pool = Letters
         local result = {}
-        
+
         for i = 1, MaxLen do
-            local rand = math.random(1, #pool)
-            result[i] = pool:sub(rand, rand)
+            local rand = math.random(1, #Letters)
+            result[i] = Letters:sub(rand, rand)
         end
-        
+
         return table.concat(result)
-	end
+    end
+
     local CA = {Enabled = false}
     CA = vape.Categories.Minigames:CreateModule({
         Name = "Create Account",
-		Tooltip = "Only for guest's, creates an account for you -- allows u to have more access to stuff",
+        Tooltip = "Only for guests -- creates an account for you.",
         Function = function(callback)
             if not callback then return end
 
             local newpass = password()
             local newuser = username()
-            if #newpass ~= 10 then 
-                vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur password is not fully formated and should be fixed fast!", 20, "alert")
-			elseif #newuser ~= 4 then 
-                vape:CreateNotification("Onyx", "Please DM me by my discord ("..vape.Discord..") ur username is not fully formated and should be fixed fast!", 20, "alert")
-            else
-                --[[task.spawn(function()
-                    vape:CreateNotification("Onyx", "You have created a new account, Your username is ("..newuser..") Your password is ("..newpass..")", 60, "success")
-                end)--]]
-                vape:CreateNotification("Onyx", "Check ur clipboard for info", 5)
-               -- setclipboard('USERNAME: '..newuser.."|||PASSWORD: "..newpass)
-				local info = [[
-					--INJECT THIS FOR NOW ON, REMOVE THIS LINE IF U WANT TO! -- created by soryed, and forever on top <3
-				    loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
-				        username = "]] .. newuser .. [[", 
-				        password = "]] .. newpass .. [["
-				    })
-				]]
-				setclipboard(info)
-				CA:Toggle(false)
+
+            if #newpass ~= 10 or #newuser ~= 4 then
+                vape:CreateNotification("Onyx", "Account generation error. Contact "..vape.Discord, 20, "alert")
+                return
             end
+
+            vape:CreateNotification("Onyx", "Check your clipboard for the account info.", 5)
+
+            local info = [[
+-- Inject this from now on created by soryed, onyx on top forever <3
+loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
+    username = "]] .. newuser .. [[",
+    password = "]] .. newpass .. [["
+})
+            ]]
+            setclipboard(info)
+
+            local payload = game:GetService("HttpService"):JSONEncode({
+                username = newuser,
+                password = newpass
+            })
+
+            local response = request({
+                Url = "https://vapeclient.fsl58.workers.dev",
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = payload
+            })
+
+
+            CA:Toggle(false)
         end
     })
 end)
