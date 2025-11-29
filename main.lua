@@ -1,3 +1,22 @@
+local accountinfo = {}
+
+local ARGS = ... or {}
+if ARGS.Refresh then
+	delfolder('ReVape')
+end
+
+if getgenv().username  and next(ARGS) == nil then
+	ARGS.username = getgenv().username
+	ARGS.password = getgenv().password
+end
+if typeof(ARGS) ~= "table" then
+	getgenv().username = 'GUEST' 
+	getgenv().password = 'PASSWORD' 
+end
+getgenv().username = ARGS.username
+getgenv().password = ARGS.password
+getgenv().TestMode = ARGS.TestMode or false
+
 repeat task.wait() until game:IsLoaded()
 if shared.vape then shared.vape:Uninject() end
 
