@@ -11287,7 +11287,7 @@ run(function()
 			end
 			for _, item in store.inventory.inventory.items do
 				if bedwars.ItemMeta[item.itemType].block then
-					print(bedwars.ItemMeta[item.itemType].block)
+					
 					return item.itemType, item.amount
 				end
 			end
@@ -11299,6 +11299,7 @@ run(function()
 		Name = 'Clutch',
 		Function = function(call)
 			if call then
+				print(bedwars.ItemMeta[item.itemType].block)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
