@@ -11299,7 +11299,7 @@ run(function()
 		Name = 'Clutch',
 		Function = function(call)
 			if call then
-				print(bedwars.ItemMeta[item.itemType].block)
+				print(bedwars.ItemMeta[store.inventory.inventory.items].block)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
