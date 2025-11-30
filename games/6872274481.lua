@@ -976,7 +976,7 @@ end
 		ClientDamageBlock = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['block-engine'].out.shared.remotes).BlockEngineRemotes.Client,
 		CombatConstant = require(replicatedStorage.TS.combat['combat-constant']).CombatConstant,
 		DamageIndicator = Knit.Controllers.DamageIndicatorController.spawnDamageIndicator,
-		--DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.game.locker['kill-effect'].effects['default-kill-effect']),
+		DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.global.locker['kill-effect'].effects['default-kill-effect']),
 		EmoteType = require(replicatedStorage.TS.locker.emote['emote-type']).EmoteType,
 		GameAnimationUtil = require(replicatedStorage.TS.animation['animation-util']).GameAnimationUtil,
 		NotificationController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/notification-controller@NotificationController'),
@@ -995,7 +995,7 @@ end
 		end,
 		HudAliveCount = require(lplr.PlayerScripts.TS.controllers.global['top-bar'].ui.game['hud-alive-player-counts']).HudAlivePlayerCounts,
 		ItemMeta = debug.getupvalue(require(replicatedStorage.TS.item['item-meta']).getItemMeta, 1),
-		--KillEffectMeta = require(replicatedStorage.TS.locker['kill-effect']['kill-effect-meta']).KillEffectMeta,
+		KillEffectMeta = require(replicatedStorage.TS.locker['kill-effect']['kill-effect-meta']).KillEffectMeta,
 		KillFeedController = Flamework.resolveDependency('client/controllers/game/kill-feed/kill-feed-controller@KillFeedController'),
 		Knit = Knit,
 		KnockbackUtil = require(replicatedStorage.TS.damage['knockback-util']).KnockbackUtil,
@@ -1538,8 +1538,7 @@ local function BedwarsErrorNotification(mes)
 		image = "rbxassetid://18518244636"
 	});
 end
-getgenv().BIN = BedwarsInfoNotification
-getgenv().BEN = BedwarsErrorNotification
+
 local reportedPlayers = {}
 local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
@@ -1572,7 +1571,10 @@ local function TryToReport(targettedplayer,value)
 		task.wait(1 + math.random())
 	end
 end
-
+getgenv().TTR = TryToReport
+getgenv().BIN = BedwarsInfoNotification
+getgenv().BEN = BedwarsErrorNotification
+getgenv().Remotes = bedwars.Client.Get
 for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MouseTP', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
 	vape:Remove(v)
 end
@@ -5905,15 +5907,6 @@ run(function()
 			end or nil
 		end
 	})
-	Upgrades = AutoBuy:CreateToggle({
-		Name = 'Buy Upgrades',
-		Function = function(callback)
-			for _, v in UpgradeToggles do
-				v.Object.Visible = callback
-			end
-		end,
-		Default = true
-	})
 	local count = 0
 	for i, v in bedwars.TeamUpgradeMeta do
 		local toggleCount = count
@@ -7582,7 +7575,7 @@ run(function()
 	})
 end)
 	
---[[run(function()
+run(function()
 	local KillEffect
 	local Mode
 	local List
@@ -7746,7 +7739,7 @@ end)
 		end,
 		Darker = true
 	})
-end)--]]
+end)
 	
 run(function()
 	local ReachDisplay
@@ -9640,31 +9633,40 @@ run(function()
     for _, kit in ipairs(kits) do
         for i = 0, 1 do
             local args = {kit, i}
-            game:GetService("ReplicatedStorage")
-                :WaitForChild("rbxts_include")
-                :WaitForChild("node_modules")
-                :WaitForChild("@rbxts")
-                :WaitForChild("net")
-                :WaitForChild("out")
-                :WaitForChild("_NetManaged")
-                :WaitForChild("BanKit")
-                :InvokeServer(unpack(args))
+			if getgenv().TestMode then
+				bedwars.Client:Get('BanKit'):CallServerAsync({[1] = kit,[2] = i})
+			else
+           		game:GetService("ReplicatedStorage")
+                	:WaitForChild("rbxts_include")
+                	:WaitForChild("node_modules")
+                	:WaitForChild("@rbxts")
+                	:WaitForChild("net")
+                	:WaitForChild("out")
+                	:WaitForChild("_NetManaged")
+                	:WaitForChild("BanKit")
+                	:InvokeServer(unpack(args))
+			end
 
+				
         end
     end
 
     for i = 0, 1 do
         local args = {"none", i}
-       game:GetService("ReplicatedStorage")
-            :WaitForChild("rbxts_include")
-            :WaitForChild("node_modules")
-            :WaitForChild("@rbxts")
-            :WaitForChild("net")
-            :WaitForChild("out")
-            :WaitForChild("_NetManaged")
-            :WaitForChild("SelectKit")
-            :InvokeServer(unpack(args))
 
+			if getgenv().TestMode then
+				bedwars.Client:Get('SelectKit'):CallServerAsync({[1] = 'none',[2] = i})
+			else
+				game:GetService("ReplicatedStorage")
+					:WaitForChild("rbxts_include")
+					:WaitForChild("node_modules")
+					:WaitForChild("@rbxts")
+					:WaitForChild("net")
+					:WaitForChild("out")
+					:WaitForChild("_NetManaged")
+					:WaitForChild("SelectKit")
+					:InvokeServer(unpack(args))
+			end
     end
 
     task.wait(0.01)
@@ -15893,7 +15895,6 @@ end)
 
 
 if getgenv().TestMode then	
-
 	warn("loaded test mode!")
 else
 end
