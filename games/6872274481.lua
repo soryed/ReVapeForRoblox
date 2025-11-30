@@ -1009,14 +1009,13 @@ end
 		Roact = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts']['roact'].src),
 		RuntimeLib = require(replicatedStorage['rbxts_include'].RuntimeLib),
 		SoundList = require(replicatedStorage.TS.sound['game-sound']).GameSound,
-		SoundManager =	require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out.shared.sound['sound-manager']),
+		--SoundManager = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).SoundManager,
 		Store = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
 		TeamUpgradeMeta = debug.getupvalue(require(replicatedStorage.TS.games.bedwars['team-upgrade']['team-upgrade-meta']).getTeamUpgradeMetaForQueue, 6),
 		UILayers = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
 		VisualizerUtils = require(lplr.PlayerScripts.TS.lib.visualizer['visualizer-utils']).VisualizerUtils,
 		WeldTable = require(replicatedStorage.TS.util['weld-util']).WeldUtil,
 		WinEffectMeta = require(replicatedStorage.TS.locker['win-effect']['win-effect-meta']).WinEffectMeta,
-		QueueDodgesConfigs = require(replicatedStorage.TS['queue-dodge']['queue-dodge-configs']),
 		ZapNetworking = require(lplr.PlayerScripts.TS.lib.network),
 	}, {
 		__index = function(self, ind)
@@ -1858,7 +1857,7 @@ run(function()
 		Function = function(callback)
 			bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = callback and Value.Value + 2 or 14.4
 		end,
-		Tooltip = 'Extends attack reach'
+		Tooltip = 'Extends reach'
 	})
 	Value = Reach:CreateSlider({
 		Name = 'Attack Range',
@@ -2823,7 +2822,7 @@ run(function()
 			local shoot = bedwars.ItemMeta[item.itemType].projectileSource.launchSound
 			shoot = shoot and shoot[math.random(1, #shoot)] or nil
 			if shoot then
-				bedwars.SoundManager:playSound(shoot)
+				--bedwars.SoundManager:playSound(shoot)
 			end
 		end
 	end
@@ -3357,7 +3356,7 @@ run(function()
 												local shoot = itemMeta.launchSound
 												shoot = shoot and shoot[math.random(1, #shoot)] or nil
 												if shoot then
-													bedwars.SoundManager:playSound(shoot)
+													--bedwars.SoundManager:playSound(shoot)
 												end
 											end
 										end)
@@ -4372,13 +4371,13 @@ run(function()
 										itemDrop = v
 									}):andThen(function(suc)
 										if suc and bedwars.SoundList then
-											bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
+											--bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
 											local sound = bedwars.ItemMeta[v.Name].pickUpOverlaySound
 											if sound then
-												bedwars.SoundManager:playSound(sound, {
+												--[[bedwars.SoundManager:playSound(sound, {
 													position = v.Position,
 													volumeMultiplier = 0.9
-												})
+												})--]]
 											end
 										end
 									end)
@@ -5733,7 +5732,7 @@ run(function()
 			shopId = id
 		}):andThen(function(suc)
 			if suc then
-				bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
+			--	bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
 				bedwars.Store:dispatch({
 					type = 'BedwarsAddItemPurchased',
 					itemType = item.itemType
@@ -7906,7 +7905,7 @@ run(function()
 	})
 end)
 	
-run(function()
+--[[run(function()
 	local SoundChanger
 	local List
 	local soundlist = {}
@@ -7939,13 +7938,13 @@ run(function()
 			for _, entry in List.ListEnabled do
 				local split = entry:split('/')
 				local id = bedwars.SoundList[split[1]]
-				if id and #split > 1 then
+				--[[if id and #split > 1 then
 					soundlist[id] = split[2]:find('rbxasset') and split[2] or isfile(split[2]) and assetfunction(split[2]) or ''
-				end
+				end--]
 			end
 		end
 	})
-end)
+end)--]]
 	
 run(function()
 	local UICleanup
@@ -11288,7 +11287,7 @@ run(function()
 			end
 			for _, item in store.inventory.inventory.items do
 				if bedwars.ItemMeta[item.itemType].block then
-					
+					print(bedwars.ItemMeta[item.itemType].block)
 					return item.itemType, item.amount
 				end
 			end
@@ -12096,13 +12095,7 @@ run(function()
 	
 	local AutoKitFunctions = {
         alchemist = function()
-			kitCollection('Flower', function(v)
-			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
-			end, 18, false)
-			kitCollection('Mushrooms', function(v)
-			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
-			end, 18, false)
-			kitCollection('Thorns', function(v)
+			kitCollection('alchemist_ingedients', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
         end,
@@ -12546,7 +12539,7 @@ run(function()
 			kitCollection('HarvestableCrop', function(v)
 				if bedwars.Client:Get(remotes.HarvestCrop):CallServer({position = bedwars.BlockController:getBlockPosition(v.Position)}) then
 					bedwars.GameAnimationUtil:playAnimation(lplr.Character, bedwars.AnimationType.PUNCH)
-					bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
+					--bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
 				end
 			end, 10, false)
 		end,
@@ -12664,22 +12657,143 @@ run(function()
 			end, 20, false)
 		end,
 		summoner = function()
+			local lastAttackTime = 0
+			local attackCooldown = 0.65
+			
 			repeat
+				if not entitylib.isAlive then
+					task.wait(0.1)
+					continue
+				end
+				
+				local isCasting = false
+				if Legit.Enabled then
+					if lplr.Character:GetAttribute("Casting") or 
+					lplr.Character:GetAttribute("UsingAbility") or
+					lplr.Character:GetAttribute("SummonerCasting") then
+						isCasting = true
+					end
+					
+					local humanoid = lplr.Character:FindFirstChildOfClass("Humanoid")
+					if humanoid and humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+						isCasting = true
+					end
+				end
+				
+				if Legit.Enabled and isCasting then
+					task.wait(0.1)
+					continue
+				end
+				
+				if (workspace:GetServerTimeNow() - lastAttackTime) < attackCooldown then
+					task.wait(0.1)
+					continue
+				end
+				
+				local handItem = lplr.Character:FindFirstChild('HandInvItem')
+				local hasClaw = false
+				if handItem and handItem.Value then
+					local itemType = handItem.Value.Name
+					hasClaw = itemType:find('summoner_claw')
+				end
+				
+				if not hasClaw then
+					task.wait(0.1)
+					continue
+				end
+				
+				local range = Legit.Enabled and 31 or 100
 				local plr = entitylib.EntityPosition({
-					Range = 31,
+					Range = 35, 
 					Part = 'RootPart',
 					Players = true,
+					NPCs = true,
 					Sort = sortmethods.Health
 				})
-	
+
+				if plr then
+					local distance = (entitylib.character.RootPart.Position - plr.RootPart.Position).Magnitude
+					if Legit.Enabled and distance > 23 then
+						plr = nil 
+					end
+				end
+
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute('Health') or 0) > 0) then
 					local localPosition = entitylib.character.RootPart.Position
 					local shootDir = CFrame.lookAt(localPosition, plr.RootPart.Position).LookVector
 					localPosition += shootDir * math.max((localPosition - plr.RootPart.Position).Magnitude - 16, 0)
-	
-					KaidaController:request(plr)
+
+					lastAttackTime = workspace:GetServerTimeNow()
+
+					pcall(function()
+						bedwars.AnimationUtil:playAnimation(lplr, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE), {
+							looped = false
+						})
+					end)
+
+					task.spawn(function()
+						pcall(function()
+							local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
+							
+							if bedwars.KnightClient and bedwars.KnightClient.Controllers.SummonerKitSkinController then
+								if bedwars.KnightClient.Controllers.SummonerKitSkinController:isPrismaticSkin(lplr) then
+									bedwars.KnightClient.Controllers.SummonerKitSkinController:applyClawRGB(clawModel)
+								end
+							end
+							
+							clawModel.Parent = workspace
+							
+							if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - entitylib.character.RootPart.Position).Magnitude < 1 then
+								for _, part in clawModel:GetDescendants() do
+									if part:IsA('MeshPart') then
+										part.Transparency = 0.6
+									end
+								end
+							end
+							
+							local rootPart = entitylib.character.RootPart
+							local Unit = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
+							local startPos = rootPart.Position + Unit:Cross(Vector3.new(0, 1, 0)).Unit * -1 * 5 + Unit * 6
+							local direction = (startPos + shootDir * 13 - startPos).Unit
+							local cframe = CFrame.new(startPos, startPos + direction)
+							
+							clawModel:PivotTo(cframe)
+							clawModel.PrimaryPart.Anchored = true
+							
+							if clawModel:FindFirstChild('AnimationController') then
+								local animator = clawModel.AnimationController:FindFirstChildOfClass('Animator')
+								if animator then
+									bedwars.AnimationUtil:playAnimation(animator, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK), {
+										looped = false,
+										speed = 1
+									})
+								end
+							end
+							
+							pcall(function()
+								local sounds = {
+									bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
+									bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
+									bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
+									bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
+								}
+								bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], {
+									position = rootPart.Position
+								})
+							end)
+							
+							task.wait(0.75)
+							clawModel:Destroy()
+						end)
+					end)
+
+					bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
+						position = localPosition,
+						direction = shootDir,
+						clientTime = workspace:GetServerTimeNow()
+					})
 				end
-	
+
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
@@ -15896,66 +16010,7 @@ run(function()
 end)
 
 
-if getgenv().TestMode then
-
-	run(function()
-		local NEW = {
-			['ranked'] = {
-				["badBehaviorRangeSec"] = 0,
-				["queueRestrictionDurations"] = {
-					0,
-					0,
-					0,
-					0,
-					0,
-					0
-				}
-			},
-			['all_random_kit'] = {
-				["badBehaviorRangeSec"] = 0,
-				["queueRestrictionDurations"] = {
-					0,
-					0,
-					0,
-					0,
-					0,
-					0
-				}
-			}
-		}
-		local OLD = {
-			['ranked'] = {
-				["badBehaviorRangeSec"] = 86400,
-				["queueRestrictionDurations"] = {
-					0,
-					120,
-					600,
-					1800,
-					21600,
-					43200
-				}
-			},
-			['all_random_kit'] = {
-				["badBehaviorRangeSec"] = 86400,
-				["queueRestrictionDurations"] = {
-					0,
-					0,
-					120,
-					300,
-					600,
-					1800
-				}
-			}
-		}
-		local QDR
-		QDR = vape.Categories.Exploits:CreateModule({
-		Name = "QueueDodgeRemover",
-		Tooltip = "Removes the cooldown to queue dodges, this might not work prob",
-		Function = function(callback)
-			bedwars.QueueDodgesConfig.QueueDodgeConfigs = callback and NEW or OLD
-		end
-	})
-	end)
+if getgenv().TestMode then	
 	warn("loaded test mode!")
 else
 end
