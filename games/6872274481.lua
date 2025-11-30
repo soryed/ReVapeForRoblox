@@ -1009,13 +1009,14 @@ end
 		Roact = require(replicatedStorage['rbxts_include']['node_modules']['@rbxts']['roact'].src),
 		RuntimeLib = require(replicatedStorage['rbxts_include'].RuntimeLib),
 		SoundList = require(replicatedStorage.TS.sound['game-sound']).GameSound,
-		--SoundManager = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).SoundManager,
+		SoundManager =	require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out.shared.sound['sound-manager']),
 		Store = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
 		TeamUpgradeMeta = debug.getupvalue(require(replicatedStorage.TS.games.bedwars['team-upgrade']['team-upgrade-meta']).getTeamUpgradeMetaForQueue, 6),
 		UILayers = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
 		VisualizerUtils = require(lplr.PlayerScripts.TS.lib.visualizer['visualizer-utils']).VisualizerUtils,
 		WeldTable = require(replicatedStorage.TS.util['weld-util']).WeldUtil,
 		WinEffectMeta = require(replicatedStorage.TS.locker['win-effect']['win-effect-meta']).WinEffectMeta,
+		QueueDodgesConfigs = require(replicatedStorage.TS['queue-dodge']['queue-dodge-configs']),
 		ZapNetworking = require(lplr.PlayerScripts.TS.lib.network),
 	}, {
 		__index = function(self, ind)
@@ -2822,7 +2823,7 @@ run(function()
 			local shoot = bedwars.ItemMeta[item.itemType].projectileSource.launchSound
 			shoot = shoot and shoot[math.random(1, #shoot)] or nil
 			if shoot then
-				--bedwars.SoundManager:playSound(shoot)
+				bedwars.SoundManager:playSound(shoot)
 			end
 		end
 	end
@@ -3356,7 +3357,7 @@ run(function()
 												local shoot = itemMeta.launchSound
 												shoot = shoot and shoot[math.random(1, #shoot)] or nil
 												if shoot then
-													--bedwars.SoundManager:playSound(shoot)
+													bedwars.SoundManager:playSound(shoot)
 												end
 											end
 										end)
@@ -4371,13 +4372,13 @@ run(function()
 										itemDrop = v
 									}):andThen(function(suc)
 										if suc and bedwars.SoundList then
-											--bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
+											bedwars.SoundManager:playSound(bedwars.SoundList.PICKUP_ITEM_DROP)
 											local sound = bedwars.ItemMeta[v.Name].pickUpOverlaySound
 											if sound then
-												--[[bedwars.SoundManager:playSound(sound, {
+												bedwars.SoundManager:playSound(sound, {
 													position = v.Position,
 													volumeMultiplier = 0.9
-												})--]]
+												})
 											end
 										end
 									end)
@@ -5732,7 +5733,7 @@ run(function()
 			shopId = id
 		}):andThen(function(suc)
 			if suc then
-			--	bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
+				bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
 				bedwars.Store:dispatch({
 					type = 'BedwarsAddItemPurchased',
 					itemType = item.itemType
@@ -7905,7 +7906,7 @@ run(function()
 	})
 end)
 	
---[[run(function()
+run(function()
 	local SoundChanger
 	local List
 	local soundlist = {}
@@ -7938,13 +7939,13 @@ end)
 			for _, entry in List.ListEnabled do
 				local split = entry:split('/')
 				local id = bedwars.SoundList[split[1]]
-				--[[if id and #split > 1 then
+				if id and #split > 1 then
 					soundlist[id] = split[2]:find('rbxasset') and split[2] or isfile(split[2]) and assetfunction(split[2]) or ''
-				end--]
+				end
 			end
 		end
 	})
-end)--]]
+end)
 	
 run(function()
 	local UICleanup
@@ -11299,7 +11300,6 @@ run(function()
 		Name = 'Clutch',
 		Function = function(call)
 			if call then
-				print(bedwars.ItemMeta[store.inventory.inventory.items].block)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
@@ -12096,13 +12096,13 @@ run(function()
 	
 	local AutoKitFunctions = {
         alchemist = function()
-			kitCollection('flower', function(v)
+			kitCollection('Flower', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
-			kitCollection('mushrooms', function(v)
+			kitCollection('Mushrooms', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
-			kitCollection('thorns', function(v)
+			kitCollection('Thorns', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
 			end, 18, false)
         end,
@@ -12546,7 +12546,7 @@ run(function()
 			kitCollection('HarvestableCrop', function(v)
 				if bedwars.Client:Get(remotes.HarvestCrop):CallServer({position = bedwars.BlockController:getBlockPosition(v.Position)}) then
 					bedwars.GameAnimationUtil:playAnimation(lplr.Character, bedwars.AnimationType.PUNCH)
-					--bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
+					bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
 				end
 			end, 10, false)
 		end,
@@ -15896,7 +15896,66 @@ run(function()
 end)
 
 
-if getgenv().TestMode then	
+if getgenv().TestMode then
+
+	run(function()
+		local NEW = {
+			['ranked'] = {
+				["badBehaviorRangeSec"] = 0,
+				["queueRestrictionDurations"] = {
+					0,
+					0,
+					0,
+					0,
+					0,
+					0
+				}
+			},
+			['all_random_kit'] = {
+				["badBehaviorRangeSec"] = 0,
+				["queueRestrictionDurations"] = {
+					0,
+					0,
+					0,
+					0,
+					0,
+					0
+				}
+			}
+		}
+		local OLD = {
+			['ranked'] = {
+				["badBehaviorRangeSec"] = 86400,
+				["queueRestrictionDurations"] = {
+					0,
+					120,
+					600,
+					1800,
+					21600,
+					43200
+				}
+			},
+			['all_random_kit'] = {
+				["badBehaviorRangeSec"] = 86400,
+				["queueRestrictionDurations"] = {
+					0,
+					0,
+					120,
+					300,
+					600,
+					1800
+				}
+			}
+		}
+		local QDR
+		QDR = vape.Categories.Exploits:CreateModule({
+		Name = "QueueDodgeRemover",
+		Tooltip = "Removes the cooldown to queue dodges, this might not work prob",
+		Function = function(callback)
+			bedwars.QueueDodgesConfig.QueueDodgeConfigs = callback and NEW or OLD
+		end
+	})
+	end)
 	warn("loaded test mode!")
 else
 end
