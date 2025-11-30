@@ -1544,7 +1544,7 @@ local function TryToReport(targettedplayer,value)
     reportedPlayers[targettedplayer] = true
 	if value == "VapeNotify" then
 	    if reportedPlayers[targettedplayer] then
-	       	vape:CreateNotification('AutoReport', "You have already reported this player", 1, "alert")
+	       	vape:CreateNotification('AutoReport', "You have already reported this player!", 1, "alert")
 	        return
 		else
 	bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
@@ -1555,7 +1555,7 @@ local function TryToReport(targettedplayer,value)
 
 	elseif value == "BedwarsNotify" then
 	    if reportedPlayers[targettedplayer] then
-	        BedwarsErrorNotification("You have already reported this player")
+	        BedwarsErrorNotification("You have already reported this player!")
 	        return
 		else
 			bedwars.Client:Get("ReportPlayer"):SendToServer(targettedplayer)
@@ -10774,7 +10774,7 @@ run(function()
 	AutoShootFOV = AutoShoot:CreateSlider({
 		Name = 'FOV',
 		Min = 1,
-		Max = 180,
+		Max = 360,
 		Default = 90,
 		Tooltip = 'Field of view for target detection (1-180 degrees)'
 	})
@@ -11287,6 +11287,7 @@ run(function()
 			end
 			for _, item in store.inventory.inventory.items do
 				if bedwars.ItemMeta[item.itemType].block then
+					print(bedwars.ItemMeta[item.itemType].block)
 					return item.itemType, item.amount
 				end
 			end
