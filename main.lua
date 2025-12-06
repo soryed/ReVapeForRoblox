@@ -154,7 +154,7 @@ local gui = readfile('ReVape/profiles/gui.txt')
 if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
 end
-vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
+vape = loadstring(downloadFile('ReVape/guis/new.lua'), 'gui')()
 shared.vape = vape
 
 if not shared.VapeIndependent then
