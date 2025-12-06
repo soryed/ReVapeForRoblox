@@ -613,6 +613,19 @@ local function getSwordSlot()
 	return nil
 end
 
+local function getPickaxeSlot()
+	local Obj = {}
+	for i, v in store.inventory.hotbar do
+		if v.item and v.item.itemType then
+			local nme = string.find(v.item.itemType,'pickaxe')
+			if v.item.itemType == nme then
+				table.insert(Obj, i - 1)
+			end
+		end
+	end
+	return Obj
+end
+
 local function getObjSlot(nme)
 	local Obj = {}
 	for i, v in store.inventory.hotbar do
@@ -10394,7 +10407,7 @@ run(function()
     local blacklisted
 	local SlientAim
 	local LimitedToItem
-	
+
     local function getBlocks()
         local blocks = {}
 
@@ -11828,6 +11841,8 @@ run(function()
 		
 					if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 then
 						if block:GetAttribute('PlacedByUserId') == lplr.UserId and (block.Position - entitylib.character.RootPart.Position).Magnitude < 30 then
+							local pickaxe = getPickaxeSlot()
+							hotbarSwitch(pickaxe)
 							task.spawn(bedwars.breakBlock, block, false, nil, true)
 						end
 					end
