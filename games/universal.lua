@@ -7937,8 +7937,9 @@ run(function()
 	})
 	
 end)
-	run(function()
-local Streamer
+
+run(function()
+	local Streamer
 	Streamer = vape.Categories.Minigames:CreateModule({
 		Name = "Streamer",
 		Function = function(callback)
@@ -7946,11 +7947,7 @@ local Streamer
 		end,
 		Tooltip ='hides onyx\'s modules'
 	})
-
 end)
-
-
-
 	
 run(function()
     local UpdateChecker
@@ -7995,12 +7992,7 @@ run(function()
                     running = false
 
                 elseif LatestVersion == 0 or CurrentVersion == 0 then
-                    vape:CreateNotification(
-                        'THIS IS NOT A UPDATE!',
-                        'THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!',
-                        45,
-                        'alert'
-                    )
+                    vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!', 45,'alert')
                 end
 
                 if not running then break end
