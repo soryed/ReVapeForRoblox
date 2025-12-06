@@ -8644,56 +8644,42 @@ run(function()
 			if callback then 
 				AutoBan:Toggle(false)
 				  local kits = {"berserker", "hatter", "flower_bee", "glacial_skater",'void_dragon','card','cat'}
-    for _, kit in ipairs(kits) do
-        for i = 0, 1 do
-            local args = {kit, i}
-			if getgenv().TestMode then
-				bedwars.Client:Get('BanKit'):CallServerAsync({[1] = kit,[2] = i})
-			else
-           		game:GetService("ReplicatedStorage")
-                	:WaitForChild("rbxts_include")
-                	:WaitForChild("node_modules")
-                	:WaitForChild("@rbxts")
-                	:WaitForChild("net")
-                	:WaitForChild("out")
-                	:WaitForChild("_NetManaged")
-                	:WaitForChild("BanKit")
-                	:InvokeServer(unpack(args))
-			end
-
-				
-        end
-    end
-
-    for i = 0, 1 do
-        local args = {"none", i}
-
-			if getgenv().TestMode then
-				bedwars.Client:Get('SelectKit'):CallServerAsync({[1] = 'none',[2] = i})
-			else
-				game:GetService("ReplicatedStorage")
-					:WaitForChild("rbxts_include")
-					:WaitForChild("node_modules")
-					:WaitForChild("@rbxts")
-					:WaitForChild("net")
-					:WaitForChild("out")
-					:WaitForChild("_NetManaged")
-					:WaitForChild("SelectKit")
-					:InvokeServer(unpack(args))
-			end
-   		 end
-
-   			task.wait(0.01)
+			    for _, kit in ipairs(kits) do
+			        for i = 0, 1 do
+			            local args = {kit, i}
+			        	game:GetService("ReplicatedStorage")
+				            :WaitForChild("rbxts_include")
+				            :WaitForChild("node_modules")
+				            :WaitForChild("@rbxts")
+				            :WaitForChild("net")
+				            :WaitForChild("out")
+				            :WaitForChild("_NetManaged")
+				            :WaitForChild("BanKit")
+				            :InvokeServer(unpack(args))
+			        end
+			    end
+			    for i = 0, 1 do
+			        local args = {"none", i}
+					game:GetService("ReplicatedStorage")
+						:WaitForChild("rbxts_include")
+						:WaitForChild("node_modules")
+						:WaitForChild("@rbxts")
+						:WaitForChild("net")
+						:WaitForChild("out")
+						:WaitForChild("_NetManaged")
+						:WaitForChild("SelectKit")
+						:InvokeServer(unpack(args))
+						
+			   	end
+			   	task.wait(0.01)
 			end
 		end,
 	}) 
 end)
 
-
-
 run(function()
 	local ItemlessLongjump = {Enabled = false}
-
+	local added = 0
 	ItemlessLongjump = vape.Categories.Blatant:CreateModule({
 		Name = "ItemlessLongjump",
 		Function = function(call)
@@ -8703,28 +8689,34 @@ run(function()
 			end  
 			ItemlessLongjump.Enabled = call
 			if call then
-				lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 100, 0)
+				added = 100																																																																																																																																																		
+				lplr.Character.HumanoidRootPart.Velocity += Vector3.new(0, 100, 0)
 				task.wait(0.3)
+				added = 0																																																																																																																																																		
 				for i = 1, 4 do
 					task.wait(0.4)
-					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 75, 0)
+					added += 75
+					lplr.Character.HumanoidRootPart.Velocity += Vector3.new(0, 75, 0)
 				end
+				added = 0
 				task.wait(0.025)
 				for i = 1, 2 do
 					task.wait(0.125)
-					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 85, 0)
+					added += 85
+					lplr.Character.HumanoidRootPart.Velocity += Vector3.new(0, 85, 0)
 				end
 
 			else
-				workspace.Gravity = 192.6
+				repeat 
+				added = added - 10
+				lplr.Character.HumanoidRootPart.Velocity -= Vector3.new(0,added,0)
+				task.wait(0.0025)
+				until added == 0
 			end
 		end,
 		Tooltip = "Lets you do a longjump without any items/kits"
 	})
 end)
-
-
-
 
 --[[run(function()
 local AutoReport = {Enabled = false}
@@ -13439,6 +13431,39 @@ run(function()
 	})
 end)
 
+run(function()
+	local InfiniteJump
+	local Mode
+	local jumps = 0
+	InfiniteJump = vape.Categories.Blatant:CreateModule({
+		Name = "Infinite Jump",
+		Tooltip = "Allows you to jump infinitely.",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
+			if callback then
+				jumps = 0														
+				InfiniteJump:Clean(inputService.JumpRequest:Connect(function()
+					jumps += 1
+					if jumps > 1 and Mode.Value == "Velocity" then
+						local power = math.sqrt(2 * workspace.Gravity * entitylib.character.Humanoid.JumpHeight)
+						entitylib.character.RootPart.Velocity = Vector3.new(entitylib.character.RootPart.Velocity.X, power, entitylib.character.RootPart.Velocity.Z)
+					elseif Mode.Value == "Jump" then
+						entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+					end
+				end))
+			end
+		end,
+		ExtraText = function() return Mode.Value or "HeatSeeker" end
+	})
+	Mode = InfiniteJump:CreateDropdown({
+		Name = "Mode",
+		List = {"Jump", "Velocity"}
+	})
+end)
+
 --[[
 
 run(function()
@@ -13734,39 +13759,7 @@ run(function()
 			Default = {'telepearl'}
 		})
 	end)
-	run(function()
-		local InfiniteJump
-		local Mode
-		local jumps = 0
-		InfiniteJump = vape.Categories.Blatant:CreateModule({
-			Name = "Infinite Jump",
-			Tooltip = "Allows you to jump infinitely.",
-			Function = function(callback)
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end  
-				if callback then
-					jumps = 0
-																			
-					InfiniteJump:Clean(inputService.JumpRequest:Connect(function()
-						jumps += 1
-						if jumps > 1 and Mode.Value == "Velocity" then
-							local power = math.sqrt(2 * workspace.Gravity * entitylib.character.Humanoid.JumpHeight)
-							entitylib.character.RootPart.Velocity = Vector3.new(entitylib.character.RootPart.Velocity.X, power, entitylib.character.RootPart.Velocity.Z)
-						elseif Mode.Value == "Jump" then
-							entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-						end
-					end))
-				end
-			end,
-			ExtraText = function() return Mode.Value end
-		})
-		Mode = InfiniteJump:CreateDropdown({
-			Name = "Mode",
-			List = {"Jump", "Velocity"}
-		})
-	end)
+
 	run(function()
 		local BackTrackIncoming = {Enabled = false}
 		local BackTrack = vape.Categories.Exploits:CreateModule({
