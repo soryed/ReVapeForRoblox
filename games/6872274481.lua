@@ -13809,12 +13809,9 @@ run(function()
 		})
 	end)
 
-local function TM()
-	vape:CreateNotification("Onyx","Please note test modules will not work 100%",6,'warning')
-	warn("loaded test mode!")
-end
+
 if getgenv().TestMode then
-	TM()
+	warn("loaded test mode!")
 else
 
 end
