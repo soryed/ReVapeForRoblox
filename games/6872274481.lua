@@ -49,9 +49,16 @@ local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role or "guest"
 local user = vape.user or "GUEST"
 task.spawn(function()
+	local NR,NU = role,user
+	if NR == '' or NR == nil then
+		NR = 'guest'
+	end
+	if NU == '' or NU == nil then
+		NU = 'GUEST'
+	end
 	while task.wait(0.01) do
-		vape.role = role
-		vape.user = user
+		vape.role = NR
+		vape.user = NU
 	end
 end)
 
