@@ -14,7 +14,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/soryed/OynxVAPEv4/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -8147,7 +8147,7 @@ run(function()
                     if shared.VapeDeveloper then
                         loadstring(readfile('ReVape/loader.lua'), 'loader')()
                     else
-                        loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/OynxVAPEv4/main/loader.lua', true))()
+                        loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
                     end
 
                     running = false
@@ -8371,7 +8371,7 @@ end)
 
             local info = 
 
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/OynxVAPEv4/main/NewMainScript.lua", true))({
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
     username =  .. newuser .. ,
     password =  .. newpass .. 
 })
