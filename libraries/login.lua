@@ -1,8 +1,11 @@
 local login = {}
 if not shared.vape then repeat task.wait() until shared.vape end
+local cloneref = cloneref or function(obj)
+    return obj
+end
 
 local vape = shared.vape
-local http = game:GetService("HttpService")
+local http = cloneref(game:GetService("HttpService"))
 
 local ApiBase = "https://onyxclient.fsl58.workers.dev/"
 local LoginBase = ApiBase
@@ -19,7 +22,7 @@ else
 end
 
 
-local function HWIDCheck(user)
+--[[local function HWIDCheck(user)
     local hwid = readfile("ReVape/accounts/hwid.txt")
     local req = request or http_request or (syn and syn.request)
     if not req then 
@@ -44,7 +47,11 @@ local function HWIDCheck(user)
 
     return result
 end
+--]]
 
+local function HWIDCheck(user)
+    return {valid = true, sentHWID = http:GenerateHUID(false), StatusCode = 200}
+end
 
 local function postLogin(u, p)
     local req = request or http_request or syn.request
