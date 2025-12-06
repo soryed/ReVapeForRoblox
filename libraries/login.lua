@@ -4,8 +4,9 @@ if not shared.vape then repeat task.wait() until shared.vape end
 local vape = shared.vape
 local http = game:GetService("HttpService")
 
-local apiBase = "https://onyxclient.fsl58.workers.dev/"
-
+local ApiBase = "https://onyxclient.fsl58.workers.dev/"
+local LoginBase = ApiBase
+local HwidBase = ApiBase.."hwid?user="
 local username = ""
 local password = ""
 
@@ -18,12 +19,39 @@ else
 end
 
 
+local function HWIDCheck(user)
+    local hwid = readfile("ReVape/accounts/hwid.txt")
+    local req = request or http_request or (syn and syn.request)
+    if not req then 
+        warn("No HTTP request function available.")
+        return nil 
+    end
+
+    local success, result = pcall(function()
+        return req({
+            Url = HwidBase..user.."&hwid="..hwid,
+            Method = "GET",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            }
+        })
+    end)
+
+    if not success then
+        warn("HWID check failed:", result)
+        return nil
+    end
+
+    return result
+end
+
+
 local function postLogin(u, p)
     local req = request or http_request or syn.request
     if not req then return nil end
 
     return req({
-        Url = apiBase,
+        Url = LoginBase,
         Method = "POST",
         Headers = { ["Content-Type"] = "application/json" },
         Body = http:JSONEncode({
@@ -40,16 +68,23 @@ function login:Login()
 
     local ok = pcall(function()
         local req = postLogin(username, password)
-
-        if not req or req.StatusCode ~= 200 then
+        local req2 = HWIDCheck(username)
+        if not req or req.StatusCode ~= 200 or not req2 or req2.StatusCode ~= 200  then
             vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded then
+        local decoded2
+        pcall(function() decoded2 = http:JSONDecode(req2.Body) end)
+        if not decoded or decoded2 then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
+            return 'guest', 'GUEST', 'PASSWORD'
+        end
+        if decoded2.valid ~= 'true' then
+            local formatted = string.format("Incorrect HWID %s. Guest mode.", decoded2.sentHWID)
+            vape:CreateNotification("Onyx", formatted, 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
         role = decoded.role or "guest"
@@ -69,18 +104,25 @@ function login:SlientLogin()
 
     pcall(function()
         local req = postLogin(username, password)
-        if not req or req.StatusCode ~= 200 then
+        local req2 = HWIDCheck(username)
+        if not req or req.StatusCode ~= 200 or not req2 or req2.StatusCode ~= 200  then
             vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded then
+        local decoded2
+        pcall(function() decoded2 = http:JSONDecode(req2.Body) end)
+        if not decoded or decoded2 then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
-           return 'guest', 'GUEST', 'PASSWORD'
+            return 'guest', 'GUEST', 'PASSWORD'
         end
-
+        if decoded2.valid ~= 'true' then
+            local formatted = string.format("Incorrect HWID %s. Guest mode.", decoded2.sentHWID)
+            vape:CreateNotification("Onyx", formatted, 7,'warning')
+            return 'guest', 'GUEST', 'PASSWORD'
+        end
         role = decoded.role or "guest"
         U = username
         P = password
