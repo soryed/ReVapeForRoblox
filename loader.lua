@@ -1,3 +1,34 @@
+local accountinfo = {}
+
+local ARGS = ... or {}
+local function TTD()
+    delfolder('ReVape')
+end
+
+if ARGS.Refresh then
+    TTD()
+    if not isfolder('ReVape') then
+        print('Successfully deleted the "ReVape" folder!')
+    else
+        warn('Had an issue deleting the "ReVape" folder. Please DM the user "ye40" on Discord!')
+    end
+end
+
+if getgenv().username  and next(ARGS) == nil then
+	ARGS.username = getgenv().username
+	ARGS.password = getgenv().password
+end
+if typeof(ARGS) ~= "table" then
+	getgenv().username = 'GUEST' 
+	getgenv().password = 'PASSWORD' 
+end
+getgenv().username = ARGS.username
+getgenv().password = ARGS.password
+getgenv().TestMode = ARGS.TestMode or false
+
+
+local tweenService = game:GetService('TweenService')
+
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
@@ -11,7 +42,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/OynxVAPEv4/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -34,15 +65,34 @@ local function wipeFolder(path)
 	end
 end
 
+
 for _, folder in {'ReVape', 'ReVape/games', 'ReVape/profiles', 'ReVape/assets', 'ReVape/libraries', 'ReVape/guis'} do
 	if not isfolder(folder) then
 		makefolder(folder)
 	end
+	task.wait(0.05)
+end
+
+
+local folders = {'Revape/accounts'}
+
+for _, folder in ipairs(folders) do
+    if not isfolder(folder) then
+        makefolder(folder)
+    end
+    local files = {folder .. '/username.txt', folder .. '/password.txt'}
+    for _, txt in ipairs(files) do
+        if not isfile(txt) then
+            writefile(txt, "")
+        end
+        task.wait(0.05)
+    end
+    task.wait(0.05)
 end
 
 if not shared.VapeDeveloper then
 	local _, subbed = pcall(function() 
-		return game:HttpGet('https://github.com/qe40/ReVapeForRoblox') 
+		return game:HttpGet('https://github.com/soryed/OynxVAPEv4') 
 	end)
 	local commit = subbed:find('currentOid')
 	commit = commit and subbed:sub(commit + 13, commit + 52) or nil
