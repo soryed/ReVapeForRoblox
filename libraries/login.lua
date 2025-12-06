@@ -82,7 +82,7 @@ function login:Login()
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
-        if decoded2.valid ~= 'true' then
+        if decoded2.valid ~= true then
             local formatted = string.format("Incorrect HWID %s. Guest mode.", decoded2.sentHWID)
             vape:CreateNotification("Onyx", formatted, 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
@@ -118,7 +118,7 @@ function login:SlientLogin()
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
-        if decoded2.valid ~= 'true' then
+        if decoded2.valid ~= true then
             local formatted = string.format("Incorrect HWID %s. Guest mode.", decoded2.sentHWID)
             vape:CreateNotification("Onyx", formatted, 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
