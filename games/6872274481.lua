@@ -13814,21 +13814,5 @@ vape:Remove('AutoCharge')
 if getgenv().TestMode then
 	TM()
 else
-	run(function()
-		local tm
-		tm = vape.Legit:CreateModule({
-			Name = "Test Mode",
-			Tooltip = 'load\'s in test mode features in here WILL or WILL NOT come into onyx'
-			Function = function(callback) 
-				if callback then
-					TM()
-				else
-					local modules = {'BetterPA','ProjectileHightLight','Bed Alarm','Infinite Jump','BackTrack'}
-					for _, v in modules do
-						vape:Remove(v)
-					end
-				end
-			end
-		})
-	end)
+
 end
