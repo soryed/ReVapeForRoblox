@@ -8177,7 +8177,21 @@ run(function()
     end)
 end)
 
---[[run(function()
+local createlib = {}
+
+function createlib:Create(name, props)
+	local obj = Instance.new(name)
+	for k, v in pairs(props) do
+		if type(k) == "number" then
+			v.Parent = obj
+		else
+			obj[k] = v
+		end
+	end
+	return obj
+end
+
+run(function()
     local ChangeLogs
     ChangeLogs = vape.Categories.Minigames:CreateModule({
         Name = "ChangeLogs",
@@ -8298,7 +8312,7 @@ end)
     })
 
 
-end)--]]
+end)
 
 run(function()
 	local GetExecutor	
@@ -8323,13 +8337,12 @@ run(function()
 	})
 end)
 
-
---[[run(function()
+run(function()
     local http = game:GetService("HttpService")
     local req = request or http_request or syn.request
 
     local function sendCreateRequest()
-        local url = "https://onyxclient.fsl58.workers.dev/create"
+        local url = "https://onyxclient.fsl58.workers.dev"
 
         local body = {
             username = "",
@@ -8370,16 +8383,16 @@ end)
 
             vape:CreateNotification("Onyx", "Account created! Copied to clipboard.", 6)
 
-            local info = 
-
+            local info = [[
+--Inject this for now on, created by soryed :WM: Onyx
 				loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
-    username =  .. newuser .. ,
-    password =  .. newpass .. 
+    username =  ]].. newuser ..[[
+    password =  ]].. newpass .. [[
 })
-           
+]]
 
             setclipboard(info)
             CA:Toggle(false)
         end
     })
-end)--]]
+end)
