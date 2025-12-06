@@ -12621,9 +12621,6 @@ end)
 
 run(function()
 	local AG
-	local AL
-	local T
-	local OS
 	AG = vape.Categories.AltFarm:CreateModule({
 		Name = "AccountGrinding",
 		Tooltip = "Used for getting accounts having rank enabled",
@@ -12646,27 +12643,6 @@ run(function()
 
 			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(handleEndEvent))
 
-			if AL.Enabled then
-				task.delay(OS,handleEndEvent)
-			end
-		end
-	})
-	AL = AG:CreateToggle({
-		Name = "Auto Lobby",
-		Tooltip = "Automatically lobbies for you whenever a specific time mark reaches",
-		Default = false,
-		Function = function(v)
-			T.Visible = v or false
-		end
-	})
-	T = AG:CreateSlider({
-		Name = "Time",
-		Default = 15,
-		Min = 5,
-		Max = 18,
-		Visible = false,
-		Function = function()
-			OS = (T.Value * 60) or (15 * 60)
 		end
 	})
 end)
