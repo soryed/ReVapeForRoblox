@@ -134,7 +134,7 @@ local getcustomassets = {
 	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
 	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
 	['ReVape/assets/new/success.png'] = 'rbxassetid://98117832989643',
-	['ReVape/assets/new/module.png'] = 'rbxassetid://88102681647746',
+	['ReVape/assets/new/modules.png'] = 'rbxassetid://88102681647746',
 }
 
 local isfile = isfile or function(file)
