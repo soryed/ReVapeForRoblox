@@ -1567,15 +1567,10 @@ local function TryToReport(targettedplayer,value)
 		task.wait(1 + math.random())
 	end
 end
-getgenv().TTR = TryToReport
+
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
-getgenv().Remotes = bedwars.Client.Get
-getgenv().SIV2 = switchItemV2
-getgenv().SI = switchItem
-getgenv().ObjSlot = getObjSlot
-getgenv().SwordSlot = getSwordSlot
-getgenv().HotbarChanger = hotbarSwitch
+
 for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MouseTP', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
 	vape:Remove(v)
 end
@@ -13416,7 +13411,11 @@ run(function()
 	local inf = math.huge or 9e9
 	BCR = vape.Categories.Blatant:CreateModule({
 		Name = "BlockCPSRemover",
-		Function = function(callback) 
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
 			if callback then
 				old = bedwars.SharedConstants.CpsConstants['BLOCK_PLACE_CPS']
 				bedwars.SharedConstants.CpsConstants['BLOCK_PLACE_CPS'] = Value.Value == 0 and inf or Value.Value
@@ -13445,9 +13444,7 @@ run(function()
 	})
 end)
 
-local function TM()
-	vape:CreateNotification("Onyx","Please note test modules will not work 100%",6,'warning')
-	run(function()
+run(function()
 		local ProjectileHightLight
 		local Color
 		local color
@@ -13473,6 +13470,10 @@ local function TM()
 			Name = "ProjectileHightLight",
 			Tooltip = "whenever you shoot out an projectile it highlights it",
 			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end  
 				if callback then
 					ProjectileHightLight:Clean(workspace.DescendantAdded:Connect(function(proj)
 						if not ProjectileHightLight.Enabled then return end
@@ -13564,6 +13565,10 @@ local function TM()
 		BSA = vape.Categories.Combat:CreateModule({
 			Name = 'BetterPA',
 			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end  
 				if callback then
 					handlePlayerSelection()
 					
@@ -13739,7 +13744,11 @@ local function TM()
 		InfiniteJump = vape.Categories.Blatant:CreateModule({
 			Name = "Infinite Jump",
 			Tooltip = "Allows you to jump infinitely.",
-			Function = function(callback: boolean)
+			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end  
 				if callback then
 					jumps = 0
 																			
@@ -13762,23 +13771,14 @@ local function TM()
 		})
 	end)
 	run(function()
-		local BA
-		BA = vape.Categories.Exploits:CreateModule({
-			Name = "Bed Alarm",
-			Tooltip = 'Alerts you whenever theres someone on ur bed',
-			Function = function(callback)
-				if callback then
-
-				end
-			end
-		})
-
-	end)
-	run(function()
 		local BackTrackIncoming = {Enabled = false}
 		local BackTrack = vape.Categories.Exploits:CreateModule({
 			Name = "BackTrack", 
-			Function = function(callback) 
+			Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
 				if callback then
 							game:GetService("NetworkClient"):SetOutgoingKBPSLimit(1)
 					if BackTrackIncoming.Enabled then 
@@ -13808,9 +13808,11 @@ local function TM()
 			end
 		})
 	end)
+
+local function TM()
+	vape:CreateNotification("Onyx","Please note test modules will not work 100%",6,'warning')
 	warn("loaded test mode!")
 end
-vape:Remove('AutoCharge')
 if getgenv().TestMode then
 	TM()
 else
