@@ -5812,7 +5812,17 @@ mainapi:CreateCategory({
 })
 mainapi:CreateCategory({
 	Name = 'Exploits',
-	Icon = getcustomasset('ReVape/assets/new/radaricon.png'),
+	Icon = getcustomasset('ReVape/assets/new/modules.png'),
+	Size = UDim2.fromOffset(19, 12)
+})
+mainapi:CreateCategory({
+	Name = 'Troll',
+	Icon = getcustomasset('ReVape/assets/new/troll.png'),
+	Size = UDim2.fromOffset(19, 12)
+})
+mainapi:CreateCategory({
+	Name = 'AltFarm',
+	Icon = getcustomasset('ReVape/assets/new/af.png'),
 	Size = UDim2.fromOffset(19, 12)
 })
 mainapi.Categories.Main:CreateDivider('misc')
@@ -6104,9 +6114,11 @@ guipane:CreateButton({
 			WorldCategory = 6,
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
-			ExploitsCategory = 9,															
-			FriendsCategory = 10,
-			ProfilesCategory = 11
+			ExploitsCategory = 9,
+			TrollCategory = 10,
+			AltFarmCategory = 11,												
+			FriendsCategory = 12,
+			ProfilesCategory = 13
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
