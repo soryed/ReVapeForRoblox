@@ -13808,8 +13808,41 @@ local function TM()
 			end
 		})
 
-	end)	
-	
+	end)
+	TRun(function()
+		local BackTrackIncoming = {Enabled = false}
+		local BackTrack = vape.Categories.Exploits:CreateModule({
+			Name = "BackTrack", 
+			Function = function(callback) 
+				if callback then
+							game:GetService("NetworkClient"):SetOutgoingKBPSLimit(1)
+					if BackTrackIncoming.Enabled then 
+						settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
+					end
+				else
+					game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
+					if BackTrackIncoming.Enabled then 
+						settings():GetService("NetworkSettings").IncomingReplicationLag = 0
+					end
+				end
+			end, 
+			Tooltip = "PositionRaper"
+		})
+		BackTrackIncoming = BackTrack:CreateToggle({
+			Name = "Incoming",
+			Function = function(callback)
+				if callback then
+					if BackTrack.Enabled then 
+						settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
+					end
+				else
+					if BackTrack.Enabled then 
+						settings():GetService("NetworkSettings").IncomingReplicationLag = 0
+					end
+				end
+			end
+		})
+	end)
 	warn("loaded test mode!")
 end
 vape:Remove('AutoCharge')
@@ -13825,7 +13858,7 @@ else
 				if callback then
 					TM()
 				else
-					local modules = {'BetterPA','ProjectileHightLight','Bed Alarm','Infinite Jump'}
+					local modules = {'BetterPA','ProjectileHightLight','Bed Alarm','Infinite Jump','BackTrack'}
 					for _, v in modules do
 						vape:Remove(v)
 					end
