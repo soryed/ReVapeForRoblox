@@ -621,7 +621,20 @@ local function getSwordSlot()
 	end
 	return nil
 end
-		
+
+local function getObjSlot(nme)
+	local Obj = {}
+	for i, v in store.inventory.hotbar do
+		if v.item and v.item.itemType then
+			if v.item.itemType == nme then
+				table.insert(Obj, i - 1)
+			end
+		end
+	end
+	return Obj
+end
+
+
 
 local function switchItemV2(tool, delayTime)
 	delayTime = delayTime or 0.05
@@ -633,8 +646,7 @@ local function switchItemV2(tool, delayTime)
 		bedwars.Client:Get('SetInvItem'):CallServer({hand = tool})
 	end)
 end
-getgenv().SIV2 = switchItemV2
-getgenv().SI = switchItem
+
 
 local function waitForChildOfType(obj, name, timeout, prop)
 	local check, returned = tick() + timeout
@@ -1570,6 +1582,11 @@ getgenv().TTR = TryToReport
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
 getgenv().Remotes = bedwars.Client.Get
+getgenv().SIV2 = switchItemV2
+getgenv().SI = switchItem
+getgenv().ObjSlot = getObjSlot
+getgenv().SwordSlot = getSwordSlot
+getgenv().HotbarChanger = hotbarSwitch
 for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MouseTP', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
 	vape:Remove(v)
 end
@@ -11054,17 +11071,6 @@ run(function()
 	
 	local AutoKitFunctions = {
 		regent = function()
-			local function getObjSlot(nme)
-				local Obj = {}
-				for i, v in store.inventory.hotbar do
-					if v.item and v.item.itemType then
-						if v.item.itemType == nme then
-							table.insert(Obj, i - 1)
-						end
-					end
-				end
-				return Obj
-			end
 
 			repeat
 				if not entitylib.isAlive then task.wait(0.1); continue end
@@ -11095,17 +11101,6 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		jade = function()
-			local function getObjSlot(nme)
-				local Obj = {}
-				for i, v in store.inventory.hotbar do
-					if v.item and v.item.itemType then
-						if v.item.itemType == nme then
-							table.insert(Obj, i - 1)
-						end
-					end
-				end
-				return Obj
-			end
 
 			repeat
 				if not entitylib.isAlive then task.wait(0.1); continue end
@@ -12858,18 +12853,7 @@ run(function()
 			local gloopItem = getItem('glue_projectile')
 			return gloopItem and gloopItem.amount > 0
 		end
-		
-		local function getGloopSlots()
-			local gloops = {}
-			for i, v in store.inventory.hotbar do
-				if v.item and v.item.itemType then
-					if v.item.itemType == 'glue_projectile' then
-						table.insert(gloops, i - 1)
-					end
-				end
-			end
-			return gloops
-		end
+		local getGloopSlots = GetObjSlot('glue_projectile')
 		
 
 		local function getClosestTargetDistance()
@@ -13055,7 +13039,7 @@ run(function()
 		local KnitInit, Knit
 		repeat
 			KnitInit, Knit = pcall(function()
-				return debug.getupvalue(require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.knit).setup, 9)
+				return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 9)
 			end)
 			if KnitInit then break end
 			task.wait()
@@ -13065,7 +13049,7 @@ run(function()
 			repeat task.wait() until debug.getupvalue(Knit.Start, 1)
 		end
 	
-		local Players = game:GetService("Players")
+		local Players = playersService
 	
 		shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT = shared.PERMISSION_CONTROLLER_HASANYPERMISSIONS_REVERT or Knit.Controllers.PermissionController.hasAnyPermissions
 		shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT = shared.MATCH_CONTROLLER_GETPLAYERPARTY_REVERT or Knit.Controllers.MatchController.getPlayerParty
