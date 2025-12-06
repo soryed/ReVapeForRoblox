@@ -8668,9 +8668,9 @@ run(function()
 					:WaitForChild("SelectKit")
 					:InvokeServer(unpack(args))
 			end
-    end
+   		 end
 
-    task.wait(0.01)
+   			task.wait(0.01)
 			end
 		end,
 	}) 
@@ -8696,7 +8696,7 @@ run(function()
 					task.wait(0.4)
 					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 75, 0)
 				end
-task.wait(0.025)
+				task.wait(0.025)
 				for i = 1, 2 do
 					task.wait(0.125)
 					lplr.Character.HumanoidRootPart.Velocity = lplr.Character.HumanoidRootPart.Velocity + Vector3.new(0, 85, 0)
@@ -8713,7 +8713,7 @@ end)
 
 
 
-run(function()
+--[[run(function()
 local AutoReport = {Enabled = false}
 local Mode
 	 AutoReport = vape.Categories.Exploits:CreateModule({
@@ -8738,21 +8738,17 @@ local Mode
 		Name = "Mode",
 		List= {"VapeNotify", "BedwarsNotify", "Hidden"}
 	})
-	AutoReport:Toggle(false)
-end)
+end)--]]
 
 
 run(function()
 	local AutoQueue
 	
-
-	
 	AutoQueue = vape.Categories.Exploits:CreateModule({
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				
-																							vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
 			if callback then
@@ -10398,17 +10394,7 @@ run(function()
     local blacklisted
 	local SlientAim
 	local LimitedToItem
-    local function getBedNear()
-        local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
-        for _, v in collectionService:GetTagged("bed") do
-            if (localPosition - v.Position).Magnitude < 20 
-                and v:GetAttribute("Team" .. (lplr:GetAttribute("Team") or -1) .. "NoBreak")
-            then
-                return v
-            end
-        end
-    end
-
+	
     local function getBlocks()
         local blocks = {}
 
@@ -10618,7 +10604,7 @@ run(function()
 				return
 			end  
 			if call then
-				connection = DamageAffect:Clean(workspace.DescendantAdded:Connect(function(part)
+				DamageAffect:Clean(workspace.DescendantAdded:Connect(function(part)
 				    if part.Name == "DamageIndicatorPart" and part:IsA("BasePart") then
 				        for i, v in part:GetDescendants() do
 				            if v:IsA("TextLabel") then
@@ -10633,8 +10619,7 @@ run(function()
 				    end
 				end))
 			else
-				connection:Disconnect()
-				connection = nil
+
 			end
         end,
         Tooltip = "Customizes Damage Affects"
@@ -12614,34 +12599,29 @@ run(function()
 		})																																									
 end)
 
---[[run(function()
-	local AG
-	AG = vape.Categories.AltFarm:CreateModule({
-		Name = "AccountGrinding",
-		Tooltip = "Used for getting accounts having rank enabled",
+run(function()
+	local AccountGrinding
+
+	AccountGrinding = vape.Categories.AltFarm:CreateModule({
+		Name = "Account Grinding",
 		Function = function(callback)
-			if callback then
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
-			end       
-
-			local function handleEndEvent()
-				 lobby()
 			end
-			
-			AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-				if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-					handleEndEvent()
-				end
-			end))
-
-			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(handleEndEvent))
-		
-		end
+			if callback then
+				AccountGrinding:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+						lobby()
+					end
+				end))
+				AccountGrinding:Clean(vapeEvents.MatchEndEvent.Event:Connect(lobby))
+			end
+		end,
+		Tooltip = "Helps you get an account level 20"
 	})
 end)
---]]
+
 run(function()
 	local WhitelistChecker
 	local cachedData = {}
