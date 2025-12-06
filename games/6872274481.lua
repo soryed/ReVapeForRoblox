@@ -26,7 +26,6 @@ local guiService = cloneref(game:GetService('GuiService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
 local TeleportService = cloneref(game:GetService("TeleportService"))
-local executor = identifyexecutor() or "FAILED TO FETECH EXECUTOR"
 local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
@@ -10145,7 +10144,7 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
-			if not setfflag then vape:CreateNotification("Onyx", "Your current executor '"..executor.."' does not support setfflag", 6, "warning"); return end     
+			if not setfflag then vape:CreateNotification("Onyx", "Your current executor '"..identifyexecutor().."' does not support setfflag", 6, "warning"); return end     
 			setfflag('NextGenReplicatorEnabledWrite4', callback or false)
 
 		end,
