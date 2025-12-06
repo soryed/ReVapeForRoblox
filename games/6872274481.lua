@@ -13809,9 +13809,3 @@ run(function()
 		})
 	end)
 
-
-if getgenv().TestMode then
-	warn("loaded test mode!")
-else
-
-end
