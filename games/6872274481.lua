@@ -12619,7 +12619,7 @@ run(function()
 		})																																									
 end)
 
-run(function()
+--[[run(function()
 	local AG
 	AG = vape.Categories.AltFarm:CreateModule({
 		Name = "AccountGrinding",
@@ -12642,11 +12642,11 @@ run(function()
 			end))
 
 			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(handleEndEvent))
-
+		
 		end
 	})
 end)
-
+--]]
 run(function()
 	local WhitelistChecker
 	local cachedData = {}
