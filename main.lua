@@ -53,7 +53,7 @@ local function finishLoading()
 		until not vape.Loaded
 	end)
 
---[[	local teleportedServers
+	local teleportedServers
 	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
@@ -72,12 +72,15 @@ local function finishLoading()
 				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
 			end
 			if getgenv().username then
-				teleportScript = 'getgenv().username'
+				teleportScript =  'getgenv().username = "'..getgenv().username..'"\n'..teleportScript
+			end
+			if getgenv().password then
+				teleportScript =  'getgenv().password = "'..getgenv().password..'"\n'..teleportScript
 			end
 			vape:Save()
 			queue_on_teleport(teleportScript)
 		end
-	end))--]]
+	end))
 
 	if not shared.vapereload then
 		if not vape.Categories then return end
