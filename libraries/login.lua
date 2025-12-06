@@ -9,7 +9,7 @@ local http = cloneref(game:GetService("HttpService"))
 
 local ApiBase = "https://onyxclient.fsl58.workers.dev/"
 local LoginBase = ApiBase
-local HwidBase = ApiBase.."hwid?user="
+--local HwidBase = ApiBase.."hwid?user="
 local username = ""
 local password = ""
 
