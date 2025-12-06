@@ -634,8 +634,6 @@ local function getObjSlot(nme)
 	return Obj
 end
 
-
-
 local function switchItemV2(tool, delayTime)
 	delayTime = delayTime or 0.05
 	delayTime = (delayTime == 0 and 0.05 or delayTime)
