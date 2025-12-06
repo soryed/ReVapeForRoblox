@@ -13809,31 +13809,4 @@ run(function()
 		})
 	end)
 
-run(function()
-	local AG
-	AG = vape.Categories.AltFarm:CreateModule({
-		Name = "AccountGrinding",
-		Tooltip = "Used for getting accounts having rank enabled",
-		Function = function(callback)
-			if callback then
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
 
-			local function handleEndEvent()
-				 lobby()
-			end
-			
-			AG:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-				if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-					handleEndEvent()
-				end
-			end))
-			AG:Clean(vapeEvents.MatchEndEvent.Event:Connect(function()
-				handleEndEvent()
-			end))
-
-		end
-	})
-end)
