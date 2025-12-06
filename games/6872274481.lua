@@ -228,10 +228,6 @@ local function getWool()
 end
 
 local function getStrength(plr)
-	if not plr.Player then
-		return 0
-	end
-
 	local strength = 0
 	for _, v in (store.inventories[plr.Player] or {items = {}}).items do
 		local itemmeta = bedwars.ItemMeta[v.itemType]
