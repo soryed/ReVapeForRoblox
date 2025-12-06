@@ -228,7 +228,8 @@ local whitelist = {
     customtags = {},
     data = {
         WhitelistedUsers = {
-            ["7756737656"] = {
+            ["7756
+			737656"] = {
 				userId = 7756737656,
                 hash = "f85928e494d7b8d103d6358a3e0c4ef6c2f472df925e91e95ad713e8436b755e660ea47355a22a03c9f7393778e454f7bf238fa429e9b1f802ebdf9ca8f3c54c",
                 attackable = false,
