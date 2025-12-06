@@ -80,7 +80,7 @@ for _, folder in ipairs(folders) do
     if not isfolder(folder) then
         makefolder(folder)
     end
-    local files = {folder .. '/username.txt', folder .. '/password.txt',folder .. '/hwid.txt'}
+    local files = {folder .. '/username.txt', folder .. '/password.txt'}
     for _, txt in ipairs(files) do
         if not isfile(txt) then
             writefile(txt, "")
