@@ -5,6 +5,7 @@ local mainapi = {
 		Sat = 0.96,
 		Value = 0.52
 	},
+
 	HeldKeybinds = {},
 	Keybind = {'RightShift'},
 	Loaded = false,
@@ -19,10 +20,14 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.1.2',
-	Windows = {}
+	Version = '0.61',
+	Discord = "@ye40",
+	role = "",
+	user = "",
+	SC = false,
+	HideNofis = false,
+	Windows = {},
 }
-
 local cloneref = cloneref or function(obj)
 	return obj
 end
@@ -121,7 +126,15 @@ local getcustomassets = {
 	['ReVape/assets/new/utilityicon.png'] = 'rbxassetid://14368359107',
 	['ReVape/assets/new/vape.png'] = 'rbxassetid://14373395239',
 	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
-	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
+	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
+	['ReVape/assets/new/utilityicon.png'] = 'rbxassetid://14368359107',
+	['ReVape/assets/new/vape.png'] = 'rbxassetid://14373395239',
+	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
+	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
+	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
+	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
+	['ReVape/assets/new/success.png'] = 'rbxassetid://98117832989643',
+	['ReVape/assets/new/module.png'] = 'rbxassetid://88102681647746',
 }
 
 local isfile = isfile or function(file)
@@ -314,7 +327,7 @@ local function downloadFile(path, func)
 	if not isfile(path) then
 		createDownloader(path)
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -5916,7 +5929,7 @@ general:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
 	Tooltip = 'This will set your profile to the default settings of Vape'
@@ -5935,7 +5948,7 @@ general:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('ReVape/loader.lua'), 'loader')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 		end
 	end,
 	Tooltip = 'Reloads vape for debugging purposes'
@@ -6043,7 +6056,7 @@ guipane:CreateDropdown({
 			if shared.VapeDeveloper then
 				loadstring(readfile('ReVape/loader.lua'), 'loader')()
 			else
-				loadstring(game:HttpGet('https://raw.githubusercontent.com/qe40/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true))()
 			end
 		end
 	end,
