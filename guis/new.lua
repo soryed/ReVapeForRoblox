@@ -5349,6 +5349,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		progress.BackgroundColor3 =
 			type == 'alert' and Color3.fromRGB(250, 50, 56)
 			or type == 'warning' and Color3.fromRGB(236, 129, 43)
+			or type == 'success' and Color3.fromRGB(102, 205, 170)
 			or Color3.fromRGB(220, 220, 220)
 		progress.BorderSizePixel = 0
 		progress.Parent = notification
