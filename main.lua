@@ -42,7 +42,9 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-
+local function escape(s)
+    return s and s:gsub("\\", "\\\\"):gsub('"', '\\"') or ""
+end
 local function finishLoading()
 	vape.Init = nil
 	vape:Load()
@@ -54,28 +56,29 @@ local function finishLoading()
 	end)
 
 	local teleportedServers
+	
 	vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 		if (not teleportedServers) and (not shared.VapeIndependent) then
 			teleportedServers = true
-			local teleportScript =
+			local teleportScript =[[
 				shared.vapereload = true
 				if shared.VapeDeveloper then
 					loadstring(readfile('ReVape/loader.lua'), 'loader')()
 				else
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 				end
-		
+			]]
 			if shared.VapeDeveloper then
 				teleportScript = 'shared.VapeDeveloper = true\n'..teleportScript
 			end
 			if shared.VapeCustomProfile then
-				teleportScript = 'shared.VapeCustomProfile = "'..shared.VapeCustomProfile..'"\n'..teleportScript
+			    teleportScript = 'shared.VapeCustomProfile = "'..escape(shared.VapeCustomProfile)..'"\n'..teleportScript
 			end
 			if getgenv().username then
-				teleportScript =  'getgenv().username = "'..getgenv().username..'"\n'..teleportScript
+			    teleportScript = 'getgenv().username = "'..escape(getgenv().username)..'"\n'..teleportScript
 			end
 			if getgenv().password then
-				teleportScript =  'getgenv().password = "'..getgenv().password..'"\n'..teleportScript
+			    teleportScript = 'getgenv().password = "'..escape(getgenv().password)..'"\n'..teleportScript
 			end
 			vape:Save()
 			queue_on_teleport(teleportScript)
@@ -95,7 +98,7 @@ end
 if not isfile('ReVape/profiles/gui.txt') then
 	writefile('ReVape/profiles/gui.txt', 'new')
 end
-local gui = readfile('ReVape/profiles/gui.txt')
+local gui = readfile('ReVape/profiles/gui.txt') or 'new'
 
 if not isfolder('ReVape/assets/'..gui) then
 	makefolder('ReVape/assets/'..gui)
