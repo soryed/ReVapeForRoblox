@@ -2,10 +2,6 @@ local run = function(func)
 	func()
 end
 
-local TRun = function(func)
-	task.spawn(func)
-end
-
 local cloneref = cloneref or function(obj)
 	return obj
 end
@@ -13476,7 +13472,7 @@ end)
 
 local function TM()
 	vape:CreateNotification("Onyx","Please note test modules will not work 100%",6,'warning')
-	TRun(function()
+	run(function()
 		local ProjectileHightLight
 		local Color
 		local color
@@ -13530,7 +13526,7 @@ local function TM()
 			end,
 		})
 	end)
-	TRun(function()
+	run(function()
 		local BSA
 		local TargetPart
 		local Targets
@@ -13761,7 +13757,7 @@ local function TM()
 			Default = {'telepearl'}
 		})
 	end)
-	TRun(function()
+	run(function()
 		local InfiniteJump
 		local Mode
 		local jumps = 0
@@ -13790,7 +13786,7 @@ local function TM()
 			List = {"Jump", "Velocity"}
 		})
 	end)
-	TRun(function()
+	run(function()
 		local BA
 		BA = vape.Categories.Exploits:CreateModule({
 			Name = "Bed Alarm",
@@ -13803,7 +13799,7 @@ local function TM()
 		})
 
 	end)
-	TRun(function()
+	run(function()
 		local BackTrackIncoming = {Enabled = false}
 		local BackTrack = vape.Categories.Exploits:CreateModule({
 			Name = "BackTrack", 
