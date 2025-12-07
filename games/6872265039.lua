@@ -1584,7 +1584,7 @@ run(function()
 	    ['flamethrower'] = 'pyro',
 	    ['raven'] = 'raven',
 	    ['santa'] = 'santa',
-	    ['ohsxnta'] = 'santa',
+	    ['ohsxnta'] = 'santa', -- OH SANTA LOOL
 	    ['sheep'] = 'sheep_herder',
 	    ['sheep herder'] = 'sheep_herder',
 	    ['smoke'] = 'smoke',
@@ -1613,6 +1613,7 @@ run(function()
 		['yamini'] = 'cat',
 		['yeti'] = 'yeti',
 		['ice demon'] = 'yeti',
+		['19thou'] = 'yeti', -- no penguin kit sadly yeti is the nearest tho
 		['wind walker'] = 'wind_walker',
 		['zephyr'] = 'wind_walker',
 		[''] = 'none',
