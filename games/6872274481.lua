@@ -8610,7 +8610,6 @@ run(function()
 			end
 			local data = TeleportService:GetLocalPlayerTeleportData()
 			MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-			MatchHistory:Toggle()
 		end,
 	})
 end)
