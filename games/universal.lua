@@ -8064,7 +8064,7 @@ local url = "https://onyxclient.fsl58.workers.dev/announce"
             Method = "GET"
         })
         local success, data = pcall(function()
-            return HttpService:JSONDecode(response.Body)
+            return httpService:JSONDecode(response.Body)
         end)
         if not success or not data or data.Announcement == nil then
             continue
