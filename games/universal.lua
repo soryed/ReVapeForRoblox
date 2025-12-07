@@ -7506,9 +7506,6 @@ run(function()
 	})
 end)
 	
-
-
-
 run(function()
 	local GetExecutor	
 	GetExecutor = vape.Categories.Minigames:CreateModule({
@@ -7577,108 +7574,6 @@ task.spawn(function()
             if not running then break end
             task.wait(3)
   
-        end
-    end
-end)
-
-task.spawn(function()
-	local Announcement
-	local message
-	local timer
-	local type
-	if vape.role ~= "owner" and vape.role ~= 'coowner' then
-		return
-	end
-	Announcement = vape.Categories.Minigames:CreateModule({
-		Name = "Announcement",
-		Tooltip = "Fires a global announcement",
-		Function = function(callback)
-			if vape.role ~= "owner" and vape.role ~= 'coowner' then
-				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
-				return
-			end
-			if not callback then return end
-			if callback then
-				local url = "https://announceclient.fsl58.workers.dev/announce"
-				local data = {
-				    message = message.Value,
-				    time = tonumber(timer.Value) or 5,
-				    type = type.Value
-				}
-				local DeletionTime = (data.time) + 1.45
-				local response = request({
-				    Url = url,
-				    Method = "POST",
-				    Headers = {
-				        ["Content-Type"] = "application/json"
-				    },
-				    Body = httpService:JSONEncode(data)
-				})
-				task.wait(DeletionTime)
-				local response = request({
-				    Url = url,
-				    Method = "DELETE"
-				})	
-			end
-        end
-	
-	})
-	message = Announcement:CreateTextBox({
-		Name = "Message",
-		Default = "Sup from "..vape.user,
-	})
-	timer = Announcement:CreateTextBox({
-		Name = "Timer",
-		Default = "10",
-	})
-	type = Announcement:CreateDropdown({
-		Name = "Type",
-		List = {"info",'alert','warning','success'},
-	})
-end)
-
-task.spawn(function()
-    local url = "https://announceclient.fsl58.workers.dev/announce"
-
-    local lastID = nil 
-    local active = false
-
-    while task.wait(2) do
-        if active then continue end 
-
-        local response = request({
-            Url = url,
-            Method = "GET"
-        })
-
-        local success, data = pcall(function()
-            return httpService:JSONDecode(response.Body or "")
-        end)
-
-        if not success or type(data) ~= "table" or data.Announcement == nil then
-            continue
-        end
-
-        local announce = data.Announcement
-        if type(announce) ~= "table" then
-            continue
-        end
-
-        local msg  = tostring(announce.message or "")
-        local time = tonumber(announce.time) or 5
-        local type = tostring(announce.type or "info")
-
-        local id = msg .. "|" .. time .. "|" .. type
-
-        if id ~= lastID then
-            lastID = id
-            active = true
-
-            vape:CreateNotification("Onyx | " .. vape.user, msg, time, type)
-
-            task.delay(time + 1.44, function()
-                active = false
-            end)
         end
     end
 end)
