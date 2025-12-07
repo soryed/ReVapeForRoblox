@@ -11125,6 +11125,13 @@ run(function()
 			end
 			repeat
 				if not entitylib.isAlive then task.wait(0.1); continue end
+				local bed = getBedNear()
+
+				if bed then
+					if bedwars.AbilityController:canUseAbility('dragon_sword') then
+						bedwars.AbilityController:useAbility('dragon_sword')
+					end	
+				end
 				task.wait(.45)
 		    until not AutoKit.Enabled
 		end,
@@ -12792,16 +12799,7 @@ run(function()
 		local autoGloopEnabled = false
 		local GloopKillauraTargetCheck
 		local FirstPersonCheck
-		
-		local VirtualInputManager = game:GetService("VirtualInputManager")
-		
-		local function leftClick()
-			pcall(function()
-				VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-				task.wait(0.05)
-				VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
-			end)
-		end
+	
 		
 		local function hasGloop()
 			local gloopItem = getItem('glue_projectile')
