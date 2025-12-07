@@ -8051,40 +8051,51 @@ run(function()
 	})
 end)
 
---[[run(function()
-local url = "https://onyxclient.fsl58.workers.dev/announce"
+run(function()
+    local url = "https://onyxclient.fsl58.workers.dev/announce"
 
     local lastID = nil 
     local active = false
 
     while task.wait(2) do
         if active then continue end 
+
         local response = request({
             Url = url,
             Method = "GET"
         })
+
         local success, data = pcall(function()
-            return httpService:JSONDecode(response.Body)
+            return httpService:JSONDecode(response.Body or "")
         end)
-        if not success or not data or data.Announcement == nil then
+
+        if not success or type(data) ~= "table" or data.Announcement == nil then
             continue
         end
 
         local announce = data.Announcement
-        local id = (announce.message or "") .. "|" .. tostring(announce.time) .. "|" .. tostring(announce.type)
+        if type(announce) ~= "table" then
+            continue
+        end
+
+        local msg  = tostring(announce.message or "")
+        local time = tonumber(announce.time) or 5
+        local type = tostring(announce.type or "info")
+
+        local id = msg .. "|" .. time .. "|" .. type
 
         if id ~= lastID then
             lastID = id
             active = true
 
-            vape:CreateNotification("Onyx | " .. vape.user, announce.message,announce.time,announce.type)
-            task.delay(announce.time + 1.44, function()
+            vape:CreateNotification("Onyx | " .. vape.user, msg, time, type)
+
+            task.delay(time + 1.44, function()
                 active = false
             end)
         end
     end
-end)--]]
-
+end)
 run(function()
 	local GetExecutor	
 	GetExecutor = vape.Categories.Minigames:CreateModule({
