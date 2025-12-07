@@ -8603,11 +8603,12 @@ run(function()
 	MatchHistory = vape.Categories.AltFarm:CreateModule({
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur current games history',
-		Function = function()
+		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
+			if not callback then return end
 			local data = TeleportService:GetLocalPlayerTeleportData()
 			MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 		end,
