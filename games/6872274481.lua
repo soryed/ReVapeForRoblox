@@ -8601,48 +8601,21 @@ end)
 
 
 run(function()
-	local function reset()
-
-	end
 	local MatchHistory
-	local GE
 	MatchHistory = vape.Categories.AltFarm:CreateModule({
 		Name = "MatchHistory",
 		Tooltip = 'Resets ur current games history',
-		Function = function(callback)
+		Function = function()
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
-			end       
-
-			if callback then
-				if GE.Enabled then
-				MatchHistory:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-								MatchHistory:Toggle(false)
-		local data = TeleportService:GetLocalPlayerTeleportData()
-		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-					end
-				end))
-				MatchHistory:Clean(vapeEvents.MatchEndEvent.Event:Connect(function
-		MatchHistory:Toggle(false)
-		local data = TeleportService:GetLocalPlayerTeleportData()
-		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-				end))
-
-				else
-							MatchHistory:Toggle(false)
-		local data = TeleportService:GetLocalPlayerTeleportData()
-		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
-				end
 			end
+			MatchHistory:Toggle(false)
+			local data = TeleportService:GetLocalPlayerTeleportData()
+			MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 		end,
 	})
-	GE = MatchHistory:CreateToggle({
-		Name = "Game End",
-		Tooltip = "When the current match ends it resets the history",
-		Default = true
-	})
+
 end)
 run(function() 
 	local AutoBan
