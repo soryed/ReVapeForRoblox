@@ -8029,15 +8029,6 @@ run(function()
 				    },
 				    Body = httpService:JSONEncode(data)
 				})
-				task.wait(0.5)
-				local response = request({
-				    Url = url,
-				    Method = "GET"
-				})
-				
-				local decoded = HttpService:JSONEncode(response.Body)
-				local NewData = {msg=decoded.message;time=decoded.time;type=decoded.type}
-				vape:CreateNotification('Onyx | '..vape.user, NewData.msg, NewData.time,NewData.type)
 				task.wait(DeletionTime)
 				local response = request({
 				    Url = url,
