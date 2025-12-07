@@ -8613,7 +8613,6 @@ run(function()
 			MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 		end,
 	})
-
 end)
 run(function() 
 	local AutoBan
@@ -10150,8 +10149,6 @@ run(function()
 	local HoldBase = 0.15
 	local FallVelocity = -6
 	local lastPlace = 0
-    local UseBlacklisted_Blocks
-    local blacklisted
 	local function callPlace(blockpos, wool, rotate)
 		local placeFn
 		if type(vape) == "table" and type(Clutch.Clean) == "function" then
@@ -10227,13 +10224,6 @@ run(function()
 					if not wool then
 						return
 					end
-					if wool and not UseBlacklisted_Blocks.Enabled then
-						for i,v in blacklisted.ListEnabled do
-							if wool == v then
-								return																																																																																																																																																																									
-							end																																																																																																																																																																												
-						end
-					end
 					if Clutch.RequireMouse and Clutch.RequireMouse.Enabled and not inputService:IsMouseButtonPressed(0) then
 						return
 					end
@@ -10272,16 +10262,6 @@ run(function()
 		Tooltip = 'Automatically places a block when falling to clutch'
 	})
 
-	UseBlacklisted_Blocks = Clutch:CreateToggle({
-		Name = "Use Blacklisted Blocks",
-		Default = false
-	})
-
-	blacklisted = Clutch:CreateTextList({
-		Name = "Blacklisted Blocks",
-		Placeholder = "tnt"
-	})
-	
 	Clutch.LimitToItems = Clutch:CreateToggle({
 		Name = 'Limit to items',
 		Default = false,
