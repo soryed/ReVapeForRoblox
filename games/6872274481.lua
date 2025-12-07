@@ -10148,7 +10148,12 @@ run(function()
 				return
 			end
 			if not setfflag then vape:CreateNotification("Onyx", "Your current executor '"..identifyexecutor().."' does not support setfflag", 6, "warning"); return end     
-			setfflag('NextGenReplicatorEnabledWrite4', callback or false)
+if callback then
+	
+setfflag('NextGenReplicatorEnabledWrite4', 'true')
+else
+	setfflag('NextGenReplicatorEnabledWrite4', 'false')
+end
 
 		end,
 		Tooltip = 'Note this will ban you for client modifications.'
