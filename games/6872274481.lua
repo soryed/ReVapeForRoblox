@@ -6577,7 +6577,6 @@ run(function()
 			
 						hit += 1
 						local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled)
-						print(target,path,endpos)
 						if path then
 							local currentnode = target
 							for _, part in parts do
@@ -6618,8 +6617,7 @@ run(function()
 		
 					hit += 1
 					local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled)
-										print(target,path,endpos)
-
+				print(httpService:JSONEncode(path))
 					if path then
 						local currentnode = target
 						for _, part in parts do
