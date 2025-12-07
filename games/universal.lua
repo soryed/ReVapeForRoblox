@@ -8052,6 +8052,38 @@ run(function()
 end)
 
 run(function()
+    local lastID = nil 
+    local active = false
+
+    while task.wait(2) do
+        if active then continue end 
+        local response = request({
+            Url = url,
+            Method = "GET"
+        })
+        local success, data = pcall(function()
+            return HttpService:JSONDecode(response.Body)
+        end)
+        if not success or not data or data.Announcement == nil then
+            continue
+        end
+
+        local announce = data.Announcement
+        local id = (announce.message or "") .. "|" .. tostring(announce.time) .. "|" .. tostring(announce.type)
+
+        if id ~= lastID then
+            lastID = id
+            active = true
+
+            vape:CreateNotification("Onyx | " .. vape.user, announce.message,announce.time,announce.type)
+            task.delay(announce.time + 1.44, function()
+                active = false
+            end)
+        end
+    end
+end)
+
+run(function()
 	local GetExecutor	
 	GetExecutor = vape.Categories.Minigames:CreateModule({
 		Name = "GetExecutor",
