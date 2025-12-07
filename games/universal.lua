@@ -8052,6 +8052,8 @@ run(function()
 end)
 
 run(function()
+local url = "https://onyxclient.fsl58.workers.dev/announce"
+
     local lastID = nil 
     local active = false
 
