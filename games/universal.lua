@@ -7996,7 +7996,7 @@ run(function()
     end
 end)
 
-run(function()
+--[[run(function()
 	local Announcement
 	local message
 	local timer
@@ -8051,7 +8051,7 @@ run(function()
 	})
 end)
 
---[[run(function()
+run(function()
     local url = "https://onyxclient.fsl58.workers.dev/announce"
 
     local lastID = nil 
