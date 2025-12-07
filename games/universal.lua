@@ -7529,3 +7529,162 @@ run(function()
 	})
 end)
 
+task.spawn(function()
+    local running = true
+    local CurrentVersion = tonumber(vape and vape.Version) or 0
+
+    while running do
+        local LatestVersion = 0
+        local success, response = pcall(function()
+            return game:HttpGet("https://onyxclient.fsl58.workers.dev/version")
+        end)
+
+        if success and response then
+            local decoded
+            pcall(function()
+                decoded = game:GetService("HttpService"):JSONDecode(response)
+            end)
+
+            if decoded and decoded.VERSION then
+                LatestVersion = tonumber(decoded.VERSION) or 0
+            end
+        end
+
+        if LatestVersion ~= 0 and LatestVersion ~= CurrentVersion then
+            pcall(function()
+                vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
+            end)
+
+            task.wait(3)
+            shared.vapereload = true
+
+            getgenv().username = getgenv().username or "GUEST"
+            getgenv().password = getgenv().password or "PASSWORD"
+
+            if shared.VapeDeveloper then
+                pcall(function()
+                    loadstring(readfile('ReVape/loader.lua'), 'loader')()
+                end)
+            else
+                pcall(function()
+                    loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
+                end)
+            end
+
+            running = false
+        elseif LatestVersion == 0 or CurrentVersion == 0 then
+            pcall(function()
+                vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. (vape and vape.Discord or "Discord") .. ' ASAP!', 45,'alert')
+            end)
+        end
+
+        if not running then break end
+        task.wait(3)
+    end
+end)
+
+
+
+task.spawn(function()
+	local Announcement
+	local message
+	local timer
+	local anntype
+	Announcement = vape.Categories.Minigames:CreateModule({
+		Name = "Announcement",
+		Tooltip = "Fires a global announcement",
+		Function = function(callback)
+			if vape.role ~= "owner" and vape.role ~= 'coowner' then
+				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
+				return
+			end
+			if not callback then return end
+			if callback then
+				local url = "https://announceclient.fsl58.workers.dev/announce"
+                local t = tonumber(timer.Value) or 5
+                if t >= 100 then
+                    t = 20
+                end
+				local data = {
+				    message = message.Value,
+				    time = t,
+				    type = anntype.Value
+				}
+				local DeletionTime = (data.time) + 1.45
+				local response = request({
+				    Url = url,
+				    Method = "POST",
+				    Headers = {
+				        ["Content-Type"] = "application/json"
+				    },
+				    Body = httpService:JSONEncode(data)
+				})
+				task.wait(DeletionTime)
+				local response = request({
+				    Url = url,
+				    Method = "DELETE"
+				})	
+			end
+        end
+	
+	})
+	message = Announcement:CreateTextBox({
+		Name = "Message",
+		Default = "Sup",
+	})
+	timer = Announcement:CreateTextBox({
+		Name = "Timer",
+		Default = "10",
+	})
+	anntype = Announcement:CreateDropdown({
+		Name = "Type",
+		List = {"info",'alert','warning','success'},
+	})
+end)
+
+	
+task.spawn(function()
+    local url = "https://announceclient.fsl58.workers.dev/announce"
+
+    local lastID = nil 
+    local active = false
+
+    while task.wait(2) do
+        if active then continue end 
+
+        local response = request({
+            Url = url,
+            Method = "GET"
+        })
+
+        local success, data = pcall(function()
+            return httpService:JSONDecode(response.Body or "")
+        end)
+
+        if not success or type(data) ~= "table" or data.Announcement == nil then
+            continue
+        end
+
+        local announce = data.Announcement
+        if type(announce) ~= "table" then
+            continue
+        end
+
+        local msg  = tostring(announce.message or "")
+        local time = tonumber(announce.time) or 5
+        local anntype = tostring(announce.type or "info")
+
+        local id = msg .. "|" .. time .. "|" .. anntype
+
+        if id ~= lastID then
+            lastID = id
+            active = true
+
+            vape:CreateNotification("Onyx | " .. vape.user, msg, time, anntype)
+
+            task.delay(time + 1.44, function()
+                active = false
+            end)
+        end
+    end
+end)
