@@ -8608,9 +8608,9 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
-			MatchHistory:Toggle(false)
 			local data = TeleportService:GetLocalPlayerTeleportData()
 			MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
+			MatchHistory:Toggle()
 		end,
 	})
 end)
