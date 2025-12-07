@@ -8051,7 +8051,7 @@ run(function()
 	})
 end)
 
-run(function()
+--[[run(function()
 local url = "https://onyxclient.fsl58.workers.dev/announce"
 
     local lastID = nil 
@@ -8083,7 +8083,7 @@ local url = "https://onyxclient.fsl58.workers.dev/announce"
             end)
         end
     end
-end)
+end)--]]
 
 run(function()
 	local GetExecutor	
