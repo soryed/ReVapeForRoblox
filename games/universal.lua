@@ -628,12 +628,11 @@ run(function()
 
 			if whitelist.textdata ~= whitelist.olddata then
 
-				end
+			end
 				whitelist.olddata = whitelist.textdata
 				pcall(function()
 					writefile('ReVape/profiles/whitelist.json', whitelist.textdata)
 				end)
-			end
 
 			if whitelist.data.KillVape then
 				vape:Uninject()
