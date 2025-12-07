@@ -7506,7 +7506,33 @@ run(function()
 	})
 end)
 	
+
+
+
 run(function()
+	local GetExecutor	
+	GetExecutor = vape.Categories.Minigames:CreateModule({
+		Name = "GetExecutor",
+		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+				GetExecutor:Toggle(false)
+				local timer = 4.5
+					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
+					if identifyexecutor then
+					task.wait(timer + 0.5)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
+					else
+						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+					end
+				end)
+			end
+		end	
+	})
+end)
+
+task.spawn(function()
     local running = true
     local CurrentVersion = tonumber(vape.Version) or 0
 
@@ -7552,8 +7578,7 @@ run(function()
         task.wait(3)
     end
 end)
-
-run(function()
+task.spawn(function()
 	local Announcement
 	local message
 	local timer
@@ -7609,8 +7634,6 @@ run(function()
 	})
 end)
 
-
-run(function()
     local url = "https://announceclient.fsl58.workers.dev/announce"
 
     local lastID = nil 
@@ -7654,28 +7677,4 @@ run(function()
             end)
         end
     end
-end)
-
-
-run(function()
-	local GetExecutor	
-	GetExecutor = vape.Categories.Minigames:CreateModule({
-		Name = "GetExecutor",
-		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
-		Function = function(callback)
-			if callback then
-				task.spawn(function()
-				GetExecutor:Toggle(false)
-				local timer = 4.5
-					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
-					if identifyexecutor then
-					task.wait(timer + 0.5)
-						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
-					else
-						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
-					end
-				end)
-			end
-		end	
-	})
 end)
