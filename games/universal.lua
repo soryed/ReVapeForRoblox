@@ -7950,64 +7950,114 @@ run(function()
 end)
 	
 run(function()
-    local UpdateChecker
-    UpdateChecker = vape.Categories.Minigames:CreateModule({
-        Name = "UpdateChecker",
-        Function = function(callback)
-            local running = callback
-            local CurrentVersion = tonumber(vape.Version) or 0
+    local running = true
+    local CurrentVersion = tonumber(vape.Version) or 0
 
-            while running do
-                local LatestVersion = 0
-                local success, response = pcall(function()
-                    return game:HttpGet("https://onyxclient.fsl58.workers.dev/version")
-                end)
-
-                if success and response then
-                    local decoded = nil
-                    pcall(function()
-                        decoded = game:GetService("HttpService"):JSONDecode(response)
-                    end)
-
-                    if decoded and decoded.VERSION then
-                        LatestVersion = tonumber(decoded.VERSION) or 0
-                    end
-                end
-
-                if LatestVersion ~= 0 and LatestVersion ~= CurrentVersion then
-                    vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
-
-                    task.wait(3)
-                    shared.vapereload = true
-
-                    getgenv().username = getgenv().username or "GUEST"
-                    getgenv().password = getgenv().password or "PASSWORD"
-
-                    if shared.VapeDeveloper then
-                        loadstring(readfile('ReVape/loader.lua'), 'loader')()
-                    else
-                        loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
-                    end
-
-                    running = false
-
-                elseif LatestVersion == 0 or CurrentVersion == 0 then
-                    vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!', 45,'alert')
-                end
-
-                if not running then break end
-                task.wait(3)
-            end
-        end,
-        Tooltip = 'Checks whenever an update is available from the main server'
-    })
-
-    task.spawn(function()
-        repeat task.wait(1) until vape.Loaded or vape.Loaded == nil
-        if vape.Loaded and not UpdateChecker.Enabled then
-            UpdateChecker:Toggle(true)
-        end
+    while running do
+    local LatestVersion = 0
+    local success, response = pcall(function()
+        return game:HttpGet("https://onyxclient.fsl58.workers.dev/version")
     end)
+
+    if success and response then
+        local decoded = nil
+        pcall(function()
+            decoded = game:GetService("HttpService"):JSONDecode(response)
+        end)
+
+         if decoded and decoded.VERSION then
+            LatestVersion = tonumber(decoded.VERSION) or 0
+        end
+    end
+
+    if LatestVersion ~= 0 and LatestVersion ~= CurrentVersion then
+        vape:CreateNotification('Update Found!', 'Reinjecting to finalize update..', 2.85, 'warning')
+
+        task.wait(3)
+        shared.vapereload = true
+
+        getgenv().username = getgenv().username or "GUEST"
+        getgenv().password = getgenv().password or "PASSWORD"
+
+        if shared.VapeDeveloper then
+            loadstring(readfile('ReVape/loader.lua'), 'loader')()
+        else
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
+        end
+
+        running = false
+
+        elseif LatestVersion == 0 or CurrentVersion == 0 then
+            vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. vape.Discord .. ' ASAP!', 45,'alert')
+        end
+
+        if not running then break end
+        task.wait(3)
+    end
+end)
+
+run(function()
+	local Announcement
+	local message
+	local timer
+	local type
+	if vape.role ~= "owner" or vape.role ~= 'coowner' then
+		return
+	end
+	Announcement = vape.Categories.Minigames:CreateModule({
+		Name = "Announcement",
+		Tooltip = "Fires a global announcement",
+		Function = function(callback)
+			if vape.role ~= "owner" or vape.role ~= 'coowner' then
+				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
+				return
+			end
+			if not callback then return end
+			if callback then
+				local url = "https://onyxclient.fsl58.workers.dev/announce"
+				local data = {
+				    message = message.Value,
+				    time = tonumber(timer.Value) or 5,
+				    type = type.Value
+				}
+				local DeletionTime = (data.time) + 1.45
+				local response = request({
+				    Url = url,
+				    Method = "POST",
+				    Headers = {
+				        ["Content-Type"] = "application/json"
+				    },
+				    Body = httpService:JSONEncode(data)
+				})
+				task.wait(0.5)
+				local response = request({
+				    Url = url,
+				    Method = "GET"
+				})
+				
+				local decoded = HttpService:JSONEncode(response.Body)
+				local NewData = {msg=decoded.message;time=decoded.time;type=decoded.type}
+				vape:CreateNotification('Onyx | '..vape.user, NewData.msg, NewData.time,NewData.type)
+				task.wait(DeletionTime)
+				local response = request({
+				    Url = url,
+				    Method = "DELETE"
+				})	
+			end
+		end	
+	})
+	message = Announcement:CreateTextBox({
+		Name = "Message",
+		Default = "Sup from "..vape.user,
+	})
+	timer = Announcement:CreateTextBox({
+		Name = "Timer",
+		Default = "10",
+	})
+	type = Announcement:CreateDropdown({
+		Name = "Type",
+		List = {"info",'alert','warning','success'},
+	})
 end)
 
 run(function()
