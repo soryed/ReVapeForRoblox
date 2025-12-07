@@ -9108,7 +9108,7 @@ run(function()
 
 
 									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
-										AnimDelay = tick()
+										AnimDelay = SyncHit.Enabled and tick() - 0.045 or tick()
 									end
 
 									local Q = 0.5
@@ -9246,13 +9246,6 @@ run(function()
 		Max = 1,
 		Default = 0.3,
 		Decimal = 100
-	})
-	AfterSwing = Killaura:CreateSlider({
-		Name = 'After Swing',
-		Min = 0.25,
-		Max = 2,
-		Default = 0.5,
-		Suffix = 's',
 	})
 	AngleSlider = Killaura:CreateSlider({
 		Name = 'Max angle',
