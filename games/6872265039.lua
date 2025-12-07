@@ -1651,6 +1651,71 @@ run(function()
 	})
 end)
 
+run(function()
+    local function CreateUI()
+        local Players = cloneref(game:GetService("Players"))
+        local LocalPlayer = lplr
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "CustomGui"
+        screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+        screenGui.IgnoreGuiInset = true 
+        screenGui.ResetOnSpawn = false
+
+        local frame = Instance.new("Frame")
+        frame.Name = "MainFrame"
+        frame.Size = UDim2.new(0, 150, 0, 150)
+        frame.Position = UDim2.new(0, 0, 0, 0) 
+        frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        frame.BorderSizePixel = 0
+        frame.ZIndex = 1
+        frame.Parent = screenGui
+
+        local playerLevel = LocalPlayer:GetAttribute("PlayerLevel") or 0
+
+        local image = Instance.new("ImageLabel")
+        image.Name = "IconImage"
+        image.Size = UDim2.new(0, 48, 0, 48)
+        image.Position = UDim2.new(0.5, -24, 0, 5)
+        image.BackgroundTransparency = 1
+        image.Image = "rbxassetid://138775259837229"
+        image.Parent = frame
+
+        local function createStyledLabel(name, text, posY)
+            local textLabel = Instance.new("TextLabel")
+            textLabel.Name = name
+            textLabel.Size = UDim2.new(1, -10, 0, 20)
+            textLabel.Position = UDim2.new(0, 5, 0, posY)
+            textLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+            textLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+            textLabel.TextStrokeTransparency = 0.7
+            textLabel.TextScaled = true
+            textLabel.Font = Enum.Font.GothamMedium
+            textLabel.BorderSizePixel = 0
+            textLabel.Text = text
+            textLabel.Parent = frame
+        end
+
+        createStyledLabel("PlayerLevelLabel", "Lvl: " .. tostring(playerLevel), 60)
+        lplr:GetAttributeChangedSignal("PlayerLevel"):Connect(function()
+            playerLevel = lplr:GetAttribute("PlayerLevel") or 0
+            createStyledLabel("PlayerLevelLabel", "Lvl: " .. playerLevel, 60)
+        end)
+    end
+	local Piston
+	Piston = vape.Legit:CreateModule({
+		Name = 'Piston Effect',
+		Function = function(callback)
+			if callback then
+	           	CreateUI()
+			else
+				lplr.PlayerGui:FindFirstChild('CustomGui'):Destroy()
+	        end
+		end,
+		Tooltip = 'Creates a piston frame!'
+	})
+end)
+																						
 if getgenv().TestMode then	
 	run(function()
 		local ResetHistory
