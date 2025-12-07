@@ -11128,8 +11128,8 @@ run(function()
 				local bed = getBedNear()
 
 				if bed then
-					if bedwars.AbilityController:canUseAbility('dragon_sword') then
-						bedwars.AbilityController:useAbility('dragon_sword')
+					if bedwars.AbilityController:canUseAbility('yeti_glacial_roar') then
+						bedwars.AbilityController:useAbility('yeti_glacial_roar')
 					end	
 				end
 				task.wait(.45)
@@ -11847,8 +11847,6 @@ run(function()
 		
 					if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 then
 						if block:GetAttribute('PlacedByUserId') == lplr.UserId and (block.Position - entitylib.character.RootPart.Position).Magnitude < 30 then
-							local pickaxe = getPickaxeSlot()
-							hotbarSwitch(pickaxe)
 							task.spawn(bedwars.breakBlock, block, false, nil, true)
 						end
 					end
