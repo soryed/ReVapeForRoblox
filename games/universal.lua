@@ -7586,14 +7586,14 @@ task.spawn(function()
 	local message
 	local timer
 	local type
-	if vape.role ~= "owner" or vape.role ~= 'coowner' then
+	if vape.role ~= "owner" and vape.role ~= 'coowner' then
 		return
 	end
 	Announcement = vape.Categories.Minigames:CreateModule({
 		Name = "Announcement",
 		Tooltip = "Fires a global announcement",
 		Function = function(callback)
-			if vape.role ~= "owner" or vape.role ~= 'coowner' then
+			if vape.role ~= "owner" and vape.role ~= 'coowner' then
 				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
 				return
 			end
