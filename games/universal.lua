@@ -8026,7 +8026,7 @@ run(function()
 				})	
 			end
         end
-    end	
+	
 	})
 	message = Announcement:CreateTextBox({
 		Name = "Message",
