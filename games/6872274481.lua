@@ -11013,8 +11013,12 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		sheep_herder = function()
+			kitCollection('sheep', function(v)
+			    bedwars.Client:Get("SheepHerder/TameSheep"):SendToServer({[1] = v})
+			end, 18, false)
+		end,
 		regent = function()
-
 			repeat
 				if not entitylib.isAlive then task.wait(0.1); continue end
 				local axe = getItem("void_axe")
