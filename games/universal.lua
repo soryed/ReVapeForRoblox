@@ -7987,7 +7987,7 @@ run(function()
     end
 end)
 
---[[run(function()
+run(function()
 	local Announcement
 	local message
 	local timer
@@ -8005,7 +8005,7 @@ end)
 			end
 			if not callback then return end
 			if callback then
-				local url = "https://onyxclient.fsl58.workers.dev/announce"
+				local url = "https://announceclient.fsl58.workers.dev/announce"
 				local data = {
 				    message = message.Value,
 				    time = tonumber(timer.Value) or 5,
@@ -8026,7 +8026,8 @@ end)
 				    Method = "DELETE"
 				})	
 			end
-		end	
+        end
+    end	
 	})
 	message = Announcement:CreateTextBox({
 		Name = "Message",
@@ -8042,8 +8043,9 @@ end)
 	})
 end)
 
+
 run(function()
-    local url = "https://onyxclient.fsl58.workers.dev/announce"
+    local url = "https://announceclient.fsl58.workers.dev/announce"
 
     local lastID = nil 
     local active = false
@@ -8086,7 +8088,9 @@ run(function()
             end)
         end
     end
-end)--]]
+end)
+
+
 run(function()
 	local GetExecutor	
 	GetExecutor = vape.Categories.Minigames:CreateModule({
