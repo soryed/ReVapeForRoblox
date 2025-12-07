@@ -8602,9 +8602,7 @@ end)
 
 run(function()
 	local function reset()
-		MatchHistory:Toggle(false)
-		local data = TeleportService:GetLocalPlayerTeleportData()
-		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
+
 	end
 	local MatchHistory
 	local GE
@@ -8621,13 +8619,21 @@ run(function()
 				if GE.Enabled then
 				MatchHistory:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
 					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
-						reset()
+								MatchHistory:Toggle(false)
+		local data = TeleportService:GetLocalPlayerTeleportData()
+		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 					end
 				end))
-				MatchHistory:Clean(vapeEvents.MatchEndEvent.Event:Connect(reset))
+				MatchHistory:Clean(vapeEvents.MatchEndEvent.Event:Connect(function
+		MatchHistory:Toggle(false)
+		local data = TeleportService:GetLocalPlayerTeleportData()
+		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
+				end))
 
 				else
-					reset()
+							MatchHistory:Toggle(false)
+		local data = TeleportService:GetLocalPlayerTeleportData()
+		MatchHistory:Clean(TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer, data))
 				end
 			end
 		end,
@@ -10064,7 +10070,7 @@ run(function()
 	local AutoSendLength
 	local oldphys, oldsend
 	local enabled
-	Desync = vape.Categories.Exploits:CreateModule({
+	Desync = vape.Categories.Esetfflag('NextGenReplicatorEnabledWrite4', 'false')xploits:CreateModule({
 		Name = 'Desync',
 		Function = function(callback)
 			if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning") return end
