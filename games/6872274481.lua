@@ -13546,10 +13546,10 @@ run(function()
 			Darker = true,
 			Default = {'telepearl'}
 		})
-	end)
+	end)--]]
 
-	run(function()
-		local BackTrackIncoming = {Enabled = false}
+run(function()
+	local BackTrackIncoming = {}
 		local BackTrack = vape.Categories.Exploits:CreateModule({
 			Name = "BackTrack", 
 			Function = function(callback)
@@ -13585,5 +13585,5 @@ run(function()
 				end
 			end
 		})
-	end)
---]]
+end)
+
