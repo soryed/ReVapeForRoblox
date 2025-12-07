@@ -2540,7 +2540,7 @@ function mainapi:CreateGUI()
 	discordbutton.BackgroundTransparency = 1
 	discordbutton.Image = getcustomasset('ReVape/assets/new/discord.png')
 	discordbutton.Parent = window
-	addTooltip(discordbutton, 'Join discord')
+	addTooltip(discordbutton, 'My discord!')
 	local settingspane = Instance.new('TextButton')
 	settingspane.Size = UDim2.fromScale(1, 1)
 	settingspane.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
@@ -3578,35 +3578,8 @@ function mainapi:CreateGUI()
 		settingspane.Visible = false
 	end)
 	discordbutton.MouseButton1Click:Connect(function()
-		task.spawn(function()
-			local body = httpService:JSONEncode({
-				nonce = httpService:GenerateGUID(false),
-				args = {
-					invite = {code = '5gJqhQmrdS'},
-					code = '5gJqhQmrdS'
-				},
-				cmd = 'INVITE_BROWSER'
-			})
-
-			for i = 1, 14 do
-				task.spawn(function()
-					request({
-						Method = 'POST',
-						Url = 'http://127.0.0.1:64'..(53 + i)..'/rpc?v=1',
-						Headers = {
-							['Content-Type'] = 'application/json',
-							Origin = 'https://discord.com'
-						},
-						Body = body
-					})
-				end)
-			end
-		end)
-
-		task.spawn(function()
 			tooltip.Text = 'Copied!'
-			setclipboard('https://discord.gg/5gJqhQmrdS')
-		end)
+			setclipboard(self.Discord)
 	end)
 	settingsbutton.MouseEnter:Connect(function()
 		settingsicon.ImageColor3 = uipallet.Text
