@@ -8131,7 +8131,9 @@ task.spawn(function()
         end
     end
 end)
-local uipallet = vape.uipallet
+local uipallet = {
+	Font = "Arimo"
+}
 
 run(function()
     local Configs
