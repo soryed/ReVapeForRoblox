@@ -8488,7 +8488,7 @@ run(function()
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end       
