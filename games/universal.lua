@@ -8276,72 +8276,83 @@ run(function()
         end
     end
 
-    local function RequestURL(method,prnt)
-            if method == "GET" then
-                local URL = "https://configclient.fsl58.workers.dev/configs"
+	local function RequestURL(method, prnt)
+		local URL = "https://configclient.fsl58.workers.dev/configs"
 
-                local response = request({
-                    Url = URL,
-                    Method = "GET"
-                })
+		if method == "GET" then
+			local response = request({
+				Url = URL,
+				Method = "GET"
+			})
 
-                if not response or response.StatusCode ~= 200 then
-                    warn("Failed to fetch configs:", response and response.StatusMessage)
-                    return
-                end
+			if not response or response.StatusCode ~= 200 then
+				warn("Failed to fetch configs:", response and response.StatusMessage)
+				return
+			end
 
-                local decoded = nil
-                local ok, err = pcall(function()
-                    decoded = httpService:JSONDecode(response.Body)
-                end)
+			local decoded = nil
+			local ok, err = pcall(function()
+				decoded = httpService:JSONDecode(response.Body)
+			end)
 
-                if not ok then
-                    warn("JSON decode error:", err)
-                    return
-                end
+			if not ok then
+				warn("JSON decode error:", err)
+				return
+			end
 
-                for _, cfg in ipairs(decoded) do
-                    local configData = {
-                        name = cfg.name,
-                        created = cfg.created,
-                        profileName = cfg.profileName,
-                        profile = cfg.profile,
-                        See = cfg.See or true,
-                    }
-                    if not configData.See then return end
-					print(configData.name)
-                    createProfile(configData, prnt)
-                end
-            elseif method == "POST" then
-                local URL = "https://configclient.fsl58.workers.dev/configs"
+			for _, cfg in ipairs(decoded) do
+				local configData = {
+					name = cfg.name,
+					created = cfg.created,
+					profileName = cfg.profileName,
+					profile = cfg.profile,
+					See = cfg.See or true,
+				}
+				if not configData.See then return end
+				print(configData.name)
+				createProfile(configData, prnt)
+			end
 
+		elseif method == "POST" then
+			local body = httpService:JSONEncode({
+				profile = Option.profile,
+				name = Option.Username,
+				date = Option.created,
+				ProfileName = Option.profileName,
+				See = Option.See
+			})
 
-                local body = httpService:JSONEncode({
-                    profile = Option.profile,
-                    name = Option.Username,
-                    date = Option.created,
-                    ProfileName = Option.profileName,
-                    See = Option.See
-                })
+			local res = request({
+				Url = URL,
+				Method = "POST",
+				Body = body,
+				Headers = {
+					["Content-Type"] = "application/json"
+				}
+			})
 
-                local res = request({
-                    Url = URL,
-                    Method = "POST",
-                    Body = body,
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    }
-                })
+			if res.StatusCode ~= 200 then
+				warn("POST failed:", res.Body)
+			else
+				print("POST success:", res.Body)
+			end
 
-                if res.StatusCode ~= 200 then
-                    warn("POST failed:", res.Body)
-                else
-                    print("POST success:", res.Body)
-                end
-            else
-                warn("[Method is not allowed]: "..method)
-            end
-    end
+		elseif method == "DELETE" then
+			local res = request({
+				Url = URL,
+				Method = "DELETE"
+			})
+
+			if res.StatusCode ~= 200 then
+				warn("DELETE failed:", res.Body)
+			else
+				print("DELETE success:", res.Body)
+			end
+
+		else
+			warn("[Method is not allowed]: "..method)
+		end
+	end
 
     Configs = vape.Categories.Exploits:CreateModule({
         Name = "Configs",
@@ -8351,7 +8362,8 @@ run(function()
                 local ProfilesGUI = create("Frame",{AnchorPoint=Vector2.new(0.5,0.5);BackgroundColor3=Color3.fromRGB(26,25,26);Name='ProfilesGUI';Position=UDim2.fromScale(0.5,0.5);Size=UDim2.fromOffset(660,465),Parent=vape.gui.ScaledGui})
                 local MainFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='MainFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI})
                 local CreateFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='CreateFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})
-                addBlur(ProfilesGUI)
+                local ClearProfileFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='ClearProfileFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})  
+				addBlur(ProfilesGUI)
                 create("TextButton",{BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromOffset(0,0),Text="",Parent=ProfilesGUI,Modal=true})
                 createC(ProfilesGUI,UDim.new(0,5))
                 create("Frame",{Name='Divider',BorderSizePixel=0;BackgroundColor3=Color3.fromRGB(36,34,36);Position=UDim2.fromOffset(0,40);Size=UDim2.new(1,0,0,1);Parent=ProfilesGUI})
@@ -8385,6 +8397,8 @@ run(function()
                 createS(reloadButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
                 create("TextLabel",{Parent=reloadButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='RELOAD PROFILES',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
 
+
+				
                 local Children = create("ScrollingFrame",{Parent=MainFrame,Name='Children',BackgroundTransparency=1,Position=UDim2.fromOffset(147,133),Size=UDim2.fromOffset(500,321),AutomaticCanvasSize="Y",CanvasSize=UDim2.fromOffset(0,107),ScrollBarImageTransparency=0.75,ScrollBarThickness=2})
                 create("UIGridLayout",{Parent=Children,CellPadding=UDim2.fromOffset(4,3),CellSize=UDim2.fromOffset(190,185),FillDirection='Horizontal',FillDirectionMaxCells=9})
 
@@ -8417,6 +8431,30 @@ run(function()
                 createS(publishButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
                 create("TextLabel",{Parent=publishButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='PUBLISH',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
 
+                local ClearButton = create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(170, 64, 66),Name='remove',Position=UDim2.fromOffset(15,151),Size=UDim2.fromOffset(158,44),Text=''})
+                createC(ClearButton,UDim.new(0,4))
+                createS(ClearButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=ClearButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR PROFILES',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+
+				local backV2 =create("TextButton",{Parent=ClearProfileFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(79,354),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
+                createC(backV2,UDim.new(0,4))
+                createS(backV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=backV2,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+
+                local ClearButtonV2 = create("TextButton",{Parent=ClearProfileFrame,BackgroundColor3=Color3.fromRGB(170, 64, 66),Name='Clear',Position=UDim2.fromOffset(436,354),Size=UDim2.fromOffset(158,44),Text=''})
+                createC(ClearButtonV2,UDim.new(0,4))
+                createS(ClearButtonV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=ClearButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+				
+				local WarningImage = create("ImageLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.new(0.168,0,0.375,0),Size=UDim2.fromOffset(437,180),Image=getcustomasset('ReVape/assets/new/warning.png'),ScaleType='Fit'})
+                local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=30})
+
+
+				if vape.role ~= "owner" or vape.role ~= "coowner" then
+					ClearButton:Destroy()
+					ClearProfileFrame:Destroy()
+				end
+			
                 local back =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(15,398),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
                 createC(back,UDim.new(0,4))
                 createS(back,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
@@ -8470,15 +8508,36 @@ run(function()
                     addProfile(child)
                     updateDisplay()
                 end)
-                createButton.Activated:Connect(function()
-                    MainFrame.Visible = false
-                    CreateFrame.Visible = true
-                end)
 
-                back.Activated:Connect(function()
-                    MainFrame.Visible = true
-                    CreateFrame.Visible = false
-                end)
+
+				if backV2 then
+					createButton.Activated:Connect(function()
+						MainFrame.Visible = false
+						CreateFrame.Visible = true
+						ClearProfileFrame.Visible = false
+					end)
+
+					back.Activated:Connect(function()
+						MainFrame.Visible = true
+						CreateFrame.Visible = false
+						ClearProfileFrame.Visible = false
+					end)
+					backV2.Activated:Connect(function()
+						MainFrame.Visible = false
+						CreateFrame.Visible = false
+						ClearProfileFrame.Visible = true
+					end)
+				else
+					createButton.Activated:Connect(function()
+						MainFrame.Visible = false
+						CreateFrame.Visible = true
+					end)
+
+					back.Activated:Connect(function()
+						MainFrame.Visible = true
+						CreateFrame.Visible = false
+					end)
+				end
 
                 public.Activated:Connect(function()
                     Option.See = true
@@ -8495,6 +8554,21 @@ run(function()
                     TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
                     TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
+				local old,old2 = nil,nil
+				if ClearButtonV2 then
+					ClearButtonV2.Activated:Connect(function()
+						RequestURL("DELETE",nil)
+						old = WarningText.Text
+						old2 = WarningImage.Image
+						WarningText.Text = "Successfully Deleted!"
+						WarningImage.Image = getcustomasset('ReVape/assets/new/success.png')
+						task.wait(3)
+						WarningText.Text = old
+						WarningImage.Image = old2
+						old = nil
+						old2 = nil
+					end)
+				end
 
                 publishButton.Activated:Connect(function()
                     updateUN()
@@ -8539,37 +8613,37 @@ run(function()
                 end)
 
                 sortProfiles(sorted)
-	if not loaded then
-                loading.Visible = true
-                local max = math.random(1, 5)
-                local current = 0
-
-                local frames = {
-                    "LOADING",
-                    "LOADING.",
-                    "LOADING..",
-                    "LOADING...",
-                }
-
-                while task.wait(math.random(1,2)) do
-                    current += 1
-                    if current >= max then
-                        loading.Text = "LOADING.."
-                        task.wait(0.5)
-                        loading.Visible = false
-                        break
-                    end
-
-                    for _, frame in ipairs(frames) do
-                        loading.Text = frame
-                        task.wait(0.5)
-                    end
-                end
-                task.wait(1)
-                loading.Visible = false
-loaded = true
-RequestURL("GET",Children)
-end
+				if not loaded then
+			                loading.Visible = true
+			                local max = math.random(1, 5)
+			                local current = 0
+			
+			                local frames = {
+			                    "LOADING",
+			                    "LOADING.",
+			                    "LOADING..",
+			                    "LOADING...",
+			                }
+			
+			                while task.wait(math.random(1,2)) do
+			                    current += 1
+			                    if current >= max then
+			                        loading.Text = "LOADING.."
+			                        task.wait(0.5)
+			                        loading.Visible = false
+			                        break
+			                    end
+			
+			                    for _, frame in ipairs(frames) do
+			                        loading.Text = frame
+			                        task.wait(0.5)
+			                    end
+			                end
+	                task.wait(1)
+	                loading.Visible = false
+					loaded = true
+					RequestURL("GET",Children)
+				end
                 RequestURL("GET",Children)
             else
                 RemoveUI()
