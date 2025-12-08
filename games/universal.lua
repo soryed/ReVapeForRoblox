@@ -8255,7 +8255,7 @@ run(function()
         create("TextLabel",{Name='user';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromOffset(0,0.064);Size=UDim2.new(1,0,0.33,0);Font=uipallet.Font;Text=Name;TextSize=14;TextColor3=Color3.fromRGB(255,255,255)})
         ProfileFrame:SetAttribute("Profile",profile)
         ProfileButton.Activated:Connect(function()
-            DownloadConfig(profile,profileName,user)
+            DownloadConfig(profile,Name,user)
         end)
     end
 
