@@ -8445,7 +8445,7 @@ run(function()
                 local ClearButtonV2 = create("TextButton",{Parent=ClearProfileFrame,BackgroundColor3=Color3.fromRGB(170, 64, 66),Name='Clear',Position=UDim2.fromOffset(436,354),Size=UDim2.fromOffset(158,44),Text=''})
                 createC(ClearButtonV2,UDim.new(0,4))
                 createS(ClearButtonV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
-                create("TextLabel",{Parent=ClearButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+                create("TextLabel",{Parent=ClearButtonV2,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
 				
 				local WarningImage = create("ImageLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.new(0.168,0,0.375,0),Size=UDim2.fromOffset(437,180),Image=getcustomasset('ReVape/assets/new/warning.png'),ScaleType='Fit'})
                 local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=30})
@@ -8510,7 +8510,6 @@ run(function()
                 end)
 
 
-				if backV2 then
 					createButton.Activated:Connect(function()
 						MainFrame.Visible = false
 						CreateFrame.Visible = true
@@ -8527,17 +8526,7 @@ run(function()
 						CreateFrame.Visible = false
 						ClearProfileFrame.Visible = true
 					end)
-				else
-					createButton.Activated:Connect(function()
-						MainFrame.Visible = false
-						CreateFrame.Visible = true
-					end)
-
-					back.Activated:Connect(function()
-						MainFrame.Visible = true
-						CreateFrame.Visible = false
-					end)
-				end
+				
 
                 public.Activated:Connect(function()
                     Option.See = true
@@ -8555,7 +8544,6 @@ run(function()
                     TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
 				local old,old2 = nil,nil
-				if ClearButtonV2 then
 					ClearButtonV2.Activated:Connect(function()
 						RequestURL("DELETE",nil)
 						old = WarningText.Text
@@ -8568,7 +8556,6 @@ run(function()
 						old = nil
 						old2 = nil
 					end)
-				end
 
                 publishButton.Activated:Connect(function()
                     updateUN()
