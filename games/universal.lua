@@ -8276,7 +8276,7 @@ run(function()
         end
     end
 
-    local function RequestURL(method)
+    local function RequestURL(method,prnt)
             if method == "GET" then
                 local URL = "https://configclient.fsl58.workers.dev/configs"
 
@@ -8310,7 +8310,7 @@ run(function()
                     }
                     if not configData.See then return end
 					print(configData.name)
-                    createProfile(configData, Children)
+                    createProfile(configData, prnt)
                 end
             elseif method == "POST" then
                 local URL = "https://configclient.fsl58.workers.dev/configs"
@@ -8501,7 +8501,7 @@ run(function()
                     updatePN()
                     updateProfiles()
                     Option.created = os.date("%m/%d/%Y")
-                    RequestURL("POST")
+                    RequestURL("POST",nil)
                 end)
 
                 reloadButton.Activated:Connect(function()
@@ -8535,7 +8535,7 @@ run(function()
                     updatePN()
                     updateProfiles()
                     Option.created = os.date("%m/%d/%Y")
-                    RequestURL("GET")
+                    RequestURL("GET",Children)
                 end)
 
                 sortProfiles(sorted)
@@ -8568,9 +8568,9 @@ run(function()
                 task.wait(1)
                 loading.Visible = false
 loaded = true
-RequestURL("GET")
+RequestURL("GET",Children)
 end
-                RequestURL("GET")
+                RequestURL("GET",Children)
             else
                 RemoveUI()
             end
