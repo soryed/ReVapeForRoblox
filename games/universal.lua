@@ -8146,7 +8146,7 @@ run(function()
         See = true,
         profile = '',
         profileName = '',
-        Username = '',
+        Username = vape.user,
         created = os.date("%m/%d/%Y")
     }
 
@@ -8225,12 +8225,12 @@ run(function()
 
     local function DownloadConfig(file,name,user)
         task.wait(1.5)
-        if isfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt') then
+        if isfile('ReVape/profiles/'..name..vape.Place..'.txt') then
             vape:CreateNotification("Onyx","You already have '"..name.."' by "..user.."!",10,'warning')
             return
         else
             local s,e = pcall(function()
-                return writefile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt',file)
+                return writefile('ReVape/profiles/'..name..vape.Place..'.txt',file)
             end)
             if e or not s then
                 vape:CreateNotification("Onyx","Could not save '"..name.."' by "..user.."? DM "..vape.Discord.." for help!",15,'alert')
@@ -8268,6 +8268,7 @@ run(function()
         end
     end
 
+	clearProfiles(Children)
 
     local function RemoveUI()
         if vape.gui.ScaledGui then
@@ -8307,10 +8308,9 @@ run(function()
 					created = cfg.created,
 					profileName = cfg.profileName,
 					profile = cfg.profile,
-					See = cfg.See or true,
+					See = cfg.See,
 				}
 				if not configData.See then return end
-				print(configData.name)
 				createProfile(configData, prnt)
 			end
 
@@ -8334,8 +8334,9 @@ run(function()
 
 			if res.StatusCode ~= 200 then
 				warn("POST failed:", res.Body)
+				vape:CreateNotification('Onyx','Config wasn\'t successfully created? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
 			else
-				print("POST success:", res.Body)
+				vape:CreateNotification('Onyx','Config was successfully created!',6,"success")
 			end
 
 		elseif method == "DELETE" then
@@ -8345,9 +8346,9 @@ run(function()
 			})
 
 			if res.StatusCode ~= 200 then
-				warn("DELETE failed:", res.Body)
+				ape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
 			else
-				print("DELETE success:", res.Body)
+				vape:CreateNotification('Onyx','All saved config\'s was successfully deleted!',6,"success")
 			end
 
 		else
@@ -8410,11 +8411,11 @@ run(function()
                 local searchV2 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV2,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Name of profile',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
                 createP(searchV2,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
 
-                local searchFrameV3 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,150),Size=UDim2.fromOffset(419,31)})
+               --[[ local searchFrameV3 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,150),Size=UDim2.fromOffset(419,31)})
                 createC(searchFrameV3,UDim.new(0,4))
                 createS(searchFrameV3,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(48,48,48),'Round','FixedSize',1,0.2)
                 local searchV3 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV3,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Username',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
-                createP(searchV3,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
+                createP(searchV3,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))--]]
 
 
                 local public =create("TextButton",{Parent=CreateFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='public',Position=UDim2.fromOffset(201,59),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
@@ -8477,7 +8478,7 @@ run(function()
                 end
 
                 local function updateUN()
-                    Option.Username = searchV3.Text
+                    Option.Username = vape.user
                 end
 
                 search:GetPropertyChangedSignal("Text"):Connect(updateDisplay)
@@ -8628,7 +8629,6 @@ run(function()
 	                task.wait(1)
 	                loading.Visible = false
 					loaded = true
-					RequestURL("GET",Children)
 				end
                 RequestURL("GET",Children)
             else
