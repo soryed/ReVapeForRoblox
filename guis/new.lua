@@ -5539,7 +5539,10 @@ function mainapi:Remove(obj)
 	end
 end
 
-function mainapi:Save(newprofile)
+function mainapi:Save(newprofile,profilename)
+	if profilename == nil then
+		profilename = self.Profile
+	end
 	if not self.Loaded then return end
 	local guidata = {
 		Categories = {},
@@ -5582,7 +5585,7 @@ function mainapi:Save(newprofile)
 	end
 
 	writefile('ReVape/profiles/'..game.GameId..'.gui.txt', httpService:JSONEncode(guidata))
-	writefile('ReVape/profiles/'..self.Profile..self.Place..'.txt', httpService:JSONEncode(savedata))
+	writefile('ReVape/profiles/'..profilename..self.Place..'.txt', httpService:JSONEncode(savedata))
 end
 
 function mainapi:SaveOptions(object, savedoptions)
