@@ -8131,6 +8131,7 @@ task.spawn(function()
         end
     end
 end)
+local uipallet = vape.uipallet
 
 run(function()
     local Configs
