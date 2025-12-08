@@ -8448,7 +8448,7 @@ run(function()
                 create("TextLabel",{Parent=ClearButtonV2,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
 				
 				local WarningImage = create("ImageLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.new(0.168,0,0.375,0),Size=UDim2.fromOffset(437,180),Image=getcustomasset('ReVape/assets/new/warning.png'),ScaleType='Fit'})
-                local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=30})
+                local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=25})
 
 
 				if R ~= "owner" then
@@ -8543,11 +8543,10 @@ run(function()
                     TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
                     TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
-				local old,old2 = nil,nil
 					ClearButtonV2.Activated:Connect(function()
 						RequestURL("DELETE",nil)
-						old = WarningText.Text
-						old2 = WarningImage.Image
+						local old = WarningText.Text
+						local old2 = WarningImage.Image
 						WarningText.Text = "Successfully Deleted!"
 						WarningImage.Image = getcustomasset('ReVape/assets/new/success.png')
 						task.wait(3)
