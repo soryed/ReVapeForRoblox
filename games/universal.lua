@@ -8225,12 +8225,12 @@ run(function()
 
     local function DownloadConfig(file,name,user)
         task.wait(1.5)
-        if isfile('ReVape/profiles/'..name..vape.Place..'.txt') then
+        if isfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt') then
             vape:CreateNotification("Onyx","You already have '"..name.."' by "..user.."!",10,'warning')
             return
         else
             local s,e = pcall(function()
-                return writefile('ReVape/profiles/'..name..vape.Place..'.txt',file)
+                return writefile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt',file)
             end)
             if e or not s then
                 vape:CreateNotification("Onyx","Could not save '"..name.."' by "..user.."? DM "..vape.Discord.." for help!",15,'alert')
