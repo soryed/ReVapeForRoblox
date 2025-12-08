@@ -8340,7 +8340,7 @@ run(function()
             end
     end
 
-    Configs = vape.Legit:CreateModule({
+    Configs = vape.Categories.Exploits:CreateModule({
         Name = "Configs",
         Tooltip = 'Global configs',
         Function = function(callback)
