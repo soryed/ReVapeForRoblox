@@ -8543,7 +8543,7 @@ run(function()
                     TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
                     TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
-					ClearButtonV2.Activated:Connect(function()
+					ClearButton.Activated:Connect(function()
 						RequestURL("DELETE",nil)
 						local old = WarningText.Text
 						local old2 = WarningImage.Image
