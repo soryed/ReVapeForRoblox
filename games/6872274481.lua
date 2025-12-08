@@ -8900,7 +8900,7 @@ end)
 
 run(function()
 	local Killaura
-	local SyncHits
+	local SyncHit
 	local Targets
 	local Sort
 	local SwingRange
@@ -9108,7 +9108,7 @@ run(function()
 
 
 									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
-										AnimDelay = SyncHit.Enabled and tick() - 0.045 or tick()
+										AnimDelay =  tick()
 									end
 
 									local Q = 0.5
