@@ -8432,7 +8432,7 @@ run(function()
                 createS(publishButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
                 create("TextLabel",{Parent=publishButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='PUBLISH',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
 
-                local ClearButton = create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(170, 64, 66),Name='remove',Position=UDim2.fromOffset(15,151),Size=UDim2.fromOffset(158,44),Text=''})
+                local ClearButton = create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(170, 64, 66),Name='remove',Position=UDim2.fromOffset(15,151),Size=UDim2.fromOffset(120,32),Text=''})
                 createC(ClearButton,UDim.new(0,4))
                 createS(ClearButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
                 create("TextLabel",{Parent=ClearButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CLEAR PROFILES',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
@@ -8452,8 +8452,7 @@ run(function()
 
 
 				if R ~= "owner" then
-					ClearButton:Destroy()
-					ClearProfileFrame:Destroy()
+					ClearButton.Visible = false
 				end
 			
                 local back =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(15,398),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
