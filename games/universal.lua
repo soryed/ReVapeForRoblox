@@ -8159,7 +8159,7 @@ run(function()
             end)
         end)
     end
-
+	local loaded = false
     function sortProfiles(byNewest)
         table.sort(profiles, function(a, b)
             if byNewest then
@@ -8306,9 +8306,10 @@ run(function()
                         created = cfg.created,
                         profileName = cfg.profileName,
                         profile = cfg.profile,
-                        See = cfg.See,
+                        See = cfg.See or true,
                     }
                     if not configData.See then return end
+					print(configData.name)
                     createProfile(configData, Children)
                 end
             elseif method == "POST" then
@@ -8538,6 +8539,7 @@ run(function()
                 end)
 
                 sortProfiles(sorted)
+	if not loaded then
                 loading.Visible = true
                 local max = math.random(1, 5)
                 local current = 0
@@ -8565,6 +8567,9 @@ run(function()
                 end
                 task.wait(1)
                 loading.Visible = false
+loaded = true
+RequestURL("GET")
+end
                 RequestURL("GET")
             else
                 RemoveUI()
