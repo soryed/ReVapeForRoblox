@@ -8485,7 +8485,6 @@ run(function()
 
                 searchV2:GetPropertyChangedSignal("Text"):Connect(updatePN)
 
-                searchV3:GetPropertyChangedSignal("Text"):Connect(updateUN)
 
 
                 new.Activated:Connect(function()
