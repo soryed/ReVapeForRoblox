@@ -223,12 +223,13 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-
+local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
 	vape.role = S 
 	vape.user = U
-	print(S,U)
+	R = S
+	UR = U
 end)
 
 local whitelist = {
@@ -8450,7 +8451,7 @@ run(function()
                 local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=30})
 
 
-				if vape.role ~= "owner" or vape.role ~= "coowner" then
+				if R ~= "owner" then
 					ClearButton:Destroy()
 					ClearProfileFrame:Destroy()
 				end
