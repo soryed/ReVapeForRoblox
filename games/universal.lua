@@ -8144,10 +8144,11 @@ run(function()
 
     local Option = {
         See = true,
-        profile = '',
-        profileName = '',
+        Profile = '',
+        ProfileName = '',
         Username = vape.user,
-        created = os.date("%m/%d/%Y")
+        Created = os.date("%m/%d/%Y"),
+		Description = ''
     }
 
     local function TweenController(object, tweenInfo, goal)
@@ -8176,7 +8177,7 @@ run(function()
     end
     local function updateProfiles()
         if isfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt') then
-            Option.profile = readfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt')
+            Option.Profile = readfile('ReVape/profiles/'..vape.Profile..vape.Place..'.txt')
         end
     end
     updateProfiles()
@@ -8244,6 +8245,35 @@ run(function()
 			vape:Load(true, awesome)
         end
     end
+    local ProfilesGUI = create("Frame",{Visible=false,AnchorPoint=Vector2.new(0.5,0.5);BackgroundColor3=Color3.fromRGB(26,25,26);Name='ProfilesGUI';Position=UDim2.fromScale(0.5,0.5);Size=UDim2.fromOffset(660,465),Parent=vape.gui.ScaledGui})
+
+	local function createPopup(values,prnt)
+        local user = values.name
+        local date = values.created
+        local Name = values.profileName
+        local profile = values.profile
+		local desc = values.description
+		local popupFrame = create("Frame",{BorderSizePixel=0,Name="popup",Parent=ProfilesGUI,Position=UDim2.fromScale(0.5,0.5),Size=UDim2.fromScale(0.95,0.9),AnchorPoint=UDim.new(0.5,0.5),BackgroundColor3=Color3.fromRGB(32,32,32),ZIndex=5})
+		createS(popupFrame,'Contextual',UDim.new(0,0),'Outer',Color3.fromRGB(42,40,42),'Round','FixedSize',2,0)
+		create("Frame",{Parent=popupFrame,Name='divide1',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(165,0),Size=UDim2.fromOffset(1,1),ZIndex=5})
+		create("Frame",{Parent=popupFrame,Name='divide2',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(180,290),Size=UDim2.new(0.729,0,0,1),ZIndex=5})
+		local DownloadsFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(42,40,42),Name='downloads',Position=UDim2.fromScale(0.29,0.545),Size=UDim2.fromOffset(432,25),ZIndex=5})
+		createC(DownloadsFrame,UDim.new(0,4))
+		create("TextLabel",{Text='Created on '..date,Name='Creation',AnchorPoint=UDim.new(0.5,0),BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromScale(0.5,1),Size=UDim2.fromOffset(100,20),Parent=DownloadsFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=11,TextTransparency=0.5})
+		local CloseIMAGE = create("ImageButton",{ZIndex=5,Parent=popupFrame,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
+		createC(CloseIMAGE,UDim.new(1,0))
+		local TextButton = create("TextButton",{Parent=popupFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),ZIndex=5,Size=UDim2.fromOffset(496,30),Position=UDim2.fromOffset(188,317),Font=uipallet.Font,Text = "Download",TextSize=12})
+		createC(TextButton,UDim.new(0,4))
+		create("TextLabel",{Text='Details',BackgroundTransparency=1,Name='titledescription',ZIndex=5,Position=UDim2.fromOffset(180,16),Size=UDim2.new(1,-200,0.222,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		create("TextLabel",{Text=desc,BackgroundTransparency=1,Name='description',ZIndex=5,Position=UDim2.fromOffset(179,36),Size=UDim2.new(1,-200,0.178,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		local info = create("TextLabel",{Text=Name,BackgroundTransparency=1,Name='info',ZIndex=5,Position=UDim2.fromOffset(13,16),Size=UDim2.new(1,-520,0,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=15,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		local UserText = create("TextLabel",{Text='by '..user,BackgroundTransparency=1,Name='user',ZIndex=5,Position=UDim2.fromOffset(0,25),Size=UDim2.fromOffset(50,20),Parent=info,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=12,TextTransparency=0.7,TextXAlignment='Left',TextYAlignment='Top'})
+		TextButton.Activated:Connect(function()
+           	DownloadConfig(profile,Name,user)
+        end)
+		
+	end
+
     local function createProfile(values,prnt)
         local user = values.name
         local date = values.created
@@ -8259,8 +8289,9 @@ run(function()
         task.wait(0.005)
         create("TextLabel",{Name='user';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromOffset(0,0.064);Size=UDim2.new(1,0,0.33,0);Font=uipallet.Font;Text=Name;TextSize=14;TextColor3=Color3.fromRGB(255,255,255)})
         ProfileFrame:SetAttribute("Profile",profile)
-        ProfileButton.Activated:Connect(function()
-            DownloadConfig(profile,Name,user)
+        
+		ProfileButton.Activated:Connect(function()
+            createPopup(values,ProfilesGUI)
         end)
     end
 
@@ -8312,18 +8343,22 @@ run(function()
 					profileName = cfg.profileName,
 					profile = cfg.profile,
 					See = cfg.See,
+					description = cfg.Description
 				}
-				if not configData.See then return end
-				createProfile(configData, prnt)
+
+				if configData.See then
+					createProfile(configData, prnt)
+				end
 			end
 
 		elseif method == "POST" then
 			local body = httpService:JSONEncode({
-				profile = Option.profile,
+				profile = Option.Profile,
 				name = Option.Username,
-				date = Option.created,
-				ProfileName = Option.profileName,
-				See = Option.See
+				created = Option.Created,
+				ProfileName = Option.ProfileName,
+				See = Option.See,
+				Description = Option.Description
 			})
 
 			local res = request({
@@ -8349,7 +8384,7 @@ run(function()
 			})
 
 			if res.StatusCode ~= 200 then
-				ape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
+				vape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
 			else
 				vape:CreateNotification('Onyx','All saved config\'s was successfully deleted!',6,"success")
 			end
@@ -8364,7 +8399,7 @@ run(function()
         Tooltip = 'Global configs',
         Function = function(callback)
             if callback then
-                local ProfilesGUI = create("Frame",{AnchorPoint=Vector2.new(0.5,0.5);BackgroundColor3=Color3.fromRGB(26,25,26);Name='ProfilesGUI';Position=UDim2.fromScale(0.5,0.5);Size=UDim2.fromOffset(660,465),Parent=vape.gui.ScaledGui})
+				ProfilesGUI.Visible = true
                 local MainFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='MainFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI})
                 local CreateFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='CreateFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})
                 local ClearProfileFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='ClearProfileFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})  
@@ -8414,11 +8449,11 @@ run(function()
                 local searchV2 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV2,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Name of profile',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
                 createP(searchV2,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
 
-               --[[ local searchFrameV3 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,150),Size=UDim2.fromOffset(419,31)})
+                local searchFrameV3 = create("Frame",{Parent=CreateFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(201,150),Size=UDim2.fromOffset(419,31)})
                 createC(searchFrameV3,UDim.new(0,4))
                 createS(searchFrameV3,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(48,48,48),'Round','FixedSize',1,0.2)
-                local searchV3 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV3,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Username',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
-                createP(searchV3,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))--]]
+                local searchV3 = create("TextBox",{BackgroundTransparency=1,ClearTextOnFocus=false,CursorPosition=-1,Parent=searchFrameV3,Position=UDim2.fromOffset(10,0),Size=UDim2.new(1,-10,0,31),Font=uipallet.Font,PlaceholderColor3=Color3.fromRGB(169,169,169),PlaceholderText='Description',TextColor3 = Color3.fromRGB(200,200,200),Text='',TextSize=12,TextXAlignment='Left'})
+                createP(searchV3,UDim.new(0,0),UDim.new(0.025,0),UDim.new(0,0),UDim.new(0,0))
 
 
                 local public =create("TextButton",{Parent=CreateFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Name='public',Position=UDim2.fromOffset(201,59),Size=UDim2.fromOffset(74,32),Font=uipallet.Font,Text=''})
@@ -8468,10 +8503,8 @@ run(function()
 						old = nil
 						old2 = nil
 					end)
-
 				else
-						ClearButton.Visible = false
-
+					ClearButton.Visible = false
 				end
 
                 local back =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(15,398),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
@@ -8492,16 +8525,22 @@ run(function()
                 end
 
                 local function updatePN()
-                    Option.profileName = searchV2.Text
+                    Option.ProfileName = searchV2.Text
                 end
 
                 local function updateUN()
                     Option.Username = vape.user
                 end
 
+				local function updateD()
+					option.Description = searchV3.Text
+				end
+
                 search:GetPropertyChangedSignal("Text"):Connect(updateDisplay)
 
                 searchV2:GetPropertyChangedSignal("Text"):Connect(updatePN)
+
+                searchV3:GetPropertyChangedSignal("Text"):Connect(updateD)
 
 
 
@@ -8528,22 +8567,22 @@ run(function()
                 end)
 
 
-					createButton.Activated:Connect(function()
-						MainFrame.Visible = false
-						CreateFrame.Visible = true
-						ClearProfileFrame.Visible = false
-					end)
+				createButton.Activated:Connect(function()
+					MainFrame.Visible = false
+					CreateFrame.Visible = true
+					ClearProfileFrame.Visible = false
+				end)
 
-					back.Activated:Connect(function()
-						MainFrame.Visible = true
-						CreateFrame.Visible = false
-						ClearProfileFrame.Visible = false
-					end)
-					backV2.Activated:Connect(function()
-						MainFrame.Visible = false
-						CreateFrame.Visible = false
-						ClearProfileFrame.Visible = true
-					end)
+				back.Activated:Connect(function()
+					MainFrame.Visible = true
+					CreateFrame.Visible = false
+					ClearProfileFrame.Visible = false
+				end)
+				backV2.Activated:Connect(function()
+					MainFrame.Visible = false
+					CreateFrame.Visible = false
+					ClearProfileFrame.Visible = true
+				end)
 				
 
                 public.Activated:Connect(function()
@@ -8566,7 +8605,8 @@ run(function()
                     updateUN()
                     updatePN()
                     updateProfiles()
-                    Option.created = os.date("%m/%d/%Y")
+					updateD()
+                    Option.Created = os.date("%m/%d/%Y")
                     RequestURL("POST",nil)
                 end)
 
@@ -8600,7 +8640,7 @@ run(function()
                     updateUN()
                     updatePN()
                     updateProfiles()
-                    Option.created = os.date("%m/%d/%Y")
+                    Option.Created = os.date("%m/%d/%Y")
                     RequestURL("GET",Children)
                 end)
 
