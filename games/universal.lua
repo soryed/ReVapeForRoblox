@@ -8456,10 +8456,25 @@ run(function()
                 local WarningText = create("TextLabel",{Parent=ClearProfileFrame,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0.088),Size=UDim2.fromScale(1,0.373),Font=uipallet.Font,Text='PLEASE NOTE THIS WILL DELETE EVERY PUBLISHED(PRIVATED) PROFILES ARE YOU SURE YOU WANT TO CONTINUE? ',TextColor3=Color3.fromRGB(245,245,245),TextSize=25})
 
 
-				if R ~= "owner" then
-					ClearButton.Visible = false
+				if R == "owner" then
+					ClearButton.Activated:Connect(function()
+						RequestURL("DELETE",nil)
+						local old = WarningText.Text
+						local old2 = WarningImage.Image
+						WarningText.Text = "Successfully Deleted!"
+						WarningImage.Image = getcustomasset('ReVape/assets/new/success.png')
+						task.wait(3)
+						WarningText.Text = old
+						WarningImage.Image = old2
+						old = nil
+						old2 = nil
+					end)
+
+				else
+						ClearButton.Visible = false
+
 				end
-			
+
                 local back =create("TextButton",{Parent=CreateFrame,BackgroundTransparency=1,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',Position=UDim2.fromOffset(15,398),Size=UDim2.fromOffset(158,44),Font=uipallet.Font,Text=''})
                 createC(back,UDim.new(0,4))
                 createS(back,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
@@ -8547,18 +8562,6 @@ run(function()
                     TweenController(private, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
                     TweenController(private.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
-					ClearButton.Activated:Connect(function()
-						RequestURL("DELETE",nil)
-						local old = WarningText.Text
-						local old2 = WarningImage.Image
-						WarningText.Text = "Successfully Deleted!"
-						WarningImage.Image = getcustomasset('ReVape/assets/new/success.png')
-						task.wait(3)
-						WarningText.Text = old
-						WarningImage.Image = old2
-						old = nil
-						old2 = nil
-					end)
 
                 publishButton.Activated:Connect(function()
                     updateUN()
