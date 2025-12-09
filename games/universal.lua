@@ -8181,29 +8181,47 @@ run(function()
         end
     end
     updateProfiles()
-    local function addProfile(frame)
-        if frame:IsA("Frame") then
-			if not frame then return end
-            local profile = frame:FindFirstChild("TextButton")
-            local nameLabel = profile 
-            local usernameLabel = profile:FindFirstChild("user") 
-            local dateLabel = profile:FindFirstChild("date")
+	local function addProfile(frame)
+		if not frame or not frame:IsA("Frame") then
+			return
+		end
 
-            if nameLabel and usernameLabel and dateLabel then
-                local month, day, year = dateLabel.Text:match("created%s+(%d+)/(%d+)/(%d+)")
-                local date = os.time({year = tonumber(year), month = tonumber(month), day = tonumber(day)})
+		local profile = frame:FindFirstChild("TextButton")
+		if not profile then
+			warn("addProfile: Frame missing TextButton:", frame.Name)
+			return
+		end
 
-                table.insert(profiles, {
-                    Frame = frame,
-                    Name = nameLabel.Text,
-                    Username = usernameLabel.Text,
-                    Date = date
-                })
+		local nameLabel = profile
+		local usernameLabel = profile:FindFirstChild("user")
+		local dateLabel = profile:FindFirstChild("date")
 
-                sortProfiles(sorted)
-            end
-        end
-    end
+		if not usernameLabel or not dateLabel then
+			warn("addProfile: Missing user/date label in "..profile.Name)
+			return
+		end
+
+		local month, day, year = dateLabel.Text:match("created%s+(%d+)/(%d+)/(%d+)")
+		if not month then
+			warn("addProfile: Invalid date format:", dateLabel.Text)
+			return
+		end
+
+		local date = os.time({
+			year = tonumber(year),
+			month = tonumber(month),
+			day = tonumber(day)
+		})
+
+		table.insert(profiles, {
+			Frame = frame,
+			Name = nameLabel.Text,
+			Username = usernameLabel.Text,
+			Date = date
+		})
+
+		sortProfiles(sorted)
+	end
 
     local function create(Name,values)
         local obj = Instance.new(Name)
