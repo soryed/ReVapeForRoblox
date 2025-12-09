@@ -8272,7 +8272,6 @@ run(function()
         end
     end
 
-	clearProfiles(Children)
 
     local function RemoveUI()
         if vape.gui.ScaledGui then
