@@ -8533,7 +8533,7 @@ run(function()
                 end
 
 				local function updateD()
-					option.Description = searchV3.Text
+					Option.Description = searchV3.Text
 				end
 
                 search:GetPropertyChangedSignal("Text"):Connect(updateDisplay)
