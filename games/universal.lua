@@ -8237,7 +8237,11 @@ run(function()
                 print(e)
                 return
             end
+			local awesome = `{name} ({user})`
+			table.insert(vape.Profiles, {Name = awesome, Bind = {}})
+			vape:Save(awesome)
             vape:CreateNotification("Onyx","Downloaded '"..name.."' by "..user.."!",15)
+			vape:Load(true, awesome)
         end
     end
     local function createProfile(values,prnt)
