@@ -8425,7 +8425,7 @@ run(function()
         Tooltip = 'Global configs',
         Function = function(callback)
             if callback then
-				ProfilesGUI.Visible = true
+				ProfilesGUI.Visible = callback
                 local MainFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='MainFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI})
                 local CreateFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='CreateFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})
                 local ClearProfileFrame = create("Frame",{BorderSizePixel=0;BackgroundTransparency=1;Name='ClearProfileFrame';Position=UDim2.new(0,0,0,0);Size=UDim2.fromOffset(660,464),Parent=ProfilesGUI,Visible=false})  
@@ -8703,7 +8703,8 @@ run(function()
 				end
                 RequestURL("GET",Children)
             else
-                RemoveUI()
+                				ProfilesGUI.Visible = callback
+
             end
         end,
     })
