@@ -8381,7 +8381,7 @@ run(function()
 			local body = httpService:JSONEncode({
 				profile = Option.Profile,
 				name = Option.Username,
-				created = Option.Created,
+				date = Option.Created,
 				ProfileName = Option.ProfileName,
 				See = Option.See,
 				Description = Option.Description
