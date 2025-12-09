@@ -8253,13 +8253,13 @@ run(function()
         local Name = values.profileName
         local profile = values.profile
 		local desc = values.description
-		local popupFrame = create("Frame",{BorderSizePixel=0,Name="popup",Parent=ProfilesGUI,Position=UDim2.fromScale(0.5,0.5),Size=UDim2.fromScale(0.95,0.9),AnchorPoint=UDim.new(0.5,0.5),BackgroundColor3=Color3.fromRGB(32,32,32),ZIndex=5})
+		local popupFrame = create("Frame",{BorderSizePixel=0,Name="popup",Parent=ProfilesGUI,Position=UDim2.fromScale(0.5,0.5),Size=UDim2.fromScale(0.95,0.9),AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.fromRGB(32,32,32),ZIndex=5})
 		createS(popupFrame,'Contextual',UDim.new(0,0),'Outer',Color3.fromRGB(42,40,42),'Round','FixedSize',2,0)
 		create("Frame",{Parent=popupFrame,Name='divide1',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(165,0),Size=UDim2.fromOffset(1,1),ZIndex=5})
 		create("Frame",{Parent=popupFrame,Name='divide2',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(180,290),Size=UDim2.new(0.729,0,0,1),ZIndex=5})
 		local DownloadsFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(42,40,42),Name='downloads',Position=UDim2.fromScale(0.29,0.545),Size=UDim2.fromOffset(432,25),ZIndex=5})
 		createC(DownloadsFrame,UDim.new(0,4))
-		create("TextLabel",{Text='Created on '..date,Name='Creation',AnchorPoint=UDim.new(0.5,0),BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromScale(0.5,1),Size=UDim2.fromOffset(100,20),Parent=DownloadsFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=11,TextTransparency=0.5})
+		create("TextLabel",{Text='Created on '..date,Name='Creation',AnchorPoint=Vector2.new(0.5,0),BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromScale(0.5,1),Size=UDim2.fromOffset(100,20),Parent=DownloadsFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=11,TextTransparency=0.5})
 		local CloseIMAGE = create("ImageButton",{ZIndex=5,Parent=popupFrame,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
 		createC(CloseIMAGE,UDim.new(1,0))
 		local TextButton = create("TextButton",{Parent=popupFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),ZIndex=5,Size=UDim2.fromOffset(496,30),Position=UDim2.fromOffset(188,317),Font=uipallet.Font,Text = "Download",TextSize=12})
