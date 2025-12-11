@@ -8908,8 +8908,8 @@ run(function()
 		Name = "CharacterHider",
 		Tooltip = "Hides ur character from chatting, displays, and character model(CLIENT ONLY NOT FE!)",
 		Function = function(callback)
-			local Morph = loadstring(downloadFile('ReVape/libraries/morph.lua'), 'morph')()
-			local NameChanger = loadstring(downloadFile('ReVape/libraries/NC.lua'), 'NC')()
+			local Morph = loadstring(downloadFile('ReVape/libraries/morph.luau'), 'morph')()
+			local NameChanger = loadstring(downloadFile('ReVape/libraries/NC.luau'), 'NC')()
 
 			if not game:IsLoaded() then
 				game.Loaded:Wait()
