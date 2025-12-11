@@ -9,6 +9,9 @@ local http = cloneref(game:GetService("HttpService"))
 
 local ApiBase = "https://onyxclient.fsl58.workers.dev/"
 local LoginBase = 'https://onyxclient.fsl58.workers.dev/login'
+local ResetBase = 'https://onyxclient.fsl58.workers.dev/reset'
+local UpgradeBase = 'https://onyxclient.fsl58.workers.dev/role'
+
 --local HwidBase = ApiBase.."hwid?user="
 local username = ""
 local password = ""
@@ -65,7 +68,94 @@ local function postLogin(u, p)
     })
 end
 
+local function resetPassword(U, NP, R, OP)
+    local req = request or http_request or syn.request
+    if not req then return nil end
+    
+    return req({
+        Url = ResetBase,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = http:JSONEncode({
+            user = U,
+            newPassword = NP,
+            requester = R,
+            oldPassword = OP
+        })
+    })
+end
 
+local function roleUpgrader(T, NR, R)
+    local req = request or http_request or syn.request
+    if not req then return nil end
+    
+    return req({
+        Url = UpgradeBase,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = http:JSONEncode({
+            target = T,
+            newRole = NR,
+            requester = R
+        })
+    })
+end
+
+
+function login:ResetPassword(user, newPass, requester, oldPass)
+    local resp, err = resetPassword(user, newPass, requester, oldPass)
+
+    if not resp then
+        return false, err or "Request failed"
+    end
+
+    if resp.StatusCode ~= 200 then
+        return false, "Server returned " .. tostring(resp.StatusCode)
+    end
+
+    local body = nil
+    pcall(function()
+        body = http:JSONDecode(resp.Body)
+    end)
+
+    if not body then
+        return false, "Invalid JSON returned"
+    end
+
+    if body.error then
+        return false, body.error
+    end
+
+    return true, body
+end
+
+
+function login:RoleUpgrader(target, newRole, requester)
+    local resp, err = roleUpgrader(target, newRole, requester)
+
+    if not resp then
+        return false, err or "Request failed"
+    end
+    
+    if resp.StatusCode ~= 200 then
+        return false, "Server returned " .. tostring(resp.StatusCode)
+    end
+
+    local body = nil
+    pcall(function()
+        body = http:JSONDecode(resp.Body)
+    end)
+
+    if not body then
+        return false, "Invalid JSON returned"
+    end
+
+    if body.error then
+        return false, body.error
+    end
+
+    return true, body
+end
 
 function login:Login()
     local role, U, P = "", "", ""
@@ -92,6 +182,7 @@ function login:Login()
 
     return role, U, P
 end
+
 
 
 
