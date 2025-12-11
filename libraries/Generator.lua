@@ -108,6 +108,19 @@ function Gen:Password(tbl)
     return concat
 end
 
+function Gen:Username()
+    local Length = 4
+    local pool = Global.LettersUPPER..Global.LettersLOWER..Global.Numbers
+    local username = {}
+    
+    for i = 1, Length do
+        username[i] = pool:sub(math.random(1, #pool), math.random(1, #pool))
+    end
+    
+    return table.concat(username)
+end
+
+
 function Gen:Sessions(tbl)
     local Length = tonumber(tbl.Length) or 16
     if Length < 16 then Length = 16 end
