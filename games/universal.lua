@@ -11,8 +11,7 @@ local isfile = isfile or function(file)
 	end)
 	return suc and res ~= nil and res ~= ''
 end
---[[local function downloadFile(path, func)
-	print(path,func)
+local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
 			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
@@ -26,52 +25,7 @@ end
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
-end--]]
-local _, subbed = pcall(function() 
-	return game:HttpGet('https://github.com/soryed/ReVapeForRoblox') 
-end)
-local commit = subbed:find('currentOid')
-local function downloadFile(path, func) -- debug verison
-	print(path, func)
-
-	if not isfile(path) then
-		local suc, res = pcall(function()
-			return game:HttpGet(
-				"https://raw.githubusercontent.com/soryed/ReVapeForRoblox/"
-				.. readfile("ReVape/profiles/commit.txt")
-				.. "/"
-				.. select(1, path:gsub("ReVape/", "")),
-				true
-			)
-		end)
-
-		if not suc or res == "404: Not Found" then
-			print(commit)
-			local trace = debug.traceback("Download failed for: " .. path .. "\nReason: " .. tostring(res), 2)
-			error(trace)
-		end
-
-		if path:find("%.lua") then
-			res =
-				"--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n"
-				.. res
-		end
-
-		writefile(path, res)
-	end
-
-	local ok, result = pcall(function()
-		return (func or readfile)(path)
-	end)
-
-	if not ok then
-		local trace = debug.traceback("Read failed for: " .. path .. "\nReason: " .. tostring(result), 2)
-		error(trace)
-	end
-
-	return result
 end
-
 local run = function(func)
 	func()
 end
@@ -269,7 +223,7 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-local GenLib = loadstring(downloadFile("ReVape/libraries/libraries/Generator.lua"), "Generator")()
+local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
 local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
