@@ -1,5 +1,3 @@
--- credits for GoOnlineTools for the idea of this generator!
-
 local Gen = {}
 local Global = {
     LettersUPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
