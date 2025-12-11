@@ -53,26 +53,13 @@ end
 --]]
 
 
-local function postLogin(u, p)
-    local req = request or http_request or syn.request
-    if not req then return nil end
-
-    return req({
-        Url = LoginBase,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = http:JSONEncode({
-            username = u,
-            password = p
-        })
-    })
-end
-
 local function resetPassword(U, NP, R, OP)
     local req = request or http_request or syn.request
-    if not req then return nil end
-    
-    return req({
+    if not req then 
+        return nil, "No HTTP request function available"
+    end
+
+    local response = req({
         Url = ResetBase,
         Method = "POST",
         Headers = { ["Content-Type"] = "application/json" },
@@ -83,13 +70,17 @@ local function resetPassword(U, NP, R, OP)
             oldPassword = OP
         })
     })
+
+    return response
 end
 
 local function roleUpgrader(T, NR, R)
     local req = request or http_request or syn.request
-    if not req then return nil end
-    
-    return req({
+    if not req then 
+        return nil, "No HTTP request function available"
+    end
+
+    local response = req({
         Url = UpgradeBase,
         Method = "POST",
         Headers = { ["Content-Type"] = "application/json" },
@@ -99,59 +90,100 @@ local function roleUpgrader(T, NR, R)
             requester = R
         })
     })
+
+    return response
 end
 
+local function createAccount(U, P)
+    local req = request or http_request or syn.request
+    if not req then 
+        return nil, "No HTTP request function available"
+    end
+
+    local response = req({
+        Url = SignupBase,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = http:JSONEncode({
+            username = U,
+            password = P
+        })
+    })
+
+    return response
+end
+
+local function decodeSafe(body)
+    local ok, result = pcall(function()
+        return http:JSONDecode(body)
+    end)
+    return ok and result or nil
+end
 
 function login:ResetPassword(user, newPass, requester, oldPass)
     local resp, err = resetPassword(user, newPass, requester, oldPass)
 
     if not resp then
-        return false, err or "Request failed"
+        return false, err
     end
 
     if resp.StatusCode ~= 200 then
         return false, "Server returned " .. tostring(resp.StatusCode)
     end
 
-    local body = nil
-    pcall(function()
-        body = http:JSONDecode(resp.Body)
-    end)
-
-    if not body then
+    local body = decodeSafe(resp.Body)
+    if not body then 
         return false, "Invalid JSON returned"
     end
 
-    if body.error then
+    if body.error then 
         return false, body.error
     end
 
     return true, body
 end
 
-
 function login:RoleUpgrader(target, newRole, requester)
     local resp, err = roleUpgrader(target, newRole, requester)
 
     if not resp then
-        return false, err or "Request failed"
+        return false, err
     end
-    
+
     if resp.StatusCode ~= 200 then
         return false, "Server returned " .. tostring(resp.StatusCode)
     end
 
-    local body = nil
-    pcall(function()
-        body = http:JSONDecode(resp.Body)
-    end)
-
-    if not body then
+    local body = decodeSafe(resp.Body)
+    if not body then 
         return false, "Invalid JSON returned"
     end
 
-    if body.error then
+    if body.error then 
         return false, body.error
+    end
+
+    return true, body
+end
+
+function login:CreateAccount(username, password)
+    local resp, err = createAccount(username, password)
+
+    if not resp then
+        return false, err
+    end
+
+    if resp.StatusCode ~= 200 then
+        return false, "Server returned " .. tostring(resp.StatusCode)
+    end
+
+    local body = decodeSafe(resp.Body)
+    if not body then 
+        return false, "Invalid JSON returned"
+    end
+
+    if body.status == "error" then
+        return false, body.message or "Unknown error"
     end
 
     return true, body
