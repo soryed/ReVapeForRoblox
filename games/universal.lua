@@ -223,6 +223,8 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
+local GenLib = loadstring(downloadFile("ReVape/libraries/libraries/Generator.lua"), "Generator")()
+
 local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
@@ -7941,7 +7943,7 @@ end)
 
 run(function()
 	local Streamer
-	Streamer = vape.Categories.Minigames:CreateModule({
+	Streamer = vape.Legit:CreateModule({
 		Name = "Streamer",
 		Function = function(callback)
 			vape.HideNofis = callback
@@ -7952,7 +7954,30 @@ end)
 	
 run(function()
 	local GetExecutor	
-	GetExecutor = vape.Categories.Minigames:CreateModule({
+	GetExecutor = vape.Legit:CreateModule({
+		Name = "GetExecutor",
+		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
+		Function = function(callback)
+			if callback then
+				task.spawn(function()
+				GetExecutor:Toggle(false)
+				local timer = 4.5
+					vape:CreateNotification('Onyx', "Currently searching for your executor", timer)
+					if identifyexecutor then
+					task.wait(timer + 0.5)
+						vape:CreateNotification("Onyx", "Could find your executor '"..identifyexecutor().."'", 20,'success')
+					else
+						vape:CreateNotification("Onyx", "Couldn't find your function 'identifyexecutor' for your executor", 5,"alert")
+					end
+				end)
+			end
+		end	
+	})
+end)
+
+run(function()
+	local GetExecutor	
+	GetExecutor = vape.Legit:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -8018,7 +8043,7 @@ task.spawn(function()
             running = false
         elseif LatestVersion == 0 or CurrentVersion == 0 then
             pcall(function()
-                vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. (vape and vape.Discord or "Discord") .. ' ASAP!', 45,'alert')
+                vape:CreateNotification('THIS IS NOT A UPDATE!','THE UPDATE VERSION FILE IS CORRUPTED!! DM ' .. (vape and vape.Discord or "discord") .. ' ASAP!', 45,'alert')
             end)
         end
 
@@ -8027,14 +8052,15 @@ task.spawn(function()
     end
 end)
 
-
-
 task.spawn(function()
 	local Announcement
 	local message
 	local timer
 	local anntype
-	Announcement = vape.Categories.Minigames:CreateModule({
+	if vape.role ~= "owner" and vape.role ~= 'coowner' then
+		return
+	end
+	Announcement = vape.Legit:CreateModule({
 		Name = "Announcement",
 		Tooltip = "Fires a global announcement",
 		Function = function(callback)
@@ -8052,7 +8078,8 @@ task.spawn(function()
 				local data = {
 				    message = message.Value,
 				    time = t,
-				    type = anntype.Value
+				    type = anntype.Value,
+					role = vape.role
 				}
 				local DeletionTime = (data.time) + 1.45
 				local response = request({
@@ -8219,8 +8246,6 @@ run(function()
 			Username = usernameLabel.Text,
 			Date = date
 		})
-
-		sortProfiles(sorted)
 	end
 
     local function create(Name,values)
@@ -8266,60 +8291,7 @@ run(function()
     end
     local ProfilesGUI = create("Frame",{Visible=false,AnchorPoint=Vector2.new(0.5,0.5);BackgroundColor3=Color3.fromRGB(26,25,26);Name='ProfilesGUI';Position=UDim2.fromScale(0.5,0.5);Size=UDim2.fromOffset(660,465),Parent=vape.gui.ScaledGui})
 
-	local function createPopup(values,prnt)
-        local user = values.name
-        local date = values.created
-        local Name = values.profileName
-        local profile = values.profile
-		local desc = values.description
-		local popupFrame = create("Frame",{BorderSizePixel=0,Name="popup",Parent=ProfilesGUI,Position=UDim2.fromScale(0.5,0.5),Size=UDim2.fromScale(0.95,0.9),AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.fromRGB(32,32,32),ZIndex=5})
-		createS(popupFrame,'Contextual',UDim.new(0,0),'Outer',Color3.fromRGB(42,40,42),'Round','FixedSize',2,0)
-		create("Frame",{Parent=popupFrame,Name='divide1',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(165,0),Size=UDim2.fromOffset(1,1),ZIndex=5})
-		create("Frame",{Parent=popupFrame,Name='divide2',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(180,290),Size=UDim2.new(0.729,0,0,1),ZIndex=5})
-		local DownloadsFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(42,40,42),Name='downloads',Position=UDim2.fromScale(0.29,0.545),Size=UDim2.fromOffset(432,25),ZIndex=5})
-		createC(DownloadsFrame,UDim.new(0,4))
-		create("TextLabel",{Text='Created on '..date,Name='Creation',AnchorPoint=Vector2.new(0.5,0),BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromScale(0.5,1),Size=UDim2.fromOffset(100,20),Parent=DownloadsFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=11,TextTransparency=0.5})
-		local CloseIMAGE = create("ImageButton",{ZIndex=5,Parent=popupFrame,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
-		createC(CloseIMAGE,UDim.new(1,0))
-		local TextButton = create("TextButton",{Parent=popupFrame,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),ZIndex=5,Size=UDim2.fromOffset(150,70),Position=UDim2.fromOffset(188,317),Font=uipallet.Font,Text = "Download",TextSize=12})
-		createC(TextButton,UDim.new(0,4))
-		create("TextLabel",{Text='Details',BackgroundTransparency=1,Name='titledescription',ZIndex=5,Position=UDim2.fromOffset(180,16),Size=UDim2.new(1,-200,0.222,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
-		create("TextLabel",{Text=desc,BackgroundTransparency=1,Name='description',ZIndex=5,Position=UDim2.fromOffset(179,36),Size=UDim2.new(1,-200,0.178,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
-		local info = create("TextLabel",{Text=Name,BackgroundTransparency=1,Name='info',ZIndex=5,Position=UDim2.fromOffset(13,16),Size=UDim2.new(1,-520,0,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=15,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
-		local UserText = create("TextLabel",{Text='by '..user,BackgroundTransparency=1,Name='user',ZIndex=5,Position=UDim2.fromOffset(0,25),Size=UDim2.fromOffset(50,20),Parent=info,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=12,TextTransparency=0.7,TextXAlignment='Left',TextYAlignment='Top'})
-		local backV2 =create("TextButton",{Parent=popupFrame,BackgroundTransparency=1,ZIndex=5,BackgroundColor3=Color3.fromRGB(52, 52, 52),Name='back',ZIndex=5,Position=UDim2.fromOffset(400,317),Size=UDim2.fromOffset(150,70),Font=uipallet.Font,Text=''})
-        createC(backV2,UDim.new(0,4))
-        createS(backV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
-        create("TextLabel",{Parent=backV2,BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
-	
-		TextButton.Activated:Connect(function()
-           	DownloadConfig(profile,Name,user)
-        end)
-		backV2.Activated:Connect(function()
-           popupFrame:Destroy()
-        end)
-	end
 
-    local function createProfile(values,prnt)
-        local user = values.name
-        local date = values.created
-        local Name = values.profileName
-        local profile = values.profile
-        local ProfileFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(31,29,31);Name='Profile';Parent=prnt})
-        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileFrame})
-        local ProfileButton = create("TextButton",{BackgroundColor3=Color3.fromRGB(24,22,24),TextColor3=Color3.fromRGB(155,155,155),TextSize=8;Position=UDim2.fromScale(0.032,0.057);Size=UDim2.fromScale(0.937,0.886);Font=uipallet.Font;Text='@'..user;Parent=ProfileFrame;TextColor3=Color3.fromRGB(155,155,155);TextSize=8})
-
-        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileButton})
-        task.wait(0.005)
-        create("TextLabel",{Name='date';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromScale(0,0.845);Size=UDim2.new(1,0,0.153,0);Font=uipallet.Font;Text='created '..date;TextColor3=Color3.fromRGB(71,71,71);TextSize=12})
-        task.wait(0.005)
-        create("TextLabel",{Name='user';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromOffset(0,0.064);Size=UDim2.new(1,0,0.33,0);Font=uipallet.Font;Text=Name;TextSize=14;TextColor3=Color3.fromRGB(255,255,255)})
-        ProfileFrame:SetAttribute("Profile",profile)
-        
-		ProfileButton.Activated:Connect(function()
-            createPopup(values,ProfilesGUI)
-        end)
-    end
 
     local function clearProfiles(prnt)
         for i, v in prnt:GetChildren() do
@@ -8398,29 +8370,122 @@ run(function()
 
 			if res.StatusCode ~= 200 then
 				warn("POST failed:", res.Body)
-				vape:CreateNotification('Onyx','Config wasn\'t successfully created? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
+				vape:CreateNotification('Onyx','Config wasn\'t successfully created? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"alert")
 			else
 				vape:CreateNotification('Onyx','Config was successfully created!',6,"success")
 			end
 
-		elseif method == "DELETE" then
+		elseif method == "DELETE" and not prnt then
 			local res = request({
 				Url = URL,
 				Method = "DELETE"
 			})
 
 			if res.StatusCode ~= 200 then
-				vape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"warning")
+				vape:CreateNotification('Onyx','All saved Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"alert")
 			else
 				vape:CreateNotification('Onyx','All saved config\'s was successfully deleted!',6,"success")
 			end
+		elseif method == "DELETE" and prnt then
+			local body = httpService:JSONEncode({
+				Username = Option.Username
+			})
+			local res = request({
+				Url = URL,
+				Method = "DELETE",
+				Body = body,
+				Headers = {
+					["Content-Type"] = "application/json"
+				}
+			})
+
+			if res.StatusCode ~= 200 then
+				vape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"alert")
+			else
+				prnt:Destroy()
+				vape:CreateNotification('Onyx','Config\'s was successfully deleted!',6,"success")
+			end
 
 		else
-			warn("[Method is not allowed]: "..method)
+			vape:CreateNotification('Onyx','Method is not allowed]: '..method,(15 / 2),"warning")
 		end
 	end
 
-    Configs = vape.Categories.Exploits:CreateModule({
+	local function createPopup(values,prnt,frame)
+     	local removeBTN = nil
+		local user = values.name
+		local date = values.created
+		local Name = values.profileName
+		local profile = values.profile
+		local desc = values.description
+		local popupFrame = create("Frame",{BorderSizePixel=0,Name="popup",Parent=ProfilesGUI,Position=UDim2.fromScale(0.5,0.5),Size=UDim2.fromScale(0.95,0.9),AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.fromRGB(32,32,32),ZIndex=5})
+		createS(popupFrame,'Contextual',UDim.new(0,0),'Outer',Color3.fromRGB(42,40,42),'Round','FixedSize',2,0)
+		create("Frame",{Parent=popupFrame,Name='divide1',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(165,0),Size=UDim2.fromOffset(1,450),ZIndex=5})
+		create("Frame",{Parent=popupFrame,Name='divide2',BackgroundTransparency=0.95,BorderSizePixel=0,Position=UDim2.fromOffset(180,290),Size=UDim2.new(0.75,0,0,1),ZIndex=5})
+		local DownloadsFrame = create("Frame",{Parent=popupFrame,BackgroundColor3=Color3.fromRGB(42,40,42),Name='downloads',Position=UDim2.fromScale(0.29,0.545),Size=UDim2.fromOffset(432,25),ZIndex=5})
+		createC(DownloadsFrame,UDim.new(0,4))
+		create("TextLabel",{Text='Created on '..date,Name='Creation',AnchorPoint=Vector2.new(0.5,1),BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromScale(0.5,1),Size=UDim2.fromOffset(100,20),Parent=DownloadsFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=11,TextTransparency=0.5})
+		local CloseIMAGE = create("ImageButton",{ZIndex=5,Parent=popupFrame,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
+		createC(CloseIMAGE,UDim.new(1,0))
+		local TextButton = create("TextButton",{Parent=popupFrame,TextColor3=Color3.fromRGB(220,220,220),BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),ZIndex=5,Size=UDim2.fromOffset(150,70),Position=UDim2.fromOffset(188,317),Font=uipallet.Font,Text = "Download",TextSize=12})
+		createC(TextButton,UDim.new(0,4))
+		create("TextLabel",{Text='Details',BackgroundTransparency=1,Name='titledescription',ZIndex=5,Position=UDim2.fromOffset(180,16),Size=UDim2.new(1,-200,0.222,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		create("TextLabel",{Text=desc,BackgroundTransparency=1,Name='description',ZIndex=5,Position=UDim2.fromOffset(179,36),Size=UDim2.new(1,-200,0.178,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=14,RichText=true,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		local info = create("TextLabel",{Text=Name,BackgroundTransparency=1,Name='info',ZIndex=5,Position=UDim2.fromOffset(13,16),Size=UDim2.new(1,-520,0,20),Parent=popupFrame,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=15,TextTruncate='SplitWord',TextXAlignment='Left',TextYAlignment='Top'})
+		local UserText = create("TextLabel",{Text='by '..user,BackgroundTransparency=1,Name='user',ZIndex=5,Position=UDim2.fromOffset(0,25),Size=UDim2.fromOffset(50,20),Parent=info,Font=uipallet.Font,TextColor3=Color3.fromRGB(220,220,220),TextSize=12,TextTransparency=0.7,TextXAlignment='Left',TextYAlignment='Top'})
+		if vape.role == "owner" or vape.role == "coowner" or vape.role == "admin" or values.name == vape.user then
+			local backV2 =create("TextButton",{Parent=popupFrame,BackgroundTransparency=0,ZIndex=5,BackgroundColor3=Color3.fromRGB(30,30,30),Name='back',Position=UDim2.fromOffset(381,317),Size=UDim2.fromOffset(150,70),Font=uipallet.Font,Text=''})
+			createC(backV2,UDim.new(0,4))
+			createS(backV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+			create("TextLabel",{Parent=backV2,BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+			removeBTN =create("TextButton",{Parent=popupFrame,BackgroundTransparency=0,ZIndex=5,BackgroundColor3=Color3.fromRGB(136, 57, 57),Name='remove',Position=UDim2.fromOffset(574,317),Size=UDim2.fromOffset(111,70),Font=uipallet.Font,Text=''})
+			createC(removeBTN,UDim.new(0,4))
+			createS(removeBTN,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+			create("TextLabel",{Parent=removeBTN,BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='REMOVE',TextColor3=Color3.fromRGB(241, 241, 241),TextSize=12})	
+			if removeBTN then
+				removeBTN.Activated:Connect(function()
+					task.wait(.5)
+					RequestURL("DELETE",frame)
+					popupFrame:Destroy()
+				end)
+			end
+		else
+			local backV2 =create("TextButton",{Parent=popupFrame,BackgroundTransparency=0,ZIndex=5,BackgroundColor3=Color3.fromRGB(30, 30, 30),Name='back',Position=UDim2.fromOffset(516,317),Size=UDim2.fromOffset(150,70),Font=uipallet.Font,Text=''})
+			createC(backV2,UDim.new(0,4))
+			createS(backV2,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
+			create("TextLabel",{Parent=backV2,BackgroundTransparency=1,ZIndex=5,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
+			removeBTN = nil
+		end
+		TextButton.Activated:Connect(function()
+           	DownloadConfig(profile,Name,user)
+        end)
+		backV2.Activated:Connect(function()
+           popupFrame:Destroy()
+        end)
+	end
+
+    local function createProfile(values,prnt)
+        local user = values.name
+        local date = values.created
+        local Name = values.profileName
+        local profile = values.profile
+        local ProfileFrame = create("Frame",{BackgroundColor3=Color3.fromRGB(31,29,31);Name='Profile';Parent=prnt})
+        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileFrame})
+        local ProfileButton = create("TextButton",{BackgroundColor3=Color3.fromRGB(24,22,24),TextColor3=Color3.fromRGB(155,155,155),TextSize=8;Position=UDim2.fromScale(0.032,0.057);Size=UDim2.fromScale(0.937,0.886);Font=uipallet.Font;Text='@'..user;Parent=ProfileFrame;TextColor3=Color3.fromRGB(155,155,155);TextSize=8})
+
+        create("UICorner",{CornerRadius=UDim.new(0,4);Parent=ProfileButton})
+        task.wait(0.005)
+        create("TextLabel",{Name='date';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromScale(0,0.845);Size=UDim2.new(1,0,0.153,0);Font=uipallet.Font;Text='created '..date;TextColor3=Color3.fromRGB(71,71,71);TextSize=12})
+        task.wait(0.005)
+        create("TextLabel",{Name='user';Parent=ProfileButton;BackgroundTransparency=1;Position=UDim2.fromOffset(0,0.064);Size=UDim2.new(1,0,0.33,0);Font=uipallet.Font;Text=Name;TextSize=14;TextColor3=Color3.fromRGB(255,255,255)})
+        ProfileFrame:SetAttribute("Profile",profile)
+        
+		ProfileButton.Activated:Connect(function()
+            createPopup(values,ProfilesGUI,ProfileFrame)
+        end)
+    end
+
+    Configs = vape.Legit:CreateModule({
         Name = "Configs",
         Tooltip = 'Global configs',
         Function = function(callback)
@@ -8538,10 +8603,6 @@ run(function()
                 createS(back,"Border",UDim.new(0,0),"Outer",Color3.fromRGB(36, 34, 36),'Round','FixedSize',2,0)
                 create("TextLabel",{Parent=back,BackgroundTransparency=1,Position=UDim2.fromOffset(0,0),Size=UDim2.fromScale(1,1),Font=uipallet.Font,Text='BACK',TextColor3=Color3.fromRGB(68, 68, 68),TextSize=12})
 
-                for _, v in ipairs(Children:GetChildren()) do
-                    addProfile(v)
-                end
-
                 local function updateDisplay()
                     local query = search.Text:lower()
                     for _, profile in ipairs(profiles) do
@@ -8587,9 +8648,15 @@ run(function()
                     TweenController(old, TweenInfo.new(0.95, Enum.EasingStyle.Sine), {BackgroundTransparency = 0})
                     TweenController(old.TextLabel, TweenInfo.new(0.55, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
+                for _, v in ipairs(Children:GetChildren()) do
+					if v:IsA("Frame") then
+                    	addProfile(v)
+					end
+                end
                 Children.ChildAdded:Connect(function(child)
                     addProfile(child)
                     updateDisplay()
+					sortProfiles(sorted or true)
                 end)
 
 
@@ -8703,9 +8770,166 @@ run(function()
 				end
                 RequestURL("GET",Children)
             else
-                				ProfilesGUI.Visible = callback
-
+                ProfilesGUI.Visible = callback
             end
         end,
     })
+end)
+
+task.spawn(function()
+	local function CreatePassword()
+		local values = {Length = 10,Sets = {UC = true, LC = true, N = true, S = true, E = false}}
+		return tostring(GenLib:Password(values))
+	end
+	local RP
+	local User 
+	if vape.role ~= "owner" and vape.role ~= 'coowner' then
+		return
+	end
+	RP = vape.Legit:CreateModule({
+		Name = "Reset Password",
+		Tooltip = "Resets the current user password",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				local NP = CreatePassword()
+				RP:Toggle(false)
+				if #NP ~= 10 then
+					vape:CreateNotification("Reset Password", "New Password wasn't 10 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
+					return
+				end
+				local db, msg = loginlib:ResetPassword(User.Value,NP,vape.user)
+				if not db then
+					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
+				end
+			end
+		end	
+	})
+	User = RP:CreateTextBox({
+		Name = "Username",
+		Tooltip = "Players username!"
+		Default = "ye40",
+	})
+end)
+
+task.spawn(function()
+	local RU
+	local User
+	local Role
+	if vape.role ~= "owner" and vape.role ~= 'coowner' then
+		return
+	end
+	RU = vape.Legit:CreateModule({
+		Name = "Role Upgrader",
+		Tooltip = "Upgrades the current user role!",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				RU:Toggle(false)
+				local db, msg = loginlib:RoleUpgrader(User.Value,Role.User,vape.user)
+				if not db then
+					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
+				end
+			end
+		end	
+	})
+	User = RP:CreateTextBox({
+		Name = "Username",
+		Tooltip = "Players username!"
+		Default = "ye40",
+	})
+	Role = RP:CreateTextBox({
+		Name = "Role",
+		Tooltip = "Players new role!"
+		Default = "user",
+	})
+end)
+
+task.spawn(function()
+	local function CreateUsername()
+		return tostring(GenLib:Username())
+	end
+	local function CreatePassword()
+		local values = {Length = 10,Sets = {UC = true, LC = true, N = true, S = true, E = false}}
+		return tostring(GenLib:Password(values))
+	end
+	local AC	
+	AC = vape.Legit:CreateModule({
+		Name = "Account Creator",
+		Tooltip = "Creates a account for you!",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				AC:Toggle(false)
+				local NU = CreateUsername()
+				local NP = CreatePassword()
+
+				if #NU ~= 4 then
+					vape:CreateNotification("Account Creator", "Username wasn't 4 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
+					return
+				end
+				if #NP ~= 10 then
+					vape:CreateNotification("Account Creator", "Password wasn't 10 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
+					return
+				end
+				local db, msg = loginlib:CreateAccount(NU,NP)
+				if not db then
+					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
+				end
+local Injection = string.format([[
+-- Inject this for now on, Created by Soryed 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
+    username = "%s",
+    password = "%s"
+})
+]], NU,NP)
+				setclipboard(Injection)
+				vape:CreateNotification("Account Creator", "Check ur clipboard!",5)
+				task.wait(2)
+				vape:CreateNotification("Account Creator", "Uninjecting... Please reinject with the new script!",3)
+				task.wait(3 + 0.045)
+				vape:Uninject()
+			end
+		end	
+	})
+end)
+
+run(function()
+	local function GetID(name)
+		local ok, result = pcall(function()
+			return playersService:GetUserIdFromNameAsync(name)
+		end)
+		return ok and result or nil
+	end
+
+	local CharacterHider
+	local PLR
+	CharacterHider = vape.Legit:CreateModule({
+		Name = "CharacterHider",
+		Tooltip = "Hides ur character from chatting, displays, and character model(CLIENT ONLY NOT FE!)",
+		Function = function(callback)
+			local Morph = loadstring(downloadFile('ReVape/libraries/morph.lua'), 'morph')()
+			local NameChanger = loadstring(downloadFile('ReVape/libraries/NC.lua'), 'NC')()
+
+			if not game:IsLoaded() then
+				game.Loaded:Wait()
+			end
+			_G.Enabled = callback
+			_G.Name = PLR.Value
+			NameChanger()
+			lplr.CharacterAdded:Connect(function()
+				task.wait(0.1)
+				_G.UserID = GetID(PLR.Value)
+				_G.Enabled = callback
+				_G.Name = PLR.Value
+				Morph()
+				NameChanger()
+			end)
+		end	
+	})
+	PLR = CharacterHider:CreateTextBox({
+		Name = "Player Name",
+		Tooltip = "Players username!"
+		Default = "Roblox",
+	})
 end)
