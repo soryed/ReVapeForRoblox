@@ -8807,7 +8807,7 @@ task.spawn(function()
 	})
 	User = RP:CreateTextBox({
 		Name = "Username",
-		Tooltip = "Players username!"
+		Tooltip = "Players username!",
 		Default = "ye40",
 	})
 end)
@@ -8835,12 +8835,12 @@ task.spawn(function()
 	})
 	User = RP:CreateTextBox({
 		Name = "Username",
-		Tooltip = "Players username!"
+		Tooltip = "Players username!",
 		Default = "ye40",
 	})
 	Role = RP:CreateTextBox({
 		Name = "Role",
-		Tooltip = "Players new role!"
+		Tooltip = "Players new role!",
 		Default = "user",
 	})
 end)
@@ -8929,7 +8929,7 @@ run(function()
 	})
 	PLR = CharacterHider:CreateTextBox({
 		Name = "Player Name",
-		Tooltip = "Players username!"
+		Tooltip = "Players username!",
 		Default = "Roblox",
 	})
 end)
