@@ -31,7 +31,7 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local base64 = loadstring(downloadFile('ReVape/libraries/base64.lua'), 'base64')()
+local base64 = loadstring(downloadFile('ReVape/libraries/base.lua'), 'base')()
 
 function Gen:APIToken(tbl)
     local Length = tonumber(tbl.Length) or 32
