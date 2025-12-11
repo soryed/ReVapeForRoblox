@@ -27,7 +27,10 @@ end
 	end
 	return (func or readfile)(path)
 end--]]
-
+local _, subbed = pcall(function() 
+	return game:HttpGet('https://github.com/soryed/ReVapeForRoblox') 
+end)
+local commit = subbed:find('currentOid')
 local function downloadFile(path, func) -- debug verison
 	print(path, func)
 
@@ -43,6 +46,7 @@ local function downloadFile(path, func) -- debug verison
 		end)
 
 		if not suc or res == "404: Not Found" then
+			print(commit)
 			local trace = debug.traceback("Download failed for: " .. path .. "\nReason: " .. tostring(res), 2)
 			error(trace)
 		end
