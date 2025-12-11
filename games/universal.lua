@@ -225,9 +225,6 @@ local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), '
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 local GenLib = loadstring(downloadFile("ReVape/libraries/libraries/Generator.lua"), "Generator")()
-local Morph = loadstring(downloadFile('ReVape/libraries/morph.luau'), 'morph')()
-local NameChanger = loadstring(downloadFile('ReVape/libraries/NC.luau'), 'NC')()
-
 local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
@@ -8894,44 +8891,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblo
 				vape:Uninject()
 			end
 		end	
-	})
-end)
-
-run(function()
-	local function GetID(name)
-		local ok, result = pcall(function()
-			return playersService:GetUserIdFromNameAsync(name)
-		end)
-		return ok and result or nil
-	end
-
-	local CharacterHider
-	local PLR
-	CharacterHider = vape.Legit:CreateModule({
-		Name = "CharacterHider",
-		Tooltip = "Hides ur character from chatting, displays, and character model(CLIENT ONLY NOT FE!)",
-		Function = function(callback)
-
-
-			if not game:IsLoaded() then
-				game.Loaded:Wait()
-			end
-			_G.Enabled = callback
-			_G.Name = PLR.Value
-			NameChanger()
-			lplr.CharacterAdded:Connect(function()
-				task.wait(0.1)
-				_G.UserID = GetID(PLR.Value)
-				_G.Enabled = callback
-				_G.Name = PLR.Value
-				Morph()
-				NameChanger()
-			end)
-		end	
-	})
-	PLR = CharacterHider:CreateTextBox({
-		Name = "Player Name",
-		Tooltip = "Players username!",
-		Default = "Roblox",
 	})
 end)
