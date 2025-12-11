@@ -1,4 +1,6 @@
 local Gen = {}
+local base = {}
+base.Strings = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+=|>.<,/?[{}]"
 local Global = {
     LettersUPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     LettersLOWER = "abcdefghijklmnopqrstuvwxyz",
@@ -6,30 +8,60 @@ local Global = {
     Symbols = "~`!@#$%^&*()-_=+{[]}|,<.>/?",
     Excludes = {"0","O","1","I","5","S","2","Z",'6',"G","9","g",'8',"B","M","W","@","a"}
 }
-local loadstring = function(...)
-	local res, err = loadstring(...)
-	if err and vape then
-		vape:CreateNotification('Generator', 'Failed to load : '..err, 30, 'alert')
-	end
-	return res
+
+
+local encodeMap = {}
+local decodeMap = {}
+
+for i = 1, #base.Strings do
+    local c = base.Strings:sub(i,i)
+    encodeMap[i-1] = c  
+    decodeMap[c]    = i-1 
 end
 
-local function downloadFile(path, func)
-	if not isfile(path) then
-		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
-		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
-		end
-		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
-		end
-		writefile(path, res)
-	end
-	return (func or readfile)(path)
+function base:Encode(str)
+    local result = {}
+    local buffer = 0
+    local bits = 0
+    for i = 1, #str do
+        buffer = bit32.lshift(buffer, 8) + string.byte(str, i)
+        bits = bits + 8
+        while bits >= 6 do
+            bits = bits - 6
+            local index = bit32.rshift(buffer, bits)
+            buffer = buffer - bit32.lshift(index, bits)
+            result[#result+1] = encodeMap[index]
+        end
+    end
+    if bits > 0 then
+        local index = bit32.lshift(buffer, 6 - bits)
+        result[#result+1] = encodeMap[index]
+        result[#result+1] = "="
+    end
+    return table.concat(result)
 end
-local base64 = loadstring(downloadFile('ReVape/libraries/base.lua'), 'base')()
+
+function base:Decode(str)
+    local result = {}
+    local buffer = 0
+    local bits = 0
+    for i = 1, #str do
+        local c = str:sub(i,i)
+        if c == "=" then break end
+        local val = decodeMap[c]
+        if val then
+            buffer = bit32.lshift(buffer, 6) + val
+            bits = bits + 6
+            while bits >= 8 do
+                bits = bits - 8
+                local byte = bit32.rshift(buffer, bits)
+                buffer = buffer - bit32.lshift(byte, bits)
+                result[#result+1] = string.char(byte)
+            end
+        end
+    end
+    return table.concat(result)
+end
 
 function Gen:APIToken(tbl)
     local Length = tonumber(tbl.Length) or 32
@@ -65,7 +97,7 @@ function Gen:APIToken(tbl)
         token[i] = pool[math.random(1, #pool)]
     end
     local concat = table.concat(token)
-    local encoded = base64:Encode(concat)
+    local encoded = base:Encode(concat)
     return encoded
 end
 
@@ -153,8 +185,8 @@ function Gen:Sessions(tbl)
         token[i] = pool[math.random(1, #pool)]
     end
     local concat = table.concat(token)
-    local encoded = base64:Encode(concat)
-    local encodedv = base64:Encode(encoded)
+    local encoded = base:Encode(concat)
+    local encodedv = base:Encode(encoded)
     return encodedv
 end
 
@@ -217,11 +249,11 @@ function Gen:HexToken(tbl)
     end
 
     local concat = table.concat(token)
-    local encoded = base64:Encode(concat)
+    local encoded = base:Encode(concat)
     return encoded
 end
 
-function Gen:Base64()
+function Gen:base()
     local Length = tonumber(tbl.Length) or 32
     if Length < 16 then Length = 32 end
     if Length > 128 then Length = 128 end
@@ -255,8 +287,8 @@ function Gen:Base64()
         token[i] = pool[math.random(1, #pool)]
     end
     local concat = table.concat(token)
-    local encoded = base64:Encode(concat)
-    local encoded2 = base64:Encode(encoded)
+    local encoded = base:Encode(concat)
+    local encoded2 = base:Encode(encoded)
     return encoded2
 end
 
