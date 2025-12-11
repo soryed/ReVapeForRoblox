@@ -8,10 +8,10 @@ local vape = shared.vape
 local http = cloneref(game:GetService("HttpService"))
 
 local ApiBase = "https://onyxclient.fsl58.workers.dev/"
-local LoginBase = 'https://onyxclient.fsl58.workers.dev/login'
-local ResetBase = 'https://onyxclient.fsl58.workers.dev/reset'
-local UpgradeBase = 'https://onyxclient.fsl58.workers.dev/role'
-
+local LoginBase = ApiBase..'login'
+local ResetBase = ApiBase..'reset'
+local UpgradeBase = ApiBase..'role'
+local SignupBase = ApiBase.."signup"
 --local HwidBase = ApiBase.."hwid?user="
 local username = ""
 local password = ""
