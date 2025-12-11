@@ -60,7 +60,7 @@ function Gen:APIToken(tbl)
     if N  then addChars(Global.Numbers) end
     if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return nil end
+    if #pool == 0 then return "" end
 
     local token = {}
     for i = 1, Length do
@@ -98,7 +98,7 @@ function Gen:Password(tbl)
     if N  then addChars(Global.Numbers) end
     if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return nil end
+    if #pool == 0 then return "" end
 
     local token = {}
     for i = 1, Length do
@@ -135,7 +135,7 @@ function Gen:Sessions(tbl)
     if N  then addChars(Global.Numbers) end
     if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return nil end
+    if #pool == 0 then return "" end
 
     local token = {}
     for i = 1, Length do
@@ -237,7 +237,7 @@ function Gen:Base64()
     if N  then addChars(Global.Numbers) end
     if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return nil end
+    if #pool == 0 then return "" end
 
     local token = {}
     for i = 1, Length do
@@ -276,7 +276,7 @@ function Gen:NanoID()
     if N  then addChars(Global.Numbers) end
     if S  then addChars('_-') end
 
-    if #pool == 0 then return nil end
+    if #pool == 0 then return "" end
 
     local token = {}
     for i = 1, Length do
