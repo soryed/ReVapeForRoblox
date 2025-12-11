@@ -22754,8 +22754,6 @@ run(function()
 													selfPosition = {value = pos}
 												}
 										})
-									if not v.Character or v.Character.Humanoid.Health <= 0 then
-										print("player is dead") -- DEBUG BTW DONT WORRY 
 									end
 								end
 							end
