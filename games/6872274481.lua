@@ -13527,41 +13527,55 @@ end)
 
 run(function()
 	local BackTrackIncoming = {}
-		local BackTrack = vape.Categories.Exploits:CreateModule({
-			Name = "BackTrack", 
-			Function = function(callback)
+	local KPS
+	local BackTrack = vape.Categories.Exploits:CreateModule({
+		Name = "BackTrack", 
+		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end  
-				if callback then
-							game:GetService("NetworkClient"):SetOutgoingKBPSLimit(1)
-					if BackTrackIncoming.Enabled then 
-						settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
-					end
-				else
-					game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
-					if BackTrackIncoming.Enabled then 
-						settings():GetService("NetworkSettings").IncomingReplicationLag = 0
-					end
+			if callback then
+				game:GetService("NetworkClient"):SetOutgoingKBPSLimit(KPS.Value)
+				if BackTrackIncoming.Enabled then 
+					settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
 				end
-			end, 
-			Tooltip = "PositionRaper"
-		})
-		BackTrackIncoming = BackTrack:CreateToggle({
-			Name = "Incoming",
-			Function = function(callback)
-				if callback then
-					if BackTrack.Enabled then 
-						settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
-					end
-				else
-					if BackTrack.Enabled then 
-						settings():GetService("NetworkSettings").IncomingReplicationLag = 0
-					end
+			else
+				game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
+				if BackTrackIncoming.Enabled then 
+					settings():GetService("NetworkSettings").IncomingReplicationLag = 0
 				end
 			end
-		})
+		end, 
+		Tooltip = "PositionRaper"
+	})
+	BackTrackIncoming = BackTrack:CreateToggle({
+		Name = "Incoming",
+		Function = function(callback)
+			if callback then
+				if BackTrack.Enabled then 
+					settings():GetService("NetworkSettings").IncomingReplicationLag = 99999999
+				end
+			else
+				if BackTrack.Enabled then 
+					settings():GetService("NetworkSettings").IncomingReplicationLag = 0
+				end
+			end
+		end
+	})
+	KPS = BackTrack:CreateSlider({
+		Name = "KPS Limit",
+		Max = 250,
+		Min = 1,
+		Default = 25,
+		Function = function()
+			if BackTrack.Enabled then 
+				game:GetService("NetworkClient"):SetOutgoingKBPSLimit(KPS.Value)
+			else
+				game:GetService("NetworkClient"):SetOutgoingKBPSLimit(math.huge)
+			end
+		end
+	})
 end)
 
 run(function()
