@@ -844,8 +844,14 @@ components = {
 			optionsettings.Function(self.Hue, self.Sat, self.Value, self.Opacity)
 		end
 		
-		function optionapi:Toggle()
-			self.Rainbow = not self.Rainbow
+		function optionapi:Toggle(db)
+			db = db or nil
+			if db then
+				self.Rainbow = db
+			else
+				self.Rainbow = not self.Rainbow
+			end
+			--self.Rainbow = not self.Rainbow
 			if self.Rainbow then
 				table.insert(mainapi.RainbowTable, self)
 				rainbow1.ImageColor3 = Color3.fromRGB(5, 127, 100)
@@ -5663,7 +5669,7 @@ local scarcitybanner = Instance.new('TextLabel')
 scarcitybanner.Size = UDim2.fromScale(1, 0.02)
 scarcitybanner.Position = UDim2.fromScale(0, 0.97)
 scarcitybanner.BackgroundTransparency = 1
-scarcitybanner.Text = 'A new discord has been created, click the discord icon to join.'
+scarcitybanner.Text = ''
 scarcitybanner.TextScaled = true
 scarcitybanner.TextColor3 = Color3.new(1, 1, 1)
 scarcitybanner.TextStrokeTransparency = 0.5
@@ -7014,7 +7020,5 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
-function mainapi:GUIType()
-	return "NEW"
-end
+
 return mainapi
