@@ -113,6 +113,23 @@ local function createAccount(U, P)
     return response
 end
 
+local function postLogin(U, P)
+    local req = request or http_request or syn.request
+    if not req then
+        return nil, "No HTTP request function available"
+    end
+
+    return req({
+        Url = LoginBase,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = http:JSONEncode({
+            username = U,
+            password = P
+        })
+    })
+end
+
 local function decodeSafe(body)
     local ok, result = pcall(function()
         return http:JSONDecode(body)
