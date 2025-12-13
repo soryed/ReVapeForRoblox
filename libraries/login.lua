@@ -226,7 +226,7 @@ function login:Login()
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded or req then
+        if not decoded  then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
@@ -252,7 +252,7 @@ function login:SlientLogin()
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded or req then
+        if not decoded then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
