@@ -5645,7 +5645,7 @@ end
 
 gui = Instance.new('ScreenGui')
 gui.Name = randomString()
-gui.DisplayOrder = 20
+gui.DisplayOrder = 2000
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 gui.IgnoreGuiInset = true
 gui.OnTopOfCoreBlur = true
