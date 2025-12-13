@@ -9,7 +9,7 @@ local Global = {
 
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then
+	if err then
 		error('Onyx | Failed to load : '..err)
 	end
 	return res
@@ -34,269 +34,275 @@ end
 local base = loadstring(downloadFile('ReVape/libraries/base64.lua'), 'base64')()
 
 function Gen:APIToken(tbl)
-    local Length = tonumber(tbl.Length) or 32
-    if Length < 16 then Length = 32 end
-    if Length > 128 then Length = 128 end
+	local Length = tonumber(tbl.Length) or 32
+	if Length < 16 then Length = 32 end
+	if Length > 128 then Length = 128 end
 
-    local Sets = tbl.Sets or {}
-    local UC = Sets.UC or false
-    local LC = Sets.LC or false
-    local N  = Sets.N  or false
-    local S  = Sets.S  or false
-    local E  = Sets.E  or false
+	local Sets = tbl.Sets or {}
+	local UC = Sets.UC or false
+	local LC = Sets.LC or false
+	local N  = Sets.N  or false
+	local S  = Sets.S  or false
+	local E  = Sets.E  or false
 
-    local pool = {}
-    local function addChars(str)
-        for i = 1, #str do
-            local ch = str:sub(i,i)
-            if not E or not table.find(Global.Excludes, ch) then
-                table.insert(pool, ch)
-            end
-        end
-    end
+	local pool = {}
+	local function addChars(str)
+		for i = 1, #str do
+			local ch = str:sub(i,i)
+			if not E or not table.find(Global.Excludes, ch) then
+				table.insert(pool, ch)
+			end
+		end
+	end
 
-    if UC then addChars(Global.LettersUPPER) end
-    if LC then addChars(Global.LettersLOWER) end
-    if N  then addChars(Global.Numbers) end
-    if S  then addChars(Global.Symbols) end
+	if UC then addChars(Global.LettersUPPER) end
+	if LC then addChars(Global.LettersLOWER) end
+	if N  then addChars(Global.Numbers) end
+	if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return "" end
+	if #pool == 0 then return "" end
 
-    local token = {}
-    for i = 1, Length do
-        token[i] = pool[math.random(1, #pool)]
-    end
-    local concat = table.concat(token)
-    local encoded = base:Encode(concat)
-    return encoded
+	local token = {}
+	for i = 1, Length do
+		token[i] = pool[math.random(1, #pool)]
+	end
+	local concat = table.concat(token)
+	local encoded = base:Encode(concat)
+	return encoded
 end
 
 function Gen:Password(tbl)
-    local Length = tonumber(tbl.Length) or 32
-    if Length < 8 then Length = 32 end
-    if Length > 128 then Length = 128 end
+	local Length = tonumber(tbl.Length) or 32
+	if Length < 8 then Length = 32 end
+	if Length > 128 then Length = 128 end
 
-    local Sets = tbl.Sets or {}
-    local UC = Sets.UC or false
-    local LC = Sets.LC or false
-    local N  = Sets.N  or false
-    local S  = Sets.S  or false
-    local E  = Sets.E  or false
+	local Sets = tbl.Sets or {}
+	local UC = Sets.UC or false
+	local LC = Sets.LC or false
+	local N  = Sets.N  or false
+	local S  = Sets.S  or false
+	local E  = Sets.E  or false
 
-    local pool = {}
-    local function addChars(str)
-        for i = 1, #str do
-            local ch = str:sub(i,i)
-            if not E or not table.find(Global.Excludes, ch) then
-                table.insert(pool, ch)
-            end
-        end
-    end
+	local pool = {}
+	local function addChars(str)
+		for i = 1, #str do
+			local ch = str:sub(i,i)
+			if not E or not table.find(Global.Excludes, ch) then
+				table.insert(pool, ch)
+			end
+		end
+	end
 
-    if UC then addChars(Global.LettersUPPER) end
-    if LC then addChars(Global.LettersLOWER) end
-    if N  then addChars(Global.Numbers) end
-    if S  then addChars(Global.Symbols) end
+	if UC then addChars(Global.LettersUPPER) end
+	if LC then addChars(Global.LettersLOWER) end
+	if N  then addChars(Global.Numbers) end
+	if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return "" end
+	if #pool == 0 then return "" end
 
-    local token = {}
-    for i = 1, Length do
-        token[i] = pool[math.random(1, #pool)]
-    end
-    local concat = table.concat(token)
-    return concat
+	local token = {}
+	for i = 1, Length do
+		token[i] = pool[math.random(1, #pool)]
+	end
+	local concat = table.concat(token)
+	return concat
 end
 
 function Gen:Username()
-    local Length = 4
-    local pool = Global.LettersUPPER..Global.LettersLOWER..Global.Numbers
-    local username = {}
-    
-    for i = 1, Length do
-        username[i] = pool:sub(math.random(1, #pool), math.random(1, #pool))
-    end
-    
-    return table.concat(username)
+	local Length = 4
+	local pool = Global.LettersUPPER .. Global.LettersLOWER .. Global.Numbers
+	local username = {}
+
+	for i = 1, Length do
+		local index = math.random(1, #pool)
+		username[i] = pool:sub(index, index)
+	end
+
+	return table.concat(username)
 end
 
-
 function Gen:Sessions(tbl)
-    local Length = tonumber(tbl.Length) or 16
-    if Length < 16 then Length = 16 end
-    if Length > 128 then Length = 128 end
+	local Length = tonumber(tbl.Length) or 16
+	if Length < 16 then Length = 16 end
+	if Length > 128 then Length = 128 end
 
-    local Sets = tbl.Sets or {}
-    local UC = Sets.UC or false
-    local LC = Sets.LC or false
-    local N  = Sets.N  or false
-    local S  = Sets.S  or false
-    local E  = Sets.E  or false
+	local Sets = tbl.Sets or {}
+	local UC = Sets.UC or false
+	local LC = Sets.LC or false
+	local N  = Sets.N  or false
+	local S  = Sets.S  or false
+	local E  = Sets.E  or false
 
-    local pool = {}
-    local function addChars(str)
-        for i = 1, #str do
-            local ch = str:sub(i,i)
-            if not E or not table.find(Global.Excludes, ch) then
-                table.insert(pool, ch)
-            end
-        end
-    end
+	local pool = {}
+	local function addChars(str)
+		for i = 1, #str do
+			local ch = str:sub(i,i)
+			if not E or not table.find(Global.Excludes, ch) then
+				table.insert(pool, ch)
+			end
+		end
+	end
 
-    if UC then addChars(Global.LettersUPPER) end
-    if LC then addChars(Global.LettersLOWER) end
-    if N  then addChars(Global.Numbers) end
-    if S  then addChars(Global.Symbols) end
+	if UC then addChars(Global.LettersUPPER) end
+	if LC then addChars(Global.LettersLOWER) end
+	if N  then addChars(Global.Numbers) end
+	if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return "" end
+	if #pool == 0 then return "" end
 
-    local token = {}
-    for i = 1, Length do
-        token[i] = pool[math.random(1, #pool)]
-    end
-    local concat = table.concat(token)
-    local encoded = base:Encode(concat)
-    local encodedv = base:Encode(encoded)
-    return encodedv
+	local token = {}
+	for i = 1, Length do
+		token[i] = pool[math.random(1, #pool)]
+	end
+	local concat = table.concat(token)
+	local encoded = base:Encode(concat)
+	local encodedv = base:Encode(encoded)
+	return encodedv
 end
 
 function Gen:UUID()
-    local hex = Global.LettersLOWER..Global.Numbers
+	math.randomseed(os.clock() * 1e3)
 
-    local function randomHex(n)
-        local t = {}
-        for i = 1, n do
-            t[i] = hex:sub(math.random(1, #hex), math.random(1, #hex))
-        end
-        return table.concat(t)
-    end
+	local hex = Global.LettersLOWER .. Global.Numbers
 
-    local uuid = string.format("%s-%s-4%s-%x%s-%s",
-        randomHex(8),
-        randomHex(4),
-        randomHex(3),
-        math.random(8,11),
-        randomHex(3),
-        randomHex(12)
-    )
+	local function randomHex(n)
+		local t = {}
+		for i = 1, n do
+			local idx = math.random(1, #hex)
+			t[i] = hex:sub(idx, idx)
+		end
+		return table.concat(t)
+	end
 
-    return uuid
+	local uuid = string.format(
+		"%s-%s-4%s-%x%s-%s",
+		randomHex(8),
+		randomHex(4),
+		randomHex(3),
+		math.random(8, 11),
+		randomHex(3),
+		randomHex(12)
+	)
+
+	return uuid
 end
 
 function Gen:GUID()
-    local hex = Global.LettersUPPER..Global.Numbers
+	math.randomseed(os.clock() * 1e6)
+	local hex = Global.LettersUPPER .. Global.Numbers
 
-    local function randomHex(n)
-        local t = {}
-        for i = 1, n do
-            t[i] = hex:sub(math.random(1, #hex), math.random(1, #hex))
-        end
-        return table.concat(t)
-    end
+	local function randomHex(n)
+		local t = {}
+		for i = 1, n do
+			local idx = math.random(1, #hex)
+			t[i] = hex:sub(idx, idx)
+		end
+		return table.concat(t)
+	end
 
-    local guid = string.format("%s-%s-4%s-%x%s-%s",
-        randomHex(12),
-        randomHex(8),
-        randomHex(6),
-        math.random(11,21),
-        randomHex(6),
-        randomHex(18)
-    )
+	local guid = string.format(
+		"%s-%s-%s-%s-%s",
+		randomHex(8),
+		randomHex(4),
+		randomHex(4),
+		randomHex(4),
+		randomHex(12)
+	)
 
-    return "{"..guid.."}"
+	return "{" .. guid .. "}"
 end
 
 function Gen:HexToken(tbl)
-    local Length = tonumber(tbl.Length) or 32
-    if Length < 16 then Length = 32 end
-    if Length > 128 then Length = 128 end
+	local Length = tonumber(tbl.Length) or 32
+	if Length < 16 then Length = 32 end
+	if Length > 128 then Length = 128 end
 
-    local hex = Global.Numbers..Global.LettersUPPER..global.LettersLOWER
-    local token = {}
+	local hex = Global.Numbers..Global.LettersUPPER..Global.LettersLOWER
+	local token = {}
 
-    for i = 1, Length do
-        token[i] = hex:sub(math.random(1, #hex), math.random(1, #hex))
-    end
+	for i = 1, Length do
+		token[i] = hex:sub(math.random(1, #hex), math.random(1, #hex))
+	end
 
-    local concat = table.concat(token)
-    local encoded = base:Encode(concat)
-    return encoded
+	local concat = table.concat(token)
+	local encoded = base:Encode(concat)
+	return encoded
 end
 
-function Gen:base()
-    local Length = tonumber(tbl.Length) or 32
-    if Length < 16 then Length = 32 end
-    if Length > 128 then Length = 128 end
+function Gen:base(tbl)
+	local Length = tonumber(tbl.Length) or 32
+	if Length < 16 then Length = 32 end
+	if Length > 128 then Length = 128 end
 
-    local Sets = tbl.Sets or {}
-    local UC = Sets.UC or false
-    local LC = Sets.LC or false
-    local N  = Sets.N  or false
-    local S  = Sets.S  or false
-    local E  = Sets.E  or false
+	local Sets = tbl.Sets or {}
+	local UC = Sets.UC or false
+	local LC = Sets.LC or false
+	local N  = Sets.N  or false
+	local S  = Sets.S  or false
+	local E  = Sets.E  or false
 
-    local pool = {}
-    local function addChars(str)
-        for i = 1, #str do
-            local ch = str:sub(i,i)
-            if not E or not table.find(Global.Excludes, ch) then
-                table.insert(pool, ch)
-            end
-        end
-    end
+	local pool = {}
+	local function addChars(str)
+		for i = 1, #str do
+			local ch = str:sub(i,i)
+			if not E or not table.find(Global.Excludes, ch) then
+				table.insert(pool, ch)
+			end
+		end
+	end
 
-    if UC then addChars(Global.LettersUPPER) end
-    if LC then addChars(Global.LettersLOWER) end
-    if N  then addChars(Global.Numbers) end
-    if S  then addChars(Global.Symbols) end
+	if UC then addChars(Global.LettersUPPER) end
+	if LC then addChars(Global.LettersLOWER) end
+	if N  then addChars(Global.Numbers) end
+	if S  then addChars(Global.Symbols) end
 
-    if #pool == 0 then return "" end
+	if #pool == 0 then return "" end
 
-    local token = {}
-    for i = 1, Length do
-        token[i] = pool[math.random(1, #pool)]
-    end
-    local concat = table.concat(token)
-    local encoded = base:Encode(concat)
-    local encoded2 = base:Encode(encoded)
-    return encoded2
+	local token = {}
+	for i = 1, Length do
+		token[i] = pool[math.random(1, #pool)]
+	end
+	local concat = table.concat(token)
+	local encoded = base:Encode(concat)
+	local encoded2 = base:Encode(encoded)
+	return encoded2
 end
 
-function Gen:NanoID()
-    local Length = tonumber(tbl.Length) or 21
-    if Length < 8 then Length = 8 end
-    if Length > 64 then Length = 64 end
+function Gen:NanoID(tbl)
+	local Length = tonumber(tbl.Length) or 21
+	if Length < 8 then Length = 8 end
+	if Length > 64 then Length = 64 end
 
-    local Sets = tbl.Sets or {}
-    local UC = Sets.UC or false
-    local LC = Sets.LC or false
-    local N  = Sets.N  or false
-    local S  = Sets.S  or false
-    local E  = Sets.E  or false
+	local Sets = tbl.Sets or {}
+	local UC = Sets.UC or false
+	local LC = Sets.LC or false
+	local N  = Sets.N  or false
+	local S  = true
+	local E  = Sets.E  or false
 
-    local pool = {}
-    local function addChars(str)
-        for i = 1, #str do
-            local ch = str:sub(i,i)
-            if not E or not table.find(Global.Excludes, ch) then
-                table.insert(pool, ch)
-            end
-        end
-    end
+	local pool = {}
+	local function addChars(str)
+		for i = 1, #str do
+			local ch = str:sub(i,i)
+			if not E or not table.find(Global.Excludes, ch) then
+				table.insert(pool, ch)
+			end
+		end
+	end
 
-    if UC then addChars(Global.LettersUPPER) end
-    if LC then addChars(Global.LettersLOWER) end
-    if N  then addChars(Global.Numbers) end
-    if S  then addChars('_-') end
+	if UC then addChars(Global.LettersUPPER) end
+	if LC then addChars(Global.LettersLOWER) end
+	if N  then addChars(Global.Numbers) end
+	if S  then addChars('_-') end
 
-    if #pool == 0 then return "" end
+	if #pool == 0 then return "" end
 
-    local token = {}
-    for i = 1, Length do
-        token[i] = pool[math.random(1, #pool)]
-    end
-    local concat = table.concat(token)
-    return concat
+	local token = {}
+	for i = 1, Length do
+		token[i] = pool[math.random(1, #pool)]
+	end
+	local concat = table.concat(token)
+	return concat
 end
 
 return Gen
