@@ -9810,7 +9810,7 @@ run(function()
 	end
 
 	HR = Killaura:CreateSlider({
-		Visible = false
+		Visible = false,
 		Name = 'Hit Registration',
 		Min = 1,
 		Max = 36,
