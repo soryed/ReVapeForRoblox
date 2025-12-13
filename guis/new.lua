@@ -5645,18 +5645,7 @@ end
 
 gui = Instance.new('ScreenGui')
 gui.Name = randomString()
-local DO = 0
-if identifyexecutor then
-	local l = string.lower(identifyexecutor()[1])
-	if string.find(l,"delta") then
-		DO = 20
-	else
-		DO = 9999999
-	end
-else
-	DO = 9999999
-end
-gui.DisplayOrder = DO
+gui.DisplayOrder = 20
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 gui.IgnoreGuiInset = true
 gui.OnTopOfCoreBlur = true
