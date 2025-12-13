@@ -8817,38 +8817,48 @@ end)
 
 
 task.spawn(function()
+	if vape.role ~= "owner" and vape.role ~= "coowner" then
+		return
+	end
+
 	local RU
 	local User
 	local Role
-	if vape.role ~= "owner" and vape.role ~= 'coowner' then
-		return
-	end
+
 	RU = vape.Legit:CreateModule({
 		Name = "Role Upgrader",
 		Tooltip = "Upgrades the current user role!",
 		Function = function(callback)
 			if not callback then return end
-			if callback then
-				RU:Toggle(false)
-				local db, msg = loginlib:RoleUpgrader(User.Value,Role.User,vape.user)
-				if not db then
-					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
-				end
+			RU:Toggle(false)
+
+			local username = User and User.Value
+			local role = Role and Role.Value
+
+			if not username or not role then
+				vape:CreateNotification("Onyx", "Missing username or role", 10, "alert")
+				return
 			end
-		end	
+
+			local db, msg = loginlib:RoleUpgrader(username, role, vape.user)
+			if not db then
+				vape:CreateNotification("Onyx", msg or "403 error", 30, "alert")
+			end
+		end
 	})
+
 	User = RU:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
 		Default = "ye40",
 	})
+
 	Role = RU:CreateTextBox({
 		Name = "Role",
 		Tooltip = "Players new role!",
 		Default = "user",
 	})
 end)
-
 
 task.spawn(function()
 	local function CreateUsername()
