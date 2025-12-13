@@ -14858,15 +14858,6 @@ run(function()
 					Sort = sortmethods.Health
 				})
 
-				local range2 = 5
-				local plr2 = entitylib.EntityPosition({
-					Range = range2, 
-					Part = 'RootPart',
-					Players = true,
-					NPCs = true,
-					Sort = sortmethods.Health
-				})
-
 				if plr then
 					local distance = (entitylib.character.RootPart.Position - plr.RootPart.Position).Magnitude
 					if Legit.Enabled and distance > 23 then
@@ -14943,10 +14934,7 @@ run(function()
 						clientTime = workspace:GetServerTimeNow() - 0.045
 					})
 				end
-				
-				if plr2 then
-
-				end
+			
 
 				task.wait(0.1)
 			until not BetterKaida.Enabled
