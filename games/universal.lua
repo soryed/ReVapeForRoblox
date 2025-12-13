@@ -8163,6 +8163,7 @@ local uipallet = {
 	Font = "Arimo"
 }
 
+
 run(function()
     local Configs
     local TweenService = cloneref(game:GetService("TweenService"))
@@ -8375,7 +8376,7 @@ run(function()
 				vape:CreateNotification('Onyx','Config was successfully created!',6,"success")
 			end
 
-		elseif method == "DELETE" and not prnt then
+		elseif method == "DELETE" then
 			local res = request({
 				Url = URL,
 				Method = "DELETE"
@@ -8386,26 +8387,6 @@ run(function()
 			else
 				vape:CreateNotification('Onyx','All saved config\'s was successfully deleted!',6,"success")
 			end
-		elseif method == "DELETE" and prnt then
-			local body = httpService:JSONEncode({
-				Username = Option.Username
-			})
-			local res = request({
-				Url = URL,
-				Method = "DELETE",
-				Body = body,
-				Headers = {
-					["Content-Type"] = "application/json"
-				}
-			})
-
-			if res.StatusCode ~= 200 then
-				vape:CreateNotification('Onyx','Config wasn\'t successfully deleted? DM '..vape.Discord..' StatusCode: '..res.StatusCode,15,"alert")
-			else
-				prnt:Destroy()
-				vape:CreateNotification('Onyx','Config\'s was successfully deleted!',6,"success")
-			end
-
 		else
 			vape:CreateNotification('Onyx','Method is not allowed]: '..method,(15 / 2),"warning")
 		end
@@ -8501,7 +8482,7 @@ run(function()
                 create("TextLabel",{Parent=ProfilesGUI,Name='Title',BackgroundTransparency=1,Position=UDim2.fromOffset(47,12),Size=UDim2.new(0.944,-10,0,20),Font=uipallet.Font,Text="Public Profiles",TextColor3=Color3.fromRGB(200,200,200),TextSize=13,TextXAlignment='Left',TextYAlignment='Center'})
                 local ProfileIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="profile",Position=UDim2.new(0.068,-35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/profilesicon.png')})
                 createC(ProfileIMAGE,UDim.new(1,0))
-                local CloseIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image='rbxassetid://14368309446'})
+                local CloseIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/closemini.png')})
                 createC(CloseIMAGE,UDim.new(1,0))
                 local loading = create("TextLabel",{Parent=MainFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.309,0.47),Size=UDim2.new(0.52,0,0.2,0),Font=uipallet.Font,Text="LOADING...",TextColor3=Color3.fromRGB(200,200,200),TextSize=18,Visible=false})
                 local searchFrame = create("Frame",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(147,50),Size=UDim2.fromOffset(499,31)})
