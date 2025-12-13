@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, entitylib = {}, {}
+local frictionTable, oldfrict, entitylib, weatherlib = {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -224,9 +224,23 @@ local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), '
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
+weatherlib.Lightning = loadstring(downloadFile("ReVape/libraries/Weather/Lightning.lua"), "Lightning")()
+weatherlib.Rain =  loadstring(downloadFile("ReVape/libraries/Weather/Rain.lua"), "Rain")()
+weatherlib.Snow =  loadstring(downloadFile("ReVape/libraries/Weather/Snow.lua"), "Snow")()
+
 local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
+	if S == "" then
+		S = "guest"
+	end
+	if U == "" then
+		U = "GUEST"
+	end
+	if S == "" and U == "" then
+		S = "guest"
+		U = "GUEST"
+	end
 	vape.role = S 
 	vape.user = U
 	R = S
@@ -6930,6 +6944,169 @@ run(function()
 end)
 	
 run(function()
+	local weather
+	local oldatmosphere = {}
+	local oldclouds = {}
+	local thundertick = tick()
+	local weathermode = nil
+	local snowYLevel
+
+	local thunderSounds = {}
+
+	for i,v in {'rbxassetid://6734393210', 'rbxassetid://18650085493'} do
+		local sound = Instance.new('Sound', game.SoundService)
+		sound.SoundId = v
+		table.insert(thunderSounds, sound)
+	end
+
+		local lightning = game:GetObjects('rbxassetid://71302811326216')[1]
+		lightning:PivotTo(CFrame.new())
+		lightning.Parent = replicatedStorage
+
+		for _, v in lightning:GetChildren() do
+			local PointLight = Instance.new('PointLight', v)
+			PointLight.Brightness = 20
+			PointLight.Range = 35
+			PointLight.Shadows = true
+		end
+
+		local function createThunder(pos)
+			weatherlib.Lightning.CreateLightning(pos)
+
+			local old = lightingService.Brightness
+			local b = tweenService:Create(lightingService, TweenInfo.new(0.1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+				Brightness = Random.new():NextInteger(90, 100)
+			})
+			b:Play()
+			b.Completed:Wait()
+			local sound = thunderSounds[math.random(1, #thunderSounds)]
+			sound.Volume = Random.new():NextNumber(0.7, 1.5)
+			sound:Play()
+			
+			task.wait(0.14)
+			tweenService:Create(lightingService, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
+				Brightness = old
+			}):Play()
+		end
+
+		local function getrandompos(currpos)
+			local randomizedvec = Vector3.new(Random.new():NextInteger(19, math.random(23, 47)), 0, Random.new():NextInteger(18, math.random(22, 45)))
+
+			local ray = workspace:Raycast(currpos + randomizedvec, Vector3.new(0, -50000, 0))
+
+			if ray then
+				return CFrame.new(ray.Position)
+			else
+				local vec = currpos + randomizedvec
+				return CFrame.new(vec)
+			end
+		end
+
+		local rand = Random.new()
+
+		weather = vape.Legit:CreateModule({
+			Name = 'Weather',
+			Function = function(call)
+				if call then
+					thundertick = tick() + math.random(1, 2)
+					if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' then
+						weatherlib.Rain:Enable()
+					elseif weathermode.Value == 'Snow' then
+						weatherlib.Snow:Enable(snowYLevel.Value)
+					end
+					if not workspace.Terrain:FindFirstChildOfClass('Clouds') then
+						local clouds = Instance.new('Clouds', workspace.Terrain)
+						clouds.Cover = 1
+						clouds.Density = 1
+						clouds.Color = Color3.fromRGB(12, 13, 16)
+						weather:Clean(clouds)
+					end
+					if not lightingService:FindFirstChildOfClass('Atmosphere') then
+						local atmosphere = Instance.new('Atmosphere', lightingService)
+						weather:Clean(atmosphere)
+					else
+						local a = lightingService:FindFirstChildOfClass('Atmosphere')
+						oldatmosphere.Density = a.Density
+						oldatmosphere.Offset = a.Offset
+						oldatmosphere.Glare = a.Glare
+						oldatmosphere.Haze = a.Haze
+						oldatmosphere.Color = a.Color
+						oldatmosphere.Decay = a.Decay
+					end
+					repeat
+						local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+						if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' or weathermode.Value == "Snow" then
+							if atmosphere then
+								if weathermode.Value == 'Rain' then
+									atmosphere.Density = 0.65
+									atmosphere.Offset = 0.25
+									atmosphere.Glare = 0
+									atmosphere.Haze = 0
+								elseif weathermode.Value == "Snow" then
+									atmosphere.Density = 0.7
+									atmosphere.Offset = 0.75
+									atmosphere.Color = Color3.fromRGB(142, 142, 142)
+									atmosphere.Decay = Color3.fromRGB(142, 142, 142)
+									atmosphere.Glare = 0.5
+									atmosphere.Haze = 0.5
+								elseif weathermode.Value == 'Thunderstorm' then
+									atmosphere.Density = 0.8
+									atmosphere.Offset = 0.2
+									atmosphere.Glare = 0.1
+									atmosphere.Color = Color3.fromRGB(121, 124, 160)
+									atmosphere.Decay = Color3.fromRGB(37, 38, 49)
+									atmosphere.Haze = 9
+								end
+							end
+							if weathermode.Value == 'Thunderstorm' and tick() > thundertick then
+								thundertick = tick() + rand:NextNumber(7, 25)
+								local pivot = getrandompos(lplr.Character.PrimaryPart.Position)
+								createThunder(pivot)
+							end
+						end
+						task.wait()
+					until not weather.Enabled
+				else
+					weatherlib.Rain:Disable()
+					weatherlib.Snow:Disable()
+					local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+					if atmosphere then
+						for i,v in oldatmosphere do
+							atmosphere[i] = v
+						end
+					end
+					table.clear(oldatmosphere)
+				end
+			end,
+			ExtraText = function()
+				return weathermode.Value
+			end
+		})
+		weathermode = weather:CreateDropdown({
+			Name = 'Mode',
+			List = {'Rain', 'Snow', 'Thunderstorm'},
+			Function = function()
+				if weather.Enabled then
+					weather:Toggle()
+					weather:Toggle()
+				end
+			end
+		})
+		snowYLevel = weather:CreateSlider({
+			Name = 'Snow Y Level',
+			Min = 0,
+			Max = 256,
+			Default = 60,
+			Function = function()
+				if weather.Enabled then
+					weather:Toggle()
+					weather:Toggle()
+				end
+			end,
+		})
+end)
+
+run(function()
 	local Breadcrumbs
 	local Texture
 	local Lifetime
@@ -7940,16 +8117,6 @@ run(function()
 	
 end)
 
-run(function()
-	local Streamer
-	Streamer = vape.Legit:CreateModule({
-		Name = "Streamer",
-		Function = function(callback)
-			vape.HideNofis = callback
-		end,
-		Tooltip ='hides onyx\'s modules'
-	})
-end)
 	
 run(function()
 	local GetExecutor	
@@ -8500,7 +8667,7 @@ run(function()
                 create("TextLabel",{Parent=ProfilesGUI,Name='Title',BackgroundTransparency=1,Position=UDim2.fromOffset(47,12),Size=UDim2.new(0.944,-10,0,20),Font=uipallet.Font,Text="Public Profiles",TextColor3=Color3.fromRGB(200,200,200),TextSize=13,TextXAlignment='Left',TextYAlignment='Center'})
                 local ProfileIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="profile",Position=UDim2.new(0.068,-35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/profilesicon.png')})
                 createC(ProfileIMAGE,UDim.new(1,0))
-                local CloseIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image=getcustomasset('ReVape/assets/new/close.png')})
+                local CloseIMAGE = create("ImageButton",{Parent=ProfilesGUI,ScaleType='Fit',ImageTransparency=0.5,Name="close",Position=UDim2.new(-1,35,0,9),Size=UDim2.fromOffset(24,24),BackgroundTransparency=1,Image='rbxassetid://14368309446'})
                 createC(CloseIMAGE,UDim.new(1,0))
                 local loading = create("TextLabel",{Parent=MainFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.309,0.47),Size=UDim2.new(0.52,0,0.2,0),Font=uipallet.Font,Text="LOADING...",TextColor3=Color3.fromRGB(200,200,200),TextSize=18,Visible=false})
                 local searchFrame = create("Frame",{Parent=MainFrame,BackgroundColor3=Color3.fromRGB(34,33,34),Name='Search',Position=UDim2.fromOffset(147,50),Size=UDim2.fromOffset(499,31)})
@@ -8768,7 +8935,12 @@ run(function()
 					loaded = true
 				end
                 RequestURL("GET",Children)
-            else
+
+				CloseIMAGE.Activated:Connect(function()
+					Configs:Toggle(false)
+				end)
+            
+			else
                 ProfilesGUI.Visible = callback
             end
         end,
@@ -8793,14 +8965,12 @@ task.spawn(function()
 			if callback then
 				local NP = CreatePassword()
 				RP:Toggle(false)
-				if #NP ~= 10 then
-					vape:CreateNotification("Reset Password", "New Password wasn't 10 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
-					return
-				end
 				local db, msg = loginlib:ResetPassword(User.Value,NP,vape.user)
 				if not db then
 					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
 				end
+				vape:CreateNotification("Onyx",User.Value.."'s new password is "..NP,8)
+				setclipboard(NP)
 			end
 		end	
 	})
@@ -8867,10 +9037,6 @@ task.spawn(function()
 					vape:CreateNotification("Account Creator", "Username wasn't 4 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
 					return
 				end
-				if #NP ~= 10 then
-					vape:CreateNotification("Account Creator", "Password wasn't 10 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
-					return
-				end
 				local db, msg = loginlib:CreateAccount(NU,NP)
 				if not db then
 					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
@@ -8885,10 +9051,129 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblo
 				setclipboard(Injection)
 				vape:CreateNotification("Account Creator", "Check ur clipboard!",5)
 				task.wait(2)
-				vape:CreateNotification("Account Creator", "Uninjecting... Please reinject with the new script!",3)
+				vape:CreateNotification("Account Creator", "Uninjecting... Please reinject with the new script!",3,'warning')
 				task.wait(3 + 0.045)
 				vape:Uninject()
 			end
 		end	
+	})
+end)
+
+run(function()
+	local Shaders
+	local Lighting = lightingService
+	local old = {
+		Technology = nil,
+		GlobalShadows = nil,
+		SS = nil -- HITLER,
+		Bright = nil,
+		EC = nil,
+		EDS =  nil,
+		CT = nil,
+		ODA = nil,
+		ESS = nil,
+	}
+	Shaders = vape.Legit:CreateModule({
+		Name = "Shaders",
+		Function = function(callback)
+			if callback then
+				pcall(function()
+					local RS = replicatedStorage
+					local folder = Instance.new("Folder")
+					folder.Name = "LightingStuffThingys"
+					folder.Parent = RS
+
+					for _, v in ipairs(Lighting:GetChildren()) do
+						v.Parent = folder
+					end
+				end)
+				pcall(function()
+					old.Technology = Lighting.Technology
+					old.GlobalShadows = Lighting.GlobalShadows
+					old.SS = Lighting.ShadowSoftness
+					old.Bright = Lighting.Brightness
+					old.EC = Lighting.ExposureCompensation
+					old.EDS = Lighting.EnvironmentDiffuseScale
+					old.ESS = Lighting.EnvironmentSpecularScale
+					old.CT = Lighting.ClockTime
+					old.ODA = Lighting.OutdoorAmbient
+					Lighting.GlobalShadows = true
+					Lighting.ShadowSoftness = 0.7
+					Lighting.Brightness = 1.5
+					Lighting.ExposureCompensation = -0.15
+					Lighting.EnvironmentDiffuseScale = 0.6
+					Lighting.EnvironmentSpecularScale = 0.4
+					Lighting.ClockTime = 14
+					Lighting.OutdoorAmbient = Color3.fromRGB(160, 160, 160)
+					Lighting.Technology = Enum.Technology.Future
+				end)
+
+				local Bloom = Instance.new("BloomEffect")
+				Bloom.Intensity = 0.45
+				Bloom.Size = 32
+				Bloom.Threshold = 0.9
+				Bloom.Parent = Lighting
+
+				local Color = Instance.new("ColorCorrectionEffect")
+				Color.Brightness = 0.05
+				Color.Contrast = -0.05
+				Color.Saturation = 0.12
+				Color.TintColor = Color3.fromRGB(255, 242, 230)
+				Color.Parent = Lighting
+
+				local DoF = Instance.new("DepthOfFieldEffect")
+				DoF.FarIntensity = 0.15
+				DoF.NearIntensity = 0
+				DoF.FocusDistance = 60
+				DoF.InFocusRadius = 50
+				DoF.Parent = Lighting
+
+				local Blur = Instance.new("BlurEffect")
+				Blur.Size = 2
+				Blur.Parent = Lighting
+
+				local Atmosphere = Instance.new("Atmosphere")
+				Atmosphere.Density = 0.35
+				Atmosphere.Offset = 0.25
+				Atmosphere.Glare = 0
+				Atmosphere.Haze = 1.2
+				Atmosphere.Color = Color3.fromRGB(245, 235, 225)
+				Atmosphere.Parent = Lighting
+			else
+				pcall(function()
+					local RS = replicatedStorage
+					local folder = RS:FindFirstChild("LightingStuffThingys")
+					if not folder then return end
+					local children = folder:GetChildren()
+
+					for _, v in ipairs(children) do
+						v.Parent = Lighting
+					end
+
+					folder:Destroy()
+				end)
+				pcall(function()
+					Lighting.Technology = old.Technology
+					Lighting.GlobalShadows = old.GlobalShadows
+					Lighting.ShadowSoftness = old.SS
+					Lighting.Brightness = old.Bright
+					Lighting.ExposureCompensation = old.EC
+					Lighting.EnvironmentDiffuseScale = old.EDS
+					Lighting.EnvironmentSpecularScale = old.ESS
+					Lighting.ClockTime = old.CT
+					Lighting.OutdoorAmbient = old.ODA
+					task.wait(.025)
+					old.Technology = nil
+					old.GlobalShadows = nil
+					old.SS = nil
+					old.Bright = nil
+					old.EC = nil
+					old.EDS = nil
+					old.ESS = nil
+					old.CT = nil
+					old.ODA = nil
+				end)
+			end
+		end
 	})
 end)
