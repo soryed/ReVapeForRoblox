@@ -13816,7 +13816,6 @@ run(function()
 				old = nil
 			end
 		end,
-		ExtraText = function() "HeatSeeker" end
 	})
 	Value = BCR:CreateSlider({
 		Name = "CPS",
