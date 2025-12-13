@@ -14598,7 +14598,7 @@ run(function()
 			if not callback then return
 			if Type.Value == "Known" then
 				OnlineMods(Mod.Value)
-			elseif Type.Value == "Unknown" then
+			else
 				OnlineMods("nns")
 			end
 		end,
