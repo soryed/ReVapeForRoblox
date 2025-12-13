@@ -108,6 +108,8 @@ shared.vape = vape
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
+	loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
+
 	if isfile('ReVape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('ReVape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
