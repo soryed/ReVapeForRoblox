@@ -414,7 +414,7 @@ local function coreswitch(tool, ignore)
 	end
 
 	pcall(function()
-		local res = bedwars.Client:Get(remotes.EquipItemRemote):CallServerAsync({hand = tool})
+		local res = bedwars.Client:Get('SetInvItem'):CallServerAsync({hand = tool})
 		if res ~= nil and res == true then
 			local handInvItem = character:FindFirstChild("HandInvItem")
 			if handInvItem then
@@ -645,7 +645,7 @@ local function switchItemV2(tool, delayTime)
 		tool = getItem(tool) and getItem(tool).tool
 	end
 	task.delay(delayTime,function()
-		bedwars.Client:Get(remotes.EquipItemRemote):CallServer({hand = tool})
+		bedwars.Client:Get('SetInvItem'):CallServer({hand = tool})
 	end)
 end
 
@@ -1063,7 +1063,6 @@ run(function()
 		DragonEndFly = safeGetProto(Knit.Controllers.VoidDragonController.flapWings, 1),
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
 		DropItem = Knit.Controllers.ItemDropController.dropItemInHand,
-		EquipItemRemote = "SetInvItem",
 		FireProjectile = debug.getupvalue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
 		GroundHit = Knit.Controllers.FallDamageController.KnitStart,
 		GuitarHeal = Knit.Controllers.GuitarController.performHeal,
@@ -11857,7 +11856,7 @@ run(function()
 					while root and root.Parent do
 						NewDis = (lplr.Character.HumanoidRootPart.Position - root.Position).Magnitude
 						if NewDis <= Distance then
-							bedwars.Client:Get(remotes.EquipItemRemote):SendToServer({["hand"] = game:GetService("ReplicatedStorage").Inventories[lplr.Name].infernal_shield})
+							bedwars.Client:Get('SetInvItem'):SendToServer({["hand"] = game:GetService("ReplicatedStorage").Inventories[lplr.Name].infernal_shield})
 							task.wait(0.015)
 							bedwars.Client:Get("UseInfernalShield"):SendToServer({["raised"] = true})
 						end
