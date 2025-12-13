@@ -20,7 +20,8 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '0.69',
+    ColoredNotifications = {},
+	Version = '0.7',
 	Discord = "@ye40",
 	role = "",
 	user = "",
@@ -5270,10 +5271,11 @@ function mainapi:CreateNotification(title, text, duration, type)
 		notification.Position = UDim2.new(1, 0, 1, -(29 + (78 * i)))
 		notification.ZIndex = 5
 		notification.BackgroundTransparency = 1
-		notification.Image = getcustomasset('ReVape/assets/new/notification.png')
+		notification.Image = self.ColoredNotifications.Enabled and getcustomasset('ReVape/assets/new/notificationv2.png') or getcustomasset('ReVape/assets/new/notification.png')
 		notification.ScaleType = Enum.ScaleType.Slice
 		notification.SliceCenter = Rect.new(7, 7, 9, 9)
 		notification.Parent = notifications
+        if self.ColoredNotifications.Enabled then notification.ImageColor3 = Color3.fromHSV(self.GUIColor.Hue,self.GUIColor.Sat,self.GUIColor.Value) end
 		addBlur(notification, true)
 		local iconshadow = Instance.new('ImageLabel')
 		iconshadow.Name = 'Icon'
@@ -5643,7 +5645,18 @@ end
 
 gui = Instance.new('ScreenGui')
 gui.Name = randomString()
-gui.DisplayOrder = 9999999
+local DO = 0
+if identifyexecutor then
+	local l = string.lower(identifyexecutor()[1])
+	if string.find(l,"delta") then
+		DO = 20
+	else
+		DO = 9999999
+	end
+else
+	DO = 9999999
+end
+gui.DisplayOrder = DO
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 gui.IgnoreGuiInset = true
 gui.OnTopOfCoreBlur = true
@@ -5735,7 +5748,9 @@ mainapi:Clean(scale:GetPropertyChangedSignal('Scale'):Connect(function()
 end))
 
 mainapi:Clean(clickgui:GetPropertyChangedSignal('Visible'):Connect(function()
-	mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
+	pcall(function()
+		mainapi:UpdateGUI(mainapi.GUIColor.Hue, mainapi.GUIColor.Sat, mainapi.GUIColor.Value, true)
+	end)
 	if clickgui.Visible and inputService.MouseEnabled then
 		repeat
 			local visibleCheck = clickgui.Visible
@@ -6143,6 +6158,12 @@ mainapi.ToggleNotifications = notifpane:CreateToggle({
 	Name = 'Toggle alert',
 	Tooltip = 'Notifies you if a module is enabled/disabled.',
 	Default = true,
+})
+
+mainapi.ColoredNotifications = notifpane:CreateToggle({
+	Name = 'Colored Notifications',
+	Tooltip = 'Colors the current notification',
+	Default = false,
 	Darker = true
 })
 
