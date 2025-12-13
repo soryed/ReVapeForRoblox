@@ -7142,59 +7142,65 @@ run(function()
 	end
 
 
-	local function attemptBreak(tab, localPosition)
-		if not tab then return end
+local function attemptBreak(tab, localPosition)
+    if not tab then return end
 
-		for _, v in tab do
-			if (v.Position - localPosition).Magnitude < Range.Value and bedwars.BlockController:isBlockBreakable({blockPosition = v.Position / 3}, lplr) then
-					if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
-					if (v:GetAttribute('BedShieldEndTime') or 0) > workspace:GetServerTimeNow() then continue end
-					if LimitItem.Enabled and not (store.hand.tool and bedwars.ItemMeta[store.hand.tool.Name].breakBlock) then continue end
-		
-					hit += 1
-					if NB.Enabled then
-						local playerPos = entitylib.character.HumanoidRootPart.Position
-						local closestBlock, closestPos, closestNormal = findClosestBreakableBlock(v.Position, playerPos)
-						if closestBlock and closestPos then
-							local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled,AT.Enabled)
-							if path then
-								local currentnode = target
-								for _, part in parts do
-									part.Position = currentnode or Vector3.zero
-									if currentnode then
-										part.BoxHandleAdornment.Color3 = currentnode == endpos and Color3.new(1, 0.2, 0.2) or currentnode == target and Color3.new(0.2, 0.2, 1) or Color3.new(0.2, 1, 0.2)
-									end
-									currentnode = path[currentnode]
-								end
-							end
-				
-							task.wait(InstantBreak.Enabled and (store.damageBlockFail > tick() and 4.5 or 0) or BreakSpeed.Value)
-				
-							return true                             
-						end
-					else
-						local target, path, endpos = bedwars.breakBlock(v, Effect.Enabled, Animation.Enabled, CustomHealth.Enabled and customHealthbar or nil, InstantBreak.Enabled,AT.Enabled)
-						if path then
-							local currentnode = target
-							for _, part in parts do
-								part.Position = currentnode or Vector3.zero
-								if currentnode then
-									part.BoxHandleAdornment.Color3 = currentnode == endpos and Color3.new(1, 0.2, 0.2) or currentnode == target and Color3.new(0.2, 0.2, 1) or Color3.new(0.2, 1, 0.2)
-								end
-								currentnode = path[currentnode]
-							end
-						end
-				
-						task.wait(InstantBreak.Enabled and (store.damageBlockFail > tick() and 4.5 or 0) or BreakSpeed.Value)
-				
-						return true   
-					end
-				end
-			end
-		end
-	
-		return false
-	end
+    for _, v in tab do
+        if (v.Position - localPosition).Magnitude < Range.Value
+        and bedwars.BlockController:isBlockBreakable({blockPosition = v.Position / 3}, lplr) then
+
+            if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
+            if (v:GetAttribute('BedShieldEndTime') or 0) > workspace:GetServerTimeNow() then continue end
+            if LimitItem.Enabled and not (store.hand.tool and bedwars.ItemMeta[store.hand.tool.Name].breakBlock) then continue end
+
+            hit += 1
+
+            if NB.Enabled then
+                local playerPos = entitylib.character.HumanoidRootPart.Position
+                local closestBlock, closestPos, closestNormal =
+                    findClosestBreakableBlock(v.Position, playerPos)
+
+                if closestBlock and closestPos then
+                    bedwars.breakBlock(
+                        v,
+                        Effect.Enabled,
+                        Animation.Enabled,
+                        CustomHealth.Enabled and customHealthbar or nil,
+                        InstantBreak.Enabled,
+                        AT.Enabled
+                    )
+
+                    task.wait(
+                        InstantBreak.Enabled
+                        and (store.damageBlockFail > tick() and 4.5 or 0)
+                        or BreakSpeed.Value
+                    )
+
+                    return true
+                end
+            else
+                bedwars.breakBlock(
+                    v,
+                    Effect.Enabled,
+                    Animation.Enabled,
+                    CustomHealth.Enabled and customHealthbar or nil,
+                    InstantBreak.Enabled,
+                    AT.Enabled
+                )
+
+                task.wait(
+                    InstantBreak.Enabled
+                    and (store.damageBlockFail > tick() and 4.5 or 0)
+                    or BreakSpeed.Value
+                )
+
+                return true
+            end
+        end
+    end
+
+    return false
+end
 
 	
 	Breaker = vape.Categories.Minigames:CreateModule({
