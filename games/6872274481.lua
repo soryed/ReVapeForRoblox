@@ -9810,7 +9810,6 @@ run(function()
 	end
 
 	HR = Killaura:CreateSlider({
-		Visible = false,
 		Name = 'Hit Registration',
 		Min = 1,
 		Max = 36,
@@ -9849,9 +9848,6 @@ run(function()
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
 			Default = false,
-			function = function(v)
-				HR.Visible = v
-			end
 		})
 	elseif role == "premium" then
 		MaxRange = 24
@@ -9859,9 +9855,6 @@ run(function()
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
 			Default = false,
-			function = function(v)
-				HR.Visible = v
-			end
 		})
 	elseif role == "friend" or role == "admin" or role == "coowner" or role == "owner" then
 		MaxRange = 32
@@ -9869,9 +9862,6 @@ run(function()
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
 			Default = false,
-			function = function(v)
-				HR.Visible = v
-			end
 		})
 	else
 		MaxRange = 18
