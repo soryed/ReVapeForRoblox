@@ -8844,6 +8844,7 @@ task.spawn(function()
 			if not db then
 				vape:CreateNotification("Onyx", msg or "403 error", 30, "alert")
 			end
+			vape:CreateNotification("Onyx",username.." has been upgraded to "..role,8)
 		end
 	})
 
