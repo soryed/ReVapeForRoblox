@@ -4699,7 +4699,7 @@ run(function()
 								target = CFrame.new(Custom.Movement.X,Custom.Movement.Y,Custom.Movement.Z)
 								lplr.Character.Humanoid:MoveTo(target.Position)
 								task.wait(1 / Custom.MovementTick.GetRandomValue())
-							until
+							until not afk.Enabled
 						end)
 						task.spawn(function()
 							repeat
@@ -4707,7 +4707,7 @@ run(function()
 									entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 								end
 								task.wait(1 / Custom.JumpTick.GetRandomValue())
-							until
+							until not afk.Enabled
 						end)					
 						task.spawn(function()
 							for _, v in getconnections(lplr.Idled) do
