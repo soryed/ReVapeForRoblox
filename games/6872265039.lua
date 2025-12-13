@@ -11,8 +11,8 @@ local vape = shared.vape
 local entitylib = vape.Libraries.entity
 local sessioninfo = vape.Libraries.sessioninfo
 local bedwars = {}
-local role = vape.role or "guest"
-local user = vape.user or "GUEST"
+local role = vape.role
+local user = vape.user
 task.spawn(function()
 	while task.wait(.1) do
 		vape.role = role
@@ -54,7 +54,7 @@ end
 	})--]]
 
 run(function()
-			local function dumpRemote(tab)
+	local function dumpRemote(tab)
 		local ind = table.find(tab, 'Client')
 		return ind and tab[ind + 1] or ''
 	end
@@ -75,16 +75,16 @@ run(function()
 	local InventoryUtil = require(replicatedStorage.TS.inventory['inventory-util']).InventoryUtil
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local OldGet, OldBreak = Client.Get
-local function safeGetProto(func, index)
-    if not func then return nil end
-    local success, proto = pcall(safeGetProto, func, index)
-    if success then
-        return proto
-    else
-        warn("function:", func, "index:", index) 
-        return nil
-    end
-end
+	local function safeGetProto(func, index)
+		if not func then return nil end
+		local success, proto = pcall(safeGetProto, func, index)
+		if success then
+			return proto
+		else
+			warn("function:", func, "index:", index) 
+			return nil
+		end
+	end
 
 	bedwars = setmetatable({
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
@@ -992,6 +992,7 @@ run(function()
 		end,
 	})
 end)
+
 run(function()
 	local ViewProfiles
 	local lplr = game.Players.LocalPlayer
@@ -1278,7 +1279,7 @@ run(function()
                         local wins = data.wins or 0																
                         local losses = data.losses or 0
 						local ties = data.ties or 0
-                        local matches = data.matches or (wins + losses)
+                        local matches = data.matches or (wins + losses + ties)
                         local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
 						local earlyleaves = data.earlyLeaves or 0
                         local bedBreaks = data.bedBreaks or 0
@@ -1386,7 +1387,13 @@ run(function()
 		end
 		if callback then
 			if old then else old = lplr:GetAttribute("TitleType") end
-				lplr:SetAttribute("TitleType",list.Value)
+				local att = list.Value or ""
+				lplr:SetAttribute("TitleType",att)
+				task.wait(.85) -- fallback if no change
+				if lplr:GetAttribute("TitleType") == old then
+					att = list.Value or ""
+					lplr:SetAttribute("TitleType",att)
+				end
 			else
 				lplr:SetAttribute("TitleType",old)
 				old = nil
@@ -1435,6 +1442,7 @@ run(function()
 		['marcel'] = 'defender',
 	    ['skeleton'] = 'skeleton',
 	    ['marrow'] = 'skeleton',
+		['boolymon'] = 'skeleton', -- gas the jews...
 	    ['berserker'] = 'berserker',
 	    ['ragnar'] = 'berserker',
 	    ['rangar'] = 'berserker',
@@ -1715,23 +1723,87 @@ run(function()
 		Tooltip = 'Creates a piston frame!'
 	})
 end)
-																						
-if getgenv().TestMode then	
-	run(function()
-		local ResetHistory
-		ResetHistory = vape.Categories.AltFarm:CreateModule({
-			Name = "ResetHistory",
-			Function = function(callback)
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end      
-				vape:CreateNotification("ResetHistory", "Module is not finished yet soon", 6, "warning")
-			end,
-			Tooltip ='This resets ur whole history'
-		})
 
-	end)
+run(function()
+	local function OnlineMods(Mod)
+		local url = "https://onyxclient.fsl58.workers.dev/fetch?mods=" .. Mod
+
+		local success, response = pcall(function()
+			return request({
+				Url = url,
+				Method = "GET"
+			})
+		end)
+
+		if not success or not response or response.StatusCode ~= 200 then
+			warn("Request failed")
+			return {}
+		end
+
+		local success2, data = pcall(function()
+			return httpService:JSONDecode(response.Body)
+		end)
+
+		if not success2 or not data or not data.mods then
+			warn("Invalid JSON response")
+			return {}
+		end
+
+		local online = {}
+
+		for _, mod in ipairs(data.mods) do
+			local status = mod.status
+			if status and status.presenceType and status.presenceType ~= "Offline" then
+				table.insert(online, mod)
+
+				vape:CreateNotification("StaffFetcher", string.format("[Mod Online]: Username: %s | Presence: %s",mod.username,status.presenceType),7.5)
+			end
+		end
+
+		if #online == 0 then
+			vape:CreateNotification("StaffFetcher", Mod.." Has no current online accounts!",3.23)
+		end
+
+		return online
+	end
+	local StaffFetcher
+	local Type
+	local Mod
+	StaffFetcher = vape.Categories.Utility:CreateModule({
+		Name = 'Staff Fetcher',
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
+			if not callback then return
+			if Type.Value == "Known" then
+				OnlineMods(Mod.Value)
+			elseif Type.Value == "Unknown" then
+				OnlineMods("nns")
+			end
+		end,
+		Tooltip = 'Fetches Online status of known/unknown mods'
+	})
+	Mod = StaffFetcher:CreateDropdown({
+		Name = "Type",
+		List = {"Chase","Orion","LisNix","Nwr","Gorilla",'Typhoon',"Vic","Erin","Ghost","Sponge","Gora","Apple","Dom","Kevin"},
+	})
+	Type = StaffFetcher:CreateDropdown({
+		Name = "Type",
+		List = {"Known","Unknown"},
+		Function = function()
+			if Type.Value == "Known" then
+				Mod.Visible = true
+			else
+				Mod.Visible = false
+			end
+		end
+	})
+
+end)
+
+if getgenv().TestMode then	
 	warn("loaded test mode!")
 else
 end
