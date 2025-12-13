@@ -8815,6 +8815,7 @@ task.spawn(function()
 	})
 end)
 
+
 task.spawn(function()
 	local RU
 	local User
@@ -8836,17 +8837,18 @@ task.spawn(function()
 			end
 		end	
 	})
-	User = RP:CreateTextBox({
+	User = RU:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
 		Default = "ye40",
 	})
-	Role = RP:CreateTextBox({
+	Role = RU:CreateTextBox({
 		Name = "Role",
 		Tooltip = "Players new role!",
 		Default = "user",
 	})
 end)
+
 
 task.spawn(function()
 	local function CreateUsername()
