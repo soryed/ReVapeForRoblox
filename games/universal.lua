@@ -8751,7 +8751,7 @@ run(function()
 				end
                 RequestURL("GET",Children)
 
-				CloseIMAGE.Activated:Connect(function()
+				ProfileIMAGE.Activated:Connect(function()
 					Configs:Toggle(false)
 				end)
             
