@@ -1049,7 +1049,6 @@ run(function()
 	})
 
 	local remoteNames = {
-		EmberHellRelease = "HellBladeRelease",
 		AfkStatus = safeGetProto(Knit.Controllers.AfkController.KnitStart, 1),
 		AttackEntity = Knit.Controllers.SwordController.sendServerRequest,
 		BeePickup = Knit.Controllers.BeeNetController.trigger,
@@ -9679,7 +9678,7 @@ run(function()
 
 						if #plrs > 0 then
 							if store.equippedKit == "ember" and sword.itemType == "infernal_saber" then
-								bedwars.Client:Get(remotes.EmberHellRelease):FireServer({chargeTime = 1, player = lplr, weapon = sword.tool})
+								bedwars.Client:Get('HellBladeRelease'):FireServer({chargeTime = 1, player = lplr, weapon = sword.tool})
 							end
 							local selfpos = entitylib.character.RootPart.Position
 							local localfacing = entitylib.character.RootPart.CFrame.LookVector * Vector3.new(1, 0, 1)
