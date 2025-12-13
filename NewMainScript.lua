@@ -2,16 +2,49 @@ local accountinfo = {}
 
 local ARGS = ... or {}
 local function TTD()
-    delfolder('ReVape')
-end
-
-if ARGS.Refresh then
-    TTD()
+    pcall(function()
+		delfolder('ReVape')
+	end)
     if not isfolder('ReVape') then
         print('Successfully deleted the "ReVape" folder!')
     else
         warn('Had an issue deleting the "ReVape" folder. Please DM the user "ye40" on Discord!')
     end
+end
+
+local REI()
+	pcall(function()
+		if not ARGS.onyxdev then
+			if isfolder('ReVape') then
+				for _, v: string in listfiles('ReVape') do
+					if not v:find('profiles') then
+						if isfolder(v) then
+							delfolder(v)
+						elseif isfile(v) then
+							delfile(v)
+						end
+					end
+				end
+
+				if isfolder('ReVape/profiles') and isfile('ReVape/profiles/commit.txt') then
+					delfile('ReVape/profiles/commit.txt')
+				end
+			end
+		end
+	end)
+    if not isfile('ReVape/profiles/commit.txt') then
+        print('Successfully reinstalled the "ReVape" folder!')
+    else
+        warn('Had an issue reinstalling the "ReVape" folder. Please DM the user "ye40" on Discord!')
+    end
+end
+
+if ARGS.Refresh then
+    TTD()
+end
+
+if ARGS.Reinstall then
+	REI()
 end
 
 if getgenv().username  and next(ARGS) == nil then
