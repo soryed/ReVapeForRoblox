@@ -14801,188 +14801,64 @@ end)
 
 run(function()
     local AutoDodge
-	local Distance = 15
-	local D
-	AutoDodge = vape.Categories.Blatant:CreateModule({
+    local Distance = 15
+    local D
+
+    AutoDodge = vape.Categories.Blatant:CreateModule({
         Name = 'AutoDodge',
+        Tooltip = 'Automatically dodges arrows for you -- close range only',
         Function = function(callback)
-			AutoDodge:Clean(workspace.DescendantAdded:Connect(function(arrow)
-				if not AutoDodge.Enabled then return end
-				if (arrow.Name == "crossbow_arrow" or arrow.Name == "arrow" or arrow.Name == "headhunter_arrow") and arrow:IsA("Model") then
-					if arrow:GetAttribute("ProjectileShooter") == lplr.UserId then return end
-					local root = arrow:FindFirstChildWhichIsA("BasePart")
-					if not root then return end
-					local NewDis = (lplr.Character.HumanoidRootPart.Position - root.Position).Magnitude
-					while root and root.Parent do
-						NewDis = (lplr.Character.HumanoidRootPart.Position - root.Position).Magnitude
-						if NewDis <= Distance then
-							local pos = CFrame.new(entitylib.character.rootPart.Position.X + 5, entitylib.character.rootPart.Position.Y, entitylib.character.rootPart.Position.Z )
-							lplr.Character.Humanoid:MoveTo(pos.CFrame)
-						end
-						task.wait(0.05)
-					end
-				end
-			end))       
-		end,
-        Tooltip = 'automatically dodges arrows for you -- close range only'
+            if not callback then return end
+
+            AutoDodge:Clean(
+                workspace.DescendantAdded:Connect(function(arrow)
+                    if not AutoDodge.Enabled then return end
+                    if not entitylib.isAlive then return end
+
+                    if (arrow.Name == "crossbow_arrow"
+                    or arrow.Name == "arrow"
+                    or arrow.Name == "headhunter_arrow")
+                    and arrow:IsA("Model") then
+
+                        if arrow:GetAttribute("ProjectileShooter") == lplr.UserId then return end
+
+                        local root = arrow:FindFirstChildWhichIsA("BasePart")
+                        if not root then return end
+
+                        while AutoDodge.Enabled and root and root.Parent and entitylib.isAlive do
+                            local char = lplr.Character
+                            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                            local hum = char and char:FindFirstChildOfClass("Humanoid")
+                            if not hrp or not hum then break end
+
+                            local dist = (hrp.Position - root.Position).Magnitude
+                            if dist <= Distance then
+                                local dodgePos = hrp.Position + Vector3.new(5, 0, 0)
+                                hum:MoveTo(dodgePos)
+                                break
+                            end
+
+                            task.wait(0.05)
+                        end
+                    end
+                end)
+            )
+        end
     })
-	D = AutoDodge:CreateSlider({
-		Name = "Distance",
-		Min = 1,
-		Max = 30,
-		Default = 15,
-		Suffix = function(val)
-			if val <= 1 then
-				return "stud"
-			else
-				return "studs"
-			end
-		end,
-		Function = function(val)
-			Distance = val
-		end
-	})
+
+    D = AutoDodge:CreateSlider({
+        Name = "Distance",
+        Min = 1,
+        Max = 30,
+        Default = 15,
+        Suffix = function(val)
+            return val == 1 and "stud" or "studs"
+        end,
+        Function = function(val)
+            Distance = val
+        end
+    })
 end)
 
-run(function()
-	function IsAlive(plr)
-		return entitylib.IsAlive
-	end
-	local Slowmode
-	local CC
-	local Distance
-	local GodMode
-	GodMode = vape.Categories.Blatant:CreateModule({
-		Name = "Godmode",
-		Tooltip = 'Better than skidware LMFAO',
-		Function = function(callback)
-			if callback then
-				task.spawn(function()
-					repeat task.wait()
-						local res, msg = pcall(function()
-							if (not Fly.Enabled) and (not InfiniteFly.Enabled) then
-								for i, v in pairs(playersService:GetChildren()) do
-									if v.Team ~= lplr.Team and IsAlive(v) and IsAlive(lplr) then
-										if v and v ~= lplr then
-											local TargetDistance = lplr:DistanceFromCharacter(v.Character:FindFirstChild("HumanoidRootPart").CFrame.p)
-											if TargetDistance < Distance.Value then
-												if not lplr.Character:WaitForChild("HumanoidRootPart"):FindFirstChildOfClass("BodyVelocity") then
-													repeat task.wait() until bedwars.Store:getState().matchState ~= 0
-													if not (v.Character.HumanoidRootPart.Velocity.Y < -10*5) then
-														lplr.Character.Archivable = true
-				
-														local Clone = lplr.Character:Clone()
-														Clone.Parent = game.Workspace
-														Clone.Head:ClearAllChildren()
-														gameCamera.CameraSubject = Clone:FindFirstChild("Humanoid")
-					
-														for i,v in pairs(Clone:GetChildren()) do
-															if string.lower(v.ClassName):find("part") and v.Name ~= "HumanoidRootPart" then
-																v.Transparency = 1
-															end
-															if v:IsA("Accessory") then
-																v:FindFirstChild("Handle").Transparency = 1
-															end
-														end
-					
-														lplr.Character:WaitForChild("HumanoidRootPart").CFrame = lplr.Character:WaitForChild("HumanoidRootPart").CFrame + Vector3.new(0,100,0)
-					
-														CC = game:GetService("RunService").RenderStepped:Connect(function()
-															if Clone ~= nil and Clone:FindFirstChild("HumanoidRootPart") then
-																Clone.HumanoidRootPart.Position = Vector3.new(lplr.Character:WaitForChild("HumanoidRootPart").Position.X, Clone.HumanoidRootPart.Position.Y, lplr.Character:WaitForChild("HumanoidRootPart").Position.Z)
-															end
-														end)
-					
-														task.wait(Slowmode.Value/10)
-														lplr.Character:WaitForChild("HumanoidRootPart").Velocity = Vector3.new(lplr.Character:WaitForChild("HumanoidRootPart").Velocity.X, -1, lplr.Character:WaitForChild("HumanoidRootPart").Velocity.Z)
-														lplr.Character:WaitForChild("HumanoidRootPart").CFrame = Clone.HumanoidRootPart.CFrame
-														gameCamera.CameraSubject = lplr.Character:FindFirstChild("Humanoid")
-														Clone:Destroy()
-														task.wait(0.15)
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end)
-						if not res then warn(msg) end
-					until (not GodMode.Enabled)
-				end)
-			else
-				pcall(function()
-					CC:Disconnect()
-				end)
-			end
-		end
-	})
-	Slowmode = GodMode:CreateSlider({
-		Name = "Slowmode",
-		Function = function() end,
-		Default = 2,
-		Min = 1,
-		Max = 25,
-		Suffix = "s"
-	})
-	Distance = GodMode:CreateSlider({
-		Name = "Distance",
-		Default = 25,
-		Min = 1,
-		Max = 32,
-		Suffix = function(val) 
-		if val <= 1 then
-			return "stud" 
-		else 
-			return "studs"
-		end
-	end
-	})
-end)
 
-run(function()
-	local ABE
-	local Delay
-	local Distance
-	ABE = vape.Categories.Inventory:CreateModule({
-		Name = "AutoBuyEnchant",
-		Tooltip = 'Buy\'s an enchant for you in a close range distance',
-		Function = function(callback)
-			for i, obj in workspace:GetDescendants() do
-				if obj:IsA("BasePart") then
-					if obj.Name == "broken_enchant_table" then
-						local NewDis = (obj.Position - entitylib.character.rootPart.Position).Magnitude
-						if NewDis <= Distance.Value then
-							if obj:GetAttribute("Team") == lplr.Character:GetAttribute("Team") then
-								vape:CreateNotification("AutoBuyEnchant", "you have an broken enchant table", 8, "warning")
-								ABE:Toggle(false)
-								return
-							end
-						end
-					end
-				end
-			end
-		end
-	})
-	Delay = ABE:CreateSlider({
-		Name = "Delay",
-		Min = 20,
-		Max = 1000,
-		Default = 250,
-		Suffix = "ms"
-	})
-	Distance = ABE:CreateSlider({
-		Name = "Distance",
-		Min = 1,
-		Max = 13,
-		Default = 5,
-		Suffix = function(val)
-			if val <= 1 then
-				return "stud"
-			else
-				return "studs"
-			end
-		end
-	})
-end)
 
