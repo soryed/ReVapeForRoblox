@@ -8466,7 +8466,7 @@ run(function()
         end)
     end
 
-    Configs = vape.Legit:CreateModule({
+    Configs = vape.Categories.Minigames:CreateModule({
         Name = "Configs",
         Tooltip = 'Global configs',
         Function = function(callback)
@@ -8751,7 +8751,7 @@ run(function()
 				end
                 RequestURL("GET",Children)
 
-				ProfileIMAGE.Activated:Connect(function()
+				CloseIMAGE.Activated:Connect(function()
 					Configs:Toggle(false)
 				end)
             
