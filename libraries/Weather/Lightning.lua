@@ -43,4 +43,5 @@ return {
 
 		return LightningSparks.new(NewBolt)
 	end
+
 }
