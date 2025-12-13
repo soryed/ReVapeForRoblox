@@ -1,5 +1,3 @@
-local accountinfo = {}
-
 local ARGS = ... or {}
 local function TTD()
 	delfolder('ReVape')
