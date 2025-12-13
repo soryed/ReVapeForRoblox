@@ -150,10 +150,13 @@ function login:ResetPassword(user, newPass, requester, oldPass)
 
     local body = decodeSafe(resp.Body)
     if not body then 
+        warn("Invaild JSON returned")
         return false, "Invalid JSON returned"
     end
 
-    if body.error then 
+    if body.error then
+        warn(body.error or 'Unknown error')
+ 
         return false, body.error
     end
 
@@ -173,10 +176,13 @@ function login:RoleUpgrader(target, newRole, requester)
 
     local body = decodeSafe(resp.Body)
     if not body then 
+        warn("Invaild JSON returned")
         return false, "Invalid JSON returned"
     end
 
-    if body.error then 
+    if body.error then
+        warn(body.error or 'Unknown error')
+
         return false, body.error
     end
 
@@ -195,11 +201,13 @@ function login:CreateAccount(username, password)
     end
 
     local body = decodeSafe(resp.Body)
-    if not body then 
+    if not body then
+        warn("Invaild JSON returned")
         return false, "Invalid JSON returned"
     end
 
     if body.status == "error" then
+        warn(body.message or 'Unknown error')
         return false, body.message or "Unknown error"
     end
 
@@ -218,7 +226,7 @@ function login:Login()
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded then
+        if not decoded or req then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
@@ -232,9 +240,6 @@ function login:Login()
     return role, U, P
 end
 
-
-
-
 function login:SlientLogin()
     local role, U, P = "", "", ""
 
@@ -247,7 +252,7 @@ function login:SlientLogin()
 
         local decoded
         pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded then
+        if not decoded or req then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
             return 'guest', 'GUEST', 'PASSWORD'
         end
