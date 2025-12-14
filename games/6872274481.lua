@@ -14972,162 +14972,163 @@ run(function()
 end)
 
 run(function()
-	local BetterKaida
-	local CastDistance
-	local AttackRange
-	local LimitToItem
-	local Angle
-	local Targets
+    local BetterKaida
+    local CastDistance
+    local AttackRange
+    local Angle
+    local Targets
 
-	BetterKaida = vape.Categories.Exploits:CreateModule({
-		Name = "BetterKaida",
-		Tooltip = "the killaura verison of Kaida lol",
-		Function = function(callback)
-			local plrs = entitylib.AllPosition({
-				Range = AttackRange.Value,
-				Wallcheck = Targets.Walls.Enabled or true,
-				Part = 'RootPart',
-				Players = Targets.Players.Enabled,
-				NPCs = Targets.NPCs.Enabled,
-				Limit = 2,
-				Sort = 'Distance'
-			})
-			local plrs2 = entitylib.AllPosition({
-				Range = CastDistance.Value,
-				Wallcheck = Targets.Walls.Enabled or true,
-				Part = 'RootPart',
-				Players = Targets.Players.Enabled,
-				NPCs = Targets.NPCs.Enabled,
-				Limit = 2,
-				Sort = 'Distance'
-			})
+    BetterKaida = vape.Categories.Exploits:CreateModule({
+        Name = "BetterKaida",
+        Tooltip = "Killaura-style Kaida",
+        Function = function(callback)
+            local plrs = entitylib.AllPosition({
+                Range = AttackRange.Value,
+                Wallcheck = Targets.Walls.Enabled,
+                Part = "RootPart",
+                Players = Targets.Players.Enabled,
+                NPCs = Targets.NPCs.Enabled,
+                Limit = 2,
+                Sort = "Distance"
+            })
 
-			if plrs then
-				local root = entitylib.character.RootPart
-				local delta = entitylib.character.RootPart.Position - root.Position
-				local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-				local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-				if angle >= (math.rad(Angle.Value) / 2) then return end
+            local plrs2 = entitylib.AllPosition({
+                Range = CastDistance.Value,
+                Wallcheck = Targets.Walls.Enabled,
+                Part = "RootPart",
+                Players = Targets.Players.Enabled,
+                NPCs = Targets.NPCs.Enabled,
+                Limit = 2,
+                Sort = "Distance"
+            })
 
-				local localPosition = entitylib.character.RootPart.Position
-				local shootDir = CFrame.lookAt(localPosition, plr.RootPart.Position).LookVector
-				localPosition += shootDir * math.max((localPosition - plr.RootPart.Position).Magnitude - 16, 0)
+            local char = entitylib.character
+            if not char or not char.RootPart then return end
+            local root = char.RootPart
 
-				lastAttackTime = workspace:GetServerTimeNow()
+            if plrs and #plrs > 0 then
+                local ent = plrs[1]
+                if ent and ent.RootPart then
+                    local delta = ent.RootPart.Position - root.Position
+                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+                    if angle <= (math.rad(Angle.Value) / 2) then
+                        local localPosition = root.Position
+                        local shootDir = CFrame.lookAt(localPosition, ent.RootPart.Position).LookVector
+                        localPosition = localPosition + shootDir * math.max((localPosition - ent.RootPart.Position).Magnitude - 16, 0)
 
-				pcall(function()
-					bedwars.AnimationUtil:playAnimation(lplr, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE), {
-						looped = false
-					})
-				end)
+                        pcall(function()
+                            bedwars.AnimationUtil:playAnimation(
+                                lplr,
+                                bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE),
+                                { looped = false }
+                            )
+                        end)
 
-				task.spawn(function()
-					pcall(function()
-						local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
-									
-						clawModel.Parent = workspace
-								
-						if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - entitylib.character.RootPart.Position).Magnitude < 1 then
-							for _, part in clawModel:GetDescendants() do
-								if part:IsA('MeshPart') then
-										part.Transparency = 0.6
-									end
-								end
-							end
-								
-						local rootPart = entitylib.character.RootPart
-						local Unit = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
-						local startPos = rootPart.Position + Unit:Cross(Vector3.new(0, 1, 0)).Unit * -1 * 5 + Unit * 6
-						local direction = (startPos + shootDir * 13 - startPos).Unit
-						local cframe = CFrame.new(startPos, startPos + direction)
-								
-						clawModel:PivotTo(cframe)
-						clawModel.PrimaryPart.Anchored = true
-								
-						if clawModel:FindFirstChild('AnimationController') then
-							local animator = clawModel.AnimationController:FindFirstChildOfClass('Animator')
-							if animator then
-								bedwars.AnimationUtil:playAnimation(animator, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK), {
-									looped = false,
-									speed = 1
-								})
-							end
-						end
-								
-						pcall(function()
-							local sounds = {
-								bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
-								bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
-								bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
-								bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
-							}
-							bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], {
-								position = rootPart.Position
-							})
-						end)
-								
-						task.wait(0.75)
-						clawModel:Destroy()
-						end)
-					end)
+                        task.spawn(function()
+                            pcall(function()
+                                local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
+                                clawModel.Parent = workspace
 
-					bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
-						position = localPosition,
-						direction = shootDir,
-						clientTime = workspace:GetServerTimeNow()
-					})
-				end
-			end
+                                if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - root.Position).Magnitude < 1 then
+                                    for _, part in clawModel:GetDescendants() do
+                                        if part:IsA("MeshPart") then
+                                            part.Transparency = 0.6
+                                        end
+                                    end
+                                end
 
-			if plrs2 then
-				local root = entitylib.character.RootPart
-				local delta = entitylib.character.RootPart.Position - root.Position
-				local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-				local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-				if angle >= (math.rad(Angle.Value) / 2) then return end
+                                local unitDir = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
+                                local startPos = root.Position + unitDir:Cross(Vector3.new(0, 1, 0)).Unit * -5 + unitDir * 6
+                                local direction = (startPos + shootDir * 13 - startPos).Unit
+                                clawModel:PivotTo(CFrame.new(startPos, startPos + direction))
+                                clawModel.PrimaryPart.Anchored = true
 
-				if bedwars.AbilityController:canUseAbility('summoner_start_charging') then
-					bedwars.AbilityController:useAbility('summoner_start_charging')
-					task.wait(math.random(1,2) - math.random())
-					if bedwars.AbilityController:canUseAbility('summoner_finish_charging') then
-						bedwars.AbilityController:useAbility('summoner_finish_charging')
-					else
-						task.wait(0.33)
-						bedwars.AbilityController:useAbility('summoner_finish_charging')
-					end
-				end
-			end
-			
+                                if clawModel:FindFirstChild("AnimationController") then
+                                    local animator = clawModel.AnimationController:FindFirstChildOfClass("Animator")
+                                    if animator then
+                                        bedwars.AnimationUtil:playAnimation(
+                                            animator,
+                                            bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK),
+                                            { looped = false, speed = 1 }
+                                        )
+                                    end
+                                end
 
-		end
-	})
-	Targets = Killaura:CreateTargets({
-		Players = true,
-		NPCs = true
-	})
+                                pcall(function()
+                                    local sounds = {
+                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
+                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
+                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
+                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
+                                    }
+                                    bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], { position = root.Position })
+                                end)
+
+                                task.wait(0.75)
+                                clawModel:Destroy()
+                            end)
+                        end)
+
+                        bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
+                            position = localPosition,
+                            direction = shootDir,
+                            clientTime = workspace:GetServerTimeNow()
+                        })
+                    end
+                end
+            end
+
+            if plrs2 and #plrs2 > 0 then
+                local ent2 = plrs2[1]
+                if ent2 and ent2.RootPart then
+                    local delta = ent2.RootPart.Position - root.Position
+                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+                    if angle <= (math.rad(Angle.Value) / 2) then
+                        if bedwars.AbilityController:canUseAbility("summoner_start_charging") then
+                            bedwars.AbilityController:useAbility("summoner_start_charging")
+                            task.wait(math.random(1,2) - math.random())
+                            if bedwars.AbilityController:canUseAbility("summoner_finish_charging") then
+                                bedwars.AbilityController:useAbility("summoner_finish_charging")
+                            else
+                                task.wait(0.33)
+                                bedwars.AbilityController:useAbility("summoner_finish_charging")
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    })
+
+    Targets = BetterKaida:CreateTargets({
+        Players = true,
+        NPCs = true,
+        Walls = true
+    })
+
     CastDistance = BetterKaida:CreateSlider({
         Name = "Cast Distance",
         Min = 1,
         Max = 10,
         Default = 5,
-        Suffix = function(val)
-            return val == 1 and "stud" or "studs"
-        end,
+        Suffix = function(val) return val == 1 and "stud" or "studs" end
     })
+
     Angle = BetterKaida:CreateSlider({
         Name = "Angle",
         Min = 0,
         Max = 360,
-        Default = 180,
+        Default = 180
     })
+
     AttackRange = BetterKaida:CreateSlider({
         Name = "Attack Range",
         Min = 1,
         Max = 18,
         Default = 18,
-        Suffix = function(val)
-            return val == 1 and "stud" or "studs"
-        end,
+        Suffix = function(val) return val == 1 and "stud" or "studs" end
     })
 end)
 
