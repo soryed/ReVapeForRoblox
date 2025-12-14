@@ -106,6 +106,36 @@ end
 vape = loadstring(downloadFile('ReVape/guis/'..gui..'.lua'), 'gui')()
 shared.vape = vape
 
+task.spawn(function()
+	if getgenv().Closet then
+	local LogService = cloneref(game:GetService("LogService"))
+	
+	local function hook(funcName)
+		if typeof(getgenv()[funcName]) == "function" then
+			local old
+			old = hookfunction(getgenv()[funcName], function(...)
+				return nil
+			end)
+		end
+	end
+	
+	hook("print")
+	hook("warn")
+	hook("error")
+	hook("info")
+	
+	pcall(function()
+		LogService:ClearOutput()
+	end)
+	
+	pcall(function()
+		LogService.MessageOut:Connect(function()
+			LogService:ClearOutput()
+		end)
+	end)
+	end
+end)
+
 if not shared.VapeIndependent then
 	loadstring(downloadFile('ReVape/games/universal.lua'), 'universal')()
 	--loadstring(downloadFile('ReVape/games/modules.luau'), 'modules')()
