@@ -54,7 +54,7 @@ end
 getgenv().username = ARGS.username
 getgenv().password = ARGS.password
 getgenv().TestMode = ARGS.TestMode or false
-
+getgenv().Closet = ARGS.Closet or false
 
 local tweenService = game:GetService('TweenService')
 
