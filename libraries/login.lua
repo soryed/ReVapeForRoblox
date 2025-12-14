@@ -236,7 +236,8 @@ function login:Login()
 
         vape:CreateNotification("Onyx", "Logged in as "..U.." ("..role..")", 7)
     end)
-
+    vape.role = role
+    vape.user = U
     return role, U, P
 end
 
@@ -261,7 +262,8 @@ function login:SlientLogin()
         U = username
         P = password
     end)
-
+    vape.role = role
+    vape.user = U
     return role, U, P
 end
 
