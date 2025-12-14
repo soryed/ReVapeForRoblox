@@ -14968,26 +14968,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 							character.PrimaryPart.Velocity.Z
 						)
 					end
-				end
-
-				task.spawn(function()
-					task.spawn(function()
-						while task.wait() do
-							if lplr.Character and lplr.Character.PrimaryPart then
-								local velocity = lplr.Character.PrimaryPart.Velocity
-								lplr.Character.PrimaryPart.Velocity = Vector3.new(velocity.X, 0, velocity.Z)
-							end
-						end
-					end)
-				end)
-
-
-				task.spawn(function()
-					while task.wait() do
-						pcall(checkWallClimb)
-					end
-				end)
-				
+				end				
 
 			dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
 			local part = Instance.new("Part",game.workspace)
