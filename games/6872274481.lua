@@ -13904,66 +13904,6 @@ run(function()
 	})
 end)
 
-
-run(function()
-		local ProjectileHightLight
-		local Color
-		local color
-		local targetOutline
-		local function UpdateHighlight(target)
-			if  target == nil then
-				if targetOutline then
-					targetOutline:Destroy()
-					targetOutline = nil
-				end
-			end
-			if target then
-				targetOutline = Instance.new("Highlight")
-				targetOutline.FillTransparency = 1
-				targetOutline.OutlineColor = color or Color3.fromRGB(255, 0, 0)
-				targetOutline.OutlineTransparency = 0
-				targetOutline.Adornee = target
-				targetOutline.Parent = target
-			end
-		end
-	
-		ProjectileHightLight = vape.Categories.Troll:CreateModule({
-			Name = "ProjectileHightLight",
-			Tooltip = "whenever you shoot out an projectile it highlights it",
-			Function = function(callback)
-				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-					return
-				end  
-				if callback then
-					ProjectileHightLight:Clean(workspace.DescendantAdded:Connect(function(proj)
-						if not ProjectileHightLight.Enabled then return end
-						local NamePart = string.lower(v.Name)
-						if (string.find(NamePart,"arrow")) and proj:IsA("Model") then
-							if proj:GetAttribute("ProjectileShooter") ~= lplr.UserId then return end
-							local root = proj:FindFirstChildWhichIsA("BasePart")
-							if not root then return end
-							UpdateHighlight(root)
-						end
-					end))
-				else
-					UpdateHighlight(nil)
-				end
-			end,
-		})
-
-		Color = ProjectileHightLight:CreateColorSlider({
-			Name = "Color",
-			Function = function(hue,sat,val)
-				if ProjectileHightLight.Enabled then
-					color = Color3.fromHSV(hue, sat, val)
-				else
-					return
-				end
-			end,
-		})
-end)
-
 run(function()
 		local BSA
 		local TargetPart
