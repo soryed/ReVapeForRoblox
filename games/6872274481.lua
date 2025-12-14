@@ -14908,7 +14908,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 				local dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
 				local pos = nil
 
-				task.spawn(function()
+			task.spawn(function()
 					if CurrentTeam == "blue" then
 						local id = "2_bed"
 						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
@@ -14942,7 +14942,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 						local id = "8_bed"
 						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
 					end
-				end)
+			end)
 
 
 				local function checkWallClimb()
@@ -14970,7 +14970,8 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					end
 				end				
 
-			dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
+			
+				dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
 			local part = Instance.new("Part",game.workspace)
 			part.Position = pos.Position
 			part.Anchored = true
@@ -14985,7 +14986,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			local Direction = part.Position.Unit
 			local JumpSpeed = 4.5 * 37
 			local start = entitylib.isAlive and entitylib.character.RootPart.Position or nil
-
+			entitylib.character.RootPart.Position = entitylib.character.RootPart.Position + Vector3.new(0,5,0)
 			AutoWin:Clean(runService.PreSimulation:Connect(function(dt)
 				    local root = entitylib.isAlive and entitylib.character.RootPart
 				    if not root or not isnetworkowner(root) then return end
@@ -14999,11 +15000,9 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 				    end
 				
 				    local direction = delta.Unit
-				    local speed = getSpeed() + JumpSpeed
+				    local speed = getSpeed() + JumpSpeed - 1.5
 				
-				    root.AssemblyLinearVelocity =
-				        direction * speed +
-				        Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+				    root.AssemblyLinearVelocity =direction * speed +Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
 				end))
 			end
 		})
