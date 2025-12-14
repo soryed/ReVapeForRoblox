@@ -1896,21 +1896,66 @@ end)
 	
 run(function()
 	local Attack
-	local Place
 	local Mine
-
+	local oldAttackReach, oldMineReach
 
 	Reach = vape.Categories.Combat:CreateModule({
 		Name = 'Reach',
 		Function = function(callback)
-			bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = callback and Attack.Value + 2 or 14.4
+			if callback then
+				oldAttackReach = bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE
+				
+				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = Attack.Value + 2
+				
+				task.spawn(function()
+					repeat task.wait(0.1) until bedwars.BlockBreakController or not Reach.Enabled
+					if not Reach.Enabled then return end
+					
+					pcall(function()
+						local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
+						if blockBreaker then
+							oldMineReach = oldMineReach or blockBreaker:getRange()
+							blockBreaker:setRange(Mine.Value)
+						end
+					end)
+				end)
+				
+				task.spawn(function()
+					while Reach.Enabled do
+						if bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE ~= Attack.Value + 2 then
+							bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = Attack.Value + 2
+						end
+						
+						pcall(function()
+							local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
+							if blockBreaker and blockBreaker:getRange() ~= Mine.Value then
+								blockBreaker:setRange(Mine.Value)
+							end
+						end)
+						
+						task.wait(0.5)
+					end
+				end)
+			else
+				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = oldAttackReach or 14.4
+				
+				pcall(function()
+					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
+					if blockBreaker then
+						blockBreaker:setRange(oldMineReach or 18)
+					end
+				end)
+				
+				oldAttackReach, oldMineReach = nil, nil
+			end
 		end,
-		Tooltip = 'Extends reach to attack, placing, and mining'
+		Tooltip = 'Extends reach for attacking and mining'
 	})
+	
 	Attack = Reach:CreateSlider({
 		Name = 'Attack Range',
 		Min = 0,
-		Max = 20,
+		Max = 30,
 		Default = 18,
 		Function = function(val)
 			if Reach.Enabled then
@@ -1921,28 +1966,20 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
+	
 	Mine = Reach:CreateSlider({
 		Name = 'Mine Range',
 		Min = 0,
-		Max = 20,
+		Max = 30,
 		Default = 18,
 		Function = function(val)
 			if Reach.Enabled then
-				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = val + 2
-			end
-		end,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
-		end
-	})
-	Place = Reach:CreateSlider({
-		Name = 'Place Range',
-		Min = 0,
-		Max = 20,
-		Default = 18,
-		Function = function(val)
-			if Reach.Enabled then
-				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = val + 2
+				pcall(function()
+					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
+					if blockBreaker then
+						blockBreaker:setRange(val)
+					end
+				end)
 			end
 		end,
 		Suffix = function(val)
@@ -14808,15 +14845,11 @@ run(function()
         Function = function(callback)
             if not callback then return end
 
-            AutoDodge:Clean(
-                workspace.DescendantAdded:Connect(function(arrow)
+            AutoDodge:Clean(workspace.DescendantAdded:Connect(function(arrow)
                     if not AutoDodge.Enabled then return end
                     if not entitylib.isAlive then return end
 
-                    if (arrow.Name == "crossbow_arrow"
-                    or arrow.Name == "arrow"
-                    or arrow.Name == "headhunter_arrow")
-                    and arrow:IsA("Model") then
+                    if (arrow.Name == "crossbow_arrow" or arrow.Name == "arrow" or arrow.Name == "headhunter_arrow")and arrow:IsA("Model") then
 
                         if arrow:GetAttribute("ProjectileShooter") == lplr.UserId then return end
 
