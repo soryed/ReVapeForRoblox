@@ -15081,7 +15081,7 @@ run(function()
 
 			if plrs2 then
 				local root = entitylib.character.RootPart
-				local delta = ent.RootPart.Position - root.Position
+				local delta = entitylib.character.RootPart.Position - root.Position
 				local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 				local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
 				if angle >= (math.rad(Angle.Value) / 2) then return end
