@@ -1550,7 +1550,7 @@ local KaidaController = {}
 function KaidaController:request(target)
 	if target then 
 		return bedwars.Client:Get("SummonerClawAttackRequest"):FireServer({
-			["position"] = target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position
+			["position"] = target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position,,
 			["direction"] = (target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position - lplr.Character.HumanoidRootPart.Position).unit, 
 			["clientTime"] = workspace:GetServerTimeNow(), 
 		})
