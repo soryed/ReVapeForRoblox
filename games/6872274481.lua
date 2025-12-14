@@ -14891,7 +14891,7 @@ run(function()
     })
 end)
 
-if getgenv().TestMode then
+if getgenv().TestMode or role == "owner" or role == "coowner" then
 	run(function()
 		local AutoWin
 
