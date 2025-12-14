@@ -1,6 +1,22 @@
 local ARGS = ... or {}
 local function TTD()
-	delfolder('ReVape')
+	if not ARGS.ReVapeDev then
+	    if isfolder('ReVape') then
+	        for _, v: string in listfiles('ReVape') do
+	            if not v:find('profiles') then
+	                if isfolder(v) then
+	                    delfolder(v)
+	                elseif isfile(v) then
+	                    delfile(v)
+	                end
+	            end
+	        end
+	
+	        if isfolder('ReVape/profiles') and isfile('ReVape/profiles/commit.txt') then
+	            delfile('ReVape/profiles/commit.txt')
+	        end
+	    end
+	end
 end
 if ARGS.Refresh then
     TTD()
