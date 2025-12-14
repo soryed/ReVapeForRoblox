@@ -15006,28 +15006,24 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			local start = entitylib.isAlive and entitylib.character.RootPart.Position or nil
 
 			AutoWin:Clean(runService.PreSimulation:Connect(function(dt)
-				local root = entitylib.isAlive and entitylib.character.RootPart or nil
-	
-				if root and isnetworkowner(root) then
-					if JumpTick > tick() then
-						root.AssemblyLinearVelocity = Direction * (getSpeed() + ((JumpTick - tick()) > 1.1 and JumpSpeed or 0)) + Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
-						if entitylib.character.Humanoid.FloorMaterial == Enum.Material.Air and not start then
-							root.AssemblyLinearVelocity += Vector3.new(0, dt * (workspace.Gravity - 23), 0)
-						else
-							root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 15, root.AssemblyLinearVelocity.Z)
-						end
-						start = nil
-					else
-						if start then
-							root.CFrame = CFrame.lookAlong(start, root.CFrame.LookVector)
-						end
-						root.AssemblyLinearVelocity = Vector3.zero
-						JumpSpeed = 0
-					end
-				else
-					start = nil
-				end
-			end))
+				    local root = entitylib.isAlive and entitylib.character.RootPart
+				    if not root or not isnetworkowner(root) then return end
+				
+				    local delta = part.Position - root.Position
+				    local distance = delta.Magnitude
+				
+				    if distance < 2 then
+				        root.AssemblyLinearVelocity = Vector3.zero
+				        return
+				    end
+				
+				    local direction = delta.Unit
+				    local speed = getSpeed() + JumpSpeed
+				
+				    root.AssemblyLinearVelocity =
+				        direction * speed +
+				        Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+				end))
 			end
 		})
 	end)
