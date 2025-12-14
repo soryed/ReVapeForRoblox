@@ -14891,5 +14891,146 @@ run(function()
     })
 end)
 
+if getgenv().TestMode then
+	run(function()
+		local AutoWin
+
+		AutoWin = vape.Categories.AltFarm:CreateModule({
+			Name = 'AutoWin',
+			Tooltip = 'Automatically wins a match for you',
+			Function = function(callback)
+				if not callback then return end
+				local PS = cloneref(game:GetService("Players"))
+				local RP = cloneref(game:GetService("ReplicatedStorage"))
+				local ablitity = RP['events-@easy-games/game-core:shared/game-core-networking@getEvents.Events'].useAbility
+				local CurrentTeam = string.lower(lplr.Team.Name)
+				local Start = lplr.Character.HumanoidRootPart.Position
+				local dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
+				local pos = nil
+
+				task.spawn(function()
+					if CurrentTeam == "blue" then
+						local id = "2_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "orange" then
+						local id = "1_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "pink" then
+						local id = "5_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "brown" then
+						local id = "3_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+
+					if CurrentTeam == "yellow" then
+						local id = "6_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "white" then
+						local id = "4_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "purple" then
+						local id = "7_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+					if CurrentTeam == "cyan" then
+						local id = "8_bed"
+						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
+					end
+				end)
+
+
+				local function checkWallClimb()
+					local character = lplr.Character
+					if not character or not character.PrimaryPart then return end
+				
+					local raycastParams = RaycastParams.new()
+					raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+					raycastParams.FilterDescendantsInstances = {
+						character,
+						Workspace.CurrentCamera:FindFirstChild("Viewmodel"),
+						workspace.ItemDrops
+					}
+				
+					local origin = character.PrimaryPart.Position - Vector3.new(0, 1, 0)
+					local direction = character.PrimaryPart.CFrame.LookVector * 1.5
+				
+					local result = Workspace:Raycast(origin, direction, raycastParams)
+					if result and result.Instance and result.Instance.Transparency < 1 then
+						character.PrimaryPart.Velocity = Vector3.new(
+							character.PrimaryPart.Velocity.X,
+							100,
+							character.PrimaryPart.Velocity.Z
+						)
+					end
+				end
+
+				task.spawn(function()
+					task.spawn(function()
+						while task.wait() do
+							if lplr.Character and lplr.Character.PrimaryPart then
+								local velocity = lplr.Character.PrimaryPart.Velocity
+								lplr.Character.PrimaryPart.Velocity = Vector3.new(velocity.X, 0, velocity.Z)
+							end
+						end
+					end)
+				end)
+
+
+				task.spawn(function()
+					while task.wait() do
+						pcall(checkWallClimb)
+					end
+				end)
+				
+
+			dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
+			local part = Instance.new("Part",game.workspace)
+			part.Position = pos.Position
+			part.Anchored = true
+			part.CanCollide = true
+			lplr.Character.Humanoid.WalkSpeed = 23.05
+			ablitity:FireServer('dash', {
+				direction = dir,
+				origin = Start,
+				weapon = 'wood_dao'
+			})
+			local JumpTick = tick() + 2.4
+			local Direction = part.Position.Unit
+			local JumpSpeed = 4.5 * 37
+			local start = entitylib.isAlive and entitylib.character.RootPart.Position or nil
+
+			AutoWin:Clean(runService.PreSimulation:Connect(function(dt)
+				local root = entitylib.isAlive and entitylib.character.RootPart or nil
+	
+				if root and isnetworkowner(root) then
+					if JumpTick > tick() then
+						root.AssemblyLinearVelocity = Direction * (getSpeed() + ((JumpTick - tick()) > 1.1 and JumpSpeed or 0)) + Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+						if entitylib.character.Humanoid.FloorMaterial == Enum.Material.Air and not start then
+							root.AssemblyLinearVelocity += Vector3.new(0, dt * (workspace.Gravity - 23), 0)
+						else
+							root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 15, root.AssemblyLinearVelocity.Z)
+						end
+						start = nil
+					else
+						if start then
+							root.CFrame = CFrame.lookAlong(start, root.CFrame.LookVector)
+						end
+						root.AssemblyLinearVelocity = Vector3.zero
+						JumpSpeed = 0
+					end
+				else
+					start = nil
+				end
+			end))
+			end
+		})
+	end)
+end
 
 
