@@ -15002,6 +15002,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 
 				root.AssemblyLinearVelocity = Vector3.new(direction.X * speed,0,direction.Z * speed)
 			end))
+		end
 		})
 end
 
