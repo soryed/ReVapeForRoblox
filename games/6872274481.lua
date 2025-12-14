@@ -14943,35 +14943,9 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 						pos = game.workspace:WaitForChild("MapCFrames"):WaitForChild(id).Value
 					end
 			end)
-
-
-				local function checkWallClimb()
-					local character = lplr.Character
-					if not character or not character.PrimaryPart then return end
-				
-					local raycastParams = RaycastParams.new()
-					raycastParams.FilterType = Enum.RaycastFilterType.Exclude
-					raycastParams.FilterDescendantsInstances = {
-						character,
-						Workspace.CurrentCamera:FindFirstChild("Viewmodel"),
-						workspace.ItemDrops
-					}
-				
-					local origin = character.PrimaryPart.Position - Vector3.new(0, 1, 0)
-					local direction = character.PrimaryPart.CFrame.LookVector * 1.5
-				
-					local result = Workspace:Raycast(origin, direction, raycastParams)
-					if result and result.Instance and result.Instance.Transparency < 1 then
-						character.PrimaryPart.Velocity = Vector3.new(
-							character.PrimaryPart.Velocity.X,
-							100,
-							character.PrimaryPart.Velocity.Z
-						)
-					end
-				end				
-
 			
-				dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
+
+			dir =  lplr.Character.HumanoidRootPart.CFrame.LookVector
 			local part = Instance.new("Part",game.workspace)
 			part.Position = pos.Position
 			part.Anchored = true
