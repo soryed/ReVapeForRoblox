@@ -14976,7 +14976,6 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			part.Position = pos.Position
 			part.Anchored = true
 			part.CanCollide = true
-			lplr.Character.Humanoid.WalkSpeed = 23.05
 			ablitity:FireServer('dash', {
 				direction = dir,
 				origin = Start,
