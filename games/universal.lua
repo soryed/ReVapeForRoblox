@@ -8064,10 +8064,6 @@ task.spawn(function()
 		Name = "Announcement",
 		Tooltip = "Fires a global announcement",
 		Function = function(callback)
-			if vape.role ~= "owner" and vape.role ~= 'coowner' then
-				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
-				return
-			end
 			if not callback then return end
 			if callback then
 				local url = "https://announceclient.fsl58.workers.dev/announce"
@@ -8081,7 +8077,7 @@ task.spawn(function()
 				    type = anntype.Value,
 					role = vape.role
 				}
-				local DeletionTime = (data.time) + 1.45
+				local DeletionTime = (data.time) + 5.33
 				local response = request({
 				    Url = url,
 				    Method = "POST",
