@@ -14982,123 +14982,128 @@ run(function()
         Name = "BetterKaida",
         Tooltip = "Killaura-style Kaida",
         Function = function(callback)
-            local plrs = entitylib.AllPosition({
-                Range = AttackRange.Value,
-                Wallcheck = Targets.Walls.Enabled,
-                Part = "RootPart",
-                Players = Targets.Players.Enabled,
-                NPCs = Targets.NPCs.Enabled,
-                Limit = 2,
-                Sort = "Distance"
-            })
-
-            local plrs2 = entitylib.AllPosition({
-                Range = CastDistance.Value,
-                Wallcheck = Targets.Walls.Enabled,
-                Part = "RootPart",
-                Players = Targets.Players.Enabled,
-                NPCs = Targets.NPCs.Enabled,
-                Limit = 2,
-                Sort = "Distance"
-            })
-
-            local char = entitylib.character
-            if not char or not char.RootPart then return end
-            local root = char.RootPart
-
-            if plrs and #plrs > 0 then
-                local ent = plrs[1]
-                if ent and ent.RootPart then
-                    local delta = ent.RootPart.Position - root.Position
-                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-                    if angle <= (math.rad(Angle.Value) / 2) then
-                        local localPosition = root.Position
-                        local shootDir = CFrame.lookAt(localPosition, ent.RootPart.Position).LookVector
-                        localPosition = localPosition + shootDir * math.max((localPosition - ent.RootPart.Position).Magnitude - 16, 0)
-
-                        pcall(function()
-                            bedwars.AnimationUtil:playAnimation(
-                                lplr,
-                                bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE),
-                                { looped = false }
-                            )
-                        end)
-
-                        task.spawn(function()
-                            pcall(function()
-                                local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
-                                clawModel.Parent = workspace
-
-                                if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - root.Position).Magnitude < 1 then
-                                    for _, part in clawModel:GetDescendants() do
-                                        if part:IsA("MeshPart") then
-                                            part.Transparency = 0.6
-                                        end
-                                    end
-                                end
-
-                                local unitDir = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
-                                local startPos = root.Position + unitDir:Cross(Vector3.new(0, 1, 0)).Unit * -5 + unitDir * 6
-                                local direction = (startPos + shootDir * 13 - startPos).Unit
-                                clawModel:PivotTo(CFrame.new(startPos, startPos + direction))
-                                clawModel.PrimaryPart.Anchored = true
-
-                                if clawModel:FindFirstChild("AnimationController") then
-                                    local animator = clawModel.AnimationController:FindFirstChildOfClass("Animator")
-                                    if animator then
-                                        bedwars.AnimationUtil:playAnimation(
-                                            animator,
-                                            bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK),
-                                            { looped = false, speed = 1 }
-                                        )
-                                    end
-                                end
-
-                                pcall(function()
-                                    local sounds = {
-                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
-                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
-                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
-                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
-                                    }
-                                    bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], { position = root.Position })
-                                end)
-
-                                task.wait(0.75)
-                                clawModel:Destroy()
-                            end)
-                        end)
-
-                        bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
-                            position = localPosition,
-                            direction = shootDir,
-                            clientTime = workspace:GetServerTimeNow()
-                        })
-                    end
-                end
-            end
-
-            if plrs2 and #plrs2 > 0 then
-                local ent2 = plrs2[1]
-                if ent2 and ent2.RootPart then
-                    local delta = ent2.RootPart.Position - root.Position
-                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-                    if angle <= (math.rad(Angle.Value) / 2) then
-                        if bedwars.AbilityController:canUseAbility("summoner_start_charging") then
-                            bedwars.AbilityController:useAbility("summoner_start_charging")
-                            task.wait(math.random(1,2) - math.random())
-                            if bedwars.AbilityController:canUseAbility("summoner_finish_charging") then
-                                bedwars.AbilityController:useAbility("summoner_finish_charging")
-                            else
-                                task.wait(0.33)
-                                bedwars.AbilityController:useAbility("summoner_finish_charging")
-                            end
-                        end
-                    end
-                end
-            end
+			if callback then
+				repeat
+		            local plrs = entitylib.AllPosition({
+		                Range = AttackRange.Value,
+		                Wallcheck = Targets.Walls.Enabled,
+		                Part = "RootPart",
+		                Players = Targets.Players.Enabled,
+		                NPCs = Targets.NPCs.Enabled,
+		                Limit = 2,
+		                Sort = "Distance"
+		            })
+		
+		            local plrs2 = entitylib.AllPosition({
+		                Range = CastDistance.Value,
+		                Wallcheck = Targets.Walls.Enabled,
+		                Part = "RootPart",
+		                Players = Targets.Players.Enabled,
+		                NPCs = Targets.NPCs.Enabled,
+		                Limit = 2,
+		                Sort = "Distance"
+		            })
+		
+		            local char = entitylib.character
+		            if not char or not char.RootPart then return end
+		            local root = char.RootPart
+		
+		            if plrs then
+		                local ent = plrs[1]
+		                if ent and ent.RootPart then
+		                    local delta = ent.RootPart.Position - root.Position
+		                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+		                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+		                    if angle <= (math.rad(Angle.Value) / 2) then
+		                        local localPosition = root.Position
+		                        local shootDir = CFrame.lookAt(localPosition, ent.RootPart.Position).LookVector
+		                        localPosition = localPosition + shootDir * math.max((localPosition - ent.RootPart.Position).Magnitude - 16, 0)
+		
+		                        pcall(function()
+		                            bedwars.AnimationUtil:playAnimation(
+		                                lplr,
+		                                bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE),
+		                                { looped = false }
+		                            )
+		                        end)
+		
+		                        task.spawn(function()
+		                            pcall(function()
+		                                local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
+		                                clawModel.Parent = workspace
+		
+		                                if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - root.Position).Magnitude < 1 then
+		                                    for _, part in clawModel:GetDescendants() do
+		                                        if part:IsA("MeshPart") then
+		                                            part.Transparency = 0.6
+		                                        end
+		                                    end
+		                                end
+		
+		                                local unitDir = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
+		                                local startPos = root.Position + unitDir:Cross(Vector3.new(0, 1, 0)).Unit * -5 + unitDir * 6
+		                                local direction = (startPos + shootDir * 13 - startPos).Unit
+		                                clawModel:PivotTo(CFrame.new(startPos, startPos + direction))
+		                                clawModel.PrimaryPart.Anchored = true
+		
+		                                if clawModel:FindFirstChild("AnimationController") then
+		                                    local animator = clawModel.AnimationController:FindFirstChildOfClass("Animator")
+		                                    if animator then
+		                                        bedwars.AnimationUtil:playAnimation(
+		                                            animator,
+		                                            bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK),
+		                                            { looped = false, speed = 1 }
+		                                        )
+		                                    end
+		                                end
+		
+		                                pcall(function()
+		                                    local sounds = {
+		                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
+		                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
+		                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
+		                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
+		                                    }
+		                                    bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], { position = root.Position })
+		                                end)
+		
+		                                task.wait(0.75)
+		                                clawModel:Destroy()
+		                            end)
+		                        end)
+		
+		                        bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
+		                            position = localPosition,
+		                            direction = shootDir,
+		                            clientTime = workspace:GetServerTimeNow()
+		                        })
+		                    end
+		                end
+		            end
+		
+		            if plrs2  then
+		                local ent2 = plrs2[1]
+		                if ent2 and ent2.RootPart then
+		                    local delta = ent2.RootPart.Position - root.Position
+		                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+		                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+		                    if angle <= (math.rad(Angle.Value) / 2) then
+		                        if bedwars.AbilityController:canUseAbility("summoner_start_charging") then
+		                            bedwars.AbilityController:useAbility("summoner_start_charging")
+		                            task.wait(math.random(1,2) - math.random())
+		                            if bedwars.AbilityController:canUseAbility("summoner_finish_charging") then
+		                                bedwars.AbilityController:useAbility("summoner_finish_charging")
+		                            else
+		                                task.wait(0.33)
+		                                bedwars.AbilityController:useAbility("summoner_finish_charging")
+		                            end
+		                        end
+		                    end
+		                end
+		            end																							
+					task.wait(0.05)
+				until not BetterKaida.Enabled
+			end
         end
     })
 
