@@ -1550,9 +1550,9 @@ local KaidaController = {}
 function KaidaController:request(target)
 	if target then 
 		return bedwars.Client:Get("SummonerClawAttackRequest"):FireServer({
-			["clientTime"] = tick(), 
-			["direction"] = (target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position - lplr.Character.HumanoidRootPart.Position).unit, 
 			["position"] = target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position
+			["direction"] = (target:FindFirstChild("HumanoidRootPart") and target:FindFirstChild("HumanoidRootPart").Position - lplr.Character.HumanoidRootPart.Position).unit, 
+			["clientTime"] = workspace:GetServerTimeNow(), 
 		})
 	else return nil end
 end
@@ -1623,9 +1623,12 @@ getgenv().BEN = BedwarsErrorNotification
 for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MouseTP', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
 	vape:Remove(v)
 end
+
 run(function()
 	local AimAssist
 	local Targets
+	local Shake
+	local ShakeV
 	local Sort
 	local AimSpeed
 	local Distance
@@ -1634,11 +1637,14 @@ run(function()
 	local KillauraTarget
 	local ClickAim
 	
+	local shakeTime = 0
+
 	AimAssist = vape.Categories.Combat:CreateModule({
 		Name = 'AimAssist',
 		Function = function(callback)
 			if callback then
 				AimAssist:Clean(runService.Heartbeat:Connect(function(dt)
+					shakeTime += dt
 					if entitylib.isAlive and ((not ClickAim.Enabled) or (tick() - bedwars.SwordController.lastSwing) < 0.4) then
 						local ent = not KillauraTarget.Enabled and entitylib.EntityPosition({
 							Range = Distance.Value,
@@ -1648,14 +1654,26 @@ run(function()
 							NPCs = Targets.NPCs.Enabled,
 							Sort = sortmethods[Sort.Value]
 						}) or store.KillauraTarget
-	
+
 						if ent then
-							local delta = (ent.RootPart.Position - entitylib.character.RootPart.Position)
-							local localfacing = entitylib.character.RootPart.CFrame.LookVector * Vector3.new(1, 0, 1)
+							local root = entitylib.character.RootPart
+							local delta = ent.RootPart.Position - root.Position
+							local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 							local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
 							if angle >= (math.rad(AngleSlider.Value) / 2) then return end
+
 							targetinfo.Targets[ent] = tick() + 1
-							gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.p, ent.RootPart.Position), (AimSpeed.Value + (StrafeIncrease.Enabled and (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 10 or 0)) * dt)
+
+							local shakeOffset = Vector3.zero
+							if Shake.Enabled then
+								local freq = (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 16 or 10
+								local x = math.sin(shakeTime * freq) * ShakeV.Value
+								shakeOffset = gameCamera.CFrame.RightVector * x * 0.05
+							end
+
+							local speed = (AimSpeed.Value + (StrafeIncrease.Enabled and (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 10 or 0)) * dt
+
+							gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position, ent.RootPart.Position + shakeOffset), speed)
 						end
 					end
 				end))
@@ -1663,26 +1681,31 @@ run(function()
 		end,
 		Tooltip = 'Smoothly aims to closest valid target'
 	})
+
 	Targets = AimAssist:CreateTargets({
 		Players = true,
 		Walls = true
 	})
+
 	local methods = {'Damage', 'Distance'}
 	for i in sortmethods do
 		if not table.find(methods, i) then
 			table.insert(methods, i)
 		end
 	end
+
 	Sort = AimAssist:CreateDropdown({
 		Name = 'Target Mode',
 		List = methods
 	})
+
 	AimSpeed = AimAssist:CreateSlider({
 		Name = 'Aim Speed',
 		Min = 1,
 		Max = 20,
 		Default = 6
 	})
+
 	Distance = AimAssist:CreateSlider({
 		Name = 'Distance',
 		Min = 1,
@@ -1692,19 +1715,40 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
+
 	AngleSlider = AimAssist:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
 		Default = 70
 	})
+
 	ClickAim = AimAssist:CreateToggle({
 		Name = 'Click Aim',
 		Default = true
 	})
+
+	Shake = AimAssist:CreateToggle({
+		Name = 'Shake',
+		Default = false,
+		Function = function(callback)
+			ShakeV.Object.Visible = callback
+		end
+	})
+
+	ShakeV = AimAssist:CreateSlider({
+		Name = "Shake Power",
+		Min = 0,
+		Max = 1,
+		Default = .5,
+		Visible = false,
+		Decimal = 100,
+	})
+
 	KillauraTarget = AimAssist:CreateToggle({
 		Name = 'Use killaura target',
 	})
+
 	StrafeIncrease = AimAssist:CreateToggle({Name = 'Strafe increase'})
 end)
 
@@ -1897,7 +1941,8 @@ end)
 run(function()
 	local Attack
 	local Mine
-	local oldAttackReach, oldMineReach
+	local Place
+	local oldAttackReach, oldMineReach, oldPlaceReach
 
 	Reach = vape.Categories.Combat:CreateModule({
 		Name = 'Reach',
@@ -1967,6 +2012,26 @@ run(function()
 		end
 	})
 	
+	Place = Reach:CreateSlider({
+		Name = 'Place Range',
+		Min = 0,
+		Max = 30,
+		Default = 18,
+		Function = function(val)
+			if Reach.Enabled then
+				pcall(function()
+					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
+					if blockBreaker then
+						blockBreaker:setRange(val)
+					end
+				end)
+			end
+		end,
+		Suffix = function(val)
+			return val == 1 and 'stud' or 'studs'
+		end
+	})
+
 	Mine = Reach:CreateSlider({
 		Name = 'Mine Range',
 		Min = 0,
@@ -8432,7 +8497,7 @@ run(function()
 	})
 	WallCheck = Speed:CreateToggle({
 		Name = 'Wall Check',
-		Default = true
+		Default = false
 	})
 	AutoJump = Speed:CreateToggle({
 		Name = 'AutoJump',
@@ -9562,14 +9627,87 @@ run(function()
 	})
 end)
 
+
+local Killaura
+local ChargeTime
+
 run(function()
-	local Killaura
+	local SlientAura
+	local Distance
+
+	local currentTarget
+	local chargeStart = 0
+	local chargeDuration = 0
+
+	SlientAura = vape.Categories.Combat:CreateModule({
+		Name = "SlientAura",
+		Tooltip = "Synchronizes swing timing with AimAssist within a 180 angle",
+		Function = function(callback)
+			if callback then
+				if not Killaura.Enabled then
+					vape:CreateNotification("SlientAura","You must have KillAura enabled!",8.5,"warning")
+					SlientAura:Toggle(false)
+					return
+				end
+
+				SlientAura:Clean(runService.Heartbeat:Connect(function(dt)
+					if entitylib.isAlive then
+						local ent = entitylib.EntityPosition({
+							Range = Distance.Value,
+							Part = "RootPart",
+							Wallcheck = true,
+							Players = true,
+							NPCs = false,
+							Sort = "Distance"
+						})
+
+						if not ent then
+							currentTarget = nil
+							return
+						end
+
+						local root = entitylib.character.RootPart
+						local delta = ent.RootPart.Position - root.Position
+						local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+						local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+						if angle >= math.rad(180) then return end
+
+						if ent ~= currentTarget then
+							currentTarget = ent
+							chargeStart = tick()
+							local base = math.clamp(ChargeTime.Value / 10, 0.1, 1)
+							chargeDuration = math.clamp(base + math.random(-5, 5) / 100,0.1,1)
+						end
+
+						local progress = math.clamp((tick() - chargeStart) / chargeDuration,0,1)
+						local eased = progress * progress * (3 - 2 * progress)
+
+						gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position,ent.RootPart.Position),eased)
+					end
+				end))
+			end
+		end
+	})
+
+	Distance = SlientAura:CreateSlider({
+		Name = "Distance",
+		Min = 1,
+		Max = 30,
+		Default = 12,
+		Suffix = function(v)
+			return v <= 1 and "stud" or "studs"
+		end
+	})
+
+end)
+
+run(function()
+
 	local SyncHit
 	local Targets
 	local Sort
 	local SwingRange
 	local AttackRange
-	local ChargeTime
 	local AfterSwing
 	local UpdateRate
 	local AngleSlider
@@ -12710,7 +12848,7 @@ run(function()
 						bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
 							position = localPosition,
 							direction = shootDir,
-							clientTime = workspace:GetServerTimeNow() - 0.045
+							clientTime = workspace:GetServerTimeNow()
 						})
 					end
 
@@ -13904,6 +14042,8 @@ run(function()
 	})
 end)
 
+
+
 run(function()
 		local BSA
 		local TargetPart
@@ -14803,8 +14943,8 @@ run(function()
                             if not hrp or not hum then break end
 
                             local dist = (hrp.Position - root.Position).Magnitude
-                            if dist <= Distance then
-                                local dodgePos = hrp.Position + Vector3.new(5, 0, 0)
+                            if dist <= (Distance + 3) then
+                                local dodgePos = hrp.Position + Vector3.new(8, 0, 0)
                                 hum:MoveTo(dodgePos)
                                 break
                             end
@@ -14831,7 +14971,172 @@ run(function()
     })
 end)
 
+run(function()
+	local BetterKaida
+	local CastDistance
+	local AttackRange
+	local LimitToItem
+	local Angle
+	local Targets
+
+	BetterKaida = vape.Categories.Exploits:CreateModule({
+		Name = "BetterKaida",
+		Tooltip = "the killaura verison of Kaida lol",
+		Function = function(callback)
+			local plrs = entitylib.AllPosition({
+				Range = AttackRange.Value,
+				Wallcheck = Targets.Walls.Enabled or true,
+				Part = 'RootPart',
+				Players = Targets.Players.Enabled,
+				NPCs = Targets.NPCs.Enabled,
+				Limit = 2,
+				Sort = 'Distance'
+			})
+			local plrs2 = entitylib.AllPosition({
+				Range = CastDistance.Value,
+				Wallcheck = Targets.Walls.Enabled or true,
+				Part = 'RootPart',
+				Players = Targets.Players.Enabled,
+				NPCs = Targets.NPCs.Enabled,
+				Limit = 2,
+				Sort = 'Distance'
+			})
+
+			if plrs then
+				local root = entitylib.character.RootPart
+				local delta = ent.RootPart.Position - root.Position
+				local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+				local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+				if angle >= (math.rad(Angle.Value) / 2) then return end
+
+				local localPosition = entitylib.character.RootPart.Position
+				local shootDir = CFrame.lookAt(localPosition, plr.RootPart.Position).LookVector
+				localPosition += shootDir * math.max((localPosition - plr.RootPart.Position).Magnitude - 16, 0)
+
+				lastAttackTime = workspace:GetServerTimeNow()
+
+				pcall(function()
+					bedwars.AnimationUtil:playAnimation(lplr, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CHARACTER_SWIPE), {
+						looped = false
+					})
+				end)
+
+				task.spawn(function()
+					pcall(function()
+						local clawModel = replicatedStorage.Assets.Misc.Kaida.Summoner_DragonClaw:Clone()
+									
+						clawModel.Parent = workspace
+								
+						if gameCamera.CFrame.Position and (gameCamera.CFrame.Position - entitylib.character.RootPart.Position).Magnitude < 1 then
+							for _, part in clawModel:GetDescendants() do
+								if part:IsA('MeshPart') then
+										part.Transparency = 0.6
+									end
+								end
+							end
+								
+						local rootPart = entitylib.character.RootPart
+						local Unit = Vector3.new(shootDir.X, 0, shootDir.Z).Unit
+						local startPos = rootPart.Position + Unit:Cross(Vector3.new(0, 1, 0)).Unit * -1 * 5 + Unit * 6
+						local direction = (startPos + shootDir * 13 - startPos).Unit
+						local cframe = CFrame.new(startPos, startPos + direction)
+								
+						clawModel:PivotTo(cframe)
+						clawModel.PrimaryPart.Anchored = true
+								
+						if clawModel:FindFirstChild('AnimationController') then
+							local animator = clawModel.AnimationController:FindFirstChildOfClass('Animator')
+							if animator then
+								bedwars.AnimationUtil:playAnimation(animator, bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK), {
+									looped = false,
+									speed = 1
+								})
+							end
+						end
+								
+						pcall(function()
+							local sounds = {
+								bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
+								bedwars.SoundList.SUMMONER_CLAW_ATTACK_2,
+								bedwars.SoundList.SUMMONER_CLAW_ATTACK_3,
+								bedwars.SoundList.SUMMONER_CLAW_ATTACK_4
+							}
+							bedwars.SoundManager:playSound(sounds[math.random(1, #sounds)], {
+								position = rootPart.Position
+							})
+						end)
+								
+						task.wait(0.75)
+						clawModel:Destroy()
+						end)
+					end)
+
+					bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
+						position = localPosition,
+						direction = shootDir,
+						clientTime = workspace:GetServerTimeNow()
+					})
+				end
+			end
+
+			if plrs2 then
+				local root = entitylib.character.RootPart
+				local delta = ent.RootPart.Position - root.Position
+				local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+				local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+				if angle >= (math.rad(Angle.Value) / 2) then return end
+
+				if bedwars.AbilityController:canUseAbility('summoner_start_charging') then
+					bedwars.AbilityController:useAbility('summoner_start_charging')
+					task.wait(math.random(1,2) - math.random())
+					if bedwars.AbilityController:canUseAbility('summoner_finish_charging') then
+						bedwars.AbilityController:useAbility('summoner_finish_charging')
+					else
+						task.wait(0.33)
+						bedwars.AbilityController:useAbility('summoner_finish_charging')
+					end
+				end
+			end
+			
+
+		end
+	})
+	Targets = Killaura:CreateTargets({
+		Players = true,
+		NPCs = true
+	})
+    CastDistance = BetterKaida:CreateSlider({
+        Name = "Cast Distance",
+        Min = 1,
+        Max = 10,
+        Default = 5,
+        Suffix = function(val)
+            return val == 1 and "stud" or "studs"
+        end,
+    })
+    Angle = BetterKaida:CreateSlider({
+        Name = "Angle",
+        Min = 0,
+        Max = 360,
+        Default = 180,
+    })
+    AttackRange = BetterKaida:CreateSlider({
+        Name = "Attack Range",
+        Min = 1,
+        Max = 18,
+        Default = 18,
+        Suffix = function(val)
+            return val == 1 and "stud" or "studs"
+        end,
+    })
+end)
+
 if getgenv().TestMode or role == "owner" or role == "coowner" then
+	warn("loaded test mode!")
+end
 
-end 
-
+if getgenv().Closet then
+	for _, v in {'AutoShoot','BetterKaida','LeaveParty','QueueMods','Disabler','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","AimAssist","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
+		vape:Remove(v)
+	end
+end
