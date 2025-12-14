@@ -14957,7 +14957,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			})
 			local JumpTick = tick() + 2.4
 			local Direction = part.Position.Unit
-			local JumpSpeed = 4.5 * 23
+			local JumpSpeed = 4.5 * 32
 			local start = entitylib.isAlive and entitylib.character.RootPart.Position or nil
 			AutoWin:Clean(runService.PreSimulation:Connect(function(dt)
 				local root = entitylib.isAlive and entitylib.character.RootPart
