@@ -14914,7 +14914,8 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 				local direction = delta.Unit
 				local speed = getSpeed() + JumpSpeed / 1.5
 
-				root.AssemblyLinearVelocity + direction * speed
+				local velY = math.max(root.AssemblyLinearVelocity.Y, 5)
+				root.AssemblyLinearVelocity = Vector3.new(direction.X * speed,velY,direction.Z * speed)
 			end))
 		end 
 	})
