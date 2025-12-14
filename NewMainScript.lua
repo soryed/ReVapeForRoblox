@@ -18,6 +18,10 @@ local function TTD()
 	    end
 	end
 end
+local function RTTD()
+	delfolder('ReVape')
+end
+
 if ARGS.Refresh then
     TTD()
 	task.wait(0.5)
@@ -25,6 +29,16 @@ if ARGS.Refresh then
         print('Successfully deleted the "ReVape" folder!')
     else
         warn('Had an issue deleting the "ReVape" folder. Please DM the user "ye40" on Discord!')
+	end
+end
+
+if ARGS.ForceRefresh then
+    RTTD()
+	task.wait(0.5)
+    if not isfolder('ReVape') then
+        print('Successfully forced an deletion to "ReVape" folder!')
+    else
+        warn('Had an issue forcing to delete the "ReVape" folder. Please DM the user "ye40" on Discord!')
 	end
 end
 
