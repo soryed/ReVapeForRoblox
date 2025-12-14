@@ -14984,27 +14984,25 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			})
 			local JumpTick = tick() + 2.4
 			local Direction = part.Position.Unit
-			local JumpSpeed = 4.5 * 37
+			local JumpSpeed = 4.5 * 23
 			local start = entitylib.isAlive and entitylib.character.RootPart.Position or nil
-			entitylib.character.RootPart.Position = entitylib.character.RootPart.Position + Vector3.new(0,5,0)
 			AutoWin:Clean(runService.PreSimulation:Connect(function(dt)
-				    local root = entitylib.isAlive and entitylib.character.RootPart
-				    if not root or not isnetworkowner(root) then return end
-				
-				    local delta = part.Position - root.Position
-				    local distance = delta.Magnitude
-				
-				    if distance < 2 then
-				        root.AssemblyLinearVelocity = Vector3.zero
-				        return
-				    end
-				
-				    local direction = delta.Unit
-				    local speed = getSpeed() + JumpSpeed - 1.5
-				
-				    root.AssemblyLinearVelocity =direction * speed +Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
-				end))
-			end
+				local root = entitylib.isAlive and entitylib.character.RootPart
+				if not root or not isnetworkowner(root) then return end
+
+				local delta = part.Position - root.Position
+				local distance = delta.Magnitude
+
+				if distance < 2 then
+					root.AssemblyLinearVelocity = Vector3.zero
+					return
+				end
+
+				local direction = delta.Unit
+				local speed = getSpeed() + JumpSpeed - 1.5
+
+				root.AssemblyLinearVelocity = Vector3.new(direction.X * speed,0,direction.Z * speed)
+			end))
 		})
 	end)
 end
