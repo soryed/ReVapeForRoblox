@@ -1636,6 +1636,7 @@ end
 
 run(function()
 	local AimAssist
+	local MaxTargets
 	local Targets
 	local Shake
 	local ShakeV
@@ -1662,6 +1663,7 @@ run(function()
 							Wallcheck = Targets.Walls.Enabled,
 							Players = Targets.Players.Enabled,
 							NPCs = Targets.NPCs.Enabled,
+							Limit = MaxTargets.Value,
 							Sort = sortmethods[Sort.Value]
 						}) or store.KillauraTarget
 
@@ -1692,7 +1694,14 @@ run(function()
 		Tooltip = 'Smoothly aims to closest valid target'
 	})
 
-	Targets = AimAssist:CreateTargets({
+	MaxTargets = AimAssist:CreateTargets({
+		Name = "Max Targets",
+		Min = 1,
+		Max = 8,
+		Default = 5,
+	})
+
+	Targets = AimAssist:CreateSlider({
 		Players = true,
 		Walls = true
 	})
@@ -1713,7 +1722,7 @@ run(function()
 		Name = 'Aim Speed',
 		Min = 1,
 		Max = 20,
-		Default = 6
+		Default = getgenv().Closet and 4 or 6
 	})
 
 	Distance = AimAssist:CreateSlider({
@@ -1761,6 +1770,7 @@ run(function()
 
 	StrafeIncrease = AimAssist:CreateToggle({Name = 'Strafe increase'})
 end)
+
 
 
 	
