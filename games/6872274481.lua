@@ -9640,7 +9640,6 @@ end)
 
 local Killaura
 local ChargeTime
-
 run(function()
 	local SlientAura
 	local Distance
@@ -9671,28 +9670,22 @@ run(function()
 							Sort = "Distance"
 						})
 
-						if not ent then
-							currentTarget = nil
-							return
-						end
-
 						local root = entitylib.character.RootPart
 						local delta = ent.RootPart.Position - root.Position
 						local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 						local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-						if angle >= math.rad(360) then return end
-
-						if ent ~= currentTarget then
-							currentTarget = ent
+						if angle > (math.rad(360) / 2) then continue end
+						if ent then
 							chargeStart = tick()
 							local base = math.clamp(ChargeTime.Value / 10, 0.1, 1)
 							chargeDuration = math.clamp(base + math.random(-5, 5) / 100,0.1,1)
+
+							local progress = math.clamp((tick() - chargeStart) / chargeDuration,0,1)
+							local eased = progress * progress * (3 - 2 * progress)
+
+							gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position,ent.RootPart.Position),eased)
 						end
 
-						local progress = math.clamp((tick() - chargeStart) / chargeDuration,0,1)
-						local eased = progress * progress * (3 - 2 * progress)
-
-						gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position,ent.RootPart.Position),eased)
 					end
 				end))
 			end
@@ -9710,6 +9703,7 @@ run(function()
 	})
 
 end)
+
 
 run(function()
 
