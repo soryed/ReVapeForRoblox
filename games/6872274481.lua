@@ -15159,9 +15159,11 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 				if ID == "1" then
 					id = "2"
 					oppTeamName = "Orange"
+					ItemShopName = ItemShopName
 				else
 					id = "1"
 					oppTeamName = "Blue"
+					ItemShopName = ID.."_item_shop_1"
 				end
 				local OppBedName = id.."_bed"
 				local OppositeTeamBedPos = workspace:FindFirstChild("MapCFrames"):FindFirstChild(OppBedName).Value.Position
