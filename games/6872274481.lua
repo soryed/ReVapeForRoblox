@@ -15145,7 +15145,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					local data = TeleportService:GetLocalPlayerTeleportData()
 					AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
 				end
-				if lplr.Team.Name ~= "Orange" or lplr.Team.Name ~= "Blue" then
+				if lplr.Team.Name ~= "Orange" and lplr.Team.Name ~= "Blue" then
 					vape:CreateNotification("AutoWin", "Waiting for an assigned team! (this may take a while if late loaded)",6)
 					task.wait(15)
 				end
@@ -15239,11 +15239,25 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					vape:CreateNotification("AutoWin","Moving to Shop!", 8)
 					lplr.Character.Humanoid:MoveTo(CurrentItemShop.Position)
 					Speed()
+					task.wait(1.5)
 					vape:CreateNotification("AutoWin","Purchasing Wool!", 8)
 					task.wait(3)
 					for i = 6,0,-1 do
 						PurchaseWool()
 						task.wait(0.05)
+					end
+					if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
+						vape:CreateNotification("AutoWin","Moving back to Iron Gen!", 8)
+						lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+						task.wait(2)
+						vape:CreateNotification("AutoWin | Specific","Fixing Position!", 8)
+						local pos = plr.Character.HumanoidRootPart.Position + Vector3.new(0,0,-5)
+						lplr.Character.Humanoid:MoveTo(pos)
+						task.wait(3)
+					else
+						vape:CreateNotification("AutoWin","Moving back to Iron Gen!", 8)
+						lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+						task.wait(3)
 					end
 					vape:CreateNotification("AutoWin","Moving to "..oppTeamName.."'s Bed!", 8)
 					fly()
