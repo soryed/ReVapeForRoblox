@@ -15160,10 +15160,12 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					id = "2"
 					oppTeamName = "Orange"
 					ItemShopName = ItemShopName
+					CurrentItemShop = workspace:FindFirstChild(ItemShopName)
 				else
 					id = "1"
 					oppTeamName = "Blue"
 					ItemShopName = ID.."_item_shop_1"
+					CurrentItemShop = workspace:FindFirstChild(ItemShopName)
 				end
 				local OppBedName = id.."_bed"
 				local OppositeTeamBedPos = workspace:FindFirstChild("MapCFrames"):FindFirstChild(OppBedName).Value.Position
