@@ -1694,14 +1694,14 @@ run(function()
 		Tooltip = 'Smoothly aims to closest valid target'
 	})
 
-	MaxTargets = AimAssist:CreateTargets({
+	MaxTargets = AimAssist:CreateSlider({
 		Name = "Max Targets",
 		Min = 1,
 		Max = 8,
 		Default = 5,
 	})
 
-	Targets = AimAssist:CreateSlider({
+	Targets = AimAssist:CreateTargets({
 		Players = true,
 		Walls = true
 	})
