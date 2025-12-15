@@ -15121,7 +15121,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 end
 
 if getgenv().Closet then
-	for _, v in {'AutoShoot','BetterKaida','LeaveParty','QueueMods','Disabler','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","AimAssist","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
+	for _, v in {'AutoShoot','BetterKaida','LeaveParty','QueueMods','Disabler','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
 		vape:Remove(v)
 	end
 end
