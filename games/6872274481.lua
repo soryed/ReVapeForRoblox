@@ -15131,12 +15131,18 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 	run(function()
 		local AutoWin
 
-		AutoWin = vape.Categories.AltFarm:CreateModule({
-			Name = "AutoWin",
+		AutoWin = vape.Categories.Support:CreateModule({
+			Name = "Auto Win",
 			Tooltip = "makes you go into a empty game and win for you!",
 			Function = function(callback)
 				if not callback then return end
-				local T = 50
+				if #playersService:GetChildren() > 1 then
+					vape:CreateNotification("AutoWin", "Teleporting to Empty Game!",6)
+					task.wait((6 / 3.335))
+					local TeleportService = game:GetService("TeleportService")
+					local data = TeleportService:GetLocalPlayerTeleportData()
+					AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
+				end
 				local ID = lplr:GetAttribute("Team")
 				local GeneratorName = 'cframe-'..ID.."_generator"
 				local ItemShopName = ID.."_item_shop"
@@ -15233,9 +15239,6 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 						PurchaseWool()
 						task.wait(0.05)
 					end
-					vape:CreateNotification("AutoWin","Moving back to Iron Gen!", 8)
-					lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
-					task.wait(4.5)
 					vape:CreateNotification("AutoWin","Moving to "..oppTeamName.."'s Bed!", 8)
 					fly()
 					climbwalls()
@@ -15249,7 +15252,6 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			end
 		})
 	end)
-
 	warn("loaded test mode!")
 end
 
