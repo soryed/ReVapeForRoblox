@@ -4261,9 +4261,9 @@ run(function()
 		Tooltip = 'Spawns and teleports a raven to a player\nnear your mouse.'
 	})
 end)
-	
+local Scaffold
+
 run(function()
-	local Scaffold
 	local Expand
 	local Tower
 	local Downwards
@@ -15130,7 +15130,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 	run(function()
 		local AutoWin
 
-		AutoWin = vape.Categories.Support:CreateModule({
+		AutoWin = vape.Categories.AltFarm:CreateModule({
 			Name = "Auto Win",
 			Tooltip = "makes you go into a empty game and win for you!",
 			Function = function(callback)
@@ -15219,6 +15219,8 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					end)
 				end
 				if CurrentGen then
+					Speed:Toggle(false)
+					Fly:Toggle(false)
 					vape:CreateNotification("AutoWin","Moving to Iron Gen!", 8)
 					lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
 					task.wait((T + 3.33))
@@ -15234,6 +15236,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					vape:CreateNotification("AutoWin","Moving to "..oppTeamName.."'s Bed!", 8)
 					fly()
 					climbwalls()
+					Scaffold:Toggle(true)
 					task.spawn(function()
 						lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
 					end)
