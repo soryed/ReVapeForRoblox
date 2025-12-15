@@ -14772,6 +14772,7 @@ run(function()
 
 					return Worlds:GetChildren()[1] 
 				end
+				local blocks = getWorldFolder()
 				local function GetPlayerFromUserID(id)
 					return playersService:GetPlayerByUserId(id)
 				end
@@ -15232,6 +15233,9 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 						PurchaseWool()
 						task.wait(0.05)
 					end
+					vape:CreateNotification("AutoWin","Moving back to Iron Gen!", 8)
+					lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+					task.wait(4.5)
 					vape:CreateNotification("AutoWin","Moving to "..oppTeamName.."'s Bed!", 8)
 					fly()
 					climbwalls()
