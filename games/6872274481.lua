@@ -15145,8 +15145,10 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					local data = TeleportService:GetLocalPlayerTeleportData()
 					AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
 				end
-				vape:CreateNotification("AutoWin", "Waiting for an assigned team! (this may take a while if late loaded)",6)
-				task.wait(15)
+				if lplr.Team.Name ~= "Orange" or lplr.Team.Name ~= "Blue" then
+					vape:CreateNotification("AutoWin", "Waiting for an assigned team! (this may take a while if late loaded)",6)
+					task.wait(15)
+				end
 				local ID = lplr:GetAttribute("Team")
 				local GeneratorName = 'cframe-'..ID.."_generator"
 				local ItemShopName = ID.."_item_shop"
@@ -15256,6 +15258,7 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 			end
 		})
 	end)
+
 	warn("loaded test mode!")
 end
 
