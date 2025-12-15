@@ -80,12 +80,7 @@ local function finishLoading()
 			if getgenv().password then
 			    teleportScript = 'getgenv().password = "'..escape(getgenv().password)..'"\n'..teleportScript
 			end			
-			if getgenv().Closet then
-			    teleportScript = 'getgenv().Closet = "'..escape(getgenv().Closet)..'"\n'..teleportScript
-			end			
-			if getgenv().TestMode then
-			    teleportScript = 'getgenv().TestMode = "'..escape(getgenv().TestMode)..'"\n'..teleportScript
-			end			
+		
 			vape:Save()
 			queue_on_teleport(teleportScript)
 		end
