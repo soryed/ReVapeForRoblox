@@ -9214,7 +9214,7 @@ run(function()
         end
     end
 
-    BetterDavey = vape.Categories.Exploits:CreateModule({
+    BetterDavey = vape.Categories.Support:CreateModule({
         Name = "BetterDavey",
         Tooltip = "makes u look better with davey",
         Function = function(callback)
@@ -13112,7 +13112,7 @@ run(function()
 			end,
 		}
 	
-	AutoKit = vape.Categories.Utility:CreateModule({
+	AutoKit = vape.Categories.Support:CreateModule({
 		Name = 'AutoKit',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
@@ -14886,7 +14886,7 @@ end)
 run(function()
 	local BetterCait
 	
-	BetterCait = vape.Categories.Exploits:CreateModule({
+	BetterCait = vape.Categories.Support:CreateModule({
 		Name = 'BetterCaitlyn',
 		Function = function(callback)
 			local hitPlayers = {} 
@@ -14988,7 +14988,7 @@ run(function()
     local Angle
     local Targets
 
-    BetterKaida = vape.Categories.Exploits:CreateModule({
+    BetterKaida = vape.Categories.Support:CreateModule({
         Name = "BetterKaida",
         Tooltip = "Killaura-style Kaida",
         Function = function(callback)
