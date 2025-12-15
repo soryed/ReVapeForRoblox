@@ -1803,7 +1803,20 @@ run(function()
 
 end)
 
-if getgenv().TestMode then	
+if getgenv().TestMode then
+run(function()
+local AutoWin
+	AutoWin = vape.Categories.AltFarm:CreateModule({
+		Name = "AutoWin",
+		Function = function(callback)
+			if not callback then return end
+			vape:CreateNotification("AutoWin", "Joining queue!", 2)
+			task.wait(1.5)
+			bedwars.QueueController:joinQueue('bedwars_duels')
+		end,
+		Tooltip ='makes you go into a empty game and win for you!'
+	})
+end)																	
 	warn("loaded test mode!")
 else
 end
