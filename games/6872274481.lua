@@ -15219,8 +15219,15 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					end)
 				end
 				if CurrentGen then
-					Speed:Toggle(false)
-					Fly:Toggle(false)
+					if Speed.Enabled and Fly.Enabled then
+						Fly:Toggle(false)
+						task.wait(0.025)
+						Speed:Toggle(false)
+					elseif Speed.Enabled then
+						Speed:Toggle(false)
+					elseif Fly.Enabled then
+						Fly:Toggle(false)
+					end
 					vape:CreateNotification("AutoWin","Moving to Iron Gen!", 8)
 					lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
 					task.wait((T + 3.33))
@@ -15236,7 +15243,9 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					vape:CreateNotification("AutoWin","Moving to "..oppTeamName.."'s Bed!", 8)
 					fly()
 					climbwalls()
-					Scaffold:Toggle(true)
+					if not Scaffold.Enabled then
+						Scaffold:Toggle(true)
+					end
 					task.spawn(function()
 						lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
 					end)
