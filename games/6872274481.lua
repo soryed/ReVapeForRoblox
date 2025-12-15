@@ -8675,7 +8675,7 @@ end)
 																																																						
 run(function()	
 
-	NM = vape.Categories.Troll:CreateModule({
+	NM = vape.Categories.Render:CreateModule({
 		Name = 'Nightmare Emote',
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
@@ -8749,7 +8749,7 @@ end)
 
 run(function()
 	local GetHost = {}
-	GetHost = vape.Categories.Troll:CreateModule({
+	GetHost = vape.Categories.Render:CreateModule({
 		Name = "GetHost",
 		Tooltip = "this module is only for show. None of the settings will work.",
 		Function = function(callback) 
@@ -10679,7 +10679,7 @@ run(function()
 	end
 local Funny
 local Options
-	Funny = vape.Categories.Troll:CreateModule({
+	Funny = vape.Categories.Render:CreateModule({
 		Name = "Funny",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
