@@ -15128,14 +15128,16 @@ run(function()
 end)
 
 if getgenv().TestMode or role == "owner" or role == "coowner" then
+
 	run(function()
 		local AutoWin
 
-		AutoWin = vape.Categories.Support:CreateModule({
+		AutoWin = vape.Categories.AltFarm:CreateModule({
 			Name = "Auto Win",
 			Tooltip = "makes you go into a empty game and win for you!",
 			Function = function(callback)
-				if not callback then return end
+				if not callback then vape:CreateNotification("AutoWin", "Disabled next game!", 4.5, "warning") return end
+				local T = 50
 				if #playersService:GetChildren() > 1 then
 					vape:CreateNotification("AutoWin", "Teleporting to Empty Game!",6)
 					task.wait((6 / 3.335))
@@ -15143,6 +15145,8 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 					local data = TeleportService:GetLocalPlayerTeleportData()
 					AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
 				end
+				vape:CreateNotification("AutoWin", "Waiting for an assigned team! (this may take a while if late loaded)",6)
+				task.wait(15)
 				local ID = lplr:GetAttribute("Team")
 				local GeneratorName = 'cframe-'..ID.."_generator"
 				local ItemShopName = ID.."_item_shop"
