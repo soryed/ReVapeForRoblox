@@ -9674,7 +9674,7 @@ run(function()
 						local delta = ent.RootPart.Position - root.Position
 						local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 						local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-						if angle > (math.rad(360) / 2) then continue end
+						if angle > (math.rad(360) / 2) then return end
 						if ent then
 							chargeStart = tick()
 							local base = math.clamp(ChargeTime.Value / 10, 0.1, 1)
