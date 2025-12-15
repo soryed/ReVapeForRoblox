@@ -133,6 +133,7 @@ local getcustomassets = {
 	['ReVape/assets/new/warning.png'] = 'rbxassetid://14368361552',
 	['ReVape/assets/new/worldicon.png'] = 'rbxassetid://14368362492',
 	['ReVape/assets/new/troll.png'] = 'rbxassetid://133697448446510',
+	['ReVape/assets/new/support.png'] = 'rbxassetid://111055696677285',
 	['ReVape/assets/new/af.png'] = 'rbxassetid://132399939061065',
 	['ReVape/assets/new/success.png'] = 'rbxassetid://98117832989643',
 	['ReVape/assets/new/modules.png'] = 'rbxassetid://88102681647746',
@@ -5804,9 +5805,9 @@ mainapi:CreateCategory({
 	Size = UDim2.fromOffset(19, 12)
 })
 mainapi:CreateCategory({
-	Name = 'Troll',
-	Icon = getcustomasset('ReVape/assets/new/troll.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Name = 'Support',
+	Icon = getcustomasset('ReVape/assets/new/support.png'),
+	Size = UDim2.fromOffset(26, 24)
 })
 mainapi:CreateCategory({
 	Name = 'AltFarm',
@@ -6103,7 +6104,7 @@ guipane:CreateButton({
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
 			ExploitsCategory = 9,
-			TrollCategory = 10,
+			SupportCategory = 10,
 			AltFarmCategory = 11,												
 			FriendsCategory = 12,
 			ProfilesCategory = 13
