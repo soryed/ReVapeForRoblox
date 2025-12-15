@@ -15131,10 +15131,11 @@ if getgenv().TestMode or role == "owner" or role == "coowner" then
 		local AutoWin
 
 		AutoWin = vape.Categories.AltFarm:CreateModule({
-			Name = "Auto Win",
+			Name = "AutoWin",
 			Tooltip = "makes you go into a empty game and win for you!",
 			Function = function(callback)
 				if not callback then return end
+				local T = 50
 				local ID = lplr:GetAttribute("Team")
 				local GeneratorName = 'cframe-'..ID.."_generator"
 				local ItemShopName = ID.."_item_shop"
