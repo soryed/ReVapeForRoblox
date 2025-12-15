@@ -1557,6 +1557,16 @@ function KaidaController:request(target)
 	else return nil end
 end
 
+function KaidaController:requestBetter(v1,v2)
+	if target then 
+		return bedwars.Client:Get("SummonerClawAttackRequest"):FireServer({
+			["position"] = v1,
+			["direction"] = v2, 
+			["clientTime"] = workspace:GetServerTimeNow(), 
+		})
+	else return nil end
+end
+
 local WhisperController = {}
 function WhisperController:request(type)
 	if type == "Heal" then
@@ -15056,7 +15066,8 @@ run(function()
 		                                        )
 		                                    end
 		                                end
-		
+										KaidaController:requestBetter(localPosition,shootDir)
+
 		                                pcall(function()
 		                                    local sounds = {
 		                                        bedwars.SoundList.SUMMONER_CLAW_ATTACK_1,
@@ -15071,36 +15082,10 @@ run(function()
 		                                clawModel:Destroy()
 		                            end)
 		                        end)
-		
-		                        bedwars.Client:Get(remotes.SummonerClawAttack):SendToServer({
-		                            position = localPosition,
-		                            direction = shootDir,
-		                            clientTime = workspace:GetServerTimeNow()
-		                        })
 		                    end
 		                end
 		            end
-		
-		            if plrs2  then
-		                local ent2 = plrs2[1]
-		                if ent2 and ent2.RootPart then
-		                    local delta = ent2.RootPart.Position - root.Position
-		                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-		                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-		                    if angle <= (math.rad(Angle.Value) / 2) then
-		                        if bedwars.AbilityController:canUseAbility("summoner_start_charging") then
-		                            bedwars.AbilityController:useAbility("summoner_start_charging")
-		                            task.wait(math.random(1,2) - math.random())
-		                            if bedwars.AbilityController:canUseAbility("summoner_finish_charging") then
-		                                bedwars.AbilityController:useAbility("summoner_finish_charging")
-		                            else
-		                                task.wait(0.33)
-		                                bedwars.AbilityController:useAbility("summoner_finish_charging")
-		                            end
-		                        end
-		                    end
-		                end
-		            end																							
+																				
 					task.wait(0.05)
 				until not BetterKaida.Enabled
 			end
