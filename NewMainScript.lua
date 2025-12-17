@@ -28,7 +28,7 @@ if ARGS.Refresh then
     if not isfolder('ReVape') then
         print('Successfully deleted the "ReVape" folder!')
     else
-        warn('Had an issue deleting the "ReVape" folder. Please DM the user "ye40" on Discord!')
+        warn('Had an issue deleting the "ReVape" folder. Please DM the user "41tz" on Discord!')
 	end
 end
 
@@ -38,7 +38,7 @@ if ARGS.ForceRefresh then
     if not isfolder('ReVape') then
         print('Successfully forced an deletion to "ReVape" folder!')
     else
-        warn('Had an issue forcing to delete the "ReVape" folder. Please DM the user "ye40" on Discord!')
+        warn('Had an issue forcing to delete the "ReVape" folder. Please DM the user "41tz" on Discord!')
 	end
 end
 
