@@ -8788,7 +8788,7 @@ task.spawn(function()
 	User = RP:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
-		Default = "ye40",
+		Default = "41tz",
 	})
 end)
 
@@ -8828,7 +8828,7 @@ task.spawn(function()
 	User = RU:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
-		Default = "ye40",
+		Default = "41tz",
 	})
 
 	Role = RU:CreateTextBox({
