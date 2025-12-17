@@ -49,6 +49,17 @@ local getcustomasset = vape.Libraries.getcustomasset
 local role = vape.role
 local user = vape.user
 task.spawn(function()
+	local NR, NU = "",""
+	if role == "" then
+		NR = "guest"
+	end
+	if user == "" then
+		NU = "GUEST"
+	end
+	if user == "" and role == "" then
+		NU = "GUEST"
+		NR = "guest"
+	end
 	while task.wait(0.01) do
 		vape.role = NR
 		vape.user = NU
@@ -1580,6 +1591,32 @@ function WhisperController:request(type)
 	end
 end
 
+local NazarController = {}
+local empoweredMode = false
+
+function NazarController:request(type)
+	if type == "enabled" then
+		if not empoweredMode and bedwars.AbilityController:canUseAbility('enable_life_force_attack') then
+			bedwars.AbilityController:useAbility('enable_life_force_attack')
+			empoweredMode = true
+		end
+	elseif type == "disabled" then
+		if empoweredMode and bedwars.AbilityController:canUseAbility('disable_life_force_attack') then
+			bedwars.AbilityController:useAbility('disable_life_force_attack')
+			empoweredMode = false
+		end
+	elseif type == "heal" then
+		if bedwars.AbilityController:canUseAbility('consume_life_foce') then
+			bedwars.AbilityController:useAbility('consume_life_foce')
+		end
+	else
+		if empoweredMode and bedwars.AbilityController:canUseAbility('disable_life_force_attack') then
+			bedwars.AbilityController:useAbility('disable_life_force_attack')
+			empoweredMode = false
+		end
+	end
+end
+
 local function BedwarsInfoNotification(mes)
 	bedwars.NotificationController:sendInfoNotification({
 		message = tostring(mes),
@@ -1676,7 +1713,7 @@ run(function()
 
 							targetinfo.Targets[ent] = tick() + 1
 
-							local shakeOffset = Vector3.zero
+							local shakeOffset = nil
 							if Shake.Enabled then
 								local freq = (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 16 or 10
 								local x = math.sin(shakeTime * freq) * ShakeV.Value
@@ -1684,8 +1721,11 @@ run(function()
 							end
 
 							local speed = (AimSpeed.Value + (StrafeIncrease.Enabled and (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 10 or 0)) * dt
-
-							gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position, ent.RootPart.Position + shakeOffset), speed)
+							if Shake.Enabled then
+								gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position, ent.RootPart.Position + shakeOffset), speed)
+							else
+								gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position, ent.RootPart.Position), speed)
+							end
 						end
 					end
 				end))
@@ -1694,14 +1734,14 @@ run(function()
 		Tooltip = 'Smoothly aims to closest valid target'
 	})
 
-	MaxTargets = AimAssist:CreateSlider({
+	MaxTargets = AimAssist:CreateTargets({
 		Name = "Max Targets",
 		Min = 1,
 		Max = 8,
 		Default = 5,
 	})
 
-	Targets = AimAssist:CreateTargets({
+	Targets = AimAssist:CreateSlider({
 		Players = true,
 		Walls = true
 	})
@@ -1772,9 +1812,8 @@ run(function()
 end)
 
 
-
 	
-run(function()
+--[[run(function()
 	local old
 	
 	AutoCharge = vape.Categories.Combat:CreateModule({
@@ -1828,7 +1867,7 @@ run(function()
 	    Decimal = 100
 	})
 				
-end)
+end)--]]
 	
 run(function()
 	local AutoClicker
@@ -2936,7 +2975,7 @@ run(function()
 						end
 	
 						local newlook = CFrame.new(offsetpos, plr[TargetPart.Value].Position) * CFrame.new(projmeta.projectile == 'owl_projectile' and Vector3.zero or Vector3.new(bedwars.BowConstantsTable.RelX, bedwars.BowConstantsTable.RelY, bedwars.BowConstantsTable.RelZ))
-						local calc = prediction.SolveTrajectory(newlook.p, projSpeed, gravity, plr[TargetPart.Value].Position, projmeta.projectile == 'telepearl' and Vector3.zero or plr[TargetPart.Value].Velocity, playerGravity, plr.HipHeight, plr.Jumping and 42.6 or nil, rayCheck)
+						local calc = prediction.SolveTrajectory(newlook.p, projSpeed, gravity, plr[TargetPart.Value].Position, projmeta.projectile == 'telepearl' and Vector3.zero or plr[TargetPart.Value].Velocity, playerGravity, plr.HipHeight, plr.Jumping and 42.6 or nil, rayCheck,math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000)))
 						if calc then
 							targetinfo.Targets[plr] = tick() + 1
 							return {
@@ -3037,7 +3076,7 @@ run(function()
 									rayCheck.FilterDescendantsInstances = {workspace.Map}
 									local meta = bedwars.ProjectileMeta[projectile]
 									local projSpeed, gravity = meta.launchVelocity, meta.gravitationalAcceleration or 196.2
-									local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, ent.RootPart.Position, ent.RootPart.Velocity, workspace.Gravity, ent.HipHeight, ent.Jumping and 42.6 or nil, rayCheck)
+									local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, ent.RootPart.Position, ent.RootPart.Velocity, workspace.Gravity, ent.HipHeight, ent.Jumping and 42.6 or nil, rayCheck,math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000)))
 									if calc then
 										targetinfo.Targets[ent] = tick() + 1
 										local switched = switchItem(item.tool)
@@ -3919,7 +3958,7 @@ run(function()
 	local function firePearl(pos, spot, item)
 		switchItem(item.tool)
 		local meta = bedwars.ProjectileMeta.telepearl
-		local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
+		local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0,math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000)))
 	
 		if calc then
 			local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
@@ -4000,7 +4039,7 @@ run(function()
 			if callback then
 				AutoToxic:Clean(vapeEvents.BedwarsBedBreak.Event:Connect(function(bedTable)
 					if Toggles.BedDestroyed.Enabled and bedTable.brokenBedTeam.id == lplr:GetAttribute('Team') then
-						sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'why would you bed break me <obj> onyx will obviously diff you xd')
+						sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'why would you bed break me, <obj> onyx will obviously diff you xd')
 					elseif Toggles.Bed.Enabled and bedTable.player.UserId == lplr.UserId then
 						local team = bedwars.QueueMeta[store.queueType].teams[tonumber(bedTable.brokenBedTeam.id)]
 						sendMessage('Bed', team and team.displayName:lower() or 'white', 'nice bed btw, switch to onyx forever on top | <obj>')
@@ -4017,7 +4056,7 @@ run(function()
 								sendMessage('Death', (killer.DisplayName or killer.Name), 'ur trash btw and onyx on top forever :( | <obj>')
 							end
 						elseif killer == lplr and Toggles.Kill.Enabled then
-							sendMessage('Kill', (killed.DisplayName or killed.Name), 'you should switch to onyx my friend named | <obj>')
+							sendMessage('Kill', (killed.DisplayName or killed.Name), 'you should switch to onyx, my friend | <obj> !')
 						end
 					end
 				end))
@@ -4261,9 +4300,9 @@ run(function()
 		Tooltip = 'Spawns and teleports a raven to a player\nnear your mouse.'
 	})
 end)
-local Scaffold
-
+	
 run(function()
+	local Scaffold
 	local Expand
 	local Tower
 	local Downwards
@@ -9650,6 +9689,7 @@ end)
 
 local Killaura
 local ChargeTime
+
 run(function()
 	local SlientAura
 	local Distance
@@ -9660,7 +9700,7 @@ run(function()
 
 	SlientAura = vape.Categories.Combat:CreateModule({
 		Name = "SlientAura",
-		Tooltip = "Synchronizes swing timing with AimAssist within a 180 angle",
+		Tooltip = "Synchronizes swing timing with AimAssist making you look legit",
 		Function = function(callback)
 			if callback then
 				if not Killaura.Enabled then
@@ -9680,11 +9720,6 @@ run(function()
 							Sort = "Distance"
 						})
 
-						local root = entitylib.character.RootPart
-						local delta = ent.RootPart.Position - root.Position
-						local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-						local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-						if angle > (math.rad(360) / 2) then return end
 						if ent then
 							chargeStart = tick()
 							local base = math.clamp(ChargeTime.Value / 10, 0.1, 1)
@@ -9713,7 +9748,6 @@ run(function()
 	})
 
 end)
-
 
 run(function()
 
@@ -11841,9 +11875,38 @@ run(function()
 	end
 	
 	local AutoKitFunctions = {
+		ghost_catcher = function()
+			kitCollection('ghost', function(v)
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id")})
+			end, 18, false)
+		end,
+		dino_tamer = function()
+			local function getBedNear()
+				local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
+				for _, v in collectionService:GetTagged("bed") do
+					if (localPosition - v.Position).Magnitude < Legit.Enabled and 25 or 45 then
+						if v:GetAttribute("Team" .. (lplr:GetAttribute("Team") or -1) .. "NoBreak") then 
+							return nil 
+						end
+						return v
+					end
+				end
+			end
+			repeat
+				if not entitylib.isAlive then task.wait(0.1); continue end
+				local bed = getBedNear()
+
+				if bed then
+					if bedwars.AbilityController:canUseAbility('dino_charge') then
+						bedwars.AbilityController:useAbility('dino_charge')
+					end	
+				end
+				task.wait(.45)
+		    until not AutoKit.Enabled
+		end,
 		sheep_herder = function()
 			kitCollection('sheep', function(v)
-			   -- bedwars.Client:Get("SheepHerder/TameSheep"):SendToServer({[1] = v})
+				replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged["SheepHerder/TameSheep"]:FireServer(v)
 			end, 18, false)
 		end,
 		regent = function()
@@ -11909,7 +11972,7 @@ run(function()
 			local function getBedNear()
 				local localPosition = entitylib.isAlive and entitylib.character.RootPart.Position or Vector3.zero
 				for _, v in collectionService:GetTagged("bed") do
-					if (localPosition - v.Position).Magnitude < 20 then
+					if (localPosition - v.Position).Magnitude < Legit.Enabled and 10 or 20 then
 						if v:GetAttribute("Team" .. (lplr:GetAttribute("Team") or -1) .. "NoBreak") then 
 							return nil 
 						end
@@ -12558,7 +12621,7 @@ run(function()
 					})
 		
 					if plr then
-						local calc = prediction.SolveTrajectory(origin, 100, 20, plr.RootPart.Position, plr.RootPart.Velocity, workspace.Gravity, plr.HipHeight, plr.Jumping and 42.6 or nil)
+						local calc = prediction.SolveTrajectory(origin, 100, 20, plr.RootPart.Position, plr.RootPart.Velocity, workspace.Gravity, plr.HipHeight, plr.Jumping and 42.6 or nil,nil, math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000)))
 		
 						if calc then
 							for i, v in debug.getstack(2) do
@@ -13155,7 +13218,7 @@ run(function()
 		local Heal
 		local db = false
 		local HealthHP
-	    BetterWhisper = vape.Categories.Exploits:CreateModule({
+	    BetterWhisper = vape.Categories.Support:CreateModule({
 	        Name = "BetterWhisper",
 	        Function = function(callback)
 	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
@@ -14220,7 +14283,7 @@ run(function()
 							end
 		
 							local newlook = CFrame.new(offsetpos, plr[TargetPart.Value].Position) * CFrame.new(projmeta.projectile == 'owl_projectile' and Vector3.zero or Vector3.new(bedwars.BowConstantsTable.RelX, bedwars.BowConstantsTable.RelY, bedwars.BowConstantsTable.RelZ))
-							local calc = prediction.SolveTrajectory(newlook.p, projSpeed, gravity, plr[TargetPart.Value].Position, projmeta.projectile == 'telepearl' and Vector3.zero or plr[TargetPart.Value].Velocity, playerGravity, plr.HipHeight, plr.Jumping and 42.6 or nil, rayCheck)
+							local calc = prediction.SolveTrajectory(newlook.p, projSpeed, gravity, plr[TargetPart.Value].Position, projmeta.projectile == 'telepearl' and Vector3.zero or plr[TargetPart.Value].Velocity, playerGravity, plr.HipHeight, plr.Jumping and 42.6 or nil, rayCheck,math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000)))
 							if calc then
 								targetinfo.Targets[plr] = tick() + 1
 								hovering = false
@@ -14772,10 +14835,10 @@ run(function()
 
 					return Worlds:GetChildren()[1] 
 				end
-				local blocks = getWorldFolder()
 				local function GetPlayerFromUserID(id)
 					return playersService:GetPlayerByUserId(id)
 				end
+				local blocks = getWorldFolder()
 				local bows = getBows()
 				local originalSlot = store.inventory.hotbarSlot
 				Deflect:Clean(blocks.ChildAdded:Connect(function(child)
@@ -14894,6 +14957,10 @@ run(function()
 	BetterCait = vape.Categories.Support:CreateModule({
 		Name = 'BetterCaitlyn',
 		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
 			local hitPlayers = {} 
 				
 			BetterCait:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
@@ -14939,7 +15006,10 @@ run(function()
         Tooltip = 'Automatically dodges arrows for you -- close range only',
         Function = function(callback)
             if not callback then return end
-
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
             AutoDodge:Clean(workspace.DescendantAdded:Connect(function(arrow)
                     if not AutoDodge.Enabled then return end
                     if not entitylib.isAlive then return end
@@ -14958,7 +15028,7 @@ run(function()
                             if not hrp or not hum then break end
 
                             local dist = (hrp.Position - root.Position).Magnitude
-                            if dist <= (Distance + 3) then
+                            if dist <= (Distance + 5) then
                                 local dodgePos = hrp.Position + Vector3.new(8, 0, 0)
                                 hum:MoveTo(dodgePos)
                                 break
@@ -14997,6 +15067,10 @@ run(function()
         Name = "BetterKaida",
         Tooltip = "Killaura-style Kaida",
         Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
 			if callback then
 				repeat
 		            local plrs = entitylib.AllPosition({
@@ -15009,18 +15083,8 @@ run(function()
 		                Sort = "Distance"
 		            })
 		
-		            local plrs2 = entitylib.AllPosition({
-		                Range = CastDistance.Value,
-		                Wallcheck = Targets.Walls.Enabled,
-		                Part = "RootPart",
-		                Players = Targets.Players.Enabled,
-		                NPCs = Targets.NPCs.Enabled,
-		                Limit = 2,
-		                Sort = "Distance"
-		            })
 		
 		            local char = entitylib.character
-		            if not char or not char.RootPart then return end
 		            local root = char.RootPart
 		
 		            if plrs then
@@ -15029,7 +15093,7 @@ run(function()
 		                    local delta = ent.RootPart.Position - root.Position
 		                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 		                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-		                    if angle <= (math.rad(Angle.Value) / 2) then
+		                    if angle > (math.rad(Angle.Value) / 2) then continue end
 		                        local localPosition = root.Position
 		                        local shootDir = CFrame.lookAt(localPosition, ent.RootPart.Position).LookVector
 		                        localPosition = localPosition + shootDir * math.max((localPosition - ent.RootPart.Position).Magnitude - 16, 0)
@@ -15088,7 +15152,6 @@ run(function()
 		                            end)
 		                        end)
 		                    end
-		                end
 		            end
 																				
 					task.wait(0.05)
@@ -15127,12 +15190,135 @@ run(function()
     })
 end)
 
+run(function()
+		local BetterNazar
+		local AutoHeal
+
+		BetterNazar = vape.Categories.Support:CreateModule({
+			Name = "BetterNazar",
+			Tooltip = "makes you look good with nazar lmfao",
+			Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
+				if callback then
+					local lastHitTime = 0
+					local hitTimeout = 3
+					BetterNazar:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+						if not entitylib.isAlive then return end
+							
+						local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
+						local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
+							
+						if attacker == lplr and victim and victim ~= lplr then
+							lastHitTime = workspace:GetServerTimeNow()
+							NazarController:request('enabled')
+						end
+					end))
+						
+					BetterNazar:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+						if not entitylib.isAlive then return end
+							
+						local killer = playersService:GetPlayerFromCharacter(deathTable.fromEntity)
+						local killed = playersService:GetPlayerFromCharacter(deathTable.entityInstance)
+							
+						if killer == lplr and killed and killed ~= lplr then
+							NazarController:request('disabled')
+						end
+					end))
+						
+					repeat
+						if entitylib.isAlive then
+							local currentTime = workspace:GetServerTimeNow()
+								
+							if empoweredMode and (currentTime - lastHitTime) >= hitTimeout then
+								NazarController:request('disabled')
+							end
+
+							if  entitylib.character.Humanoid.Health <= AutoHeal.Value then
+								NazarController:request('heal')
+							end
+
+						else
+							if empoweredMode then
+								NazarController:request('disabled')
+							end
+						end
+							
+						task.wait(0.1)
+					until not BetterNazar.Enabled
+						
+					if empoweredMode then
+						NazarController:request('disabled')
+					end
+				end
+			end
+		})
+
+		AutoHeal = BetterNazar:CreateSlider({
+			Name = "Heal",
+			Min = 35,
+			Max = 85,
+			Default = 75,
+		})
+end)
+
+run(function()
+    local MovementBypass = vape.Categories.Exploits:CreateModule({
+        Name = 'Anti-Cheat Bypasser',
+        Function = function(callback)
+            if callback then
+                local oldClient = bedwars.Client
+                bedwars.Client = {Get = function(self, remote) 
+                    return {SendToServer = function(...) 
+                        return oldClient:Get(remote):SendToServer(...) 
+                    end}
+                end}
+            else
+                bedwars.Client = oldClient
+            end
+        end
+    })
+end)
+
+
 if getgenv().TestMode or role == "owner" or role == "coowner" then
-	warn("loaded test mode!")
+	run(function()
+		local JumpHeights
+		local Height 
+		JumpHeights = vape.Categories.Blatant:CreateModule({
+			Name = "Jump Heights",
+			Tooltip = "Increases your jump height with an undetected method!",
+			Function = function(callback)
+				if callback then
+		    		bedwars.JumpHeightController:getJumpModifier():addModifier({
+                        airJumps = Height.GetRandomValue() or 1
+                    })
+				else
+		    		bedwars.JumpHeightController:getJumpModifier():addModifier({
+                        airJumps = 0
+                    })
+				end
+			end
+		})
+		Height = JumpHeights:CreateTwoSlider({
+			Name = "Air Jumps",
+			Min = 1,
+			Max = 5,
+			DefaultMin = 1,
+			DefaultMax = 5,
+		})
+	end)
+	if getgenv().Closet then
+		warn("loaded test mode!, EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)")
+	else
+		vape:CreateNotification("Onyx", "Loaded Test mode! EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)", 8, "warning")
+	end
 end
 
 if getgenv().Closet then
-	for _, v in {'AutoShoot','BetterKaida','LeaveParty','QueueMods','Disabler','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
+	for _, v in {'AutoShoot','BetterKaida','Anti-Cheat Bypasser','LeaveParty','QueueMods','Disabler','AutoWin','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
 		vape:Remove(v)
 	end
 end
