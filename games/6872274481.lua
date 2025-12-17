@@ -1811,9 +1811,7 @@ run(function()
 	StrafeIncrease = AimAssist:CreateToggle({Name = 'Strafe increase'})
 end)
 
-
-	
---[[run(function()
+run(function()
 	local old
 	
 	AutoCharge = vape.Categories.Combat:CreateModule({
@@ -1867,7 +1865,7 @@ end)
 	    Decimal = 100
 	})
 				
-end)--]]
+end)
 	
 run(function()
 	local AutoClicker
