@@ -21,7 +21,7 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
     ColoredNotifications = {},
-	Version = '0.76',
+	Version = '0.77',
 	Discord = "@41tz",
 	role = "",
 	user = "",
@@ -5795,15 +5795,16 @@ mainapi:CreateCategory({
 	Size = UDim2.fromOffset(15, 14)
 })
 mainapi:CreateCategory({
-	Name = 'Minigames',
-	Icon = getcustomasset('ReVape/assets/new/miniicon.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Name = 'Legit',
+	Icon = getcustomasset('ReVape/assets/new/legit.png'),
+	Size = UDim2.fromOffset(29, 16)
 })
 mainapi:CreateCategory({
 	Name = 'Exploits',
 	Icon = getcustomasset('ReVape/assets/new/modules.png'),
 	Size = UDim2.fromOffset(19, 12)
 })
+
 mainapi:CreateCategory({
 	Name = 'Support',
 	Icon = getcustomasset('ReVape/assets/new/support.png'),
@@ -6102,7 +6103,7 @@ guipane:CreateButton({
 			UtilityCategory = 5,
 			WorldCategory = 6,
 			InventoryCategory = 7,
-			MinigamesCategory = 8,
+			LegitCategory = 8,
 			ExploitsCategory = 9,
 			SupportCategory = 10,
 			AltFarmCategory = 11,												
@@ -7032,5 +7033,12 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 		table.remove(mainapi.HeldKeybinds, ind)
 	end
 end))
+
+function mainapi:Loaded()
+	if not game:IsLoaded() then
+		game.Loaded:Wait()
+	end
+	return true
+end
 
 return mainapi
