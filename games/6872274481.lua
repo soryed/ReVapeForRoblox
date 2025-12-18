@@ -1630,7 +1630,7 @@ end
 getgenv().BIN = BedwarsInfoNotification
 getgenv().BEN = BedwarsErrorNotification
 
-for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MouseTP', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
+for _, v in {'AntiRagdoll', 'TriggerBot', 'AutoRejoin', 'Rejoin', 'Disabler', 'Timer', 'ServerHop', 'MurderMystery','SilentAim','GetUnc','GetExecutor'} do
 	vape:Remove(v)
 end
 
@@ -15566,6 +15566,37 @@ run(function()
 	})
 end)
 
+run(function()
+	local AutoWin
+	local rayCheck = RaycastParams.new()
+	rayCheck.RespectCanCollide = true
+	AutoWin = vape.Categories.AltFarm:CreateModule({
+		Name = "AutoWin",
+		Tooltip = "Temp autowin for now this is not the final verison",
+		Function = function(callback)
+			if not callback then
+				return
+			end
+            if #playersService:GetChildren() > 1 then
+                vape:CreateNotification("AutoWin", "Teleporting to Empty Game!", 6)
+                task.wait((6 / 3.335))
+                local data = TeleportService:GetLocalPlayerTeleportData()
+                AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
+            end
+			local ray = cloneref(lplr:GetMouse()).UnitRay
+			rayCheck.FilterDescendantsInstances = {lplr.Character, gameCamera}
+			ray = workspace:Raycast(ray.Origin, ray.Direction * 10000, rayCheck)
+			position = ray and ray.Position + Vector3.new(0, entitylib.character.HipHeight or 2, 0)
+			if not position then
+				notif('AutoWin', 'No position found.', 5)
+				AutoWin:Toggle(false)
+				return
+			end
+			entitylib.character.RootPart.CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)
+			AutoWin:Toggle(false)
+		end
+	})
+end)
 
 
 if getgenv().TestMode or role == "owner" or role == "coowner" then
