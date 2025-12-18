@@ -11746,9 +11746,11 @@ run(function()
 					while root and root.Parent do
 						NewDis = (lplr.Character.HumanoidRootPart.Position - root.Position).Magnitude
 						if NewDis <= Distance then
-							bedwars.Client:Get('SetInvItem'):SendToServer({["hand"] = game:GetService("ReplicatedStorage").Inventories[lplr.Name].infernal_shield})
-							task.wait(0.015)
-							bedwars.Client:Get("UseInfernalShield"):SendToServer({["raised"] = true})
+							local IS = getObjSlot('infernal_shield')
+							local ogslot = store.inventory.hotbarSlot
+							hotbarSwitch(IS)
+							task.wait(0.125)
+							hotbarSwitch(ogslot)
 						end
 						task.wait(0.05)
 					end
@@ -11808,9 +11810,9 @@ run(function()
 								part.Name = "AutoKitRagnarPart"
 								part.Touched:Connect(function(v)
 									if v.Parent.Name == lplr.Name then
-					if bedwars.AbilityController:canUseAbility('berserker_rage') then
-						bedwars.AbilityController:useAbility('berserker_rage')
-					end																																
+										if bedwars.AbilityController:canUseAbility('berserker_rage') then
+											bedwars.AbilityController:useAbility('berserker_rage')
+										end																																
 									end
 								end)
 							end
@@ -12342,7 +12344,12 @@ run(function()
 		
 					if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 then
 						if block:GetAttribute('PlacedByUserId') == lplr.UserId and (block.Position - entitylib.character.RootPart.Position).Magnitude < 30 then
+							local pa = getPickaxeSlot()
+							local ogslot = store.inventory.hotbarSlot
+							hotbarSwitch(pa)
 							task.spawn(bedwars.breakBlock, block, false, nil, true)
+							task.wait(0.45)
+							hotbarSwitch(ogslot)
 						end
 					end
 		
