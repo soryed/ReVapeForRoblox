@@ -9046,7 +9046,7 @@ run(function()
 	local old = {
 		Technology = nil,
 		GlobalShadows = nil,
-		SS = nil -- HITLER,
+		SS = nil, -- HITLER,
 		Bright = nil,
 		EC = nil,
 		EDS =  nil,
