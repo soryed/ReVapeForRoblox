@@ -853,7 +853,7 @@ run(function()
         end
     })
 end)
---[[run(function()
+run(function()
 	local TAG
 	local CustomTAG
 	local R, G, B
@@ -991,7 +991,7 @@ end)
 			CustomTAG:Toggle()
 		end,
 	})
-end)--]]
+end)
 
 run(function()
 	local ViewProfiles
@@ -1711,7 +1711,7 @@ run(function()
         end)
     end
 	local Piston
-	Piston = vape.Legit:CreateModule({
+	Piston = vape.Categories.Legit:CreateModule({
 		Name = 'Piston Effect',
 		Function = function(callback)
 			if callback then
@@ -1779,7 +1779,7 @@ run(function()
 			if not callback then return
 			if Type.Value == "Known" then
 				OnlineMods(Mod.Value)
-			else
+			elseif Type.Value == "Unknown" then
 				OnlineMods("nns")
 			end
 		end,
@@ -1803,20 +1803,125 @@ run(function()
 
 end)
 
-if getgenv().TestMode then
 run(function()
-local AutoWin
-	AutoWin = vape.Categories.AltFarm:CreateModule({
-		Name = "AutoWin",
+	local CustomTags
+	local Color
+	local Tag
+	local old, old2
+	local tagConnections = {}
+	local tagRenderConn
+	local tagGuiConn
+
+
+	local function Color3ToHex(r, g, b)
+		return string.lower(string.format("#%02X%02X%02X", r, g, b))
+	end
+
+	local function CompleteTagEffect()
+		if not lplr:FindFirstChild("Tags") then return end
+		local tagObj = lplr.Tags:FindFirstChild("0")
+		if not tagObj then return end
+
+		if not old then
+			old = tagObj.Value
+			old2 = tagObj:GetAttribute("Text")
+		end
+
+		local color = Color3.fromHSV(Color.Hue, Color.Sat, Color.Value)
+		local R = math.floor(color.R * 255)
+		local G = math.floor(color.G * 255)
+		local B = math.floor(color.B * 255)
+
+		tagObj.Value = string.format("<font color='rgb(%d,%d,%d)'>[%s]</font>",R, G, B, TAG.Value)
+		tagObj:SetAttribute("Text", TAG.Value)
+		lplr:SetAttribute("ClanTag", TAG.Value)
+
+		if tagRenderConn then
+			tagRenderConn:Disconnect()
+			tagRenderConn = nil
+		end
+		if tagGuiConn then
+			tagGuiConn:Disconnect()
+			tagGuiConn = nil
+		end
+
+		tagGuiConn = lplr.PlayerGui.ChildAdded:Connect(function(child)
+			if child.Name ~= "TabListScreenGui" or not child:IsA("ScreenGui") then return end
+			tagRenderConn = runService.RenderStepped:Connect(function()
+				local nameToFind = (lplr.DisplayName == "" or lplr.DisplayName == lplr.Name) and lplr.Name or lplr.DisplayName
+				for _, v in ipairs(child:GetDescendants()) do
+					if v:IsA("TextLabel") and string.find(string.lower(v.Text), string.lower(nameToFind)) then
+						v.Text = string.format('<font transparency="0.3" color="%s">[%s]</font> %s',Color3ToHex(Color3.fromRGB(R, G, B)),TAG.Value,nameToFind)
+					end
+				end
+			end)
+		end)
+	end
+	
+	local function RemoveTagEffect()
+		if tagRenderConn then
+			tagRenderConn:Disconnect()
+			tagRenderConn = nil
+		end
+
+		if tagGuiConn then
+			tagGuiConn:Disconnect()
+			tagGuiConn = nil
+		end
+
+		if lplr:FindFirstChild("Tags") then
+			local tagObj = lplr.Tags:FindFirstChild("0")
+			if tagObj then
+				if old then
+					tagObj.Value = old
+				end
+				if old2 then
+					tagObj:SetAttribute("Text", old2)
+				end
+			end
+		end
+
+		if lplr:GetAttribute("ClanTag") then
+			lplr:SetAttribute("ClanTag", old)
+		end
+
+		old = nil
+		old2 = nil
+	end
+
+	CustomTags = vape.Categories.Render:CreateNotification({
+		Name = "CustomTags",
+		Tooltip = "Client-Sided visual custom clan tag on-chat",
 		Function = function(callback)
-			if not callback then return end
-			vape:CreateNotification("AutoWin", "Joining queue!", 2)
-			task.wait(1.5)
-			bedwars.QueueController:joinQueue('bedwars_duels')
-		end,
-		Tooltip ='makes you go into a empty game and win for you!'
+			if callback then
+				CompleteTagEffect()
+			else
+ 				RemoveTagEffect()
+			end
+		end
 	})
-end)																	
+
+	Color = CustomTags:CreateColorSlider({
+		Name = 'Color',
+		Function = function()
+			if CustomTags.Enabled then
+				CompleteTagEffect()
+			end
+		end
+	})
+
+	Tag = CustomTags:CreateTextBox({
+		Name = 'Tag',
+		Default = "KKK",
+		Function = function()
+			if CustomTags.Enabled then
+				CompleteTagEffect()
+			end
+		end
+	})
+end)
+
+if getgenv().TestMode then	
 	warn("loaded test mode!")
 else
 end
