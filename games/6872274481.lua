@@ -14562,7 +14562,9 @@ run(function()
 				return
 			end  
 			local Cannon = getItem("cannon")
-			ray = cloneref(lplr:GetMouse()).UnitRay
+			local ray = cloneref(lplr:GetMouse()).UnitRay
+			local rayCheck = RaycastParams.new()
+			rayCheck.RespectCanCollide = true
 			rayCheck.FilterDescendantsInstances = {lplr.Character, gameCamera}
 			ray = workspace:Raycast(ray.Origin, ray.Direction * 10000, rayCheck)
 			position = ray and ray.Position + Vector3.new(0, entitylib.character.HipHeight or 2, 0)
@@ -14627,6 +14629,7 @@ run(function()
 	})
 
 end)
+	
 	
 run(function()
 	local FakeLag
@@ -14939,7 +14942,10 @@ run(function()
         Tooltip = 'Automatically dodges arrows for you -- close range only',
         Function = function(callback)
             if not callback then return end
-
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
             AutoDodge:Clean(workspace.DescendantAdded:Connect(function(arrow)
                     if not AutoDodge.Enabled then return end
                     if not entitylib.isAlive then return end
@@ -14958,7 +14964,7 @@ run(function()
                             if not hrp or not hum then break end
 
                             local dist = (hrp.Position - root.Position).Magnitude
-                            if dist <= (Distance + 3) then
+                            if dist <= (Distance + 5) then
                                 local dodgePos = hrp.Position + Vector3.new(8, 0, 0)
                                 hum:MoveTo(dodgePos)
                                 break
@@ -14997,6 +15003,10 @@ run(function()
         Name = "BetterKaida",
         Tooltip = "Killaura-style Kaida",
         Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
 			if callback then
 				repeat
 		            local plrs = entitylib.AllPosition({
@@ -15009,18 +15019,8 @@ run(function()
 		                Sort = "Distance"
 		            })
 		
-		            local plrs2 = entitylib.AllPosition({
-		                Range = CastDistance.Value,
-		                Wallcheck = Targets.Walls.Enabled,
-		                Part = "RootPart",
-		                Players = Targets.Players.Enabled,
-		                NPCs = Targets.NPCs.Enabled,
-		                Limit = 2,
-		                Sort = "Distance"
-		            })
 		
 		            local char = entitylib.character
-		            if not char or not char.RootPart then return end
 		            local root = char.RootPart
 		
 		            if plrs then
@@ -15029,7 +15029,7 @@ run(function()
 		                    local delta = ent.RootPart.Position - root.Position
 		                    local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
 		                    local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-		                    if angle <= (math.rad(Angle.Value) / 2) then
+		                    if angle > (math.rad(Angle.Value) / 2) then continue end
 		                        local localPosition = root.Position
 		                        local shootDir = CFrame.lookAt(localPosition, ent.RootPart.Position).LookVector
 		                        localPosition = localPosition + shootDir * math.max((localPosition - ent.RootPart.Position).Magnitude - 16, 0)
@@ -15088,7 +15088,6 @@ run(function()
 		                            end)
 		                        end)
 		                    end
-		                end
 		            end
 																				
 					task.wait(0.05)
@@ -15127,12 +15126,109 @@ run(function()
     })
 end)
 
+run(function()
+		local BetterNazar
+		local AutoHeal
+
+		BetterNazar = vape.Categories.Support:CreateModule({
+			Name = "BetterNazar",
+			Tooltip = "makes you look good with nazar lmfao",
+			Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
+				if callback then
+					local lastHitTime = 0
+					local hitTimeout = 3
+					BetterNazar:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+						if not entitylib.isAlive then return end
+							
+						local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
+						local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
+							
+						if attacker == lplr and victim and victim ~= lplr then
+							lastHitTime = workspace:GetServerTimeNow()
+							NazarController:request('enabled')
+						end
+					end))
+						
+					BetterNazar:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+						if not entitylib.isAlive then return end
+							
+						local killer = playersService:GetPlayerFromCharacter(deathTable.fromEntity)
+						local killed = playersService:GetPlayerFromCharacter(deathTable.entityInstance)
+							
+						if killer == lplr and killed and killed ~= lplr then
+							NazarController:request('disabled')
+						end
+					end))
+						
+					repeat
+						if entitylib.isAlive then
+							local currentTime = workspace:GetServerTimeNow()
+								
+							if empoweredMode and (currentTime - lastHitTime) >= hitTimeout then
+								NazarController:request('disabled')
+							end
+
+							if  entitylib.character.Humanoid.Health <= AutoHeal.Value then
+								NazarController:request('heal')
+							end
+
+						else
+							if empoweredMode then
+								NazarController:request('disabled')
+							end
+						end
+							
+						task.wait(0.1)
+					until not BetterNazar.Enabled
+						
+					if empoweredMode then
+						NazarController:request('disabled')
+					end
+				end
+			end
+		})
+
+		AutoHeal = BetterNazar:CreateSlider({
+			Name = "Heal",
+			Min = 35,
+			Max = 85,
+			Default = 75,
+		})
+end)
+
+run(function()
+    local MovementBypass = vape.Categories.Exploits:CreateModule({
+        Name = 'Anti-Cheat Bypasser',
+        Function = function(callback)
+            if callback then
+                local oldClient = bedwars.Client
+                bedwars.Client = {Get = function(self, remote) 
+                    return {SendToServer = function(...) 
+                        return oldClient:Get(remote):SendToServer(...) 
+                    end}
+                end}
+            else
+                bedwars.Client = oldClient
+            end
+        end
+    })
+end)
+
+
 if getgenv().TestMode or role == "owner" or role == "coowner" then
-	warn("loaded test mode!")
+	if getgenv().Closet then
+		warn("loaded test mode!, EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)")
+	else
+		vape:CreateNotification("Onyx", "Loaded Test mode! EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)", 8, "warning")
+	end
 end
 
 if getgenv().Closet then
-	for _, v in {'AutoShoot','BetterKaida','LeaveParty','QueueMods','Disabler','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',(lplr:GetAttribute("PlayingAsKits") == "pinata") and "AutoKit" or "","AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
+	for _, v in {'AutoShoot','BetterKaida','Anti-Cheat Bypasser','LeaveParty','QueueMods','Disabler','AutoWin','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',"AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
 		vape:Remove(v)
 	end
 end
