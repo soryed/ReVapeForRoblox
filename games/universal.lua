@@ -9122,7 +9122,7 @@ run(function()
 				Atmosphere.Parent = Lighting
 			else
 				pcall(function()
-					for _, v in ipairs(lightingService:GetChildren) do
+					for _, v in ipairs(lightingService:GetChildren()) do
 						if v then
 							v:Destroy()
 						end
