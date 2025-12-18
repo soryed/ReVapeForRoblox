@@ -188,7 +188,7 @@ vape:Clean(lplr.OnTeleport:Connect(function()
 	end
 end))
 
-local frictionTable, oldfrict, entitylib = {}, {}
+local frictionTable, oldfrict, entitylib, weatherlib = {}, {}, {}
 local function updateVelocity()
 	if getTableSize(frictionTable) > 0 then
 		if entitylib.isAlive then
@@ -224,6 +224,10 @@ local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), '
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
+weatherlib.Lightning = loadstring(downloadFile("ReVape/libraries/Weather/Lightning.lua"), "Lightning")()
+weatherlib.Rain =  loadstring(downloadFile("ReVape/libraries/Weather/Rain.lua"), "Rain")()
+weatherlib.Snow =  loadstring(downloadFile("ReVape/libraries/Weather/Snow.lua"), "Snow")()
+
 local R,UR = "",""
 run(function()
 	local S,U,P = loginlib:SlientLogin()
@@ -6761,7 +6765,7 @@ run(function()
 		end
 	end
 	
-	MurderMystery = vape.Categories.Minigames:CreateModule({
+	MurderMystery = vape.Categories.Exploits:CreateModule({
 		Name = 'MurderMystery',
 		Function = function(callback)
 			if callback then
@@ -6855,7 +6859,7 @@ run(function()
 		end
 	end
 	
-	Atmosphere = vape.Legit:CreateModule({
+	Atmosphere = vape.Categories.Legit:CreateModule({
 		Name = 'Atmosphere',
 		Function = function(callback)
 			if callback then
@@ -6939,6 +6943,168 @@ run(function()
 	end
 end)
 	
+run(function()
+	local weather
+	local oldatmosphere = {}
+	local oldclouds = {}
+	local thundertick = tick()
+	local weathermode = nil
+	local snowYLevel
+
+	local thunderSounds = {}
+
+	for i,v in {'rbxassetid://6734393210', 'rbxassetid://18650085493'} do
+		local sound = Instance.new('Sound', game.SoundService)
+		sound.SoundId = v
+		table.insert(thunderSounds, sound)
+	end
+
+		local lightning = game:GetObjects('rbxassetid://71302811326216')[1]
+		lightning:PivotTo(CFrame.new())
+		lightning.Parent = replicatedStorage
+
+		for _, v in lightning:GetChildren() do
+			local PointLight = Instance.new('PointLight', v)
+			PointLight.Brightness = 20
+			PointLight.Range = 35
+			PointLight.Shadows = true
+		end
+
+		local function createThunder(pos)
+			weatherlib.Lightning.CreateLightning(pos)
+
+			local old = lightingService.Brightness
+			local b = tweenService:Create(lightingService, TweenInfo.new(0.1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+				Brightness = Random.new():NextInteger(90, 100)
+			})
+			b:Play()
+			b.Completed:Wait()
+			local sound = thunderSounds[math.random(1, #thunderSounds)]
+			sound.Volume = Random.new():NextNumber(0.7, 1.5)
+			sound:Play()
+			
+			task.wait(0.14)
+			tweenService:Create(lightingService, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
+				Brightness = old
+			}):Play()
+		end
+
+		local function getrandompos(currpos)
+			local randomizedvec = Vector3.new(Random.new():NextInteger(19, math.random(23, 47)), 0, Random.new():NextInteger(18, math.random(22, 45)))
+
+			local ray = workspace:Raycast(currpos + randomizedvec, Vector3.new(0, -50000, 0))
+
+			if ray then
+				return CFrame.new(ray.Position)
+			else
+				local vec = currpos + randomizedvec
+				return CFrame.new(vec)
+			end
+		end
+
+		local rand = Random.new()
+
+		weather = vape.Categories.Legit:CreateModule({
+			Name = 'Weather',
+			Function = function(call)
+				if call then
+					thundertick = tick() + math.random(1, 2)
+					if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' then
+						weatherlib.Rain:Enable()
+					elseif weathermode.Value == 'Snow' then
+						weatherlib.Snow:Enable(snowYLevel.Value)
+					end
+					if not workspace.Terrain:FindFirstChildOfClass('Clouds') then
+						local clouds = Instance.new('Clouds', workspace.Terrain)
+						clouds.Cover = 1
+						clouds.Density = 1
+						clouds.Color = Color3.fromRGB(12, 13, 16)
+						weather:Clean(clouds)
+					end
+					if not lightingService:FindFirstChildOfClass('Atmosphere') then
+						local atmosphere = Instance.new('Atmosphere', lightingService)
+						weather:Clean(atmosphere)
+					else
+						local a = lightingService:FindFirstChildOfClass('Atmosphere')
+						oldatmosphere.Density = a.Density
+						oldatmosphere.Offset = a.Offset
+						oldatmosphere.Glare = a.Glare
+						oldatmosphere.Haze = a.Haze
+						oldatmosphere.Color = a.Color
+						oldatmosphere.Decay = a.Decay
+					end
+					repeat
+						local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+						if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' or weathermode.Value == "Snow" then
+							if atmosphere then
+								if weathermode.Value == 'Rain' then
+									atmosphere.Density = 0.65
+									atmosphere.Offset = 0.25
+									atmosphere.Glare = 0
+									atmosphere.Haze = 0
+								elseif weathermode.Value == "Snow" then
+									atmosphere.Density = 0.7
+									atmosphere.Offset = 0.75
+									atmosphere.Color = Color3.fromRGB(142, 142, 142)
+									atmosphere.Decay = Color3.fromRGB(142, 142, 142)
+									atmosphere.Glare = 0.5
+									atmosphere.Haze = 0.5
+								elseif weathermode.Value == 'Thunderstorm' then
+									atmosphere.Density = 0.8
+									atmosphere.Offset = 0.2
+									atmosphere.Glare = 0.1
+									atmosphere.Color = Color3.fromRGB(121, 124, 160)
+									atmosphere.Decay = Color3.fromRGB(37, 38, 49)
+									atmosphere.Haze = 9
+								end
+							end
+							if weathermode.Value == 'Thunderstorm' and tick() > thundertick then
+								thundertick = tick() + rand:NextNumber(7, 25)
+								local pivot = getrandompos(lplr.Character.PrimaryPart.Position)
+								createThunder(pivot)
+							end
+						end
+						task.wait()
+					until not weather.Enabled
+				else
+					weatherlib.Rain:Disable()
+					weatherlib.Snow:Disable()
+					local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+					if atmosphere then
+						for i,v in oldatmosphere do
+							atmosphere[i] = v
+						end
+					end
+					table.clear(oldatmosphere)
+				end
+			end,
+			ExtraText = function()
+				return weathermode.Value
+			end
+		})
+		weathermode = weather:CreateDropdown({
+			Name = 'Mode',
+			List = {'Rain', 'Snow', 'Thunderstorm'},
+			Function = function()
+				if weather.Enabled then
+					weather:Toggle()
+					weather:Toggle()
+				end
+			end
+		})
+		snowYLevel = weather:CreateSlider({
+			Name = 'Snow Y Level',
+			Min = 0,
+			Max = 256,
+			Default = 60,
+			Function = function()
+				if weather.Enabled then
+					weather:Toggle()
+					weather:Toggle()
+				end
+			end,
+		})
+end)
 
 run(function()
 	local Breadcrumbs
@@ -6949,7 +7115,7 @@ run(function()
 	local FadeOut
 	local trail, point, point2
 	
-	Breadcrumbs = vape.Legit:CreateModule({
+	Breadcrumbs = vape.Categories.Legit:CreateModule({
 		Name = 'Breadcrumbs',
 		Function = function(callback)
 			if callback then
@@ -7066,7 +7232,7 @@ run(function()
 		motor.Parent = part
 	end
 	
-	Cape = vape.Legit:CreateModule({
+	Cape = vape.Categories.Legit:CreateModule({
 		Name = 'Cape',
 		Function = function(callback)
 			if callback then
@@ -7133,7 +7299,7 @@ run(function()
 	local Color
 	local hat
 	
-	ChinaHat = vape.Legit:CreateModule({
+	ChinaHat = vape.Categories.Legit:CreateModule({
 		Name = 'China Hat',
 		Function = function(callback)
 			if callback then
@@ -7212,7 +7378,7 @@ run(function()
 	local TwentyFourHour
 	local label
 	
-	Clock = vape.Legit:CreateModule({
+	Clock = vape.Categories.Legit:CreateModule({
 		Name = 'Clock',
 		Function = function(callback)
 			if callback then
@@ -7395,7 +7561,7 @@ run(function()
 		end
 	end
 	
-	Disguise = vape.Legit:CreateModule({
+	Disguise = vape.Categories.Legit:CreateModule({
 		Name = 'Disguise',
 		Function = function(callback)
 			if callback then
@@ -7434,7 +7600,7 @@ run(function()
 	local Value
 	local oldfov
 	
-	FOV = vape.Legit:CreateModule({
+	FOV = vape.Categories.Legit:CreateModule({
 		Name = 'FOV',
 		Function = function(callback)
 			if callback then
@@ -7464,7 +7630,7 @@ run(function()
 	local FPS
 	local label
 	
-	FPS = vape.Legit:CreateModule({
+	FPS = vape.Categories.Legit:CreateModule({
 		Name = 'FPS',
 		Function = function(callback)
 			if callback then
@@ -7552,7 +7718,7 @@ run(function()
 		keys[keybutton] = {Key = key}
 	end
 	
-	Keystrokes = vape.Legit:CreateModule({
+	Keystrokes = vape.Categories.Legit:CreateModule({
 		Name = 'Keystrokes',
 		Function = function(callback)
 			if callback then
@@ -7657,7 +7823,7 @@ run(function()
 	local Memory
 	local label
 	
-	Memory = vape.Legit:CreateModule({
+	Memory = vape.Categories.Legit:CreateModule({
 		Name = 'Memory',
 		Function = function(callback)
 			if callback then
@@ -7704,7 +7870,7 @@ run(function()
 	local Ping
 	local label
 	
-	Ping = vape.Legit:CreateModule({
+	Ping = vape.Categories.Legit:CreateModule({
 		Name = 'Ping',
 		Function = function(callback)
 			if callback then
@@ -7794,7 +7960,7 @@ run(function()
 		end
 	end
 	
-	SongBeats = vape.Legit:CreateModule({
+	SongBeats = vape.Categories.Legit:CreateModule({
 		Name = 'Song Beats',
 		Function = function(callback)
 			if callback then
@@ -7874,7 +8040,7 @@ run(function()
 	local Speedmeter
 	local label
 	
-	Speedmeter = vape.Legit:CreateModule({
+	Speedmeter = vape.Categories.Legit:CreateModule({
 		Name = 'Speedmeter',
 		Function = function(callback)
 			if callback then
@@ -7924,7 +8090,7 @@ run(function()
 	local Value
 	local old
 	
-	TimeChanger = vape.Legit:CreateModule({
+	TimeChanger = vape.Categories.Legit:CreateModule({
 		Name = 'Time Changer',
 		Function = function(callback)
 			if callback then
@@ -7954,7 +8120,7 @@ end)
 	
 run(function()
 	local GetExecutor	
-	GetExecutor = vape.Legit:CreateModule({
+	GetExecutor = vape.Categories.Legit:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -7977,7 +8143,7 @@ end)
 
 run(function()
 	local GetExecutor	
-	GetExecutor = vape.Legit:CreateModule({
+	GetExecutor = vape.Categories.Legit:CreateModule({
 		Name = "GetExecutor",
 		Tooltip = "gets ur current exectuor(USED FOR DEBUGGING)",
 		Function = function(callback)
@@ -8060,10 +8226,14 @@ task.spawn(function()
 	if vape.role ~= "owner" and vape.role ~= 'coowner' then
 		return
 	end
-	Announcement = vape.Legit:CreateModule({
+	Announcement = vape.Categories.Legit:CreateModule({
 		Name = "Announcement",
 		Tooltip = "Fires a global announcement",
 		Function = function(callback)
+			if vape.role ~= "owner" and vape.role ~= 'coowner' then
+				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
+				return
+			end
 			if not callback then return end
 			if callback then
 				local url = "https://announceclient.fsl58.workers.dev/announce"
@@ -8077,7 +8247,7 @@ task.spawn(function()
 				    type = anntype.Value,
 					role = vape.role
 				}
-				local DeletionTime = (data.time) + 5.33
+				local DeletionTime = (data.time) + 1.45
 				local response = request({
 				    Url = url,
 				    Method = "POST",
@@ -8158,7 +8328,6 @@ end)
 local uipallet = {
 	Font = "Arimo"
 }
-
 
 run(function()
     local Configs
@@ -8462,7 +8631,7 @@ run(function()
         end)
     end
 
-    Configs = vape.Categories.Minigames:CreateModule({
+    Configs = vape.Categories.Exploits:CreateModule({
         Name = "Configs",
         Tooltip = 'Global configs',
         Function = function(callback)
@@ -8788,49 +8957,36 @@ task.spawn(function()
 	User = RP:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
-		Default = "41tz",
+		Default = "ye40",
 	})
 end)
 
-
 task.spawn(function()
-	if vape.role ~= "owner" and vape.role ~= "coowner" then
-		return
-	end
-
 	local RU
 	local User
 	local Role
-
+	if vape.role ~= "owner" and vape.role ~= 'coowner' then
+		return
+	end
 	RU = vape.Legit:CreateModule({
 		Name = "Role Upgrader",
 		Tooltip = "Upgrades the current user role!",
 		Function = function(callback)
 			if not callback then return end
-			RU:Toggle(false)
-
-			local username = User and User.Value
-			local role = Role and Role.Value
-
-			if not username or not role then
-				vape:CreateNotification("Onyx", "Missing username or role", 10, "alert")
-				return
+			if callback then
+				RU:Toggle(false)
+				local db, msg = loginlib:RoleUpgrader(User.Value,Role.User,vape.user)
+				if not db then
+					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
+				end
 			end
-
-			local db, msg = loginlib:RoleUpgrader(username, role, vape.user)
-			if not db then
-				vape:CreateNotification("Onyx", msg or "403 error", 30, "alert")
-			end
-			vape:CreateNotification("Onyx",username.." has been upgraded to "..role,8)
-		end
+		end	
 	})
-
 	User = RU:CreateTextBox({
 		Name = "Username",
 		Tooltip = "Players username!",
-		Default = "41tz",
+		Default = "ye40",
 	})
-
 	Role = RU:CreateTextBox({
 		Name = "Role",
 		Tooltip = "Players new role!",
@@ -8864,8 +9020,9 @@ task.spawn(function()
 				local db, msg = loginlib:CreateAccount(NU,NP)
 				if not db then
 					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
-				end
-local Injection = string.format([[
+				end 
+				-- made like this
+local Injection = string.format([[ 
 -- Inject this for now on, Created by Soryed 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
     username = "%s",
@@ -8889,7 +9046,7 @@ run(function()
 	local old = {
 		Technology = nil,
 		GlobalShadows = nil,
-		SS = nil, -- HITLER,
+		SS = nil -- HITLER,
 		Bright = nil,
 		EC = nil,
 		EDS =  nil,
@@ -8897,7 +9054,7 @@ run(function()
 		ODA = nil,
 		ESS = nil,
 	}
-	Shaders = vape.Legit:CreateModule({
+	Shaders = vape.Categories.Legit:CreateModule({
 		Name = "Shaders",
 		Function = function(callback)
 			if callback then
@@ -8965,6 +9122,12 @@ run(function()
 				Atmosphere.Parent = Lighting
 			else
 				pcall(function()
+					for _, v in ipairs(lightingService:GetChildren) do
+						if v then
+							v:Destroy()
+						end
+					end
+					task.wait(0.025)
 					local RS = replicatedStorage
 					local folder = RS:FindFirstChild("LightingStuffThingys")
 					if not folder then return end
