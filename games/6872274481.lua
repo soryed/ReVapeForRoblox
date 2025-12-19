@@ -11813,7 +11813,7 @@ run(function()
 												repeat
 													bedwars.BlockBreakController.blockBreaker:setCooldown(0.185)
 													task.wait(0.1)
-												until not bedwars.AbilityController:canUseAbility('berserker_rage')
+												until bedwars.AbilityController:canUseAbility('berserker_rage')
 												task.wait(0.0125)
 												bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
 											end
