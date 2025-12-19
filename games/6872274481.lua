@@ -15642,6 +15642,44 @@ run(function()
 	})
 end)
 
+run(function()
+	local ElektraTP
+	local function TP()
+		local rayCheck = RaycastParams.new()
+		rayCheck.RespectCanCollide = true
+		local ray = cloneref(lplr:GetMouse()).UnitRay
+		rayCheck.FilterDescendantsInstances = {lplr.Character, gameCamera}
+		ray = workspace:Raycast(ray.Origin, ray.Direction * 10000, rayCheck)
+		position = ray and ray.Position + Vector3.new(0, entitylib.character.HipHeight or 2, 0)
+		if not position then
+			notif('ElektraTP', 'No position found.', 5)
+			ElektraTP:Toggle(false)
+			return
+		end
+		
+		if bedwars.AbilityController:canUseAbility('ELECTRIC_DASH') then
+			bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+			task.wait(0.00012)
+			entitylib.character.RootPart.CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)
+			ElektraTP:Toggle(false)
+		end
+	end)
+	ElektraTP = vape.Categories.AltFarm:CreateModule({
+		Name = "ElektraTP",
+		Tooltip = "Elektra kit needed mouseTP",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				if store.equippedKit == "elektra" then
+					TP()
+				else
+					notif('ElektraTP', 'You need elektra to use this module.', 5, 'warning')
+					ElektraTP:Toggle(false)
+				end
+			end
+		end
+	})
+end)
 
 if getgenv().TestMode or role == "owner" or role == "coowner" then
 	run(function()
