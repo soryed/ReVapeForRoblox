@@ -15663,7 +15663,7 @@ run(function()
 			entitylib.character.RootPart.CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)
 			ElektraTP:Toggle(false)
 		end
-	end)
+	end
 	ElektraTP = vape.Categories.AltFarm:CreateModule({
 		Name = "ElektraTP",
 		Tooltip = "Elektra kit needed mouseTP",
