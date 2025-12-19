@@ -3269,7 +3269,8 @@ run(function()
         ["void_dragon"] = "rbxassetid://10982192753",
         ["cat"] = "rbxassetid://15350740470",
         ["wind_walker"] = "rbxassetid://9872355499",
-		['skeleton'] = "rbxassetid://120123419412119"
+		['skeleton'] = "rbxassetid://120123419412119",
+		['winter_lady'] = "rbxassetid://83274578564074",
     }
 
 	local Added = {
@@ -8972,7 +8973,8 @@ run(function()
         ["void_dragon"] = "rbxassetid://10982192753",
         ["cat"] = "rbxassetid://15350740470",
         ["wind_walker"] = "rbxassetid://9872355499",
-		['skeleton'] = "rbxassetid://120123419412119"
+		['skeleton'] = "rbxassetid://120123419412119",
+		['winter_lady'] = "rbxassetid://83274578564074",
     }
 
     local function createkitrender(plr)
