@@ -15216,9 +15216,7 @@ run(function()
 					end
 				end
 			else
-				if old then
-					bedwars.CooldownController.setOnCooldown = old
-				end
+				bedwars.CooldownController.setOnCooldown = old
 				
 				for _, item in pairs(bedwars.ItemMeta) do
 					if item.projectileSource then
@@ -15226,9 +15224,10 @@ run(function()
 						item.projectileSource.fireDelaySec = originalDelay
 					end
 				end
+				old = nil
 			end
 		end,
-		Tooltip = 'Makes your projectiles shoot out faster'
+		Tooltip = 'Makes your projectiles shoot out faster(ty aero for the idea)'
 	})
 end)
 
@@ -15572,7 +15571,7 @@ run(function()
 	rayCheck.RespectCanCollide = true
 	AutoWin = vape.Categories.AltFarm:CreateModule({
 		Name = "AutoWin",
-		Tooltip = "Temp autowin for now this is not the final verison",
+		Tooltip = "Temp autowin for now this is not the final verison mouseTP and autogametp",
 		Function = function(callback)
 			if not callback then
 				return
@@ -15597,6 +15596,7 @@ run(function()
 		end
 	})
 end)
+
 
 
 if getgenv().TestMode or role == "owner" or role == "coowner" then
