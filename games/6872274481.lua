@@ -15659,7 +15659,7 @@ run(function()
 		
 		if bedwars.AbilityController:canUseAbility('ELECTRIC_DASH') then
 			bedwars.AbilityController:useAbility('ELECTRIC_DASH')
-			task.wait(0.015)
+			task.wait(0.1)
 			entitylib.character.RootPart.CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)
 			ElektraTP:Toggle(false)
 		end
