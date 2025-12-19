@@ -15092,8 +15092,9 @@ run(function()
 			if callback then
 				old = bedwars.SwordController.isClickingTooFast
 				bedwars.SwordController.isClickingTooFast = function(self)
-				self.lastSwing = 1.15
-				return false
+					self.lastSwing = 1.15
+					return false
+				end
 			else
 				bedwars.SwordController.isClickingTooFast = old
 			end
