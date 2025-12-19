@@ -15682,6 +15682,35 @@ run(function()
 	})
 end)
 
+run(function()
+	local RepelLag
+	local Sync
+	RepelLag = vape.Categories.Exploits:CreateModule({
+		Name = 'RepelLag',
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and user ~= "synioxzz"  then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
+			if callback then
+				if Sync.Enabled then
+					setfflag('DFIntS2PhysicsSenderRate', '128')
+				else
+					setfflag('DFIntS2PhysicsSenderRate', '38000')
+
+				end
+			else
+				setfflag('DFIntS2PhysicsSenderRate', '14')
+			end
+		end,
+		Tooltip = 'Desync but sync\'s with the current world making you look fakelag and alittle with backtrack'
+	})
+	Sync = RepelLag:CreateToggle({
+		Name = "Sync",
+		Default = true
+	})
+end)
+
 if getgenv().TestMode or role == "owner" or role == "coowner" then
 	run(function()
 		local MovementBypass = vape.Categories.Exploits:CreateModule({
