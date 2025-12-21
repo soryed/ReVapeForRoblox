@@ -16063,16 +16063,3 @@ run(function()
 end)
 
 
-if getgenv().TestMode or role == "owner" or role == "coowner" then
-	if getgenv().Closet then
-		warn("loaded test mode!, EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)")
-	else
-		vape:CreateNotification("Onyx", "Loaded Test mode! EVERYTHING WITHIN TEST MODE ARE EXPERIMENTAL(They wont make it or will make it)", 8, "warning")
-	end
-end
-
-if getgenv().Closet then
-	for _, v in {'MLG','FakeBan','MouseTP','BuyBlocks','TaxRemover','RepelLag','AutoEmptyGameTP','BedTP','CustomTags','JumpHeight','AutoShoot','FullBright','BetterKaida','NoFall','AbilityExploits','NoNameTag','BetterAdetunde','LeaveParty','QueueMods','Disabler','AutoWin','Funny','Clutch','AntiHit','Fly','LongJump','Nightmare Emote','GetHost','KitESP','SetPlayerLevel','KitRender','MatchHistory','AutoBan','ItemlessLongjump','AutoQueue','Deflect','FakeLag','BackTrack',"Desync",'BetterDavey','ZoomUncapper','BetterPA',"SlientAim","Infinite Jump",'BlockCPSRemover',"AutoBuyUpgrades","AutoSuffocate","Account Grinding",'BlockIn','DamageAffect','MutipleKits','ZephyrExploit','AutoChargeBow'} do
-		vape:Remove(v)
-	end
-end
