@@ -1,4 +1,8 @@
 local ARGS = ... or {}
+local cloneref = cloneref or function(obj) return obj end
+
+local SG = cloneref(game:GetService('StarterGui'))
+
 local function TTD()
 	if not ARGS.ReVapeDev then
 	    if isfolder('ReVape') then
@@ -14,6 +18,12 @@ local function TTD()
 	
 	        if isfolder('ReVape/profiles') and isfile('ReVape/profiles/commit.txt') then
 	            delfile('ReVape/profiles/commit.txt')
+			else
+				SG:SetCore('SendNotification', {
+				    Title = 'Onyx',
+				    Text = 'Deleted profiles folder? DM "19thouu" on discord for help!',
+				    Duration = 5
+				})
 	        end
 	    end
 	end
@@ -25,10 +35,18 @@ end
 if ARGS.Refresh then
     TTD()
 	task.wait(0.5)
-    if not isfolder('ReVape') then
-        print('Successfully deleted the "ReVape" folder!')
+    if not isfolder('ReVape/games') then
+		SG:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Successfully reinstalled the "ReVape" folder!',
+			Duration = 10
+		})
     else
-        warn('Had an issue deleting the "ReVape" folder. Please DM the user "19thouu" on Discord!')
+		SG:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Had an issue deleting the "ReVape" folder. Please DM the user "19thouu" on Discord!',
+			Duration = 5
+		})
 	end
 end
 
@@ -36,9 +54,17 @@ if ARGS.ForceRefresh then
     RTTD()
 	task.wait(0.5)
     if not isfolder('ReVape') then
-        print('Successfully forced an deletion to "ReVape" folder!')
+		SG:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Successfully forced an deletion to "ReVape" folder!',
+			Duration = 10
+		})
     else
-        warn('Had an issue forcing to delete the "ReVape" folder. Please DM the user "19thouu" on Discord!')
+		SG:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Had an issue forcing to delete the "ReVape" folder. Please DM the user "19thouu" on Discord!',
+			Duration = 5
+		})
 	end
 end
 
