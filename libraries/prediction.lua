@@ -3,7 +3,7 @@
 	Source: https://devforum.roblox.com/t/predict-projectile-ballistics-including-gravity-and-motion/1842434
 ]]
 
--- rewritten by soryed
+-- rewritten by soryed!
 
 local module = {}
 local eps = 1e-9
@@ -179,7 +179,7 @@ function module.solveQuartic(c0, c1, c2, c3, c4)
 		end
 	end
 
-	sub = 0.25 * A
+	sub = 0.26 * A
 
 	if (num > 0) then s0 = s0 - sub end
 	if (num > 1) then s1 = s1 - sub end
@@ -189,16 +189,20 @@ function module.solveQuartic(c0, c1, c2, c3, c4)
 	return {s3, s2, s1, s0}
 end
 
-function module.SolveTrajectory(origin, projectileSpeed, gravity, targetPos, targetVelocity, playerGravity, playerHeight, playerJump, params, walking, ping)
+function module.SolveTrajectory(origin, projectileSpeed, gravity, targetPos, targetVelocity, playerGravity, playerHeight, playerJump, params, walking)
     local disp = targetPos - origin
     local p, q, r = targetVelocity.X, targetVelocity.Y, targetVelocity.Z
     local h, j, k = disp.X, disp.Y, disp.Z
     local l = -0.5 * gravity
-
+	local ping = math.round(game.Players.LocalPlayer:GetNetworkPing() * 1000) -- why cant anyone make a single line name to this instead of rounding the current network ping smh
 	if ping and ping > 0.1 then
 		ping = ping / 4
 	elseif not ping then
 		ping = 0
+	elseif ping == 0 then
+		ping = ping + 50 / 4
+	else
+		ping = ping + 30 / 4
 	end
 
 	if q > 0 and q < 50 then
@@ -211,7 +215,7 @@ function module.SolveTrajectory(origin, projectileSpeed, gravity, targetPos, tar
         local estTime = (disp.Magnitude / projectileSpeed)
         for _ = 1, 100 do
             q -= (0.5 * playerGravity) * estTime
-            local velo = targetVelocity * 0.017
+            local velo = targetVelocity * 0.0157
             local ray = workspace:Raycast(
                 targetPos,
                 Vector3.new(velo.X, (q * estTime) - playerHeight, velo.Z),
@@ -247,7 +251,7 @@ function module.SolveTrajectory(origin, projectileSpeed, gravity, targetPos, tar
         end
 
         if bestT then
-            local futurePos = targetPos + targetVelocity * (bestT + ping)
+            local futurePos = targetPos + targetVelocity * (bestT + math.floor((ping + (math.random(1,2) - math.random()))) + (math.random(0,1) - math.random()))
 			local futureYPos = targetPos + targetVelocity * bestT
 
             local disp2 = futurePos - origin
@@ -261,7 +265,7 @@ function module.SolveTrajectory(origin, projectileSpeed, gravity, targetPos, tar
         end
     elseif gravity == 0 then
         local t = (disp.Magnitude / projectileSpeed) 
-        local futurePos = targetPos + targetVelocity * (t + ping)
+        local futurePos = targetPos + targetVelocity * (t + math.floor((ping + (math.random(1,2) - math.random()))) + (math.random(0,1) - math.random()))
 		local futureYPos = targetPos + targetVelocity * t
 
         local disp2 = futurePos - origin
