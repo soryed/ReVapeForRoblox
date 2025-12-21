@@ -131,11 +131,20 @@ end
 
 function login:SlientLogin()
     local role, U, P = "", username, password
-    pcall(function()
+    local ok = pcall(function()
         local req = postLogin(username, password)
-        if not req or req.StatusCode ~= 200 then role = "guest" return end
+        if not req or req.StatusCode ~= 200 then
+            vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
+            role, U, P = "guest", "GUEST", "PASSWORD"
+            return
+        end
         local decoded = decodeSafe(req.Body)
-        role = decoded and decoded.role or "guest"
+        if not decoded then
+            vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
+            role, U, P = "guest", "GUEST", "PASSWORD"
+            return
+        end
+        role = decoded.role or "guest"
     end)
     return role, U, P
 end
