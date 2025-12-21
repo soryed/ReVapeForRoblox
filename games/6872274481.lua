@@ -15758,12 +15758,14 @@ run(function()
 		
 		if bedwars.AbilityController:canUseAbility('ELECTRIC_DASH') then
 			old = bedwars.ElektraController.onKitLocalActivated
+			local cf = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)
+			local vec3 = cf.Position
 			bedwars.ElektraController.onKitLocalActivated = function(...)
 				bedwars.Client:Get("ElectricDash"):CallServer({
 					electricDasher = lplr,
 					cameraCFrame = gameCamera.CFrame,
 					startCFrame = entitylib.character.RootPart.Position,
-					destCFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector),
+					destCFrame = vec3,
 				})
 				return true
 			end
