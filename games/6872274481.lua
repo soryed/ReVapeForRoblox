@@ -16354,10 +16354,6 @@ end)
                                     if i == 3 or i == 9 or i == 10 then
                                         lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
                                     end
-                                    if i == 8 then
-                                        task.wait(0.85)
-                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                                    end
                                     lplr.Character.Humanoid.MoveToFinished:Wait()
                                     task.wait(0.5)
                                 end
