@@ -1,11 +1,25 @@
 local ARGS = ... or {}
 
+local cloneref = cloneref or function(ref: Instance): Instance
+    return ref    
+end
+
+local StarterGui: StarterGui = cloneref(game:GetService('StarterGui'))
+local isfile = isfile or function(file)
+	local suc, res = pcall(function()
+		return readfile(file)
+	end)
+	return suc and res ~= nil and res ~= ''
+end
+local delfile = delfile or function(file)
+	writefile(file, '')
+end
 
 local function TTD()
 	if not ARGS.ReVapeDev then
 	    if isfolder('ReVape') then
 	        for _, v: string in listfiles('ReVape') do
-	            if not v:find('profiles') then
+	            if not v:find('profiles')  and not v:find('accounts') then
 	                if isfolder(v) then
 	                    delfolder(v)
 	                elseif isfile(v) then
@@ -17,7 +31,11 @@ local function TTD()
 	        if isfolder('ReVape/profiles') and isfile('ReVape/profiles/commit.txt') then
 	            delfile('ReVape/profiles/commit.txt')
 			else
-
+				StarterGui:SetCore('SendNotification', {
+				    Title = 'Onyx',
+				    Text = 'Issue reinstalling Onyx! dm "19thouu" on discord!',
+				    Duration = 20
+				})
 	        end
 	    end
 	end
@@ -30,9 +48,17 @@ if ARGS.Refresh then
     TTD()
 	task.wait(0.5)
     if not isfolder('ReVape/games') then
-
+		StarterGui:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Successfully reinstalling Onyx!!',
+			Duration = 12
+		})
     else
-
+		StarterGui:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Issue reinstalling Onyx! dm "19thouu" on discord!',
+			Duration = 20
+		})
 	end
 end
 
@@ -40,8 +66,17 @@ if ARGS.ForceRefresh then
     RTTD()
 	task.wait(0.5)
     if not isfolder('ReVape') then
+		StarterGui:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Successfully force deleted Onyx!!',
+			Duration = 12
+		})
     else
-
+		StarterGui:SetCore('SendNotification', {
+			Title = 'Onyx',
+			Text = 'Issue force deleting Onyx! dm "19thouu" on discord!',
+			Duration = 20
+		})
 	end
 end
 
@@ -59,17 +94,9 @@ getgenv().password = ARGS.password
 getgenv().TestMode = ARGS.TestMode or false
 getgenv().Closet = ARGS.Closet or false
 
-local tweenService = game:GetService('TweenService')
+local tweenService = cloneref(game:GetService('TweenService'))
 
-local isfile = isfile or function(file)
-	local suc, res = pcall(function()
-		return readfile(file)
-	end)
-	return suc and res ~= nil and res ~= ''
-end
-local delfile = delfile or function(file)
-	writefile(file, '')
-end
+
 
 local function downloadFile(path, func)
 	if not isfile(path) then
@@ -106,7 +133,7 @@ for _, folder in {'ReVape', 'ReVape/games', 'ReVape/profiles', 'ReVape/assets', 
 end
 
 
-local folders = {'Revape/accounts'}
+local folders = {'ReVape/accounts'}
 
 for _, folder in ipairs(folders) do
     if not isfolder(folder) then
