@@ -15030,7 +15030,7 @@ run(function()
 	local old
 	
 	task.spawn(function()
-		repeat task.wait() until bedwars.ProjectileMeta and vape:Loaded()
+		repeat task.wait() until bedwars.ProjectileMeta and vape
 		
 		for projectileName, projectileData in pairs(bedwars.ProjectileMeta) do
 			if projectileData.projectile then
