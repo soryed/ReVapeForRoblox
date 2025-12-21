@@ -15916,11 +15916,11 @@ run(function()
 	local function CreatePlayerList()
 		target = ""
 		table.clear(real_list)
-		for i, v in playersService:GetPlayers() do
-			if v.Name == lplr.Name then
-				return
+		for _, v in pairs(playersService:GetPlayers()) do
+			if v == lplr then
+				continue
 			end
-			table.insert(real_list,v.Name)
+			table.insert(real_list, v.Name)
 		end
 	end
 
