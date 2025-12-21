@@ -1783,6 +1783,29 @@ run(function()
 	})
 end)
 
+    run(
+        function()
+            local AutoWin
+            AutoWin =
+                vape.Categories.AltFarm:CreateModule(
+                {
+                    Name = "AutoWin",
+                    Function = function(callback)
+                        if
+                            role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and
+                                role ~= "premium"
+                         then
+                            vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                            return
+                        end
+                        bedwars.QueueController:joinQueue("bedwars_duels")
+                    end,
+                    Tooltip = "Lobby Autowin for queueing"
+                }
+            )
+        end
+    )
+																								
 if getgenv().TestMode then	
 	warn("loaded test mode!")
 else
