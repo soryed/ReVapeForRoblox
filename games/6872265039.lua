@@ -1751,7 +1751,7 @@ run(function()
 		old2 = nil
 	end
 
-	CustomTags = vape.Categories.Render:CreateNotification({
+	CustomTags = vape.Categories.Render:CreateModule({
 		Name = "CustomTags",
 		Tooltip = "Client-Sided visual custom clan tag on-chat",
 		Function = function(callback)
@@ -1789,7 +1789,7 @@ run(function()
         Name = "AutoWin",
             Function = function(callback)
                 if role "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-                    --vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                    vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
                     return
                 end
             bedwars.QueueController:joinQueue("bedwars_duels")
