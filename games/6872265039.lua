@@ -157,7 +157,7 @@ run(function()
 end)
 
 for _, v in vape.Modules do
-	if v.Category == 'Combat' or v.Category == 'Minigames' then
+	if v.Category == 'Combat' or v.Category == 'Render' then
 		vape:Remove(i)
 	end
 end
@@ -192,7 +192,7 @@ end)
 run(function()
 	local AutoGamble
 	
-	AutoGamble = vape.Categories.Minigames:CreateModule({
+	AutoGamble = vape.Categories.Render:CreateModule({
 		Name = 'AutoGamble',
 		Function = function(callback)
 			if callback then
@@ -227,7 +227,7 @@ run(function()
 end)
 
 run(function()	
-	NM = vape.Categories.Minigames:CreateModule({
+	NM = vape.Categories.Render:CreateModule({
 		Name = 'Nightmare Emote',
 		Tooltip = 'Client-Sided nightmare emote, animation is Server-Side visuals are Client-Sided',
 		Function = function(callback)
@@ -1112,7 +1112,7 @@ run(function()
     local PlayerData
     local includeEmptyMatches
 	local Clean
-    PlayerData = vape.Categories.Minigames:CreateModule({
+    PlayerData = vape.Categories.Render:CreateModule({
         Name = "PlayerData",
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
