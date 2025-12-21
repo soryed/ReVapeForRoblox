@@ -7034,11 +7034,4 @@ mainapi:Clean(inputService.InputEnded:Connect(function(inputObj)
 	end
 end))
 
-function mainapi:Loaded()
-	if not game:IsLoaded() then
-		game.Loaded:Wait()
-	end
-	return true
-end
-
 return mainapi
