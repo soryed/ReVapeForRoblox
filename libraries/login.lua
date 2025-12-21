@@ -1,270 +1,159 @@
 local login = {}
-if not shared.vape then repeat task.wait() until shared.vape end
-local cloneref = cloneref or function(obj)
-    return obj
+
+local function downloadFile(path, func)
+    if not isfile(path) then
+        createDownloader(path)
+        local suc, res = pcall(function()
+            return game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/"..
+                readfile("ReVape/profiles/commit.txt").."/"..select(1, path:gsub("ReVape/", "")), true)
+        end)
+        if not suc or res == "404: Not Found" then error(res) end
+        if path:find(".lua") then res = "\n"..res end
+        writefile(path, res)
+    end
+    return (func or readfile)(path)
 end
 
+if not shared.vape then repeat task.wait() until shared.vape end
+local cloneref = cloneref or function(obj) return obj end
 local vape = shared.vape
 local http = cloneref(game:GetService("HttpService"))
 
 local ApiBase = "https://onyxclient.fsl58.workers.dev/"
-local LoginBase = ApiBase..'login'
-local ResetBase = ApiBase..'reset'
-local UpgradeBase = ApiBase..'role'
+local LoginBase = ApiBase.."login"
+local ResetBase = ApiBase.."reset"
+local UpgradeBase = ApiBase.."role"
 local SignupBase = ApiBase.."signup"
---local HwidBase = ApiBase.."hwid?user="
-local username = ""
-local password = ""
+local HwidResetBase = ApiBase.."reset-hwid"
+local username = getgenv().username or "GUEST"
+local password = getgenv().password or "PASSWORD"
 
-if getgenv().TestAccount then
-    username = "GUEST"
-    password = "PASSWORD"
-else
-    username = getgenv().username or "GUEST"
-    password = getgenv().password or "PASSWORD"
+local HWID_PATH = "ReVape/accounts/hwid.txt"
+local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
+
+local function generateHWID()
+    return GenLib:UUID()
 end
 
-
---[[local function HWIDCheck(user)
-    local hwid = readfile("ReVape/accounts/hwid.txt")
-    local req = request or http_request or (syn and syn.request)
-    if not req then 
-        warn("No HTTP request function available.")
-        return nil 
+local function getHWID()
+    if not isfile(HWID_PATH) then
+        writefile(HWID_PATH, generateHWID())
     end
-
-    local success, result = pcall(function()
-        return req({
-            Url = HwidBase..user.."&hwid="..hwid,
-            Method = "GET",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            }
-        })
-    end)
-
-    if not success then
-        warn("HWID check failed:", result)
-        return nil
-    end
-
-    return result
-end
---]]
-
-
-local function resetPassword(U, NP, R, OP)
-    local req = request or http_request or syn.request
-    if not req then 
-        return nil, "No HTTP request function available"
-    end
-
-    local response = req({
-        Url = ResetBase,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = http:JSONEncode({
-            user = U,
-            newPassword = NP,
-            requester = R,
-            oldPassword = OP
-        })
-    })
-
-    return response
-end
-
-local function roleUpgrader(T, NR, R)
-    local req = request or http_request or syn.request
-    if not req then 
-        return nil, "No HTTP request function available"
-    end
-
-    local response = req({
-        Url = UpgradeBase,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = http:JSONEncode({
-            target = T,
-            newRole = NR,
-            requester = R
-        })
-    })
-
-    return response
-end
-
-local function createAccount(U, P)
-    local req = request or http_request or syn.request
-    if not req then 
-        return nil, "No HTTP request function available"
-    end
-
-    local response = req({
-        Url = SignupBase,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = http:JSONEncode({
-            username = U,
-            password = P
-        })
-    })
-
-    return response
-end
-
-local function postLogin(U, P)
-    local req = request or http_request or syn.request
-    if not req then
-        return nil, "No HTTP request function available"
-    end
-
-    return req({
-        Url = LoginBase,
-        Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
-        Body = http:JSONEncode({
-            username = U,
-            password = P
-        })
-    })
+    return readfile(HWID_PATH)
 end
 
 local function decodeSafe(body)
-    local ok, result = pcall(function()
-        return http:JSONDecode(body)
-    end)
+    local ok, result = pcall(function() return http:JSONDecode(body) end)
     return ok and result or nil
 end
 
-function login:ResetPassword(user, newPass, requester, oldPass)
-    local resp, err = resetPassword(user, newPass, requester, oldPass)
-
-    if not resp then
-        return false, err
-    end
-
-    if resp.StatusCode ~= 200 then
-        return false, "Server returned " .. tostring(resp.StatusCode)
-    end
-
-    local body = decodeSafe(resp.Body)
-    if not body then 
-        warn("Invaild JSON returned")
-        return false, "Invalid JSON returned"
-    end
-
-    if body.error then
-        warn(body.error or 'Unknown error')
- 
-        return false, body.error
-    end
-
-    return true, body
+local function postRequest(url, bodyTable)
+    local req = request or http_request or syn.request
+    if not req then return nil, "No HTTP request function available" end
+    return req({
+        Url = url,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = http:JSONEncode(bodyTable)
+    })
 end
 
-function login:RoleUpgrader(target, newRole, requester)
-    local resp, err = roleUpgrader(target, newRole, requester)
-
-    if not resp then
-        return false, err
-    end
-
-    if resp.StatusCode ~= 200 then
-        return false, "Server returned " .. tostring(resp.StatusCode)
-    end
-
-    local body = decodeSafe(resp.Body)
-    if not body then 
-        warn("Invaild JSON returned")
-        return false, "Invalid JSON returned"
-    end
-
-    if body.error then
-        warn(body.error or 'Unknown error')
-
-        return false, body.error
-    end
-
-    return true, body
+local function createAccount(U, P)
+    return postRequest(SignupBase, { username = U, password = P, hwid = getHWID() })
 end
 
-function login:CreateAccount(username, password)
-    local resp, err = createAccount(username, password)
+local function postLogin(U, P)
+    return postRequest(LoginBase, { username = U, password = P, hwid = getHWID() })
+end
 
-    if not resp then
-        return false, err
-    end
+local function resetPassword(U, NP, R, OP)
+    return postRequest(ResetBase, { user = U, newPassword = NP, requester = R, oldPassword = OP })
+end
 
-    if resp.StatusCode ~= 200 then
-        return false, "Server returned " .. tostring(resp.StatusCode)
-    end
+local function roleUpgrader(T, NR, R)
+    return postRequest(UpgradeBase, { target = T, newRole = NR, requester = R })
+end
+
+local function resetHWIDRequest(requester, pass, target)
+    return postRequest(HwidResetBase, { username = requester, password = pass, target = target })
+end
+
+function login:CreateAccount(U, P)
+    local resp, err = createAccount(U, P)
+    if not resp then return false, err end
+    if resp.StatusCode ~= 200 then return false, "Server returned "..resp.StatusCode end
 
     local body = decodeSafe(resp.Body)
-    if not body then
-        warn("Invaild JSON returned")
-        return false, "Invalid JSON returned"
-    end
-
-    if body.status == "error" then
-        warn(body.message or 'Unknown error')
-        return false, body.message or "Unknown error"
-    end
+    if not body then return false, "Invalid JSON returned" end
+    if body.status == "error" then return false, body.message or "Unknown error" end
 
     return true, body
 end
 
 function login:Login()
-    local role, U, P = "", "", ""
-
+    local role, U, P = "", username, password
     local ok = pcall(function()
         local req = postLogin(username, password)
         if not req or req.StatusCode ~= 200 then
             vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
-            return 'guest', 'GUEST', 'PASSWORD'
+            role, U, P = "guest", "GUEST", "PASSWORD"
+            return
         end
-
-        local decoded
-        pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded  then
+        local decoded = decodeSafe(req.Body)
+        if not decoded then
             vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
-            return 'guest', 'GUEST', 'PASSWORD'
+            role, U, P = "guest", "GUEST", "PASSWORD"
+            return
         end
         role = decoded.role or "guest"
-        U = username
-        P = password
-
         vape:CreateNotification("Onyx", "Logged in as "..U.." ("..role..")", 7)
     end)
-    vape.role = role
-    vape.user = U
     return role, U, P
 end
 
 function login:SlientLogin()
-    local role, U, P = "", "", ""
-
+    local role, U, P = "", username, password
     pcall(function()
         local req = postLogin(username, password)
-        if not req or req.StatusCode ~= 200  then
-            vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
-            return 'guest', 'GUEST', 'PASSWORD'
-        end
-
-        local decoded
-        pcall(function() decoded = http:JSONDecode(req.Body) end)
-        if not decoded then
-            vape:CreateNotification("Onyx", "Bad login response. Guest mode.", 7,'warning')
-            return 'guest', 'GUEST', 'PASSWORD'
-        end
-
-        role = decoded.role or "guest"
-        U = username
-        P = password
+        if not req or req.StatusCode ~= 200 then role = "guest" return end
+        local decoded = decodeSafe(req.Body)
+        role = decoded and decoded.role or "guest"
     end)
-    vape.role = role
-    vape.user = U
     return role, U, P
+end
+
+function login:ResetPassword(user, newPass, requester, oldPass)
+    local resp, err = resetPassword(user, newPass, requester, oldPass)
+    if not resp then return false, err end
+    if resp.StatusCode ~= 200 then return false, "Server returned "..resp.StatusCode end
+    local body = decodeSafe(resp.Body)
+    if not body then return false, "Invalid JSON returned" end
+    if body.error then return false, body.error end
+    return true, body
+end
+
+function login:RoleUpgrader(target, newRole, requester)
+    local resp, err = roleUpgrader(target, newRole, requester)
+    if not resp then return false, err end
+    if resp.StatusCode ~= 200 then return false, "Server returned "..resp.StatusCode end
+    local body = decodeSafe(resp.Body)
+    if not body then return false, "Invalid JSON returned" end
+    if body.error then return false, body.error end
+    return true, body
+end
+
+function login:ResetHWID(targetUsername)
+    if not targetUsername then vape:CreateNotification("Onyx","Couldn't find targets username",7,'alert') return false, "HWID reset failed"  end
+    local resp, err = resetHWIDRequest(username, password, targetUsername)
+    if not resp then return false, err end
+    local body = decodeSafe(resp.Body)
+    if not body then vape:CreateNotification("Onyx","Invalid server response",7,'alert') return false, "Invalid server response" end
+    if resp.StatusCode ~= 200 then vape:CreateNotification("Onyx" ,body.message or "HWID reset failed",7,'alert')  return false, body.message or "HWID reset failed" end
+
+    if targetUsername == username then if isfile(HWID_PATH) then delfile(HWID_PATH) end end
+
+    vape:CreateNotification("Onyx","HWID reset successful. Relog to bind new device.",7)
+    return true, body
 end
 
 return login
