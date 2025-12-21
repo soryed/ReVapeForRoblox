@@ -16101,6 +16101,11 @@ end)
                         local ID = lplr:GetAttribute("Team")
                         local GeneratorName = "cframe-" .. ID .. "_generator"
                         local ItemShopName = ID .. "_item_shop"
+						if ID == "2" then
+							ItemShopName = ID .. "_item_shop_1"
+						else
+							ItemShopName = ItemShopName
+						end
                         local CurrentGen = workspace:FindFirstChild(GeneratorName)
                         local CurrentItemShop = workspace:FindFirstChild(ItemShopName)
                         local id = "0"
