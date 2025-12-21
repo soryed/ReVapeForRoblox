@@ -1788,7 +1788,7 @@ run(function()
 	AutoWin = vape.Categories.AltFarm:CreateModule({
         Name = "AutoWin",
             Function = function(callback)
-                if role "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" androle ~= "premium" then
+                if role "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
                     --vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
                     return
                 end
