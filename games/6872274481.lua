@@ -9154,7 +9154,7 @@ run(function()
                         FirePrompt.HoldDuration = tnt
                         LaunchSelfPrompt.HoldDuration = aunchself
 					BetterDavey:Clean(LaunchSelfPrompt.Triggered:Connect(function(p)
-						local humanoid = lplr.Character and lplr.Character:FindFirstChildOfClass("Humanoid")
+						local humanoid = entitylib.character.Humanoid
 					
 						if not humanoid then return end
 					
