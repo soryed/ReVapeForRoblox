@@ -16062,4 +16062,1024 @@ run(function()
 	})
 end)
 
+    run(
+        function()
+            local AutoWin
 
+            AutoWin =
+                vape.Categories.AltFarm:CreateModule(
+                {
+                    Name = "AutoWin",
+                    Tooltip = "makes you go into a empty game and win for you!",
+                    Function = function(callback)
+                        if
+                            role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and
+                                role ~= "premium"
+                         then
+                            vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                            return
+                        end
+                        if not callback then
+                            vape:CreateNotification("AutoWin", "Disabled next game!", 4.5, "warning")
+                            return
+                        end
+                        local T = 50
+                        if #playersService:GetChildren() > 1 then
+                            vape:CreateNotification("AutoWin", "Teleporting to Empty Game!", 6)
+                            task.wait((6 / 3.335))
+                            local data = TeleportService:GetLocalPlayerTeleportData()
+                            AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
+                        end
+                        if lplr.Team.Name ~= "Orange" and lplr.Team.Name ~= "Blue" then
+                            vape:CreateNotification(
+                                "AutoWin",
+                                "Waiting for an assigned team! (this may take a while if late loaded)",
+                                6
+                            )
+                            task.wait(15)
+                        end
+                        local ID = lplr:GetAttribute("Team")
+                        local GeneratorName = "cframe-" .. ID .. "_generator"
+                        local ItemShopName = ID .. "_item_shop"
+                        local CurrentGen = workspace:FindFirstChild(GeneratorName)
+                        local CurrentItemShop = workspace:FindFirstChild(ItemShopName)
+                        local id = "0"
+                        local oppTeamName = "nil"
+                        if ID == "1" then
+                            id = "2"
+                            oppTeamName = "Orange"
+                        else
+                            id = "1"
+                            oppTeamName = "Blue"
+                        end
+                        local OppBedName = id .. "_bed"
+                        local OppositeTeamBedPos =
+                            workspace:FindFirstChild("MapCFrames"):FindFirstChild(OppBedName).Value.Position
+
+                        local function PurchaseWool()
+                            replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.BedwarsPurchaseItem:InvokeServer(
+                                {
+                                    ["shopItem"] = {
+                                        ["currency"] = "iron",
+                                        ["itemType"] = "wool_white",
+                                        ["amount"] = 16,
+                                        ["price"] = 8,
+                                        ["category"] = "Blocks",
+                                        ["disabledInQueue"] = {"mine_wars"}
+                                    },
+                                    ["shopId"] = "1_item_shop"
+                                }
+                            )
+                        end
+
+                        local function fly()
+                            task.spawn(
+                                function()
+                                    task.spawn(
+                                        function()
+                                            while task.wait() do
+                                                if entitylib.isAlive then
+                                                    local velocity = lplr.Character.PrimaryPart.Velocity
+                                                    lplr.Character.PrimaryPart.Velocity =
+                                                        Vector3.new(velocity.X, 0, velocity.Z)
+                                                end
+                                            end
+                                        end
+                                    )
+                                end
+                            )
+                        end
+
+                        local function Speed()
+                            task.spawn(
+                                function()
+                                    while task.wait() do
+                                        if entitylib.isAlive then
+                                            lplr.Character.Humanoid.WalkSpeed = 23.05
+                                        end
+                                    end
+                                end
+                            )
+                        end
+
+                        local function checkWallClimb()
+                            if not entitylib.isAlive then
+                                return false
+                            end
+
+                            local character = lplr.Character
+                            local root = lplr.Character.PrimaryPart
+
+                            local raycastParams = RaycastParams.new()
+                            raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+                            raycastParams.FilterDescendantsInstances = {
+                                character,
+                                Workspace.CurrentCamera:FindFirstChild("Viewmodel"),
+                                workspace.ItemDrops
+                            }
+
+                            local origin = root.Position - Vector3.new(0, 1, 0)
+                            local direction = root.CFrame.LookVector * 1.5
+
+                            local result = Workspace:Raycast(origin, direction, raycastParams)
+                            if result and result.Instance and result.Instance.Transparency < 1 then
+                                root.Velocity = Vector3.new(root.Velocity.X, 100, root.Velocity.Z)
+                            end
+
+                            return true
+                        end
+
+                        local function climbwalls()
+                            task.spawn(
+                                function()
+                                    while task.wait() do
+                                        if entitylib.isAlive then
+                                            pcall(checkWallClimb)
+                                        else
+                                            break
+                                        end
+                                    end
+                                end
+                            )
+                        end
+
+                        local function MapLayoutBLUE()
+                            if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.15)
+                                local pos = {
+                                    [1] = Vector3.new(54.42063522338867, 22.4999942779541, 99.56651306152344),
+                                    [2] = Vector3.new(119.33378601074219, 22.4999942779541, 99.06503295898438),
+                                    [3] = Vector3.new(231.82752990722656, 19.4999942779541, 98.30278015136719),
+                                    [4] = Vector3.new(230.23426818847656, 19.4999942779541, 142.17169189453125),
+                                    [5] = Vector3.new(237.4776153564453, 22.4999942779541, 142.03660583496094)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Blossom") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(153.83029174804688, 37.4999885559082, 146.81619262695312),
+                                    [2] = Vector3.new(172.6735382080078, 37.4999885559082, 120.15453338623047),
+                                    [3] = Vector3.new(172.6735382080078, 37.4999885559082, 120.15453338623047),
+                                    [4] = Vector3.new(284.78765869140625, 37.4999885559082, 124.80931854248047),
+                                    [5] = Vector3.new(293.6907958984375, 37.4999885559082, 143.09649658203125)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Darkholm") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(56.4425163269043, 70.4999771118164, 196.7547607421875),
+                                    [2] = Vector3.new(188.90316772460938, 70.4999771118164, 198.4145050048828),
+                                    [3] = Vector3.new(194.74700927734375, 73.4999771118164, 198.49697875976562),
+                                    [4] = Vector3.new(198.50704956054688, 76.4999771118164, 198.38743591308594),
+                                    [5] = Vector3.new(201.18421936035156, 79.4999771118164, 198.30943298339844),
+                                    [6] = Vector3.new(340.8443603515625, 70.4999771118164, 197.34677124023438)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 or i == 5 or i == 6 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Christmas") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(143.5197296142578, 40.4999885559082, 410.59930419921875),
+                                    [2] = Vector3.new(143.98350524902344, 40.4999885559082, 328.6651306152344),
+                                    [3] = Vector3.new(133.665771484375, 40.4999885559082, 328.6337585449219),
+                                    [4] = Vector3.new(134.53382873535156, 40.4999885559082, 253.40147399902344),
+                                    [5] = Vector3.new(106.36888122558594, 40.4999885559082, 253.07655334472656),
+                                    [6] = Vector3.new(108.05854797363281, 40.4999885559082, 162.84751892089844),
+                                    [7] = Vector3.new(150.0508575439453, 40.4999885559082, 139.75106811523438)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Crystalmount") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(56.529605865478516, 31.4999942779541, 117.44342803955078),
+                                    [2] = Vector3.new(243.1451873779297, 28.4999942779541, 117.13523864746094),
+                                    [3] = Vector3.new(243.86920166015625, 28.4999942779541, 132.01922607421875),
+                                    [4] = Vector3.new(284.8253173828125, 28.4999942779541, 131.13760375976562),
+                                    [5] = Vector3.new(284.3399963378906, 28.4999942779541, 197.74057006835938),
+                                    [6] = Vector3.new(336.2626953125, 28.4999942779541, 197.87362670898438),
+                                    [7] = Vector3.new(336.4390563964844, 28.4999942779541, 212.56610107421875)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Desert-Shrine") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(160.9988250732422, 37.4999885559082, 104.86061096191406),
+                                    [2] = Vector3.new(211.70367431640625, 37.4999885559082, 104.84205627441406),
+                                    [3] = Vector3.new(225.6957244873047, 40.4999885559082, 105.22856140136719),
+                                    [4] = Vector3.new(231.78103637695312, 43.4999885559082, 105.20640563964844),
+                                    [5] = Vector3.new(240.7913360595703, 46.4999885559082, 105.17339324951172),
+                                    [6] = Vector3.new(261.78643798828125, 46.4999885559082, 105.35729217529297),
+                                    [7] = Vector3.new(260.72406005859375, 37.4999885559082, 147.41888427734375)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 4 or i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Canyon") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(106.2856216430664, 22.4999942779541, 167.7103271484375),
+                                    [2] = Vector3.new(205.44677734375, 22.4999942779541, 168.1051483154297),
+                                    [3] = Vector3.new(206.19129943847656, 22.4999942779541, 122.0677261352539),
+                                    [4] = Vector3.new(246.20388793945312, 22.4999942779541, 122.23123931884766),
+                                    [5] = Vector3.new(246.25616455078125, 22.4999942779541, 117.90743255615234),
+                                    [6] = Vector3.new(340.50830078125, 22.4999942779541, 119.04676818847656),
+                                    [7] = Vector3.new(408.0753479003906, 22.4999942779541, 119.86353302001953),
+                                    [8] = Vector3.new(408.1478576660156, 25.4999942779541, 147.79750061035156),
+                                    [9] = Vector3.new(408.3157958984375, 28.4999942779541, 152.88963317871094),
+                                    [10] = Vector3.new(408.40478515625, 31.4999942779541, 156.04873657226562),
+                                    [11] = Vector3.new(416.6556396484375, 31.4999942779541, 156.042724609375)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 9 or i == 10 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    if i == 8 then
+                                        task.wait(0.85)
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Fountain-Peaks") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(197.8756103515625, 55.4999885559082, 146.2112274169922),
+                                    [2] = Vector3.new(197.74893188476562, 55.4999885559082, 203.87440490722656),
+                                    [3] = Vector3.new(197.7208709716797, 55.4999885559082, 216.67771911621094),
+                                    [4] = Vector3.new(197.707763671875, 58.4999885559082, 222.7259063720703),
+                                    [5] = Vector3.new(197.6983184814453, 61.4999885559082, 228.9031219482422),
+                                    [6] = Vector3.new(197.71287536621094, 64.4999771118164, 234.8250732421875),
+                                    [7] = Vector3.new(197.7032470703125, 67.4999771118164, 240.8802947998047),
+                                    [8] = Vector3.new(197.7696990966797, 70.4999771118164, 242.91575622558594),
+                                    [9] = Vector3.new(216.24256896972656, 70.4999771118164, 257.28955078125),
+                                    [10] = Vector3.new(216.3074188232422, 70.4999771118164, 278.1252746582031),
+                                    [11] = Vector3.new(198.38975524902344, 70.4999771118164, 278.18292236328125),
+                                    [12] = Vector3.new(197.85623168945312, 55.4999885559082, 325.6739196777344)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Glacier") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(170.14671325683594, 28.4999942779541, 101.89541625976562),
+                                    [2] = Vector3.new(170.22109985351562, 28.4999942779541, 84.97834777832031),
+                                    [3] = Vector3.new(175.1810760498047, 31.4999942779541, 85.0855484008789),
+                                    [4] = Vector3.new(183.48684692382812, 34.4999885559082, 85.162353515625),
+                                    [5] = Vector3.new(251.9368896484375, 34.4999885559082, 85.79531860351562),
+                                    [6] = Vector3.new(251.87530517578125, 34.4999885559082, 123.78746032714844),
+                                    [7] = Vector3.new(312.71527099609375, 28.4999942779541, 124.30342864990234),
+                                    [8] = Vector3.new(372.5546875, 28.4999942779541, 124.64036560058594)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Enchanted-Forest") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(150.46469116210938, 16.4999942779541, 86.60432434082031),
+                                    [2] = Vector3.new(210.5728759765625, 16.4999942779541, 87.79756164550781),
+                                    [3] = Vector3.new(216.8912811279297, 19.4999942779541, 87.77125549316406),
+                                    [4] = Vector3.new(222.78244018554688, 22.4999942779541, 87.67369842529297),
+                                    [5] = Vector3.new(227.1719512939453, 25.4999942779541, 87.5146484375),
+                                    [6] = Vector3.new(226.99400329589844, 25.4999942779541, 130.34024047851562)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 or i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Glade") then
+                                vape:CreateNotification("AutoWin", "Teleporting to lobby, incorrect map!", 4, "warning")
+                                task.wait(2.25)
+                                lobby()
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Mystic") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(220.50648498535156, 61.4999885559082, 56.93876647949219),
+                                    [2] = Vector3.new(220.04396057128906, 49.4999885559082, 120.4498519897461),
+                                    [3] = Vector3.new(219.68345642089844, 49.4999885559082, 206.69497680664062),
+                                    [4] = Vector3.new(186.8123779296875, 49.4999885559082, 206.58248901367188),
+                                    [5] = Vector3.new(186.54818725585938, 49.4999885559082, 218.91282653808594),
+                                    [6] = Vector3.new(141.8109588623047, 40.4999885559082, 217.94798278808594),
+                                    [7] = Vector3.new(141.24285888671875, 40.4999885559082, 236.9816131591797),
+                                    [8] = Vector3.new(140.99461364746094, 43.4999885559082, 243.62637329101562),
+                                    [9] = Vector3.new(140.87582397460938, 46.4999885559082, 249.68634033203125),
+                                    [10] = Vector3.new(140.93898010253906, 49.4999885559082, 256.1976013183594),
+                                    [11] = Vector3.new(129.94161987304688, 49.4999885559082, 282.0950012207031),
+                                    [12] = Vector3.new(129.7279815673828, 49.4999885559082, 341.5072326660156),
+                                    [13] = Vector3.new(137.8108367919922, 49.4999885559082, 341.5338134765625),
+                                    [14] = Vector3.new(137.6667022705078, 40.4999885559082, 382.5955810546875),
+                                    [15] = Vector3.new(153.81500244140625, 40.4999885559082, 381.9942321777344),
+                                    [16] = Vector3.new(159.4097442626953, 43.4999885559082, 381.96942138671875),
+                                    [17] = Vector3.new(165.2544708251953, 46.4999885559082, 381.9435119628906),
+                                    [18] = Vector3.new(172.84909057617188, 49.4999885559082, 381.909912109375),
+                                    [19] = Vector3.new(181.5446319580078, 49.4999885559082, 383.2634582519531),
+                                    [20] = Vector3.new(181.60052490234375, 49.4999885559082, 391.0975646972656),
+                                    [21] = Vector3.new(218.74085998535156, 49.4999885559082, 391.41815185546875)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 8 or i == 9 or i == 10 or i == 11 or i == 16 or i == 17 or i == 18 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Nordic") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(149.74044799804688, 55.4999885559082, 128.84291076660156),
+                                    [2] = Vector3.new(149.46397399902344, 52.4999885559082, 119.18580627441406),
+                                    [3] = Vector3.new(194.9976806640625, 49.4999885559082, 118.41926574707031),
+                                    [4] = Vector3.new(194.60174560546875, 49.4999885559082, 80.95228576660156),
+                                    [5] = Vector3.new(251.18060302734375, 49.4999885559082, 81.73896789550781),
+                                    [6] = Vector3.new(250.67430114746094, 49.4999885559082, 117.65328979492188),
+                                    [7] = Vector3.new(277.3354797363281, 49.4999885559082, 118.02685546875),
+                                    [8] = Vector3.new(301.5650634765625, 52.4999885559082, 119.07581329345703)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 8 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Nordic-Snowy") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(149.74044799804688, 55.4999885559082, 128.84291076660156),
+                                    [2] = Vector3.new(149.46397399902344, 52.4999885559082, 119.18580627441406),
+                                    [3] = Vector3.new(194.9976806640625, 49.4999885559082, 118.41926574707031),
+                                    [4] = Vector3.new(194.60174560546875, 49.4999885559082, 80.95228576660156),
+                                    [5] = Vector3.new(251.18060302734375, 49.4999885559082, 81.73896789550781),
+                                    [6] = Vector3.new(250.67430114746094, 49.4999885559082, 117.65328979492188),
+                                    [7] = Vector3.new(277.3354797363281, 49.4999885559082, 118.02685546875),
+                                    [8] = Vector3.new(301.5650634765625, 52.4999885559082, 119.07581329345703)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 8 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Pinewood") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(129.2021026611328, 28.4999942779541, 135.2041473388672),
+                                    [2] = Vector3.new(153.8468475341797, 28.4999942779541, 136.81089782714844),
+                                    [3] = Vector3.new(167.808837890625, 25.4999942779541, 204.21250915527344),
+                                    [4] = Vector3.new(167.5161590576172, 25.4999942779541, 225.06863403320312),
+                                    [5] = Vector3.new(167.30459594726562, 28.4999942779541, 250.10618591308594),
+                                    [6] = Vector3.new(126.89143371582031, 28.4999942779541, 249.57664489746094)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Seasonal") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(124.22999572753906, 22.4999942779541, 50.354896545410156),
+                                    [2] = Vector3.new(124.38113403320312, 25.4999942779541, 77.86675262451172),
+                                    [3] = Vector3.new(132.7975616455078, 25.4999942779541, 77.82051849365234),
+                                    [4] = Vector3.new(132.92849731445312, 25.4999942779541, 101.65450286865234),
+                                    [5] = Vector3.new(133.16488647460938, 25.4999942779541, 193.8179931640625),
+                                    [6] = Vector3.new(133.18614196777344, 28.4999942779541, 202.04595947265625),
+                                    [7] = Vector3.new(133.21290588378906, 31.4999942779541, 212.46200561523438),
+                                    [8] = Vector3.new(133.52256774902344, 25.4999942779541, 297.04766845703125)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 2 or i == 6 or i == 7 or i == 8 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Snowman-Park") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(161.58139038085938, 16.4999942779541, 171.4049530029297),
+                                    [2] = Vector3.new(205.41207885742188, 16.4999942779541, 171.3085174560547),
+                                    [3] = Vector3.new(205.36370849609375, 16.4999942779541, 149.45138549804688)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_SteamPunk") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(160.793701171875, 82.4999771118164, 180.54180908203125),
+                                    [2] = Vector3.new(218.45816040039062, 82.4999771118164, 179.80137634277344),
+                                    [3] = Vector3.new(260.0395202636719, 82.4999771118164, 180.11831665039062),
+                                    [4] = Vector3.new(265.80975341796875, 85.4999771118164, 180.09951782226562),
+                                    [5] = Vector3.new(272.1552429199219, 88.4999771118164, 180.07870483398438),
+                                    [6] = Vector3.new(292.67315673828125, 91.4999771118164, 179.76800537109375),
+                                    [7] = Vector3.new(292.5359191894531, 91.4999771118164, 212.19924926757812),
+                                    [8] = Vector3.new(292.81573486328125, 94.4999771118164, 216.00205993652344),
+                                    [9] = Vector3.new(292.77001953125, 97.4999771118164, 219.78807067871094),
+                                    [10] = Vector3.new(292.73516845703125, 100.4999771118164, 222.6680145263672),
+                                    [11] = Vector3.new(292.6996154785156, 103.4999771118164, 225.60629272460938),
+                                    [12] = Vector3.new(292.6380920410156, 106.4999771118164, 230.70294189453125),
+                                    [13] = Vector3.new(339.04364013671875, 106.4999771118164, 231.263916015625),
+                                    [14] = Vector3.new(336.16845703125, 106.4999771118164, 204.35227966308594),
+                                    [15] = Vector3.new(344.0719299316406, 109.4999771118164, 204.4552001953125),
+                                    [16] = Vector3.new(381.0630798339844, 91.4999771118164, 204.93626403808594),
+                                    [17] = Vector3.new(381.4077453613281, 91.4999771118164, 178.77200317382812)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 4 or i == 5 or i == 6 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Volatile") then
+                                vape:CreateNotification("AutoWin", "Teleporting to lobby, incorrect map!", 4, "warning")
+                                task.wait(2.25)
+                                lobby()
+                            else
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(3)
+                            end
+                        end
+
+                        local function MapLayoutORANGE()
+                            if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.15)
+                                local pos = {
+                                    [1] = Vector3.new(354.59832763671875, 22.4999942779541, 141.19931030273438),
+                                    [2] = Vector3.new(288.35980224609375, 22.4999942779541, 140.82131958007812),
+                                    [3] = Vector3.new(178.31858825683594, 19.4999942779541, 140.5794677734375),
+                                    [4] = Vector3.new(178.41314697265625, 19.4999942779541, 97.60221862792969),
+                                    [5] = Vector3.new(167.98536682128906, 22.4999942779541, 97.5783920288086)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Blossom") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(305.7127685546875, 37.4999885559082, 143.80267333984375),
+                                    [2] = Vector3.new(294.0784912109375, 37.4999885559082, 166.19984436035156),
+                                    [3] = Vector3.new(172.51058959960938, 37.4999885559082, 166.019287109375),
+                                    [4] = Vector3.new(172.54029846191406, 37.4999885559082, 142.85401916503906),
+                                    [5] = Vector3.new(153.874755859375, 37.4999885559082, 142.830078125)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Darkholm") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(459.380615234375, 70.4999771118164, 185.4072265625),
+                                    [2] = Vector3.new(327.0589599609375, 70.4999771118164, 185.53668212890625),
+                                    [3] = Vector3.new(321.13018798828125, 73.4999771118164, 185.5518341064453),
+                                    [4] = Vector3.new(318.7851867675781, 76.4999771118164, 185.55780029296875),
+                                    [5] = Vector3.new(315.27337646484375, 79.4999771118164, 185.56675720214844),
+                                    [6] = Vector3.new(173.04278564453125, 70.4999771118164, 185.9304962158203)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 or i == 5 or i == 6 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Christmas") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(138.04017639160156, 40.4999885559082, 140.58433532714844),
+                                    [2] = Vector3.new(115.14994049072266, 40.4999885559082, 140.646240234375),
+                                    [3] = Vector3.new(115.0350341796875, 40.4999885559082, 192.96180725097656),
+                                    [4] = Vector3.new(107.36815643310547, 40.4999885559082, 192.94497680664062),
+                                    [5] = Vector3.new(107.2378158569336, 40.4999885559082, 252.27471923828125),
+                                    [6] = Vector3.new(115.74702453613281, 40.4999885559082, 326.864990234375),
+                                    [7] = Vector3.new(145.2953338623047, 40.4999885559082, 326.3784484863281),
+                                    [8] = Vector3.new(146.02037048339844, 40.4999885559082, 419.9883117675781),
+                                    [9] = Vector3.new(121.12679290771484, 40.4999885559082, 420.07379150390625),
+                                    [10] = Vector3.new(120.96660614013672, 40.4999885559082, 431.7377624511719),
+                                    [11] = Vector3.new(102.22850036621094, 40.4999885559082, 432.4336242675781)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Crystalmount") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(523.8486328125, 31.4999942779541, 212.9307861328125),
+                                    [2] = Vector3.new(404.15264892578125, 28.4999942779541, 212.3941650390625),
+                                    [3] = Vector3.new(339.4782409667969, 28.4999942779541, 212.12184143066406),
+                                    [4] = Vector3.new(339.5323181152344, 28.4999942779541, 193.957763671875),
+                                    [5] = Vector3.new(315.8712158203125, 28.4999942779541, 193.65440368652344),
+                                    [6] = Vector3.new(316.3773498535156, 28.4999942779541, 164.9138641357422),
+                                    [7] = Vector3.new(268.30816650390625, 28.4999942779541, 165.28636169433594),
+                                    [8] = Vector3.new(268.2789306640625, 28.4999942779541, 132.95947265625),
+                                    [9] = Vector3.new(248.2838897705078, 28.4999942779541, 132.472412109375),
+                                    [10] = Vector3.new(248.64834594726562, 28.4999942779541, 117.51133728027344)
+                                }
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Desert-Shrine") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(408.21319580078125, 43.4999885559082, 147.07444763183594),
+                                    [2] = Vector3.new(319.3170166015625, 37.4999885559082, 146.8579864501953),
+                                    [3] = Vector3.new(258.67718505859375, 37.4999885559082, 146.6586151123047),
+                                    [4] = Vector3.new(251.12399291992188, 40.4999885559082, 146.63404846191406),
+                                    [5] = Vector3.new(244.779296875, 43.4999885559082, 146.6132354736328),
+                                    [6] = Vector3.new(233.6015625, 46.4999885559082, 146.5764923095703),
+                                    [7] = Vector3.new(211.4630889892578, 46.4999885559082, 146.4730224609375),
+                                    [8] = Vector3.new(210.13014221191406, 37.4999885559082, 105.5939712524414)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 4 or i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Canyon") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(409.8771667480469, 22.49999237060547, 116.0271224975586),
+                                    [2] = Vector3.new(327.4731750488281, 22.4999942779541, 122.96821594238281),
+                                    [3] = Vector3.new(327.6976013183594, 25.4999942779541, 130.06983947753906),
+                                    [4] = Vector3.new(326.8793029785156, 25.4999942779541, 165.20481872558594),
+                                    [5] = Vector3.new(271.6249084472656, 22.4999942779541, 165.552978515625),
+                                    [6] = Vector3.new(271.6521911621094, 22.49999237060547, 169.8865509033203),
+                                    [7] = Vector3.new(107.6816177368164, 22.49999237060547, 171.72158813476562),
+                                    [8] = Vector3.new(108.24556732177734, 22.49999237060547, 154.60629272460938),
+                                    [9] = Vector3.new(108.06343841552734, 25.4999942779541, 141.64547729492188),
+                                    [10] = Vector3.new(107.85572814941406, 28.4999942779541, 135.289306640625),
+                                    [11] = Vector3.new(106.55116271972656, 31.4999942779541, 122.169677734375)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 9 or i == 10 or i == 11 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Fountain-Peaks") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(197.80709838867188, 55.4999885559082, 380.91845703125),
+                                    [2] = Vector3.new(198.08798217773438, 55.4999885559082, 330.4879150390625),
+                                    [3] = Vector3.new(198.1407470703125, 55.4999885559082, 319.4066162109375),
+                                    [4] = Vector3.new(198.16429138183594, 58.4999885559082, 314.4744873046875),
+                                    [5] = Vector3.new(198.19857788085938, 61.4999885559082, 307.2679443359375),
+                                    [6] = Vector3.new(198.23214721679688, 64.4999771118164, 300.2276306152344),
+                                    [7] = Vector3.new(198.2572784423828, 67.4999771118164, 294.9621276855469),
+                                    [8] = Vector3.new(198.0744171142578, 70.4999771118164, 277.3271484375),
+                                    [9] = Vector3.new(198.19863891601562, 73.4999771118164, 261.74713134765625),
+                                    [10] = Vector3.new(198.17916870117188, 55.4999885559082, 208.74942016601562),
+                                    [11] = Vector3.new(198.27981567382812, 55.4999885559082, 154.0118865966797)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Glacier") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(307.63275146484375, 28.4999942779541, 107.5975570678711),
+                                    [2] = Vector3.new(308.0843811035156, 28.4999942779541, 123.1988296508789),
+                                    [3] = Vector3.new(302.8423156738281, 31.4999942779541, 123.20875549316406),
+                                    [4] = Vector3.new(224.78607177734375, 34.4999885559082, 123.57905578613281),
+                                    [5] = Vector3.new(224.7245635986328, 34.4999885559082, 85.76427459716797),
+                                    [6] = Vector3.new(166.7411651611328, 28.4999942779541, 85.52276611328125)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Enchanted-Forest") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(297.86676025390625, 16.4999942779541, 128.88902282714844),
+                                    [2] = Vector3.new(248.98641967773438, 16.4999942779541, 128.79608154296875),
+                                    [3] = Vector3.new(239.7410430908203, 19.4999942779541, 128.74380493164062),
+                                    [4] = Vector3.new(233.1702117919922, 22.4999942779541, 128.7002716064453),
+                                    [5] = Vector3.new(229.46270751953125, 25.4999942779541, 128.67581176757812),
+                                    [6] = Vector3.new(229.83551025390625, 25.4999942779541, 82.51109313964844)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 3 or i == 4 or i == 5 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Glade") then
+                                vape:CreateNotification("AutoWin", "Teleporting to lobby, incorrect map!", 4, "warning")
+                                task.wait(2.25)
+                                lobby()
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Mystic") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(221.40838623046875, 49.4999885559082, 398.5241394042969),
+                                    [2] = Vector3.new(254.4637451171875, 49.4999885559082, 397.211669921875),
+                                    [3] = Vector3.new(254.8128204345703, 49.4999885559082, 386.21221923828125),
+                                    [4] = Vector3.new(298.4759216308594, 40.4999885559082, 386.5443420410156),
+                                    [5] = Vector3.new(298.58660888671875, 40.4999885559082, 370.09735107421875),
+                                    [6] = Vector3.new(298.7728271484375, 43.4999885559082, 362.7982177734375),
+                                    [7] = Vector3.new(298.9396667480469, 46.4999885559082, 357.5649108886719),
+                                    [8] = Vector3.new(298.80377197265625, 49.4999885559082, 349.3194580078125),
+                                    [9] = Vector3.new(298.58892822265625, 49.4999885559082, 339.3221740722656),
+                                    [10] = Vector3.new(310.25390625, 49.4999885559082, 339.0869140625),
+                                    [11] = Vector3.new(310.1837463378906, 49.4999885559082, 262.0010681152344),
+                                    [12] = Vector3.new(300.18365478515625, 49.4999885559082, 261.933349609375),
+                                    [13] = Vector3.new(300.37420654296875, 40.4999885559082, 223.8512725830078),
+                                    [14] = Vector3.new(285.1274719238281, 40.4999885559082, 223.8217315673828),
+                                    [15] = Vector3.new(279.4645690917969, 43.4999885559082, 223.8112335205078),
+                                    [16] = Vector3.new(272.19329833984375, 46.4999885559082, 223.79776000976562),
+                                    [17] = Vector3.new(266.0102844238281, 49.4999885559082, 223.78663635253906),
+                                    [18] = Vector3.new(252.8553924560547, 49.4999885559082, 223.3814239501953),
+                                    [19] = Vector3.new(252.7893829345703, 49.4999885559082, 211.234130859375),
+                                    [20] = Vector3.new(219.3946075439453, 49.4999885559082, 211.3135223388672)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 6 or i == 7 or i == 8 or i == 15 or i == 16 or i == 17 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Nordic-Snowy") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(292.3473815917969, 37.4999885559082, 128.8502960205078),
+                                    [2] = Vector3.new(292.2837829589844, 37.4999885559082, 103.8826904296875),
+                                    [3] = Vector3.new(246.86444091796875, 34.4999885559082, 103.998046875),
+                                    [4] = Vector3.new(246.81077575683594, 34.4999885559082, 82.9254379272461),
+                                    [5] = Vector3.new(198.99082946777344, 34.4999885559082, 83.04700469970703),
+                                    [6] = Vector3.new(200.015625, 34.4999885559082, 139.6517333984375),
+                                    [7] = Vector3.new(173.64576721191406, 34.4999885559082, 139.46446228027344),
+                                    [8] = Vector3.new(150.15530395507812, 37.4999885559082, 139.02587890625)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 8 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Nordic") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(292.3473815917969, 37.4999885559082, 128.8502960205078),
+                                    [2] = Vector3.new(292.2837829589844, 37.4999885559082, 103.8826904296875),
+                                    [3] = Vector3.new(246.86444091796875, 34.4999885559082, 103.998046875),
+                                    [4] = Vector3.new(246.81077575683594, 34.4999885559082, 82.9254379272461),
+                                    [5] = Vector3.new(198.99082946777344, 34.4999885559082, 83.04700469970703),
+                                    [6] = Vector3.new(200.015625, 34.4999885559082, 139.6517333984375),
+                                    [7] = Vector3.new(173.64576721191406, 34.4999885559082, 139.46446228027344),
+                                    [8] = Vector3.new(150.15530395507812, 37.4999885559082, 139.02587890625)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 8 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Pinewood") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(129.27752685546875, 28.4999942779541, 241.45860290527344),
+                                    [2] = Vector3.new(79.45954132080078, 28.49999237060547, 240.6741943359375),
+                                    [3] = Vector3.new(80.80793762207031, 28.49999237060547, 155.99095153808594),
+                                    [4] = Vector3.new(91.66584777832031, 28.49999237060547, 156.12608337402344),
+                                    [5] = Vector3.new(91.90682983398438, 28.49999237060547, 136.84848022460938),
+                                    [6] = Vector3.new(129.66644287109375, 28.49999237060547, 137.31893920898438)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Seasonal") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(135.16567993164062, 22.4999942779541, 409.7474365234375),
+                                    [2] = Vector3.new(135.17654418945312, 25.4999942779541, 380.8885803222656),
+                                    [3] = Vector3.new(124.0099105834961, 25.49999237060547, 380.8028869628906),
+                                    [4] = Vector3.new(124.02178955078125, 25.49999237060547, 280.3576354980469),
+                                    [5] = Vector3.new(123.74276733398438, 25.49999237060547, 262.22003173828125),
+                                    [6] = Vector3.new(123.6146469116211, 28.4999942779541, 253.8889617919922),
+                                    [7] = Vector3.new(123.49169921875, 31.4999942779541, 245.8935546875),
+                                    [8] = Vector3.new(123.3890380859375, 25.4999942779541, 169.56488037109375),
+                                    [9] = Vector3.new(140.38137817382812, 25.49999237060547, 169.5316925048828)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if i == 2 or i == 6 or i == 7 then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Snowman-Park") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(140.38137817382812, 25.49999237060547, 169.5316925048828),
+                                    [2] = Vector3.new(244.02467346191406, 16.4999942779541, 193.6885223388672),
+                                    [3] = Vector3.new(164.97314453125, 16.49999237060547, 194.03672790527344),
+                                    [4] = Vector3.new(164.86520385742188, 16.49999237060547, 169.71209716796875)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_SteamPunk") then
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(2.33)
+                                local pos = {
+                                    [1] = Vector3.new(459.31365966796875, 82.4999771118164, 180.3105010986328),
+                                    [2] = Vector3.new(406.04095458984375, 82.4999771118164, 179.7035369873047),
+                                    [3] = Vector3.new(399.0287780761719, 85.4999771118164, 179.84088134765625),
+                                    [4] = Vector3.new(393.3252258300781, 88.4999771118164, 179.9452667236328),
+                                    [5] = Vector3.new(370.205322265625, 91.4999771118164, 179.96041870117188),
+                                    [6] = Vector3.new(371.1557312011719, 91.4999771118164, 148.01693725585938),
+                                    [7] = Vector3.new(371.19158935546875, 94.4999771118164, 143.04385375976562),
+                                    [8] = Vector3.new(371.111572265625, 97.4999771118164, 140.0428924560547),
+                                    [9] = Vector3.new(371.05657958984375, 100.4999771118164, 137.93524169921875),
+                                    [10] = Vector3.new(370.9500732421875, 103.4999771118164, 134.1337127685547),
+                                    [11] = Vector3.new(370.477294921875, 106.4999771118164, 124.73361206054688),
+                                    [12] = Vector3.new(335.9317321777344, 106.4999771118164, 124.79263305664062),
+                                    [13] = Vector3.new(335.83599853515625, 106.4999771118164, 154.04205322265625),
+                                    [14] = Vector3.new(324.33575439453125, 106.4999771118164, 154.00502014160156),
+                                    [15] = Vector3.new(320.086669921875, 109.4999771118164, 153.9910888671875),
+                                    [16] = Vector3.new(287.7663269042969, 91.4999771118164, 153.884765625),
+                                    [17] = Vector3.new(287.6502380371094, 91.4999771118164, 181.8335723876953)
+                                }
+
+                                for i, waypoint in ipairs(pos) do
+                                    vape:CreateNotification("AutoWin | Specific", "Fixing Position [" .. i .. "] !", 8)
+                                    lplr.Character.Humanoid:MoveTo(waypoint)
+                                    if
+                                        i == 3 or i == 4 or i == 5 or i == 7 or i == 8 or i == 9 or i == 10 or i == 11 or
+                                            i == 15
+                                     then
+                                        lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                    end
+                                    lplr.Character.Humanoid.MoveToFinished:Wait()
+                                    task.wait(0.5)
+                                end
+                            elseif workspace.Map.Worlds:FindFirstChild("duels_Volatile") then
+                                vape:CreateNotification("AutoWin", "Teleporting to lobby, incorrect map!", 4, "warning")
+                                task.wait(2.25)
+                                lobby()
+                            else
+                                vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
+                                lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                                task.wait(3)
+                            end
+                        end
+
+                        if CurrentGen then
+                            vape:CreateNotification("AutoWin", "Moving to Iron Gen!", 8)
+                            lplr.Character.Humanoid:MoveTo(CurrentGen.Value.Position)
+                            task.wait((T + 3.33))
+                            vape:CreateNotification("AutoWin", "Moving to Shop!", 8)
+                            lplr.Character.Humanoid:MoveTo(CurrentItemShop.Position)
+                            Speed()
+                            task.wait(1.5)
+                            vape:CreateNotification("AutoWin", "Purchasing Wool!", 8)
+                            task.wait(3)
+                            for i = 6, 0, -1 do
+                                PurchaseWool()
+                                task.wait(0.05)
+                            end
+                            if oppTeamName == "Orange" then
+                                MapLayoutBLUE()
+                            else
+                                MapLayoutORANGE()
+                            end
+                            vape:CreateNotification("AutoWin", "Moving to " .. oppTeamName .. "'s Bed!", 8)
+                            fly()
+                            climbwalls()
+                            task.spawn(
+                                function()
+                                    lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
+                                end
+                            )
+                            lplr.Character.Humanoid.MoveToFinished:Connect(
+                                function()
+                                    lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
+                                end
+                            )
+                        end
+                    end
+                }
+            )
+        end
+    )
