@@ -15927,7 +15927,7 @@ run(function()
 	end
 
 	local function FakeReach(cb)
-		local MaxStuds = 30
+		local MaxDistance = 30
 		local PLRTarget = playersService:FindFirstChild(target)
 		if PLRTarget then
 			local CurrentDistance = 0
@@ -15950,7 +15950,7 @@ run(function()
 	end
 
 	local function FakeGodMode(cb)
-		local MaxStuds = 45
+		local MaxDistance = 45
 		local PLRTarget = playersService:FindFirstChild(target)
 		local old = {}
 		if PLRTarget then
@@ -15983,7 +15983,7 @@ run(function()
 	end
 
 	local function FakeInv(cb)
-		local MaxStuds = math.huge or (2^1024-1) -- seem some executors who cannot handle math.huge SON IM CRINE
+		local MaxDistance = math.huge or (2^1024-1) -- seem some executors who cannot handle math.huge SON IM CRINE
 		local PLRTarget = playersService:FindFirstChild(target)
 		local old = {}
 		if PLRTarget then
