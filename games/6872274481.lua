@@ -15909,7 +15909,7 @@ run(function()
 end)
 
 run(function()
-	local FakeBan
+	local FalseBan
 	local real_list = {}
 	local PlayersDropdown
 	local Type 
@@ -15932,7 +15932,7 @@ run(function()
 		if PLRTarget then
 			local CurrentDistance = 0
 			while cb do
-				CurrentDistance = (PLRTarget.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
+				CurrentDistance = (PLRTarget.Character.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
 				if CurrentDistance <= MaxDistance then
 					local Damage = math.random(10,25)
 					local NewDmg = (Damage - math.random(2,5) - math.random())
@@ -15943,8 +15943,8 @@ run(function()
 				task.wait(0.3456)
 			end
 		else
-			vape:CreateNotification("FakeBan", target.." Does not exist! check again later",4,"warning")
-			FakeBan:Toggle(false)
+			vape:CreateNotification("FalseBan", target.." Does not exist! check again later",4,"warning")
+			FalseBan:Toggle(false)
 			return
 		end
 	end
@@ -15956,7 +15956,7 @@ run(function()
 		if PLRTarget then
 			local CurrentDistance = 0
 			while cb do
-				CurrentDistance = (PLRTarget.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
+				CurrentDistance = (PLRTarget.Character.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
 				if CurrentDistance <= MaxDistance then
 					for i, v in PLRTarget.Character:GetDescendants() do
 						if (v:IsA("BasePart") or v:IsA("Decal")) and old[v] == nil then
@@ -15976,8 +15976,8 @@ run(function()
 				task.wait(0.3456)
 			end
 		else
-			vape:CreateNotification("FakeBan", target.." Does not exist! check again later",4,"warning")
-			FakeBan:Toggle(false)
+			vape:CreateNotification("FalseBan", target.." Does not exist! check again later",4,"warning")
+			FalseBan:Toggle(false)
 			return
 		end
 	end
@@ -15999,7 +15999,7 @@ run(function()
 				end
 			end)
 			while cb do
-				CurrentDistance = (PLRTarget.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
+				CurrentDistance = (PLRTarget.Character.HumanoidRootPart.Position - entitylib.character.RootPart.Position).Magnitude
 				if CurrentDistance <= MaxDistance then
 					for i, v in PLRTarget.Character:GetDescendants() do
 						if (v:IsA("BasePart") or v:IsA("Decal")) and old[v] == nil then
@@ -16020,8 +16020,8 @@ run(function()
 			end
 
 		else
-			vape:CreateNotification("FakeBan", target.." Does not exist! check again later",4,"warning")
-			FakeBan:Toggle(false)
+			vape:CreateNotification("FalseBan", target.." Does not exist! check again later",4,"warning")
+			FalseBan:Toggle(false)
 			return
 		end
 	end
@@ -16039,8 +16039,8 @@ run(function()
 	end
 
 	CreatePlayerList()
-	FakeBan = vape.Categories.World:CreateModule({
-		Name = 'FakeBan',
+	FalseBan = vape.Categories.World:CreateModule({
+		Name = 'FalseBan',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
@@ -16051,14 +16051,14 @@ run(function()
 		Tooltip = 'makes the targetted player be blatant for you to clip and get him banned'
 	})
 	CreatePlayerList()
-	PlayersDropdown = FakeBan:CreateDropdown({
+	PlayersDropdown = FalseBan:CreateDropdown({
 		Name = "Players",
 		List = real_list,
 		Function = function()
 			target = PlayersDropdown.Value
 		end
 	})
-	Type = FakeBan:CreateDropdown({
+	Type = FalseBan:CreateDropdown({
 		Name = "Type",
 		List = {"Godmode",'Reach','Invisible'}
 	})
