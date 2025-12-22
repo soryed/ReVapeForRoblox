@@ -15004,6 +15004,7 @@ end)
 run(function()
 	local old
 	local FastHits
+	local Blatant
 	FastHits = vape.Categories.Blatant:CreateModule({
 		Name = 'FastHits',
 		Function = function(callback)
@@ -15014,7 +15015,7 @@ run(function()
 			if callback then
 				old = bedwars.SwordController.isClickingTooFast
 				bedwars.SwordController.isClickingTooFast = function(self)
-					self.lastSwing = 2.15
+					self.lastSwing = Blatant.Enabled and 1.15 or 2.85
 					return false
 				end
 			else
@@ -15022,6 +15023,10 @@ run(function()
 			end
 		end,
 		Tooltip = 'Makes your sword faster increasing your hit registration'
+	})
+	Blatant = FastHits:CreateToggle({
+		Name = "Blatant",
+		Default = true
 	})
 end)
 
