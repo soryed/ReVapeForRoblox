@@ -9952,11 +9952,14 @@ run(function()
 	})
 
 	local MaxRange = 0
+	local CE = false
 	if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"  then
 		MaxRange = 14
+		CE = false
 		SyncHit = {Enabled = false}
 	elseif role == "user" then
 		MaxRange = 18
+		CE = false
 		SyncHit = Killaura:CreateToggle({
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
@@ -9964,6 +9967,7 @@ run(function()
 		})
 	elseif role == "premium" then
 		MaxRange = 24
+		CE = true
 		SyncHit = Killaura:CreateToggle({
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
@@ -9971,6 +9975,7 @@ run(function()
 		})
 	elseif role == "friend" or role == "admin" or role == "coowner" or role == "owner" then
 		MaxRange = 32
+		CE = true
 		SyncHit = Killaura:CreateToggle({
 			Name = 'Sync Hit-Time',
 			Tooltip = "Synchronize's ur hit time",
@@ -9984,6 +9989,7 @@ run(function()
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
+		Edit = CE,
 		Max = MaxRange,
 		Default = 18,
 		Suffix = function(val)
@@ -9994,6 +10000,7 @@ run(function()
 		Name = 'Attack range',
 		Min = 1,
 		Max = MaxRange,
+		Edit = CE,
 		Default = 18,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
