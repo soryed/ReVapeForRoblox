@@ -15015,7 +15015,7 @@ run(function()
 			if callback then
 				old = bedwars.SwordController.isClickingTooFast
 				bedwars.SwordController.isClickingTooFast = function(self)
-					self.lastSwing = Blatant.Enabled and 1.15 or 2.85
+					self.lastSwing = Blatant.Enabled and 1.15 or 4.995
 					return false
 				end
 			else
