@@ -683,6 +683,7 @@ components = {
 		valuebox.TextSize = 11
 		valuebox.FontFace = uipallet.Font
 		valuebox.ClearTextOnFocus = true
+		valuebox.TextEditable =  optionsettings.Edit or true
 		valuebox.Parent = slider
 		local bkg = Instance.new('Frame')
 		bkg.Name = 'Slider'
