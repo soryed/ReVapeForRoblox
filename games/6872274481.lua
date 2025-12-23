@@ -16404,6 +16404,7 @@ run(function()
                                     end
                                 end
                         end)
+																																																			end
 
                         local function checkWallClimb()
                             if not entitylib.isAlive then
