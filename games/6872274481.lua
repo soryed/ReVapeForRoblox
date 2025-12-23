@@ -17483,6 +17483,7 @@ end)
 run(function()
 	local AutoWin
 	local empty
+	local Dashes
 	local function Reset(db)
 		if db then
 			vape:CreateNotification("AutoWin", "Teleporting to empty game!", 4)
@@ -17550,6 +17551,13 @@ run(function()
 							local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 							task.spawn(function() tween:Play() end)
 							task.spawn(function()
+							if Dashes.Value == 1 then
+								task.wait(0.36)
+								if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+									vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
+									bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+								end
+							elseif Dashes.Value == 2 then
 								task.wait(0.36)
 								if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 									vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
@@ -17560,6 +17568,14 @@ run(function()
 									vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
 									bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 								end
+							else
+								task.wait(0.54)
+								if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+									vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
+									bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+								end				
+							end
+
 							end)
 							task.spawn(function()
 								tween.Completed:Wait()
@@ -17590,5 +17606,11 @@ run(function()
 	empty = AutoWin:CreateToggle({
 		Name = "EmptyGame",
 		Default = false
+	})
+	Dashes = AutoWin:CreateSlider({
+		Name = "Dashes"
+		Min = 1,
+		Max = 2,
+		Default = 1
 	})
 end)
