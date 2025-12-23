@@ -17608,7 +17608,7 @@ run(function()
 		Default = false
 	})
 	Dashes = AutoWin:CreateSlider({
-		Name = "Dashes"
+		Name = "Dashes",
 		Min = 1,
 		Max = 2,
 		Default = 1
