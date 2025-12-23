@@ -17419,7 +17419,7 @@ run(function()
 
 
     AutoWin = vape.Categories.AltFarm:CreateModule({
-        Name = "OldAutoWin",
+        Name = "AutoWin",
         Tooltip = "makes you go into a empty game and win for you!",
         Function = function(callback)
             if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
