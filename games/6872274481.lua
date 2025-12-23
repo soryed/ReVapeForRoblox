@@ -11446,6 +11446,10 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		spirit_summoner = function()
+			local projectileRemote = {InvokeServer = function() end}
+			task.spawn(function()
+				projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+			end)
 			local function fireStaff(pos, spot, item,slot)
 				if item then
 					local staff = 'spirit_staff'	
@@ -11507,14 +11511,14 @@ run(function()
 				})
 
 				if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-					if bedwars.AbilityController:canUseAbility('rebellion_aura_swap') then
-						bedwars.AbilityController:useAbility('rebellion_aura_swap')
+					if bedwars.AbilityController:canUseAbility('REBELLION_AURA_SWAP') then
+						bedwars.AbilityController:useAbility('REBELLION_AURA_SWAP')
 					end																		
 		        end
 
 				if lplr.Character:GetAttribute('Health') <= 65 then
-					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
-						bedwars.AbilityController:useAbility('rebellion_shield')
+					if bedwars.AbilityController:canUseAbility('REBELLION_SHIELD') then
+						bedwars.AbilityController:useAbility('REBELLION_SHIELD')
 					end
 				end
 				
@@ -11522,6 +11526,10 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		ninja = function()
+			local projectileRemote = {InvokeServer = function() end}
+			task.spawn(function()
+				projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+			end)
 			local function fireUmeko(pos, spot, item,slot,charm)
 				if item then		
 					local originalSlot = store.inventory.hotbarSlot
@@ -11579,6 +11587,10 @@ run(function()
 		end,
 		frosty = function()
 			local function fireball(pos, spot, item)
+				local projectileRemote = {InvokeServer = function() end}
+				task.spawn(function()
+					projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+				end)
 				if item then		
 					local snowball = getObjSlot('frosted_snowball')
 					local originalSlot = store.inventory.hotbarSlot
@@ -11618,6 +11630,10 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		cowgirl = function()
+			local projectileRemote = {InvokeServer = function() end}
+			task.spawn(function()
+				projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+			end)
 			local function fireLasso(pos, spot, item)
 				if item then		
 					local lasso = getObjSlot('lasso')
