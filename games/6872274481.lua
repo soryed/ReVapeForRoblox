@@ -17505,7 +17505,7 @@ run(function()
 	})
 	CreatePlayerList()
 	PlayerList = Invites:CreateDropdown({
-		Name = "Players"
+		Name = "Players",
 		List = real_list,
 		Function = function()
 			target = PlayerList.Value
