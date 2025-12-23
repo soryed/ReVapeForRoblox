@@ -15670,6 +15670,7 @@ run(function()
 	local AEGT
 	local e
 	local function Reset()
+		if #playersService:GetChildren() == 1 then return end
         local TeleportService = game:GetService("TeleportService")
         local data = TeleportService:GetLocalPlayerTeleportData()
         AEGT:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
