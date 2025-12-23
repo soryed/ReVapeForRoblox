@@ -17483,7 +17483,7 @@ end)
 run(function()
 	local AutoWin
 	local empty
-	local Dashes
+	local Dashes = {Value = 2}
 	local function Reset(db)
 		if db then
 			vape:CreateNotification("AutoWin", "Teleporting to empty game!", 4)
@@ -17606,11 +17606,5 @@ run(function()
 	empty = AutoWin:CreateToggle({
 		Name = "EmptyGame",
 		Default = false
-	})
-	Dashes = AutoWin:CreateSlider({
-		Name = "Dashes",
-		Min = 1,
-		Max = 2,
-		Default = 1
 	})
 end)
