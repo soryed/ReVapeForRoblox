@@ -11507,14 +11507,14 @@ run(function()
 				})
 
 				if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-					if bedwars.AbilityController:canUseAbility('REBELLION_AURA_SWAP') then
-						bedwars.AbilityController:useAbility('REBELLION_AURA_SWAP')
+					if bedwars.AbilityController:canUseAbility('rebellion_aura_swap') then
+						bedwars.AbilityController:useAbility('rebellion_aura_swap')
 					end																		
 		        end
 
 				if lplr.Character:GetAttribute('Health') <= 65 then
-					if bedwars.AbilityController:canUseAbility('REBELLION_SHIELD') then
-						bedwars.AbilityController:useAbility('REBELLION_SHIELD')
+					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
+						bedwars.AbilityController:useAbility('rebellion_shield')
 					end
 				end
 				
