@@ -17501,7 +17501,8 @@ run(function()
 				return
 			end 
 			if not callback then
-				  entitylib.character.Humanoid.Health = (lplr.Character:GetAttribute("MaxHealth") - lplr.Character:GetAttribute("Health"))
+				  --entitylib.character.Humanoid.Health = (lplr.Character:GetAttribute("MaxHealth") - lplr.Character:GetAttribute("Health"))
+				return  
 			end
 			if store.equippedKit == "elektra" then
 				Reset(empty.Value)
