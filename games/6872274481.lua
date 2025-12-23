@@ -16378,69 +16378,89 @@ run(function()
                     local OppBedName = id .. "_bed"
                     local OppositeTeamBedPos = workspace:FindFirstChild("MapCFrames"):FindFirstChild(OppBedName).Value.Position
 
-                    local function PurchaseWool()
-                        replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.BedwarsPurchaseItem:InvokeServer({["shopItem"] = {["currency"] = "iron",["itemType"] = "wool_white",["amount"] = 16,["price"] = 8,["category"] = "Blocks",["disabledInQueue"] = {"mine_wars"}},["shopId"] = "1_item_shop"})
-                    end
-
-                        local function fly()
-                            task.spawn(function()
-                                    task.spawn(function()
-                                            while task.wait() do
-                                                if entitylib.isAlive then
-                                                    local velocity = lplr.Character.PrimaryPart.Velocity
-                                                    lplr.Character.PrimaryPart.Velocity = Vector3.new(velocity.X, 0, velocity.Z)
-                                                end
-                                            end
-                                        end
-                                end)
-                        end
-
-                        local function Speed()
-                            task.spawn(function()
-                                    while task.wait() do
-                                        if entitylib.isAlive then
-                                            lplr.Character.Humanoid.WalkSpeed = 23.05
-                                        end
-                                    end
-                                end
-                        end)
-																																																			end
-
-                        local function checkWallClimb()
-                            if not entitylib.isAlive then
-                                return false
-                            end
-
-                            local character = lplr.Character
-                            local root = lplr.Character.PrimaryPart
-
-                            local raycastParams = RaycastParams.new()
-                            raycastParams.FilterType = Enum.RaycastFilterType.Exclude
-                            raycastParams.FilterDescendantsInstances = {character,gameCamera:FindFirstChild("Viewmodel"),workspace.ItemDrops}
-
-                            local origin = root.Position - Vector3.new(0, 1, 0)
-                            local direction = root.CFrame.LookVector * 1.5
-
-                            local result = Workspace:Raycast(origin, direction, raycastParams)
-                            if result and result.Instance and result.Instance.Transparency < 1 then
-                                root.Velocity = Vector3.new(root.Velocity.X, 100, root.Velocity.Z)
-                            end
-
-                            return true
-                        end
-
-                        local function climbwalls()
-                            task.spawn(function()
-                                    while task.wait() do
-                                        if entitylib.isAlive then
-                                            pcall(checkWallClimb)
-                                        else
-                                            break
-                                        end
-                                    end
-                                end
-                        end)
-
+					local function PurchaseWool()
+					    replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.BedwarsPurchaseItem:InvokeServer({
+					        shopItem = {
+					            currency = "iron",
+					            itemType = "wool_white",
+					            amount = 16,
+					            price = 8,
+					            category = "Blocks",
+					            disabledInQueue = {"mine_wars"}
+					        },
+					        shopId = "1_item_shop"
+					    })
+					end
+					
+					local function fly()
+					    task.spawn(function()
+					        while task.wait() do
+					            if entitylib and entitylib.isAlive then
+					                local char = lplr.Character
+					                local root = char and char.PrimaryPart
+					                if root then
+					                    local v = root.Velocity
+					                    root.Velocity = Vector3.new(v.X, 0, v.Z)
+					                end
+					            end
+					        end
+					    end)
+					end
+					
+					local function Speed()
+					    task.spawn(function()
+					        while task.wait() do
+					            if entitylib and entitylib.isAlive then
+					                local hum = lplr.Character and lplr.Character:FindFirstChildOfClass("Humanoid")
+					                if hum then
+					                    hum.WalkSpeed = 23.05
+					                end
+					            end
+					        end
+					    end)
+					end
+					
+					local function checkWallClimb()
+					    if not (entitylib and entitylib.isAlive) then
+					        return false
+					    end
+					
+					    local character = lplr.Character
+					    local root = character and character.PrimaryPart
+					    if not root then
+					        return false
+					    end
+					
+					    local raycastParams = RaycastParams.new()
+					    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+					    raycastParams.FilterDescendantsInstances = {
+					        character,
+					        camera and camera:FindFirstChild("Viewmodel"),
+					        Workspace:FindFirstChild("ItemDrops")
+					    }
+					
+					    local origin = root.Position - Vector3.new(0, 1, 0)
+					    local direction = root.CFrame.LookVector * 1.5
+					
+					    local result = Workspace:Raycast(origin, direction, raycastParams)
+					    if result and result.Instance and result.Instance.Transparency < 1 then
+					        root.Velocity = Vector3.new(root.Velocity.X, 100, root.Velocity.Z)
+					    end
+					
+					    return true
+					end
+					
+					local function climbwalls()
+					    task.spawn(function()
+					        while task.wait() do
+					            if entitylib and entitylib.isAlive then
+					                pcall(checkWallClimb)
+					            else
+					                break
+					            end
+					        end
+					    end)
+					end
                         local function MapLayoutBLUE()
                             if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
                                 vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
