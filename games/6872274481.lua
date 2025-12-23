@@ -17560,7 +17560,6 @@ run(function()
 								end
 							elseif Dashes.Value == 2 then
 								task.wait(0.36)
-								setclipboard(httpService:JSONEncode(bedwars.Client:Get("ElectricDash")))
 								if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 									vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
 									bedwars.AbilityController:useAbility('ELECTRIC_DASH')
