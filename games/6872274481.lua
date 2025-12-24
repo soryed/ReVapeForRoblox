@@ -11516,7 +11516,7 @@ run(function()
 					end																		
 		        end
 
-				if lplr.Character:GetAttribute('Health') <= 65 then
+				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 45 or 65 then
 					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
 						bedwars.AbilityController:useAbility('rebellion_shield')
 					end
