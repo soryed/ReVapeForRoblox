@@ -17489,7 +17489,7 @@ end)
 				return
 			end
 		end
-		if role ~= "owner" and  role ~= "coowner" or user ~= "generalcyan" then
+		if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" then
 			return 
 		end
 		AutoWin = vape.Categories.AltFarm:CreateModule({
