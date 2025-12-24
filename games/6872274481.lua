@@ -17603,7 +17603,7 @@ end)
 					vape:CreateNotification("AutoWin", "You need elektra for this method", 8,"warning")
 				end
 			end,
-			Tooltip = 'new method for autowin! will be patched very soon:('
+			Tooltip = 'new method for autowin! will be patched very soon:(' -- GGS METHOD IS PATCHED
 		})
 		empty = AutoWin:CreateToggle({
 			Name = "EmptyGame",
