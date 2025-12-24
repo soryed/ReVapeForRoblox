@@ -16165,7 +16165,7 @@ run(function()
 		List = {'Mouse','Kits'}
 	})
 end)
-
+--[[
 run(function()
 	local FalseBan
 	local real_list = {}
@@ -16346,7 +16346,7 @@ run(function()
 		List = {"Godmode",'Reach','Invisible'}
 	})
 end)
-
+--]]
 run(function()
     local AutoWin
 	local function Duels()
