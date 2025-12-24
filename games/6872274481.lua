@@ -11510,7 +11510,7 @@ run(function()
 					Sort = sortmethods.Health
 				})
 
-				if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
+				if plr and (lplr.Character) > 0 then
 					if bedwars.AbilityController:canUseAbility('rebellion_aura_swap') then
 						bedwars.AbilityController:useAbility('rebellion_aura_swap')
 					end																		
