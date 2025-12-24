@@ -113,7 +113,7 @@ function login:Login()
     local ok = pcall(function()
         local req = postLogin(username, password)
 		if req.StatusCode == 403 then
-	        vape:CreateNotification("Onyx", "API Failed to get HWID. Guest mode.", 7,'warning')
+	        vape:CreateNotification("Onyx", "API HWID Mis-Match. Guest mode.", 7,'warning')
 	        role, U, P = "guest", "GUEST", "PASSWORD"
 	        return
 		end
@@ -139,7 +139,7 @@ function login:SlientLogin()
     local ok = pcall(function()
         local req = postLogin(username, password)
 		if req.StatusCode == 403 then
-	        vape:CreateNotification("Onyx", "API Failed to get HWID. Guest mode.", 7,'warning')
+	        vape:CreateNotification("Onyx", "API HWID Mis-Match. Guest mode.", 7,'warning')
 	        role, U, P = "guest", "GUEST", "PASSWORD"
 	        return
 		end
