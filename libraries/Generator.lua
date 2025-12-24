@@ -1,3 +1,5 @@
+--creds to GoOnlineTools.com!
+
 local Gen = {}
 local Global = {
     LettersUPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
