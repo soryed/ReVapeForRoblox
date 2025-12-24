@@ -15676,23 +15676,19 @@ run(function()
 			local currentPosition = entitylib.character.RootPart.Position
 			if (pos - currentPosition).Magnitude > 0.5 then
 				if lplr.Character then
-					lplr.Character:SetAttribute('LastTeleported', 0)
+					lplr:SetAttribute('LastTeleported', 0)
 				end
 				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				task.spawn(function() tween:Play() end)
 				task.spawn(function()
 					tween.Completed:Wait()
-					if lplr.Character then
-						lplr.Character:SetAttribute('LastTeleported', 0)
-					end
 				end)
-				lplr.Character:SetAttribute('LastTeleported', workspace:GetServerTimeNow())
+				lplr:SetAttribute('LastTeleported', os.time())
 				task.wait(0.25)
 				if lplr.Character then
-					lplr.Character:SetAttribute('LastTeleported', 0)
 					task.wait(0.1235)
-					lplr.Character:SetAttribute('LastTeleported', workspace:GetServerTimeNow())
+					lplr:SetAttribute('LastTeleported', os.time())
 				end
 			end
 		end
@@ -17582,11 +17578,11 @@ end)
 								task.spawn(function()
 									tween.Completed:Wait()
 								end)
-								lplr:SetAttribute('LastTeleported', workspace:GetServerTimeNow() - .9999)
+								lplr:SetAttribute('LastTeleported', os.time())
 								task.wait(0.25)
 								if lplr.Character then
 									task.wait(0.1235)
-									lplr:SetAttribute('LastTeleported', workspace:GetServerTimeNow() - .9999)
+									lplr:SetAttribute('LastTeleported', os.time())
 								end
 							end
 						end
