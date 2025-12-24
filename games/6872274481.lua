@@ -17581,14 +17581,10 @@ end)
 								end)
 								task.spawn(function()
 									tween.Completed:Wait()
-									if lplr.Character then
-										lplr:SetAttribute('LastTeleported', 0)
-									end
 								end)
 								lplr:SetAttribute('LastTeleported', workspace:GetServerTimeNow() - .9999)
 								task.wait(0.25)
 								if lplr.Character then
-									lplr.Character:SetAttribute('LastTeleported', 0)
 									task.wait(0.1235)
 									lplr:SetAttribute('LastTeleported', workspace:GetServerTimeNow() - .9999)
 								end
