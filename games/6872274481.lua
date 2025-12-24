@@ -15327,7 +15327,7 @@ end)
 run(function()
 	local CustomTags
 	local Color
-	local Tag
+	local TAG
 	local old, old2
 	local tagConnections = {}
 	local tagRenderConn
@@ -15435,7 +15435,7 @@ run(function()
 		end
 	})
 
-	Tag = CustomTags:CreateTextBox({
+	TAG = CustomTags:CreateTextBox({
 		Name = 'Tag',
 		Default = "KKK",
 		Function = function()
