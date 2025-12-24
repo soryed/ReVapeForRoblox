@@ -11404,7 +11404,7 @@ run(function()
 	local AutoKitFunctions = {
 		black_market_trader = function()
 			kitCollection('shadow_coin', function(v)
-			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
+			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = 'shadow_coin'})
 			end, Legit.Enabled and 8 or 16, false)
 		end,
 		oasis = function()
@@ -11436,7 +11436,7 @@ run(function()
 					end																		
 		        end
 
-				if lplr.Character:GetAttribute('Health') <= 50 then
+				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 32 or 50 then
 					if bedwars.AbilityController:canUseAbility('OASIS_HEAL_VEIL') then
 						bedwars.AbilityController:useAbility('OASIS_HEAL_VEIL')
 					end
