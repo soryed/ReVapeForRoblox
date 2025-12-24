@@ -11419,7 +11419,7 @@ run(function()
 				})
 
 				if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-					if bedwars.AbilityController:canUseAbility('OASIS_SWAP_STAFF') then
+					if bedwars.AbilityController:canUseAbility('oasis_swap_staff') then
 						local str = "oasis"
 						local fullstr = ""
 						for i, v in game.ReplicatedStorage.Inventories[lplr.Name]:GetChildren() do
@@ -11428,17 +11428,17 @@ run(function()
 							end
 						end
 						local slot = getObjSlot(fullstr)
-						local ogslot = GetOriginalSlot
+						local ogslot = GetOriginalSlot()
 						hotbarSwitch(slot)
-						bedwars.AbilityController:useAbility('OASIS_SWAP_STAFF')
+						bedwars.AbilityController:useAbility('oasis_swap_staff')
 						task.wait(0.225)
 						hotbarSwitch(ogslot)
 					end																		
 		        end
 
 				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 32 or 50 then
-					if bedwars.AbilityController:canUseAbility('OASIS_HEAL_VEIL') then
-						bedwars.AbilityController:useAbility('OASIS_HEAL_VEIL')
+					if bedwars.AbilityController:canUseAbility('oasis_heal_veil') then
+						bedwars.AbilityController:useAbility('oasis_heal_veil')
 					end
 				end
 				
