@@ -112,6 +112,11 @@ function login:Login()
     local role, U, P = "", username, password
     local ok = pcall(function()
         local req = postLogin(username, password)
+		if req.StatusCode == 403 then
+	        vape:CreateNotification("Onyx", "API Failed to get HWID. Guest mode.", 7,'warning')
+	        role, U, P = "guest", "GUEST", "PASSWORD"
+	        return
+		end
         if not req or req.StatusCode ~= 200 then
             vape:CreateNotification("Onyx", "API Unreachable. Guest mode.", 7,'warning')
             role, U, P = "guest", "GUEST", "PASSWORD"
