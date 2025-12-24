@@ -6156,7 +6156,7 @@ mainapi.ToggleNotifications = notifpane:CreateToggle({
 mainapi.ColoredNotifications = notifpane:CreateToggle({
 	Name = 'Colored Notifications',
 	Tooltip = 'Colors the current notification',
-	Default = false,
+	Default = true,
 	Darker = true
 })
 
