@@ -15919,7 +15919,6 @@ end)
 run(function()
 	local TaxRemover
 	local old
-	local old2
 	TaxRemover = vape.Categories.Exploits:CreateModule({
 		Name = 'Tax Remover',
 		Function = function(callback)
@@ -15928,28 +15927,13 @@ run(function()
 				return
 			end 
 			if callback then
-				old = bedwars.TaxController.KnitStart
-				old2 = bedwars.TaxController.isTaxed
-				bedwars.TaxController.KnitStart = function(v1)
-					if v1 then
-						bedwars.KKKnitController.KnitStart(v1)
-						v1.taxStateUpdateEvent:Connect(function(v2)
-							if v2 then
-								return false
-							end
-						end)
-					end
-				end
+				old = bedwars.TaxController.isTaxed
 				bedwars.TaxController.isTaxed = function(v1)
-					if v1 then
-						return false
-					end
+					return false
 				end
 			else
-				bedwars.TaxController.KnitStart = old
-				bedwars.TaxController.isTaxed = old2
+				bedwars.TaxController.isTaxed = old
 				old = nil
-				old2 = nil
 			end
 		end,
 		Tooltip = 'Removes tax within the shop'
