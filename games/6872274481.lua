@@ -11516,8 +11516,8 @@ run(function()
 
 				if plr then
 					print('found player') -- debug ignore please																																										
-					if bedwars.AbilityController:canUseAbility('rebllion_aura_swap') then
-						bedwars.AbilityController:useAbility('rebllion_aura_swap')
+					if bedwars.AbilityController:canUseAbility('rebellion_aura_swap') then
+						bedwars.AbilityController:useAbility('rebellion_aura_swap')
 						print('used abliity') -- debug																																										
 					end																		
 		        end
