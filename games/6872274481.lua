@@ -2227,7 +2227,7 @@ run(function()
 	local Vertical
 	local Chance
 	local TargetCheck
-	local rand, old = Random.new()
+	local rand, old = math.random(0,100)
 	
 	Velocity = vape.Categories.Combat:CreateModule({
 		Name = 'Velocity',
@@ -2235,7 +2235,10 @@ run(function()
 			if callback then
 				old = bedwars.KnockbackUtil.applyKnockback
 				bedwars.KnockbackUtil.applyKnockback = function(root, mass, dir, knockback, ...)
-					if rand:NextNumber(0, 100) > Chance.Value then return end
+					if rand > Chance.Value then 
+						rand = math.random(0,100)
+						return 
+					end
 					local check = (not TargetCheck.Enabled) or entitylib.EntityPosition({
 						Range = 50,
 						Part = 'RootPart',
@@ -2280,6 +2283,7 @@ run(function()
 	})
 	TargetCheck = Velocity:CreateToggle({Name = 'Only when targeting'})
 end)
+	
 	
 local AntiFallDirection
 run(function()
