@@ -11521,8 +11521,10 @@ run(function()
 						print('used abliity') -- debug																																										
 					end																		
 		        end
-
-				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 45 or 65 then
+				local HealNum = 0
+				HealNum = Legit.Enabled and 45 or 65
+																																														print(HealNum)
+				if lplr.Character:GetAttribute('Health') <= HealNum then
 					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
 						bedwars.AbilityController:useAbility('rebellion_shield')
 						print('used abliity') -- debug																																											
