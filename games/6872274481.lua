@@ -9455,8 +9455,8 @@ end)
 
 run(function()
 	local AutoQueue
-	
-	AutoQueue = vape.Categories.Exploits:CreateModule({
+	local Bypass
+	AutoQueue = vape.Categories.World:CreateModule({
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
@@ -9464,17 +9464,35 @@ run(function()
 				return
 			end       
 			if callback then
-				AutoQueue:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+				if Bypass.Enabled then
+					bedwars.Client:Get('AfkInfo'):SendToServer({afk = false})
+					task.wait(0.025)
+					AutoQueue:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+						if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+							bedwars.Client:Get('AfkInfo'):SendToServer({afk = false})
+							joinQueue()
+						end
+					end))
+					AutoQueue:Clean(vapeEvents.MatchEndEvent.Event:Connect(function(...)
+						bedwars.Client:Get('AfkInfo'):SendToServer({afk = false})
 						joinQueue()
-					end
-				end))
-				AutoQueue:Clean(vapeEvents.MatchEndEvent.Event:Connect(joinQueue))
+					end))
+				else
+					AutoQueue:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
+						if deathTable.finalKill and deathTable.entityInstance == lplr.Character and isEveryoneDead() and store.matchState ~= 2 then
+							joinQueue()
+						end
+					end))
+					AutoQueue:Clean(vapeEvents.MatchEndEvent.Event:Connect(joinQueue))
+				end
 			end
 		end,
 		Tooltip = 'Automatically queues for the next match'
 	})
-
+	Bypass = AutoQueue:CreateToggle({
+		Name = "Bypass",
+		Default = true
+	})
 end)
 			
 run(function()
