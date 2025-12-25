@@ -1713,7 +1713,7 @@ run(function()
 				local nameToFind = (lplr.DisplayName == "" or lplr.DisplayName == lplr.Name) and lplr.Name or lplr.DisplayName
 				for _, v in ipairs(child:GetDescendants()) do
 					if v:IsA("TextLabel") and string.find(string.lower(v.Text), string.lower(nameToFind)) then
-						v.Text = string.format('<font transparency="0.3" color="%s">[%s]</font> %s',Color3ToHex(Color3.fromRGB(R, G, B)),TAG.Value,nameToFind)
+						v.Text = string.format('<font transparency="0.3" color="%s">[%s]</font> %s',Color3ToHex(R, G, B),TAG.Value,nameToFind)
 					end
 				end
 			end)
