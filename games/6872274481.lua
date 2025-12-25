@@ -11514,15 +11514,18 @@ run(function()
 					Sort = sortmethods.Health
 				})
 
-				if plr and entitylib.isAlive then
+				if plr then
+					print('found player') -- debug ignore please																																										
 					if bedwars.AbilityController:canUseAbility('rebllion_aura_swap') then
 						bedwars.AbilityController:useAbility('rebllion_aura_swap')
+						print('used abliity') -- debug																																										
 					end																		
 		        end
 
 				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 45 or 65 then
 					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
 						bedwars.AbilityController:useAbility('rebellion_shield')
+						print('used abliity') -- debug																																											
 					end
 				end
 				
