@@ -17484,16 +17484,6 @@ end)
 		local AutoWin
 		local empty
 		local Dashes = {Value = 2}
-		local function Reset(db)
-			if db then
-				vape:CreateNotification("AutoWin", "Teleporting to empty game!", 4)
-				local TeleportService = game:GetService("TeleportService")
-				local data = TeleportService:GetLocalPlayerTeleportData()
-				AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
-			else
-				return
-			end
-		end
 		if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender" then
 			return 
 		end
@@ -17508,7 +17498,7 @@ end)
 					return  
 				end
 				if store.equippedKit == "elektra" then
-					Reset(empty.Value)
+					repeat task.wait(0.1) until store.matchState ~= 0 or (not AutoWin.Enabled)
 					local beds = {}
 					local currentbedpos 
 					local function AllbedPOS()
@@ -17554,7 +17544,7 @@ end)
 								task.spawn(function() tween:Play() end)
 								task.spawn(function()
 								if Dashes.Value == 1 then
-									task.wait(0.36)
+									task.wait(0.54)
 									if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 										vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
 										
@@ -17601,9 +17591,5 @@ end)
 				end
 			end,
 			Tooltip = 'new method for autowin! will be patched very soon:(' -- GGS METHOD IS PATCHED
-		})
-		empty = AutoWin:CreateToggle({
-			Name = "EmptyGame",
-			Default = false
 		})
 	end)
