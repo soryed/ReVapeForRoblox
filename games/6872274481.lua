@@ -13076,7 +13076,7 @@ run(function()
 								WhisperController:request("Heal")
 							end
 							task.wait(0.05)
-						until not isWhispering or not AutoWhisper.Enabled
+						until not isWhispering or not BetterWhisper.Enabled
 					end
 				end))
 				BetterWhisper:Clean(bedwars.Client:Get("OwlDeattached"):Connect(function(data)
