@@ -11514,9 +11514,9 @@ run(function()
 					Sort = sortmethods.Health
 				})
 
-				if plr and (lplr.Character) > 0 then
-					if bedwars.AbilityController:canUseAbility('rebellion_aura_swap') then
-						bedwars.AbilityController:useAbility('rebellion_aura_swap')
+				if plr and entitylib.isAlive then
+					if bedwars.AbilityController:canUseAbility('rebllion_aura_swap') then
+						bedwars.AbilityController:useAbility('rebllion_aura_swap')
 					end																		
 		        end
 
