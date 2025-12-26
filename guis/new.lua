@@ -2505,7 +2505,7 @@ function mainapi:CreateGUI()
 	addCorner(window)
 	makeDraggable(window)
 	local logo = Instance.new('ImageLabel')
-	logo.Name = 'OnyxLogo'
+	logo.Name = 'VapeLogo'
 	logo.Size = UDim2.fromOffset(113, 68)
 	logo.Position = UDim2.fromOffset(11, -10)
 	logo.BackgroundTransparency = 1
