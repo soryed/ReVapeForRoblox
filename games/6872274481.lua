@@ -15258,7 +15258,7 @@ run(function()
 				return
 			end 
             if calling then 
-                if store.equippedKit == "adetunde" then
+                if store.equippedKit == "frost_hammer_kit" then
 					current_upgrador = BetterAdetunde_List.Value
 					task.spawn(function()
 						repeat
