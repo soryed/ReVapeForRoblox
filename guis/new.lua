@@ -1,9 +1,9 @@
 local mainapi = {
 	Categories = {},
 	GUIColor = {
-		Hue =0.644444465637207,
-		Sat = 0.8823529481887817,
-		Value = 0.7333333492279053
+		Hue = 0.46,
+		Sat = 0.96,
+		Value = 0.52
 	},
 
 	HeldKeybinds = {},
