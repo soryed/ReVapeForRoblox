@@ -2505,9 +2505,9 @@ function mainapi:CreateGUI()
 	addCorner(window)
 	makeDraggable(window)
 	local logo = Instance.new('ImageLabel')
-	logo.Name = 'VapeLogo'
+	logo.Name = 'OnyxLogo'
 	logo.Size = UDim2.fromOffset(113, 68)
-	logo.Position = UDim2.fromOffset(11, 4)
+	logo.Position = UDim2.fromOffset(11, -10)
 	logo.BackgroundTransparency = 1
 	logo.Image = getcustomasset('ReVape/assets/new/guivapev2.png')
 	logo.ImageColor3 = select(3, uipallet.Main:ToHSV()) > 0.5 and uipallet.Text or Color3.new(1, 1, 1)
@@ -2515,7 +2515,7 @@ function mainapi:CreateGUI()
 	local logov4 = Instance.new('ImageLabel')
 	logov4.Name = 'V4Logo'
 	logov4.Size = UDim2.fromOffset(28, 16)
-	logov4.Position = UDim2.new(1, 1, 0, 1)
+	logov4.Position = UDim2.new(0.949999988, 1, 0, 23)
 	logov4.BackgroundTransparency = 1
 	logov4.Image = getcustomasset('ReVape/assets/new/guiv4.png')
 	logov4.Parent = logo
