@@ -17719,55 +17719,214 @@ run(function()
 			end
 		end
 	end
-
-	local function method1()
-						vape:CreateNotification("AutoWin",'finding all bed positions!',1.85)
-						AllbedPOS()
-						task.wait(0.958)
-						vape:CreateNotification("AutoWin",'Founded my own bed position!',3.85)
-						UpdateCurrentBedPOS()
-						if currentbedpos then
-							task.wait(2.125)
-							vape:CreateNotification("AutoWin",'Finding the other team bed!',3.85)
-							task.wait(2)
-							bedpos = closestBed(entitylib.character.RootPart.Position)
-							if bedpos then
-								local bp = tostring(bedpos)
-								if lplr.Team.Name == "Blue" then
-									vape:CreateNotification("AutoWin",`Founded Orange's bed at {bp}`,4.85)
-									tweenToBED(bedpos)
-								else
-									vape:CreateNotification("AutoWin",`Founded Blue's bed at {bp}`,4.85)
-									tweenToBED(bedpos)
-								end
-							else
-								if lplr.Team.Name == "Blue" then
-									vape:CreateNotification("AutoWin",'Couldnt find Orange\'s bed position? ReTeleporting...','warning',10.85)
-									lplr:Kick("Don't disconnect, this will auto teleport you!")
-									task.wait(0.5)
-									Reset()
-								else
-									vape:CreateNotification("AutoWin",'Couldnt find Blue\'s bed position? ReTeleporting...','warning',10.85)
-									lplr:Kick("Don't disconnect, this will auto teleport you!")
-									task.wait(0.5)
-									Reset()
-								end
-							end
-						else
-							vape:CreateNotification("AutoWin",'Couldnt find my bed position? ReTeleporting...','warning',10.85)
-							lplr:Kick("Don't disconnect, this will auto teleport you!")
-							task.wait(0.5)
-							Reset()
+	local function tweenToBED2(pos,msg,oppositeTeam)
+		if entitylib.isAlive then
+			local oldpos = pos
+			pos = pos + Vector3.new(0, 5, 0)
+			local currentPosition = entitylib.character.RootPart.Position
+			if (pos - currentPosition).Magnitude > 0.5 then
+				if lplr.Character then
+					lplr:SetAttribute('LastTeleported', 0)
+				end
+				local info = TweenInfo.new(0.45,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				task.spawn(function() tween:Play() end)
+				task.spawn(function()
+					if Dashes.Value == 1 then
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.225s)"
+						task.wait(0.225)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
-	end
-		if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
-			return 
+					elseif Dashes.Value == 2 then
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.225s)"
+						task.wait(0.225)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+						end
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.3375s)"
+						task.wait(0.3375)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+						end
+					else
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.3375s)"
+						task.wait(0.3375)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+							end				
+						end
+				end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				msg.Text = `Fixing current positon {bedwars.BlockController:getBlockPosition(entitylib.character.RootPart.Position)} to {pos}. (1.45s)`
+				task.wait(1.45)
+				task.spawn(function() tween2:Play() end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				msg.Text = `Nuking {oppositeTeam} bed.. (0.85s)`
+				task.wait(0.85)
+				if not Breaker.Enabled then
+					Breaker:Toggle(true)
+				end
+				NewAutoWin:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
+					msg.Text = `Your current Player Level is {lplr:GetAttribute("PlayerLevel")}. (0.85s)`
+					task.wait(0.85)
+					msg.Text = 'Match ended. ReTeleporting to another Empty Game... (1.5s)'
+					task.wait(0.5)
+					if obj.Name == "WinningTeam" then
+						lplr:Kick("Don't disconnect, this will auto teleport you!")
+						task.wait(1)
+						Reset()
+					end
+				end))
+			end
 		end
+	end
+
+	local function MethodOne()
+		vape:CreateNotification("AutoWin",'finding all bed positions!',1.85)
+		AllbedPOS()
+		task.wait(0.958)
+		vape:CreateNotification("AutoWin",'Founded my own bed position!',3.85)
+		UpdateCurrentBedPOS()
+		if currentbedpos then
+			task.wait(2.125)
+			vape:CreateNotification("AutoWin",'Finding the other team bed!',3.85)
+			task.wait(2)
+			bedpos = closestBed(entitylib.character.RootPart.Position)
+			if bedpos then
+				local bp = tostring(bedpos)
+				if lplr.Team.Name == "Blue" then
+						vape:CreateNotification("AutoWin",`Founded Orange's bed at {bp}`,4.85)
+						tweenToBED(bedpos)
+					else
+						vape:CreateNotification("AutoWin",`Founded Blue's bed at {bp}`,4.85)
+						tweenToBED(bedpos)
+					end
+				else
+				if lplr.Team.Name == "Blue" then
+					vape:CreateNotification("AutoWin",'Couldnt find Orange\'s bed position? ReTeleporting...','warning',10.85)
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				else
+					vape:CreateNotification("AutoWin",'Couldnt find Blue\'s bed position? ReTeleporting...','warning',10.85)
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				end
+			end
+		else
+			vape:CreateNotification("AutoWin",'Couldnt find my bed position? ReTeleporting...','warning',10.85)
+			lplr:Kick("Don't disconnect, this will auto teleport you!")
+			task.wait(0.5)
+			Reset()
+		end
+	end
+	
+	local function MethodTwo(TooltipText)
+		TooltipText.Text = 'Finding all current beds positions near me! (1.85s)'
+		AllbedPOS()
+		task.wait(0.958)
+		TooltipText.Text = 'Founded my team\'s bed position! (2.1s)'
+		UpdateCurrentBedPOS()
+		if currentbedpos then
+			task.wait(2.125)
+			TooltipText.Text = 'Finding other team\'s bed! (3s)'
+			task.wait(2)
+			bedpos = closestBed(entitylib.character.RootPart.Position)
+			if bedpos then
+				local bp = tostring(bedpos)
+				if lplr.Team.Name == "Blue" then
+						TooltipText.Text = `Founded Orange's bed at {bp} (2s)`
+						tweenToBED2(bedpos,TooltipText,'Orange')
+					else
+						TooltipText.Text = `Founded Blue's bed at {bp} (2s)`
+						tweenToBED2(bedpos,TooltipText,'Blue')
+					end
+				else
+				if lplr.Team.Name == "Blue" then
+					TooltipText.Text = 'Couldn\'t find my Orange\'s bed position? ReTeleporting... (0.5s)'
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				else
+					TooltipText.Text = 'Couldn\'t find my Blue\'s bed position? ReTeleporting... (0.5s)'
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				end
+			end
+		else
+			TooltipText.Text = 'Couldn\'t find my bed position? ReTeleporting... (0.5s)'
+			lplr:Kick("Don't disconnect, this will auto teleport you!")
+			task.wait(0.5)
+			Reset()
+		end
+		task.spawn(function()
+			NewAutoWin:Clean(playersService.PlayerAdded:Connect(function(playerToBlock)
+				local NewFoundedPlayersName = playerToBlock.Name
+				if playersService:FindFirstChild(NewFoundedPlayersName) then
+
+					local RobloxGui = coreGui:WaitForChild("RobloxGui")
+					local CoreGuiModules = RobloxGui:WaitForChild("Modules")
+					local PlayerDropDownModule = require(CoreGuiModules:WaitForChild("PlayerDropDown"))
+					local BlockingUtility = PlayerDropDownModule:CreateBlockingUtility()
+					if BlockingUtility:IsPlayerBlockedByUserId(playerToBlock.UserId) then
+						return
+					end
+					local successfullyBlocked = BlockingUtility:BlockPlayerAsync(playerToBlock)
+					if successfullyBlocked then
+						TooltipText.Text = string.format("Successfully blocked %s! lobbying... (1s)",NewFoundedPlayersName)
+						writefile('ReVape/profiles/BlockedUsers.txt', isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" ~= "" and (isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" .. "\n" .. NewFoundedPlayersName) or NewFoundedPlayersName)
+						task.wait(1.015)
+					end
+					lobby()
+				end
+			end))
+		end)
+	end
+	
+
+	
+	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
+		return 
+	end
     NewAutoWin = vape.Categories.AltFarm:CreateModule({
 		Name = "NewElektraAutoWin",
 		Tooltip = 'must have elektra to use this',
 		Function = function(callback) 
 			if callback then
+				task.spawn(function()
+					NewAutoWin:Clean(lplr.Character.Humanoid.Died:Connect(function()
+						task.wait(playersService.RespawnTime + 0.85)
+						if Methods.Value == "Method 1" then
+							MethodOne()
+						elseif Methods.Value == "Method 2" then
+							MethodTwo()
+						else
+							vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
+						end
+					end))
+				end)
 				if Methods.Value == "Method 1" then
 					local ScreenGui = create("ScreenGui",{Parent = lplr.PlayerGui,ResetOnSpawn=false,IgnoreGuiInset=true,DisplayOrder =9e9,Name='AutowinUI'})
 					local MainFrame = create("Frame",{Visible=gui.Enabled,Name='AutowinFrame',Parent=ScreenGui,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.05,Size=UDim2.fromScale(1,1)})
@@ -17789,18 +17948,6 @@ run(function()
 							Levels.Text = "Level: "..tostring(lplr:GetAttribute("PlayerLevel")) or "0"
 							task.wait(0.1)
 						until not NewAutoWin.Enabled
-					end)
-					task.spawn(function()
-						NewAutoWin:Clean(lplr.Character.Humanoid.Died:Connect(function()
-							task.wait(playersService.RespawnTime + 0.85)
-							if Methods.Value == "Method 1" then
-								method1()
-							elseif Methods.Value == "Method 2" then
-								vape:CreateNotification("AutoWin",'Cooming soon!',1.85)
-							else
-								vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
-							end
-						end))
 					end)
 
 					ShowUserBtn.Activated:Connect(function()
@@ -17825,13 +17972,33 @@ run(function()
 						Reset()
 					else
 						repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not NewAutoWin.Enabled)
-						method1()
+						MethodOne()
 					end
 				elseif Methods.Value == "Method 2" then
-					vape:CreateNotification("AutoWin",'Cooming soon!',1.85)
+					local AutoFarmUI = create("ScreenGui",{Name='AutowinUI',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=9e9})
+					local AutoFarmFrame = create("Frame",{Name='AutoFarmFrame',BackgroundColor3=Color3.fromRGB(15,15,15),Size=UDim2.fromScale(1,1),Parent=AutoFarmUI})
+					local Title = create("TextLabel",{TextColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Parent=AutoFarmFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.396,0.264),Size=UDim2.fromOffset(322,125),Text='AUTOWIN',FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold,Enum.FontStyle.Italic),TextSize=32,TextScaled=true})
+					local TooltipText = create("TextLabel",{TextColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Parent=AutoFarmFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.435,0.596),Size=UDim2.fromOffset(200,50),Text='...',FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.Medium,Enum.FontStyle.Italic),TextSize=48})
+					create("UIStroke",{Color=Color3.fromRGB(56,56,56),Thickness=2.1,Transparency=0.22,Parent=Title})
+					create("UIStroke",{Color=Color3.fromRGB(56,56,56),Thickness=2.1,Transparency=0.22,Parent=TooltipText})
+					local num = (3 / 1.85)
+					TooltipText.Text = `checking if in empty game... ({num}s)`
+					task.wait((3 / 1.85))
+					if #playersService:GetChildren() ~= 1 then
+						num = (6 / 3.335)
+						TooltipText.Text = `player's found. Teleporting to a Empty Game.. ({num}s)`
+						lplr:Kick("Don't disconnect, this will auto teleport you!")
+						task.wait((6 / 3.335))
+						Reset()
+					else
+						repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not NewAutoWin.Enabled)
+						MethodTwo(TooltipText)
+					end
+					
 				else
 					vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
 				end
+			
 			else
 				entitylib.character.Humanoid.Health = -9e9
 				if lplr.PlayerGui:FindFirstChild('AutowinUI') then
@@ -17842,7 +18009,8 @@ run(function()
 	})
 	Methods = NewAutoWin:CreateDropdown({
 		Name = "Methods",
-		List = {'Method 1', 'Method 2'}
+		List = {'Method 1', 'Method 2','Method 3'},
+		Tooltip = 'Method 1 - normal but undetected and fast\nMethod 2 - faster and blocks people who join(with autolobby) and even more undetected!\n Method 3 - Comming soon...'
 	})
 	gui = NewAutoWin:CreateToggle({
 		Name = "Gui",
