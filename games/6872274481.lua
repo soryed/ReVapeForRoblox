@@ -17915,6 +17915,9 @@ run(function()
 		Tooltip = 'must have elektra to use this',
 		Function = function(callback) 
 			if callback then
+				if store.equippedKit ~= 'elektra' then
+					return
+				end	
 				task.spawn(function()
 					NewAutoWin:Clean(lplr.Character.Humanoid.Died:Connect(function()
 						task.wait(playersService.RespawnTime + 0.85)
