@@ -17728,31 +17728,31 @@ run(function()
 				if lplr.Character then
 					lplr:SetAttribute('LastTeleported', 0)
 				end
-				local info = TweenInfo.new(0.45,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				task.spawn(function() tween:Play() end)
 				task.spawn(function()
 					if Dashes.Value == 1 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.225s)"
-						task.wait(0.225)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.36)"
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					elseif Dashes.Value == 2 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.225s)"
-						task.wait(0.225)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.36)"
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.3375s)"
-						task.wait(0.3375)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.54)"
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					else
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.3375s)"
-						task.wait(0.3375)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.54)"
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 							end				
@@ -17922,6 +17922,8 @@ run(function()
 							MethodOne()
 						elseif Methods.Value == "Method 2" then
 							MethodTwo()
+						elseif Methods.Value == "Method 3" then
+							vape:CreateNotification("AutoWin",'Comming soon..',,5.245)
 						else
 							vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
 						end
