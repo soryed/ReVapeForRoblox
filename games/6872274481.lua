@@ -17689,7 +17689,7 @@ run(function()
 					task.wait(0.1235)
 					lplr:SetAttribute('LastTeleported', os.time())
 				end
-				task.wait(1 - math.random())
+				task.wait(1.45)
 				vape:CreateNotification("AutoWin", "Fixing position!", 1)
 				task.spawn(function() tween2:Play() end)
 				task.spawn(function()
@@ -17769,7 +17769,8 @@ run(function()
 		Function = function(callback) 
 			if callback then
 				if Methods.Value == "Method 1" then
-					local MainFrame = create("Frame",{Visible=gui.Enabled,Name='AutowinFrame',Parent=vape.gui.ScaledGui,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.05,Size=UDim2.fromScale(1,1)})
+					local ScreenGui = create("ScreenGui",{Parent = lplr.PlayerGui,IgnoreGuiInset=true,DisplayOrder =9e9,Name='AutowinUI'})
+					local MainFrame = create("Frame",{Visible=gui.Enabled,Name='AutowinFrame',Parent=ScreenGui,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.05,Size=UDim2.fromScale(1,1)})
 					local SecondaryFrame = create("Frame",{Name='SecondaryFrame',Parent=MainFrame,BackgroundColor3=Color3.fromRGB(28,25,27),BackgroundTransparency=0.1,Size=UDim2.fromScale(1,1)})
 					local ShowUserBtn = create("TextButton",{Name='UsernameButton',Parent=SecondaryFrame,Position=UDim2.fromScale(0.393,0.788),Size=UDim2.fromOffset(399,97),FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold),Text='SHOW USERNAME',TextColor3=Color3.fromRGB(65,65,65),TextSize=32,TextTransparency=0.2,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value)})
 					create("UICorner",{CornerRadius=UDim.new(0,6),Parent=ShowUserBtn})
@@ -17792,7 +17793,13 @@ run(function()
 					task.spawn(function()
 						NewAutoWin:Clean(lplr.Character.Humanoid.Died:Connect(function()
 							task.wait(playersService.RespawnTime + 0.85)
-method1()
+							if Methods.Value == "Method 1" then
+								method1()
+							elseif Methods.Value == "Method 2" then
+								vape:CreateNotification("AutoWin",'Cooming soon!',1.85)
+							else
+								vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
+							end
 						end))
 					end)
 
@@ -17818,9 +17825,7 @@ method1()
 						Reset()
 					else
 						repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not NewAutoWin.Enabled)
-
-					
-					method1()
+						method1()
 					end
 				elseif Methods.Value == "Method 2" then
 					vape:CreateNotification("AutoWin",'Cooming soon!',1.85)
@@ -17829,8 +17834,8 @@ method1()
 				end
 			else
 				entitylib.character.Humanoid.Health = -9e9
-				if vape.gui.ScaledGui:FindFirstChild('AutowinFrame') then
-					vape.gui.ScaledGui:FindFirstChild('AutowinFrame'):Destroy()
+				if lplr.PlayerGui:FindFirstChild('AutowinUI') then
+					lplr.PlayerGui:FindFirstChild('AutowinUI'):Destroy()
 				end
 			end
 		end
