@@ -17890,6 +17890,7 @@ run(function()
 					local CoreGuiModules = RobloxGui:WaitForChild("Modules")
 					local PlayerDropDownModule = require(CoreGuiModules:WaitForChild("PlayerDropDown"))
 					local BlockingUtility = PlayerDropDownModule:CreateBlockingUtility()
+					PlayerDropDownModule:InitBlockListAsync()
 					if BlockingUtility:IsPlayerBlockedByUserId(playerToBlock.UserId) then
 						return
 					end
