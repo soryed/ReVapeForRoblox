@@ -17897,7 +17897,14 @@ run(function()
 					local successfullyBlocked = BlockingUtility:BlockPlayerAsync(playerToBlock)
 					if successfullyBlocked then
 						TooltipText.Text = string.format("Successfully blocked %s! lobbying... (1s)",NewFoundedPlayersName)
-						writefile('ReVape/profiles/BlockedUsers.txt', isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" ~= "" and (isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" .. "\n" .. NewFoundedPlayersName) or NewFoundedPlayersName)
+						local path = "ReVape/profiles/BlockedUsers.txt"
+						local data = isfile(path) and readfile(path) or ""
+						
+						if data ~= "" then
+						    data ..= "\n"
+						end
+						
+						writefile(path, data .. NewFoundedPlayersName)
 						task.wait(1.015)
 					end
 					lobby()
