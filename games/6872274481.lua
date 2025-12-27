@@ -17846,6 +17846,11 @@ run(function()
 	})
 	gui = NewAutoWin:CreateToggle({
 		Name = "Gui",
-		Default = true
+		Default = true,
+		Function = function(v)
+			if lplr.PlayerGui:FindFirstChild('AutowinUI') then
+				lplr.PlayerGui:FindFirstChild('AutowinUI').Enabled = v
+			end
+		end
 	})
 end)
