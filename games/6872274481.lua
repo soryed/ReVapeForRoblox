@@ -17923,7 +17923,7 @@ run(function()
 						elseif Methods.Value == "Method 2" then
 							MethodTwo()
 						elseif Methods.Value == "Method 3" then
-							vape:CreateNotification("AutoWin",'Comming soon..',,5.245)
+							vape:CreateNotification("AutoWin",'Comming soon..',5.245)
 						else
 							vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
 						end
