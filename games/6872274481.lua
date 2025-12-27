@@ -17907,7 +17907,7 @@ run(function()
 	
 
 	
-	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
+	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender" and user ~= "synioxzz" then
 		return 
 	end
     NewAutoWin = vape.Categories.AltFarm:CreateModule({
