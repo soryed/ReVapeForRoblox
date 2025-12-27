@@ -5799,23 +5799,26 @@ mainapi:CreateCategory({
 mainapi:CreateCategory({
 	Name = 'Legit',
 	Icon = getcustomasset('ReVape/assets/new/legit.png'),
-	Size = UDim2.fromOffset(29, 16)
+	Size = UDim2.fromOffset(28,16),
+	Position = UDim2.fromOffset(8,13)
 })
 mainapi:CreateCategory({
 	Name = 'Exploits',
 	Icon = getcustomasset('ReVape/assets/new/modules.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Size = UDim2.fromOffset(20, 18)
 })
 
 mainapi:CreateCategory({
 	Name = 'Support',
 	Icon = getcustomasset('ReVape/assets/new/support.png'),
-	Size = UDim2.fromOffset(26, 24)
+	Size = UDim2.fromOffset(20, 20),
+	Position = UDim2.fromOffset(13,10)
 })
 mainapi:CreateCategory({
 	Name = 'AltFarm',
 	Icon = getcustomasset('ReVape/assets/new/af.png'),
-	Size = UDim2.fromOffset(19, 12)
+	Size = UDim2.fromOffset(20, 20),
+	Position = UDim2.fromOffset(10,10)
 })
 mainapi.Categories.Main:CreateDivider('misc')
 
