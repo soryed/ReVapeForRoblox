@@ -15456,31 +15456,31 @@ run(function()
 				if lplr.Character then
 					lplr:SetAttribute('LastTeleported', 0)
 				end
-				local info = TweenInfo.new(0.64,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				task.spawn(function() tween:Play() end)
 				task.spawn(function()
 					if Dashes.Value == 1 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.32s)"
-						task.wait(0.32)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.36s)"
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					elseif Dashes.Value == 2 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.32s)"
-						task.wait(0.32)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.36s)"
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.48s)"
-						task.wait(0.48)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.54s)"
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					else
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.48s)"
-						task.wait(0.48)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.54s)"
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 							end				
@@ -15537,7 +15537,7 @@ run(function()
 				if lplr.Character then
 					lplr:SetAttribute('LastTeleported', 0)
 				end
-				local info = TweenInfo.new(0.56,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				task.spawn(function() tween:Play() end)
@@ -15545,27 +15545,27 @@ run(function()
 					if Dashes.Value == 1 then
 						Percent:SetAttribute("Percent",62)
 						msg.Text = "Dashing to bypass Anti-Cheat.."
-						task.wait(0.28)
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					elseif Dashes.Value == 2 then
 						Percent:SetAttribute("Percent",62)
 						msg.Text = "Dashing to bypass Anti-Cheat.."
-						task.wait(0.28)
+						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 						Percent:SetAttribute("Percent",72)
 						msg.Text = "Dashing to bypass Anti-Cheat.."
-						task.wait(0.42)
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					else
 						Percent:SetAttribute("Percent",72)
 						msg.Text = "Dashing to bypass Anti-Cheat.."
-						task.wait(0.42)
+						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 							end				
@@ -15802,7 +15802,7 @@ run(function()
 		Function = function(callback) 
 			if callback then
 				if Methods.Value == "Method 1" then
-					local ScreenGui = create("ScreenGui",{Parent = lplr.PlayerGui,ResetOnSpawn=false,IgnoreGuiInset=true,DisplayOrder =9e9,Name='AutowinUI'})
+					local ScreenGui = create("ScreenGui",{Parent = lplr.PlayerGui,ResetOnSpawn=false,IgnoreGuiInset=true,DisplayOrder =999,Name='AutowinUI'})
 					local MainFrame = create("Frame",{Visible=gui.Enabled,Name='AutowinFrame',Parent=ScreenGui,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.05,Size=UDim2.fromScale(1,1)})
 					local SecondaryFrame = create("Frame",{Name='SecondaryFrame',Parent=MainFrame,BackgroundColor3=Color3.fromRGB(28,25,27),BackgroundTransparency=0.1,Size=UDim2.fromScale(1,1)})
 					local ShowUserBtn = create("TextButton",{Name='UsernameButton',Parent=SecondaryFrame,Position=UDim2.fromScale(0.393,0.788),Size=UDim2.fromOffset(399,97),FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold),Text='SHOW USERNAME',TextColor3=Color3.fromRGB(65,65,65),TextSize=32,TextTransparency=0.2,BackgroundColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value)})
@@ -15849,7 +15849,7 @@ run(function()
 						MethodOne()
 					end
 				elseif Methods.Value == "Method 2" then
-					local AutoFarmUI = create("ScreenGui",{Name='AutowinUI',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=9e9})
+					local AutoFarmUI = create("ScreenGui",{Name='AutowinUI',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=999})
 					local AutoFarmFrame = create("Frame",{Name='AutoFarmFrame',BackgroundColor3=Color3.fromRGB(15,15,15),Size=UDim2.fromScale(1,1),Parent=AutoFarmUI})
 					local Title = create("TextLabel",{TextColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Parent=AutoFarmFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.396,0.264),Size=UDim2.fromOffset(322,125),Text='AUTOWIN',FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold,Enum.FontStyle.Italic),TextSize=32,TextScaled=true})
 					local TooltipText = create("TextLabel",{TextColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Parent=AutoFarmFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.435,0.596),Size=UDim2.fromOffset(200,50),Text='...',FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.Medium,Enum.FontStyle.Italic),TextSize=48})
@@ -16139,7 +16139,7 @@ run(function()
 						end)
 					end
 
-					local AutoFarmUI = create("ScreenGui",{Name='AutowinFrame',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=999999999999999})
+					local AutoFarmUI = create("ScreenGui",{Name='AutowinUI',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=999})
 					local MainFrame = create("Frame",{Parent=AutoFarmUI,Name='AutoFarmFrame',BackgroundColor3=Color3.fromRGB(25,25,25),Size=UDim2.fromScale(1,1)})
 					local PerFrameMain = create("Frame",{BorderSizePixel=0,Parent=MainFrame,Name='LevelFrame',BackgroundColor3=Color3.fromRGB(40,40,45),Position=UDim2.new(0.5,-150,0.5,80),Size=UDim2.fromOffset(300,3),ZIndex=2})
 					local PerFrameSecondary = create("Frame",{BackgroundColor3=Color3.fromRGB(215,215,215),BorderSizePixel=0,Parent=PerFrameMain,Name='Secondary',Size=UDim2.fromScale(0,1),ZIndex=3})
@@ -16220,6 +16220,7 @@ run(function()
 		end
 	})
 end)
+
 run(function()
 	local AutoShoot
 	local Delay
