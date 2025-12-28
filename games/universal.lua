@@ -14,7 +14,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/qyroke2/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/'..readfile('ReVape/profiles/commit.txt')..'/'..select(1, path:gsub('ReVape/', '')), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -225,6 +225,10 @@ local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), '
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
+local Lightning = loadstring(downloadFile("ReVape/libraries/Weather/Lightning.lua"), "Lightning")()
+local Rain = loadstring(downloadFile("ReVape/libraries/Weather/Rain.lua"), "Rain")()
+local Rain = loadstring(downloadFile("ReVape/libraries/Weather/Snow.lua"), "Snow")()
+
 
 local R,UR = "",""
 run(function()
@@ -8038,7 +8042,7 @@ task.spawn(function()
                 end)
             else
                 pcall(function()
-                    loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/ReVapeForRoblox/main/loader.lua', true))()
+                    loadstring(game:HttpGet('https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/loader.lua', true))()
                 end)
             end
 
@@ -8066,6 +8070,10 @@ task.spawn(function()
 		Name = "Announcement",
 		Tooltip = "Fires a global announcement",
 		Function = function(callback)
+			if vape.role ~= "owner" and vape.role ~= 'coowner' then
+				vape:CreateNotification('Onyx','You do not have permission to use this!', 10,'alert')
+				return
+			end
 			if not callback then return end
 			if callback then
 				local url = "https://announceclient.fsl58.workers.dev/announce"
@@ -8858,6 +8866,47 @@ task.spawn(function()
 	})
 end)
 
+run(function()
+	local DE
+	DE = vape.Legit:CreateModule({
+		Name = "Dex Explorer",
+		Tooltip = "Dex was created by moon!",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				DE:Toggle(false)
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua"))()
+			end
+		end	
+	})
+end)
+
+run(function()
+	local RS
+	local v
+	RS = vape.Legit:CreateModule({
+		Name = "Remote Spy",
+		Tooltip = "Debugging purposes only!",
+		Function = function(callback)
+			if not callback then return end
+			if callback then				
+				RS:Toggle(false)
+				if v.Value == "Turtle" then
+					loadstring(game:HttpGet("https://raw.githubusercontent.com/Turtle-Brand/Turtle-Spy/main/source.lua", true))()
+				else
+					loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
+				end
+
+			end
+		end	
+	})
+	v  = RS:CreateDropdown({
+		Name = "Type",
+		List = {'Turtle','Classic'}
+	})
+end)
+
+
 task.spawn(function()
 	local function CreateUsername()
 		return tostring(GenLib:Username())
@@ -8866,6 +8915,10 @@ task.spawn(function()
 		local values = {Length = 10,Sets = {UC = true, LC = true, N = true, S = true, E = false}}
 		return tostring(GenLib:Password(values))
 	end
+	local function CreateHWID()
+		return tostring(GenLib:UUID())
+	end
+
 	local AC	
 	AC = vape.Legit:CreateModule({
 		Name = "Account Creator",
@@ -8876,19 +8929,19 @@ task.spawn(function()
 				AC:Toggle(false)
 				local NU = CreateUsername()
 				local NP = CreatePassword()
-
+				local NH = CreateHWID()
 				if #NU ~= 4 then
 					vape:CreateNotification("Account Creator", "Username wasn't 4 letters long, {"..#NU.."} DM "..vape.Discord,10,"warning")
 					return
 				end
-				local db, msg = loginlib:CreateAccount(NU,NP)
+				local db, msg = loginlib:CreateAccount(NU,NP,NH)
 				if not db then
 					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
 				end 
 				-- made like this
 local Injection = string.format([[ 
--- Inject this for now on, Created by qyroke2 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/qyroke2/ReVapeForRoblox/main/NewMainScript.lua", true))({
+-- Inject this for now on, Created by Soryed 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
     username = "%s",
     password = "%s"
 })
@@ -9026,5 +9079,168 @@ run(function()
 				end)
 			end
 		end
+	})
+end)
+
+run(function()
+	local weather
+	local oldatmosphere = {}
+	local oldclouds = {}
+	local thundertick = tick()
+	local weathermode = nil
+	local snowYLevel
+
+	local thunderSounds = {}
+
+	for i,v in {'rbxassetid://6734393210', 'rbxassetid://18650085493'} do
+		local sound = Instance.new('Sound', game.SoundService)
+		sound.SoundId = v
+		table.insert(thunderSounds, sound)
+	end
+
+	local lightning = game:GetObjects('rbxassetid://71302811326216')[1]
+	lightning:PivotTo(CFrame.new())
+	lightning.Parent = replicatedStorage
+
+	for _, v in lightning:GetChildren() do
+		local PointLight = Instance.new('PointLight', v)
+		PointLight.Brightness = 20
+		PointLight.Range = 35
+		PointLight.Shadows = true
+	end
+
+	local function createThunder(pos)
+		Lightning.CreateLightning(pos)
+
+		local old = lightingService.Brightness
+		local b = tweenService:Create(lightingService, TweenInfo.new(0.1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+			Brightness = Random.new():NextInteger(90, 100)
+		})
+		b:Play()
+		b.Completed:Wait()
+		local sound = thunderSounds[math.random(1, #thunderSounds)]
+		sound.Volume = Random.new():NextNumber(0.7, 1.5)
+		sound:Play()
+			
+		task.wait(0.14)
+		tweenService:Create(lightingService, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
+			Brightness = old
+		}):Play()
+	end
+
+	local function getrandompos(currpos)
+		local randomizedvec = Vector3.new(Random.new():NextInteger(19, math.random(23, 47)), 0, Random.new():NextInteger(18, math.random(22, 45)))
+
+		local ray = workspace:Raycast(currpos + randomizedvec, Vector3.new(0, -50000, 0))
+
+		if ray then
+			return CFrame.new(ray.Position)
+		else
+			local vec = currpos + randomizedvec
+			return CFrame.new(vec)
+		end
+	end
+
+	local rand = Random.new()
+
+	weather = vape.Categories.Legit:CreateModule({
+		Name = 'Weather',
+		Function = function(call)
+			if call then
+				thundertick = tick() + math.random(1, 2)
+				if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' then
+					Rain:Enable()
+				elseif weathermode.Value == 'Snow' then
+					Snow:Enable(snowYLevel.Value)
+				end
+				if not workspace.Terrain:FindFirstChildOfClass('Clouds') then
+					local clouds = Instance.new('Clouds', workspace.Terrain)
+					clouds.Cover = 1
+					clouds.Density = 1
+					clouds.Color = Color3.fromRGB(12, 13, 16)
+					weather:Clean(clouds)
+				end
+				if not lightingService:FindFirstChildOfClass('Atmosphere') then
+					local atmosphere = Instance.new('Atmosphere', lightingService)
+					weather:Clean(atmosphere)
+				else
+					local a = lightingService:FindFirstChildOfClass('Atmosphere')
+					oldatmosphere.Density = a.Density
+					oldatmosphere.Offset = a.Offset
+					oldatmosphere.Glare = a.Glare
+					oldatmosphere.Haze = a.Haze
+					oldatmosphere.Color = a.Color
+					oldatmosphere.Decay = a.Decay
+				end
+				repeat
+					local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+					if weathermode.Value == 'Rain' or weathermode.Value == 'Thunderstorm' or weathermode.Value == "Snow" then
+						if atmosphere then
+							if weathermode.Value == 'Rain' then
+								atmosphere.Density = 0.65
+								atmosphere.Offset = 0.25
+								atmosphere.Glare = 0
+								atmosphere.Haze = 0
+							elseif weathermode.Value == "Snow" then
+								atmosphere.Density = 0.7
+								atmosphere.Offset = 0.75
+								atmosphere.Color = Color3.fromRGB(142, 142, 142)
+								atmosphere.Decay = Color3.fromRGB(142, 142, 142)
+								atmosphere.Glare = 0.5
+								atmosphere.Haze = 0.5
+							elseif weathermode.Value == 'Thunderstorm' then
+								atmosphere.Density = 0.8
+								atmosphere.Offset = 0.2
+								atmosphere.Glare = 0.1
+								atmosphere.Color = Color3.fromRGB(121, 124, 160)
+								atmosphere.Decay = Color3.fromRGB(37, 38, 49)
+								atmosphere.Haze = 9
+							end
+						end
+						if weathermode.Value == 'Thunderstorm' and tick() > thundertick then
+							thundertick = tick() + rand:NextNumber(7, 25)
+							local pivot = getrandompos(lplr.Character.PrimaryPart.Position)
+							createThunder(pivot)
+						end
+					end
+					task.wait()
+				until not weather.Enabled
+			else
+				Rain:Disable()
+				Snow:Disable()
+				local atmosphere = lightingService:FindFirstChildOfClass('Atmosphere')
+				if atmosphere then
+					for i,v in oldatmosphere do
+						atmosphere[i] = v
+					end
+				end
+				table.clear(oldatmosphere)
+			end
+		end,
+		ExtraText = function()
+			return weathermode.Value
+		end
+	})
+	weathermode = weather:CreateDropdown({
+		Name = 'Mode',
+		List = {'Rain', 'Snow', 'Thunderstorm'},
+		Function = function()
+			if weather.Enabled then
+				weather:Toggle()
+				weather:Toggle()
+			end
+		end
+	})
+	snowYLevel = weather:CreateSlider({
+		Name = 'Snow Y Level',
+		Min = 0,
+		Max = 256,
+		Default = 60,
+		Function = function()
+			if weather.Enabled then
+				weather:Toggle()
+				weather:Toggle()
+			end
+		end,
 	})
 end)
