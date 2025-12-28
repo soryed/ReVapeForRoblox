@@ -15879,7 +15879,8 @@ run(function()
 	local LimitToItems
 	local RequireMouse
 	local SilentAim
-	local lastPlace, clutchCount = 0, 0
+	local lastPlace = 0
+	local clutchCount = 0
 	local function GetBlocks()
 		if store.hand.toolType == 'block' then
 			return store.hand.tool.Name, store.hand.amount
