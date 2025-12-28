@@ -14672,7 +14672,7 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end 
-			lightingService.GlobalShadows - callback
+			lightingService.GlobalShadows = callback
 		end,
 		Tooltip = 'Turns off global shadows, fps booster as well!'
 	})
