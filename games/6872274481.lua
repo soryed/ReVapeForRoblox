@@ -16844,7 +16844,7 @@ run(function()
 		Default = false,
 		Tooltip = "Only clutch when holding left click"
 	})
-	SilentAim = = Clutch:CreateToggle({
+	SilentAim = Clutch:CreateToggle({
 		Name = 'SilentAim',
 		Default = false,
 		Tooltip = "Corrects ur position when placing blocks"
