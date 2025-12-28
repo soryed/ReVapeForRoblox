@@ -16832,8 +16832,9 @@ run(function()
 						bedwars.AbilityController:useAbility('rebellion_aura_swap')
 					end																		
 		        end
-
-				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 45 or 65 then
+				local t = 0
+				t = Legit.Enabled and 45 or 65
+				if lplr.Character:GetAttribute('Health') <= t then
 					if bedwars.AbilityController:canUseAbility('rebellion_shield') then
 						bedwars.AbilityController:useAbility('rebellion_shield')
 					end
