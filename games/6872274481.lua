@@ -15140,30 +15140,6 @@ run(function()
                         replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.BedwarsPurchaseItem:InvokeServer({["shopItem"] = {["currency"] = "iron",["itemType"] = "wool_white",["amount"] = 16,["price"] = 8,["category"] = "Blocks",["disabledInQueue"] = {"mine_wars"}},["shopId"] = "1_item_shop"})
                     end
 
-                        local function fly()
-                            task.spawn(function()
-                                    task.spawn(function()
-                                            while task.wait() do
-                                                if entitylib.isAlive then
-                                                    local velocity = lplr.Character.PrimaryPart.Velocity
-                                                    lplr.Character.PrimaryPart.Velocity = Vector3.new(velocity.X, 0, velocity.Z)
-                                                end
-                                            end
-                                        end
-                                end)
-                        end)
-					end
-
-                        local function Speed()
-                            task.spawn(function()
-                                    while task.wait() do
-                                        if entitylib.isAlive then
-                                            lplr.Character.Humanoid.WalkSpeed = 23.05
-                                        end
-                                    end
-                                end
-                        end)
-					end
 
                         local function checkWallClimb()
                             if not entitylib.isAlive then
@@ -16048,7 +16024,6 @@ run(function()
                             task.wait((T + 3.33))
                             vape:CreateNotification("AutoWin", "Moving to Shop!", 8)
                             lplr.Character.Humanoid:MoveTo(CurrentItemShop.Position)
-                            Speed()
                             task.wait(1.5)
                             vape:CreateNotification("AutoWin", "Purchasing Wool!", 8)
                             task.wait(3)
@@ -16062,7 +16037,6 @@ run(function()
                                 MapLayoutORANGE()
                             end
                             vape:CreateNotification("AutoWin", "Moving to " .. oppTeamName .. "'s Bed!", 8)
-                            fly()
                             climbwalls()
                             task.spawn(function()
                                 lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
@@ -33263,7 +33237,7 @@ run(function()
 		List = {"Godmode",'Reach','Invisible'}
 	})
 end)
---]]
+
 run(function()
     local AutoWin
 	local function Duels()
@@ -33334,34 +33308,8 @@ run(function()
 					    })
 					end
 					
-					local function fly()
-					    task.spawn(function()
-					        while task.wait() do
-					            if entitylib and entitylib.isAlive then
-					                local char = lplr.Character
-					                local root = char and char.PrimaryPart
-					                if root then
-					                    local v = root.Velocity
-					                    root.Velocity = Vector3.new(v.X, 0, v.Z)
-					                end
-					            end
-					        end
-					    end)
-					end
-					
-					local function Speed()
-					    task.spawn(function()
-					        while task.wait() do
-					            if entitylib and entitylib.isAlive then
-					                local hum = lplr.Character and lplr.Character:FindFirstChildOfClass("Humanoid")
-					                if hum then
-					                    hum.WalkSpeed = 23.05
-					                end
-					            end
-					        end
-					    end)
-					end
-					
+				
+	
 					local function checkWallClimb()
 					    if not (entitylib and entitylib.isAlive) then
 					        return false
@@ -34251,7 +34199,6 @@ run(function()
                             task.wait((T + 3.33))
                             vape:CreateNotification("AutoWin", "Moving to Shop!", 8)
                             lplr.Character.Humanoid:MoveTo(CurrentItemShop.Position)
-                            Speed()
                             task.wait(1.5)
                             vape:CreateNotification("AutoWin", "Purchasing Wool!", 8)
                             task.wait(3)
@@ -34265,7 +34212,6 @@ run(function()
                                 MapLayoutORANGE()
                             end
                             vape:CreateNotification("AutoWin", "Moving to " .. oppTeamName .. "'s Bed!", 8)
-                            fly()
                             climbwalls()
                             task.spawn(function()
                                 lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
@@ -34359,7 +34305,7 @@ run(function()
     	end
     })
 end)
-
+--]]
 run(function()
 	local ZephyrExploit
 	local zepcontroller = require(lplr.PlayerScripts.TS.controllers.games.bedwars.kit.kits['wind-walker']['wind-walker-controller'])
