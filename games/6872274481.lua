@@ -16355,6 +16355,7 @@ run(function()
 	local SilentAim
 	local lastPlace = 0
 	local clutchCount = 0
+	local lastResetTime = 0
 	local function GetBlocks()
 		if store.hand.toolType == 'block' then
 			return store.hand.tool.Name, store.hand.amount
