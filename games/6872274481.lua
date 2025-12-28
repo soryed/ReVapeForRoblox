@@ -16116,6 +16116,13 @@ run(function()
 				return
 			end 
 			if callback then
+				local NewMaterial = Instance.new('MaterialVariant')
+				NewMaterial.Parent = cloneref(game:GetService('MaterialService'))
+				NewMaterial.Name = 'rbxassetid://16991768606'
+				NewMaterial.ColorMap  = 'rbxassetid://16991768606'
+				NewMaterial.StudsPerTile = 3
+				NewMaterial.RoughnessMap = 'rbxassetid://16991768606'
+				NewMaterial.BaseMaterial = 'Fabric'
 				local function getWorldFolder()
 					local Map = workspace:WaitForChild("Map", math.huge)
 					local Worlds = Map:WaitForChild("Worlds", math.huge)
@@ -16144,7 +16151,7 @@ run(function()
 						if obj:GetAttribute("PlacedByUserId") == lplr.UserId then
 							OldMaterial = obj.MaterialVariant
 							oldColorBlock = obj.Color
-							obj.MaterialVariant = "rbxassetid://16991768606"
+							obj.MaterialVariant = cloneref(game:GetService('MaterialService'))['rbxassetid://16991768606'].ColorMap
 							obj.Color = Color
 						end
 					end
@@ -16154,22 +16161,25 @@ run(function()
 						if obj:GetAttribute("PlacedByUserId") == lplr.UserId then
 							OldMaterial = obj.MaterialVariant
 							oldColorBlock = obj.Color
-							obj.MaterialVariant = "rbxassetid://16991768606"
+							obj.MaterialVariant = cloneref(game:GetService('MaterialService'))['rbxassetid://16991768606'].ColorMap
 							obj.Color = Color
 						end
 					end
 				end))
-			else
+			else				
 				for i, obj in workspace:GetDescendants() do
 					if string.find(obj.Name, "wool") then
 						if obj:GetAttribute("PlacedByUserId") == lplr.UserId then
-							obj.MaterialVariant = OldMaterial
+							obj.MaterialVariant = cloneref(game:GetService('MaterialService'))[OldMaterial].ColorMap
 							obj.Color = oldColorBlock
 							OldMaterial = nil
 							oldColor = nil
 						end
 					end
 				end
+				if cloneref(game:GetService('MaterialService')):FindFirstChild('rbxassetid://16991768606') then
+ 					cloneref(game:GetService('MaterialService')):FindFirstChild('rbxassetid://16991768606'):Destroy()
+				end		
 			end
 		end,
 		Tooltip = 'Changes your blocks from a custom color(client only)'
