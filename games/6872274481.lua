@@ -15544,27 +15544,27 @@ run(function()
 				task.spawn(function()
 					if Dashes.Value == 1 then
 						Percent:SetAttribute("Percent",62)
-						msg.Text = "Dashing to bypass Anti-Cheat.."
+						msg.Text = "Dashing to bypass Anti-Cheat.. (1)"
 						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					elseif Dashes.Value == 2 then
 						Percent:SetAttribute("Percent",62)
-						msg.Text = "Dashing to bypass Anti-Cheat.."
+						msg.Text = "Dashing to bypass Anti-Cheat.. (1)"
 						task.wait(0.36)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 						Percent:SetAttribute("Percent",72)
-						msg.Text = "Dashing to bypass Anti-Cheat.."
+						msg.Text = "Dashing to bypass Anti-Cheat.. (2)"
 						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					else
 						Percent:SetAttribute("Percent",72)
-						msg.Text = "Dashing to bypass Anti-Cheat.."
+						msg.Text = "Dashing to bypass Anti-Cheat.. (1)"
 						task.wait(0.54)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
