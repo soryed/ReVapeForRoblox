@@ -11560,7 +11560,7 @@ run(function()
 									if v.Parent.Name == lplr.Name then
 										if bedwars.AbilityController:canUseAbility('berserker_rage') then
 											bedwars.AbilityController:useAbility('berserker_rage')
-											if and not Legit.Enabled not FastBreak.Enabled then
+											if  not Legit.Enabled not FastBreak.Enabled then
 												repeat
 													bedwars.BlockBreakController.blockBreaker:setCooldown(0.185)
 													task.wait(0.1)
