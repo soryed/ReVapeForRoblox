@@ -15456,31 +15456,31 @@ run(function()
 				if lplr.Character then
 					lplr:SetAttribute('LastTeleported', 0)
 				end
-				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local info = TweenInfo.new(0.64,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
 				task.spawn(function() tween:Play() end)
 				task.spawn(function()
 					if Dashes.Value == 1 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.36)"
-						task.wait(0.36)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.32s)"
+						task.wait(0.32)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					elseif Dashes.Value == 2 then
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.36)"
-						task.wait(0.36)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.32s)"
+						task.wait(0.32)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.54)"
-						task.wait(0.54)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.48s)"
+						task.wait(0.48)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 						end
 					else
-						msg.Text = "Dashing to bypass Anti-Cheat. (0.54)"
-						task.wait(0.54)
+						msg.Text = "Dashing to bypass Anti-Cheat. (0.48s)"
+						task.wait(0.48)
 						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
 							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
 							end				
@@ -15517,6 +15517,92 @@ run(function()
 				NewAutoWin:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
 					msg.Text = `Your current Player Level is {lplr:GetAttribute("PlayerLevel")}. (0.85s)`
 					task.wait(0.85)
+					msg.Text = 'Match ended. ReTeleporting to another Empty Game... (1.5s)'
+					task.wait(0.5)
+					if obj.Name == "WinningTeam" then
+						lplr:Kick("Don't disconnect, this will auto teleport you!")
+						task.wait(1)
+						Reset()
+					end
+				end))
+			end
+		end
+	end
+	local function tweenToBED3(pos,msg,oppositeTeam,Percent)
+		if entitylib.isAlive then
+			local oldpos = pos
+			pos = pos + Vector3.new(0, 5, 0)
+			local currentPosition = entitylib.character.RootPart.Position
+			if (pos - currentPosition).Magnitude > 0.5 then
+				if lplr.Character then
+					lplr:SetAttribute('LastTeleported', 0)
+				end
+				local info = TweenInfo.new(0.56,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				task.spawn(function() tween:Play() end)
+				task.spawn(function()
+					if Dashes.Value == 1 then
+						Percent:SetAttribute("Percent",62)
+						msg.Text = "Dashing to bypass Anti-Cheat.."
+						task.wait(0.28)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+						end
+					elseif Dashes.Value == 2 then
+						Percent:SetAttribute("Percent",62)
+						msg.Text = "Dashing to bypass Anti-Cheat.."
+						task.wait(0.28)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+						end
+						Percent:SetAttribute("Percent",72)
+						msg.Text = "Dashing to bypass Anti-Cheat.."
+						task.wait(0.42)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+						end
+					else
+						Percent:SetAttribute("Percent",72)
+						msg.Text = "Dashing to bypass Anti-Cheat.."
+						task.wait(0.42)
+						if bedwars.AbilityController:canUseAbility("ELECTRIC_DASH") then
+							bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+							end				
+						end
+				end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				Percent:SetAttribute("Percent",83)
+				msg.Text = `Fixing current positon {bedwars.BlockController:getBlockPosition(entitylib.character.RootPart.Position)} to {pos}. (1.45s)`
+				task.wait(1.45)
+				task.spawn(function() tween2:Play() end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				Percent:SetAttribute("Percent",99)
+				msg.Text = `Nuking {oppositeTeam} bed.. (0.85s)`
+				task.wait(0.85)
+				if not Breaker.Enabled then
+					Breaker:Toggle(true)
+				end
+				NewAutoWin:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
+					Percent:SetAttribute("Percent",100)
 					msg.Text = 'Match ended. ReTeleporting to another Empty Game... (1.5s)'
 					task.wait(0.5)
 					if obj.Name == "WinningTeam" then
@@ -15571,15 +15657,15 @@ run(function()
 	end
 	
 	local function MethodTwo(TooltipText)
-		TooltipText.Text = 'Finding all current beds positions near me! (1.85s)'
+		TooltipText.Text = 'Finding all current beds positions near me! (0.235s)'
 		AllbedPOS()
-		task.wait(0.958)
-		TooltipText.Text = 'Founded my team\'s bed position! (2.1s)'
+		task.wait(0.2345)
+		TooltipText.Text = 'Founded my team\'s bed position! (0.35s)'
 		UpdateCurrentBedPOS()
 		if currentbedpos then
-			task.wait(2.125)
-			TooltipText.Text = 'Finding other team\'s bed! (3s)'
-			task.wait(2)
+			task.wait(0.35)
+			TooltipText.Text = 'Finding other team\'s bed! (0.5s)'
+			task.wait(.5)
 			bedpos = closestBed(entitylib.character.RootPart.Position)
 			if bedpos then
 				local bp = tostring(bedpos)
@@ -15617,22 +15703,17 @@ run(function()
 					local RobloxGui = coreGui:WaitForChild("RobloxGui")
 					local CoreGuiModules = RobloxGui:WaitForChild("Modules")
 					local PlayerDropDownModule = require(CoreGuiModules:WaitForChild("PlayerDropDown"))
-					local BlockingUtility = PlayerDropDownModule:CreateBlockingUtility()
 					PlayerDropDownModule:InitBlockListAsync()
+					local BlockingUtility = PlayerDropDownModule:CreateBlockingUtility()
+
+					
 					if BlockingUtility:IsPlayerBlockedByUserId(playerToBlock.UserId) then
 						return
 					end
 					local successfullyBlocked = BlockingUtility:BlockPlayerAsync(playerToBlock)
 					if successfullyBlocked then
 						TooltipText.Text = string.format("Successfully blocked %s! lobbying... (1s)",NewFoundedPlayersName)
-						local path = "ReVape/profiles/BlockedUsers.txt"
-						local data = isfile(path) and readfile(path) or ""
-						
-						if data ~= "" then
-						    data ..= "\n"
-						end
-						
-						writefile(path, data .. NewFoundedPlayersName)
+						writefile('ReVape/profiles/BlockedUsers.txt', isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" ~= "" and (isfile('ReVape/profiles/BlockedUsers.txt') and readfile('ReVape/profiles/BlockedUsers.txt') or "" .. "\n" .. NewFoundedPlayersName) or NewFoundedPlayersName)
 						task.wait(1.015)
 					end
 					lobby()
@@ -15641,9 +15722,78 @@ run(function()
 		end)
 	end
 	
+	local function MethodThree(TooltipText,Percent)
+		Percent:SetAttribute("Percent",5)
+		TooltipText.Text = 'Finding all current beds positions near me...'
+		task.wait(0.015825)
+		AllbedPOS()
+		Percent:SetAttribute("Percent",15)
+		task.wait(0.1345)
+		Percent:SetAttribute("Percent",35)
+		TooltipText.Text = 'Founded my team\'s bed position...'
+		UpdateCurrentBedPOS()
+		if currentbedpos then
+			task.wait(0.15)
+			Percent:SetAttribute("Percent",48)
+			TooltipText.Text = 'Finding other team\'s bed...'
+			task.wait(.485)
+			bedpos = closestBed(entitylib.character.RootPart.Position)
+			if bedpos then
+				Percent:SetAttribute("Percent",54)
+				local bp = tostring(bedpos)
+				if lplr.Team.Name == "Blue" then
+						TooltipText.Text = `Founded Orange's bed at {bp}`
+						tweenToBED3(bedpos,TooltipText,'Orange',Percent)
+					else
+						TooltipText.Text = `Founded Blue's bed at {bp}`
+						tweenToBED3(bedpos,TooltipText,'Blue',Percent)
+					end
+				else
+				if lplr.Team.Name == "Blue" then
+					TooltipText.Text = 'Couldn\'t find my Orange\'s bed position? ReTeleporting...'
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				else
+					TooltipText.Text = 'Couldn\'t find my Blue\'s bed position? ReTeleporting...'
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait(0.5)
+					Reset()
+				end
+			end
+		else
+			TooltipText.Text = 'Couldn\'t find my bed position? ReTeleporting...'
+			lplr:Kick("Don't disconnect, this will auto teleport you!")
+			task.wait(0.5)
+			Reset()
+		end
+		task.spawn(function()
+			NewAutoWin:Clean(playersService.PlayerAdded:Connect(function(playerToBlock)
+				local NewFoundedPlayersName = playerToBlock.Name
+				if playersService:FindFirstChild(NewFoundedPlayersName) then
 
+					local RobloxGui = coreGui:WaitForChild("RobloxGui")
+					local CoreGuiModules = RobloxGui:WaitForChild("Modules")
+					local PlayerDropDownModule = require(CoreGuiModules:WaitForChild("PlayerDropDown"))
+					PlayerDropDownModule:InitBlockListAsync()
+					local BlockingUtility = PlayerDropDownModule:CreateBlockingUtility()
+
+					
+					if BlockingUtility:IsPlayerBlockedByUserId(playerToBlock.UserId) then
+						return
+					end
+					local successfullyBlocked = BlockingUtility:BlockPlayerAsync(playerToBlock)
+					if successfullyBlocked then
+						TooltipText.Text = string.format("Successfully blocked %s! lobbying... ",NewFoundedPlayersName)
+						task.wait(0.125)
+					end
+					lobby()
+				end
+			end))
+		end)
+	end
 	
-	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender" and user ~= "synioxzz" then
+	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
 		return 
 	end
     NewAutoWin = vape.Categories.AltFarm:CreateModule({
@@ -15651,23 +15801,6 @@ run(function()
 		Tooltip = 'must have elektra to use this',
 		Function = function(callback) 
 			if callback then
-				if store.equippedKit ~= 'elektra' then
-					return
-				end	
-				task.spawn(function()
-					NewAutoWin:Clean(lplr.Character.Humanoid.Died:Connect(function()
-						task.wait(playersService.RespawnTime + 0.85)
-						if Methods.Value == "Method 1" then
-							MethodOne()
-						elseif Methods.Value == "Method 2" then
-							MethodTwo()
-						elseif Methods.Value == "Method 3" then
-							vape:CreateNotification("AutoWin",'Comming soon..',5.245)
-						else
-							vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
-						end
-					end))
-				end)
 				if Methods.Value == "Method 1" then
 					local ScreenGui = create("ScreenGui",{Parent = lplr.PlayerGui,ResetOnSpawn=false,IgnoreGuiInset=true,DisplayOrder =9e9,Name='AutowinUI'})
 					local MainFrame = create("Frame",{Visible=gui.Enabled,Name='AutowinFrame',Parent=ScreenGui,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.05,Size=UDim2.fromScale(1,1)})
@@ -15722,11 +15855,11 @@ run(function()
 					local TooltipText = create("TextLabel",{TextColor3=Color3.fromHSV(vape.GUIColor.Hue,vape.GUIColor.Sat,vape.GUIColor.Value),Parent=AutoFarmFrame,BackgroundTransparency=1,Position=UDim2.fromScale(0.435,0.596),Size=UDim2.fromOffset(200,50),Text='...',FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.Medium,Enum.FontStyle.Italic),TextSize=48})
 					create("UIStroke",{Color=Color3.fromRGB(56,56,56),Thickness=2.1,Transparency=0.22,Parent=Title})
 					create("UIStroke",{Color=Color3.fromRGB(56,56,56),Thickness=2.1,Transparency=0.22,Parent=TooltipText})
-					local num = (3 / 1.85)
+					local num = math.floor((3 / 1.85))
 					TooltipText.Text = `checking if in empty game... ({num}s)`
 					task.wait((3 / 1.85))
 					if #playersService:GetChildren() ~= 1 then
-						num = (6 / 3.335)
+						num = math.floor((6 / 3.335))
 						TooltipText.Text = `player's found. Teleporting to a Empty Game.. ({num}s)`
 						lplr:Kick("Don't disconnect, this will auto teleport you!")
 						task.wait((6 / 3.335))
@@ -15736,6 +15869,330 @@ run(function()
 						MethodTwo(TooltipText)
 					end
 					
+				elseif Methods.Value == 'Method 3' then
+					local tips = {
+						"you can always be afk while you farm...",
+						"this is a tip lol...",
+						'you can always sleep while afk farming...',
+						'you have 2 other methods for auto farm...',
+						'this is the most undetected farming and best method out here...',
+						'note to bedwars dev/mods FUCK YOU...'
+					}
+					local lastTip
+					local prefix = "tip: "
+					local typeSpeed = 0.085
+					local eraseSpeed = 0.04
+					local waitBetween = 2
+					local hidden = true
+					local function AccAgeHook(txt)
+						task.spawn(function()
+							local daysTotal = math.max(lplr.AccountAge, 1)
+
+							local YEARS = 365
+							local MONTHS = 30
+							local HOURS_IN_DAY = 24
+
+							local years = math.floor(daysTotal / YEARS)
+							local remainingDays = daysTotal % YEARS
+
+							local months = math.floor(remainingDays / MONTHS)
+							local days = remainingDays % MONTHS
+
+							local hours = daysTotal == 1 and 1 or 0
+							local minutes = daysTotal == 1 and 0 or 0
+
+							local parts = {}
+
+							if years > 0 then
+								table.insert(parts, years .. (years == 1 and " year" or " years"))
+							end
+
+							if months > 0 then
+								table.insert(parts, months .. (months == 1 and " month" or " months"))
+							end
+
+							if days > 0 then
+								table.insert(parts, days .. (days == 1 and " day" or " days"))
+							end
+
+							if daysTotal <= 1 then
+								table.insert(parts, hours .. (hours == 1 and " hour" or " hours"))
+								table.insert(parts, minutes .. " minutes")
+							end
+
+							local result = table.concat(parts, ", ")
+							txt.Text = 'Account age: '..result
+						end)
+					end
+
+					local function LevelCheckHook(txt)
+						task.spawn(function()
+							while NewAutoWin.Enabled do
+								txt.Text = 'level: '..tostring(lplr:GetAttribute("PlayerLevel")) or "0"
+								task.wait(0.01)
+							end
+						end)
+					end
+					
+					local function LogoBGBGTween(image)
+						local MAX = 0.92
+						local MIN = 0.84
+
+						local tweenInfo = TweenInfo.new(
+							0.96,
+							Enum.EasingStyle.Sine,
+							Enum.EasingDirection.InOut
+						)
+
+
+						local growTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MAX
+						})
+
+						local shrinkTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MIN
+						})
+
+						task.spawn(function()
+							while NewAutoWin.Enabled do
+								growTween:Play()
+								growTween.Completed:Wait()
+
+								shrinkTween:Play()
+								shrinkTween.Completed:Wait()
+							end
+						end)
+					end
+
+					local function LogoBGTween(image)
+						local MAX = 0.95
+						local MIN = 0.9
+
+						local tweenInfo = TweenInfo.new(
+							0.96,
+							Enum.EasingStyle.Sine,
+							Enum.EasingDirection.InOut
+						)
+
+
+						local growTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MAX
+						})
+
+						local shrinkTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MIN
+						})
+
+						task.spawn(function()
+							while NewAutoWin.Enabled do
+								growTween:Play()
+								growTween.Completed:Wait()
+
+								shrinkTween:Play()
+								shrinkTween.Completed:Wait()
+							end
+						end)
+					end
+
+					local function Vig1Tween(image)
+						local MAX = 1
+						local MIN = 0.85
+
+						local tweenInfo = TweenInfo.new(
+							1.5,
+							Enum.EasingStyle.Sine,
+							Enum.EasingDirection.InOut
+						)
+
+						local growTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MAX
+						})
+
+						local shrinkTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MIN
+						})
+
+						task.spawn(function()
+							while NewAutoWin.Enabled do
+								growTween:Play()
+								growTween.Completed:Wait()
+
+								shrinkTween:Play()
+								shrinkTween.Completed:Wait()
+							end
+						end)
+					end
+
+					local function Vig2Tween(image)
+						local MAX = 0.98
+						local MIN = 0.48
+
+						local tweenInfo = TweenInfo.new(
+							1.2,
+							Enum.EasingStyle.Sine,
+							Enum.EasingDirection.InOut
+						)
+
+
+						local growTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MAX
+						})
+
+						local shrinkTween = tweenService:Create(image, tweenInfo, {
+							ImageTransparency = MIN
+						})
+
+						task.spawn(function()
+							while NewAutoWin.Enabled do
+								growTween:Play()
+								growTween.Completed:Wait()
+
+								shrinkTween:Play()
+								shrinkTween.Completed:Wait()
+							end
+						end)
+					end
+
+					local function username(txt,btn)
+						hidden = not hidden
+
+						if hidden then
+							txt.Text = "username: [HIDDEN]"
+							btn.BackgroundColor3 = Color3.fromRGB(236, 78, 78)
+							btn.Text = 'Reveal user'
+						else
+							txt.Text = "username: "..lplr.Name
+							btn.BackgroundColor3 = Color3.fromRGB(141, 236, 78)
+							btn.Text = 'Conceal user'
+						end
+					end
+
+					local function playTip(txt)
+						local index
+
+						if #tips > 1 then
+							repeat
+								index = math.random(1, #tips)
+							until index ~= lastTip
+						else
+							index = 1
+						end
+
+						lastTip = index
+						local tipText = tips[index]
+
+						txt.Text = prefix .. tipText
+						txt.MaxVisibleGraphemes = #prefix
+
+						for i = #prefix + 1, #prefix + #tipText do
+							txt.MaxVisibleGraphemes = i
+							task.wait(typeSpeed)
+						end
+
+						task.wait(1.5)
+
+						for i = #prefix + #tipText, #prefix, -1 do
+							txt.MaxVisibleGraphemes = i
+							task.wait(eraseSpeed)
+						end
+
+						task.wait(waitBetween)
+					end
+
+					local function StartTips(txt)
+						task.wait(2)
+						task.spawn(function()
+							while true do
+								playTip(txt)
+							end
+						end)
+					end
+
+					local function PercentUpdate(txt,per,snd)
+						per = math.clamp(per, 0, 100)
+						txt.Text = tostring(per).."%"
+						local MaxPercent = 100
+						local NewPercent = (per / MaxPercent)
+
+						local tweenInfo = TweenInfo.new(
+							0.3,
+							Enum.EasingStyle.Sine,
+							Enum.EasingDirection.Out
+						)
+
+
+						local tween = tweenService:Create(snd, tweenInfo, {
+							Size = UDim2.fromScale(NewPercent, 1)
+						})
+						tween:Play()
+						tween.Completed:Connect(function()
+							task.wait(.1)
+							tween:Destroy()
+						end)
+					end
+
+					local function hookcheck(txt,frame)
+						task.spawn(function()
+							txt:GetAttributeChangedSignal('Percent'):Connect(function()
+								PercentUpdate(txt,txt:GetAttribute("Percent"),frame)
+							end)
+						end)
+					end
+
+					local AutoFarmUI = create("ScreenGui",{Name='AutowinFrame',Parent=lplr.PlayerGui,IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=999999999999999})
+					local MainFrame = create("Frame",{Parent=AutoFarmUI,Name='AutoFarmFrame',BackgroundColor3=Color3.fromRGB(25,25,25),Size=UDim2.fromScale(1,1)})
+					local PerFrameMain = create("Frame",{BorderSizePixel=0,Parent=MainFrame,Name='LevelFrame',BackgroundColor3=Color3.fromRGB(40,40,45),Position=UDim2.new(0.5,-150,0.5,80),Size=UDim2.fromOffset(300,3),ZIndex=2})
+					local PerFrameSecondary = create("Frame",{BackgroundColor3=Color3.fromRGB(215,215,215),BorderSizePixel=0,Parent=PerFrameMain,Name='Secondary',Size=UDim2.fromScale(0,1),ZIndex=3})
+					local PercentText = create("TextLabel",{Name='Percent',Parent=PerFrameMain,BackgroundTransparency=1,Position=UDim2.new(0.5,-50,-26.167,50),TextColor3 = Color3.fromRGB(200, 200, 200),BackgroundColor3=Color3.fromRGB(255,255,255),Size=UDim2.fromOffset(100,20),ZIndex=2,Font=Enum.Font.Code,Text='0%',TextSize=12})
+					PercentText:SetAttribute("Percent",0)
+					create("UIStroke",{Color=Color3.fromRGB(255,255,255),Transparency=0.8,Parent=PerFrameMain})
+					local XPFrameTip = create("Frame",{Name='XPFrame',BackgroundTransparency=1,Position=UDim2.fromScale(0.881,0.742),Size=UDim2.fromOffset(184,219),Parent=MainFrame})
+					local div = create("Frame",{Parent=XPFrameTip,Name='Divider',BackgroundColor3=Color3.fromRGB(56,56,56),Position=UDim2.fromScale(0.049,0.146),Size=UDim2.fromOffset(168,4)})
+					create("UICorner",{Parent = div})
+					create("TextLabel",{Name='d1',BackgroundTransparency=1,Position=UDim2.new(0.598,-110,0.288,-30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='(Day 1) > Level 9',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = XPFrameTip})
+					create("TextLabel",{Name='d2',BackgroundTransparency=1,Position=UDim2.new(0.598, -110,0.438, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='(Day 2) > Level 13',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = XPFrameTip})
+					create("TextLabel",{Name='d3',BackgroundTransparency=1,Position=UDim2.new(0.598, -110,0.589, -30),Size=UDim2.fromOffset(184,44),ZIndex=2,Font=Enum.Font.Code,Text='(Day 3) > Level 16',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = XPFrameTip})
+					create("TextLabel",{Name='d4',BackgroundTransparency=1,Position=UDim2.new(0.598, -110,0.79, -30),Size=UDim2.fromOffset(184,43),ZIndex=2,Font=Enum.Font.Code,Text='(Day 4) > Level 19',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = XPFrameTip})
+					create("TextLabel",{Name='d5',BackgroundTransparency=1,Position=UDim2.new(0.598, -110,0.986, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='(Day 5) > Level 20(Rank!)',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = XPFrameTip})
+					create("TextLabel",{Name='title',BackgroundTransparency=1,Position=UDim2.new(0.598, -110,0.137, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='XP Capped Level\'s',TextColor3=Color3.fromRGB(120,120,120),TextSize=18,TextWrapped=true,Parent = XPFrameTip})
+					local LogoBGBG = create("ImageLabel",{Parent=MainFrame,Name='LogoBGBG',BackgroundTransparency=1,Position=UDim2.new(0.5,-120,0.5,-170),Size=UDim2.fromOffset(240,240),Image='rbxassetid://127677235878436',ImageTransparency=0.84})
+					local LogoBG = create("ImageLabel",{Parent=LogoBGBG,Name='LogoBG',BackgroundTransparency=1,Size=UDim2.fromScale(1,1),Image='rbxassetid://127677235878436',ImageTransparency=0.95})
+					local Logo = create("ImageLabel",{Parent=LogoBG,Name='Logo',BackgroundTransparency=1,Position=UDim2.new(0.5,-100,0.708,-150),Size=UDim2.fromOffset(200,200),ZIndex=2,Image='rbxassetid://127677235878436'})
+					local Vig1 = create("ImageLabel",{Parent=MainFrame,Name='Vig1',BackgroundTransparency=1,Size=UDim2.fromScale(1,1),ZIndex=2,Image='rbxassetid://135131984221448',ImageTransparency=1})
+					local Vig2 = create("ImageLabel",{Parent=MainFrame,Name='Vig2',BackgroundTransparency=1,Size=UDim2.fromScale(2,2),Position=UDim2.fromScale(-0.474,-0.02),Rotation=90,ZIndex=2,Image='rbxassetid://135131984221448',ImageTransparency=1})
+					local AccAge = create("TextLabel",{Name='AccAge',BackgroundTransparency=1,Position=UDim2.new(0.068, -110,0.873, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='Account age: ',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = MainFrame})
+					local Tip = create("TextLabel",{TextXAlignment='Left',Name='Tip',BackgroundTransparency=1,Position=UDim2.new(0.5,-300,1,-40),Size=UDim2.fromOffset(1171,20),ZIndex=2,Font=Enum.Font.Code,Text='tip: ...',TextColor3=Color3.fromRGB(130,130,130),TextSize=10,TextWrapped=true,Parent = MainFrame})
+					local Tooltip = create("TextLabel",{Name='Tooltip',BackgroundTransparency=1,Position=UDim2.new(0.5,-200,0.5,100),Size=UDim2.fromOffset(400,30),ZIndex=2,Font=Enum.Font.Code,Text='...',TextColor3=Color3.fromRGB(200,200,200),TextSize=14,TextWrapped=true,Parent = MainFrame})
+					local LvL = create("TextLabel",{Name='lvl',BackgroundTransparency=1,Position=UDim2.new(0.068, -110,0.949, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='level: 0',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = MainFrame})
+					local Username = create("TextLabel",{Name='user',BackgroundTransparency=1,Position=UDim2.new(0.068, -110,0.911, -30),Size=UDim2.fromOffset(184,33),ZIndex=2,Font=Enum.Font.Code,Text='username: [HIDDEN]',TextColor3=Color3.fromRGB(120,120,120),TextSize=14,TextWrapped=true,Parent = MainFrame})
+					local UserButton = create("TextButton",{Name='btn',TextColor3=Color3.fromRGB(255,255,255),BackgroundColor3=Color3.fromRGB(236,78,78),Position=UDim2.new(4.098, 0,0, 0),Size=UDim2.fromOffset(130,26),ZIndex=1,Font=Enum.Font.Code,Text='Reveal user',TextSize=18,Parent = Username})
+					create("UICorner",{Parent = UserButton})
+
+					UserButton.Activated:Connect(function()
+						username(Username,UserButton)
+					end)
+					LevelCheckHook(LvL)
+					AccAgeHook(AccAge)
+					hookcheck(PercentText,PerFrameSecondary)
+					LogoBGTween(LogoBG)
+					LogoBGBGTween(LogoBGBG)
+					Vig1Tween(Vig1)
+					Vig2Tween(Vig2)
+					StartTips(Tip)
+					local num = math.floor((3 / 1.85))
+					Tooltip.Text = 'checking if you are in empty game...'
+					task.wait((3 / 1.85))
+					if #playersService:GetChildren() ~= 1 then
+						num = math.floor((6 / 3.335))
+						Tooltip.Text = 'player\'s found. Teleporting to a Empty Game..'
+						lplr:Kick("Don't disconnect, this will auto teleport you!")
+						task.wait((6 / 3.335))
+						Reset()
+					else
+						Tooltip.Text = 'waiting for match to start...'
+						repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not NewAutoWin.Enabled)
+						MethodThree(Tooltip,PercentText)
+					end
 				else
 					vape:CreateNotification("AutoWin",'str64 error','warning',5.245)
 				end
@@ -15751,7 +16208,7 @@ run(function()
 	Methods = NewAutoWin:CreateDropdown({
 		Name = "Methods",
 		List = {'Method 1', 'Method 2','Method 3'},
-		Tooltip = 'Method 1 - normal but undetected and fast\nMethod 2 - faster and blocks people who join(with autolobby) and even more undetected!\n Method 3 - Comming soon...'
+		Tooltip = 'Method 1 - normal but undetected and fast\nMethod 2 - faster and blocks people who join(with autolobby) and even more undetected!\n Method 3 - same as method 2 but has faster and better player detections'
 	})
 	gui = NewAutoWin:CreateToggle({
 		Name = "Gui",
@@ -15763,7 +16220,6 @@ run(function()
 		end
 	})
 end)
-
 run(function()
 	local AutoShoot
 	local Delay
