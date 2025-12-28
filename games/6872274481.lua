@@ -15601,7 +15601,11 @@ run(function()
 				if not Breaker.Enabled then
 					Breaker:Toggle(true)
 				end
+				NewAutoWin:Clean(lplr.PlayerGui.NotificationApp.ChildAdded:Connect(function(obj)
+					obj:Destroy()
+				end))
 				NewAutoWin:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
+					
 					Percent:SetAttribute("Percent",100)
 					msg.Text = 'Match ended. ReTeleporting to another Empty Game...'
 					task.wait(0.5)
