@@ -16702,6 +16702,7 @@ run(function()
 	local Speed
 	local LimitToItems
 	local RequireMouse
+	local SilentAim
 	local lastPlace, clutchCount = 0, 0
 	local function GetBlocks()
 		if store.hand.toolType == 'block' then
