@@ -15582,7 +15582,7 @@ run(function()
 					lplr:SetAttribute('LastTeleported', os.time())
 				end
 				Percent:SetAttribute("Percent",83)
-				msg.Text = `Fixing current positon {bedwars.BlockController:getBlockPosition(entitylib.character.RootPart.Position)} to {pos}. (1.45s)`
+				msg.Text = `Fixing current positon {bedwars.BlockController:getBlockPosition(entitylib.character.RootPart.Position)} to {pos}.`
 				task.wait(1.45)
 				task.spawn(function() tween2:Play() end)
 				task.spawn(function()
@@ -15596,14 +15596,14 @@ run(function()
 					lplr:SetAttribute('LastTeleported', os.time())
 				end
 				Percent:SetAttribute("Percent",99)
-				msg.Text = `Nuking {oppositeTeam} bed.. (0.85s)`
+				msg.Text = `Nuking {oppositeTeam} bed.. `
 				task.wait(0.85)
 				if not Breaker.Enabled then
 					Breaker:Toggle(true)
 				end
 				NewAutoWin:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
 					Percent:SetAttribute("Percent",100)
-					msg.Text = 'Match ended. ReTeleporting to another Empty Game... (1.5s)'
+					msg.Text = 'Match ended. ReTeleporting to another Empty Game...'
 					task.wait(0.5)
 					if obj.Name == "WinningTeam" then
 						lplr:Kick("Don't disconnect, this will auto teleport you!")
