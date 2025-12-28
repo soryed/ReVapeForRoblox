@@ -27,7 +27,7 @@ local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local lightingService = cloneref(game:GetService("Lighting"))
-local isnetworkowner = identifyexecutor and table.find({'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 
@@ -390,250 +390,20 @@ local function roundPos(vec)
 	return Vector3.new(math.round(vec.X / 3) * 3, math.round(vec.Y / 3) * 3, math.round(vec.Z / 3) * 3)
 end
 
-local function coreswitch(tool, ignore)
-    local character = lplr.Character
-    if not character then return end
-
-    local humanoid = character:FindFirstChild("Humanoid")
-    if not humanoid then return end
-
-	if not ignore then
-		local currentHandItem
-		for _, acc in character:GetChildren() do
-			if acc:IsA("Accessory") and acc:GetAttribute("InvItem") == true and acc:GetAttribute("ArmorSlot") == nil and acc:GetAttribute("IsBackpack") == nil then
-				currentHandItem = acc
-				break
-			end
-		end
-		if currentHandItem then
-			currentHandItem:Destroy()
-		end
-	
-		for _, weld in pairs(character:GetDescendants()) do
-			if weld:IsA("Weld") and weld.Name == "HandItemWeld" then
-				weld:Destroy()
-			end
-		end
-	
-		local inventoryFolder = character:FindFirstChild("InventoryFolder")
-		if not inventoryFolder or not inventoryFolder.Value then return end
-		local toolInstance = inventoryFolder.Value:FindFirstChild(tool.Name)
-		if not toolInstance then return end
-		local clone = toolInstance:Clone()
-	
-		clone:SetAttribute("InvItem", true)
-	
-		humanoid:AddAccessory(clone)
-	
-		local handle = clone:FindFirstChild("Handle")
-		if handle and handle:IsA("BasePart") then
-			local attachment = handle:FindFirstChildWhichIsA("Attachment")
-			if attachment then
-				local characterAttachment = character:FindFirstChild(attachment.Name, true)
-				if characterAttachment and characterAttachment:IsA("Attachment") then
-					local weld = Instance.new("Weld")
-					weld.Name = "HandItemWeld"
-					weld.Part0 = characterAttachment.Parent 
-					weld.Part1 = handle
-					weld.C0 = characterAttachment.CFrame
-					weld.C1 = attachment.CFrame
-					weld.Parent = handle
-				end
-			end
-		end
-	
-		local handInvItem = character:FindFirstChild("HandInvItem")
-		if handInvItem then
-			handInvItem.Value = tool
-		end
-	end
-
-	pcall(function()
-		local res = bedwars.Client:Get('SetInvItem'):CallServerAsync({hand = tool})
-		if res ~= nil and res == true then
-			local handInvItem = character:FindFirstChild("HandInvItem")
-			if handInvItem then
-				handInvItem.Value = tool
-			end
-		elseif string.find(string.lower(tostring(res)), 'promise') then
-			res:andThen(function(res)
-				if res == true then
-					local handInvItem = character:FindFirstChild("HandInvItem")
-					if handInvItem then
-						handInvItem.Value = tool
-					end
-				end
-			end)
-		end
-	end)
-
-    return true
-end
-local function corehotbarswitch(tool)
-	local function findChild(name, className, children, nodebug)
-		children = children:GetChildren()
-        for i,v in pairs(children) do if v.Name == name and v.ClassName == className then return v end end
-        local args = {Name = tostring(name), ClassName == tostring(className), Children = children}
-		if not nodebug then
-			warn("[findChild]: CHILD NOT FOUND! Args: ", game:GetService("HttpService"):JSONEncode(args), name, className, children)
-		end
-        return nil
-    end
-	local function resolveHotbar()
-		local hotbar
-		hotbar = findChild("hotbar", "ScreenGui", lplr:WaitForChild("PlayerGui"))
-		if not hotbar then return false end
-
-		local _1 = findChild("1", "Frame", hotbar, true)
-		if not _1 then return false end
-
-		local ItemsHotbar = findChild("ItemsHotbar", "Frame", _1)
-		if not ItemsHotbar then return false end
-
-		return {
-			hotbar = hotbar,
-			items = ItemsHotbar
-		}
-	end
-	local function resolveItemHotbar(hotbar)
-		if tostring(hotbar) == "10" then return "blacklisted" end
-		local res = {
-			id = hotbar.Name,
-			toolImage = "",
-			toolAmount = 0,
-			object = hotbar
-		}
-		if not tonumber(res.id) then return false end
-
-		local _1 = findChild("1", "ImageButton", hotbar, true)
-		if not _1 then return false end
-
-		local __1 = findChild("1", "TextLabel", _1, true)
-		if __1 then 
-			res.toolAmount = tonumber(__1.Text) or nil
-		end
-
-		local _3 = findChild("3", "Frame", _1, true)
-		if not _3 then return false end
-
-		local ___1 = findChild("1", "ImageLabel", _3, true)
-		if not ___1 then return false end
-		res.toolImage = ___1.Image
-
-		return res
-	end
-	local function resolveItemsHotbar(hotbar)
-		local res = {}
-		for i,v in pairs(hotbar:GetChildren()) do
-			local rev = resolveItemHotbar(v)
-			local name = tostring(v.Name)
-			if rev and type(rev) == "table" then 
-				if res[name] then warn("Duplication found! Overwriting... ["..name.."]") end
-				res[name] = rev
-			else
-				if rev == "blacklisted" then continue end
-				if res[name] then warn("Duplication found! Overwriting... ["..name.."]") end
-				res[name] = {
-					object = v
-				}
-			end
-		end
-		return res
-	end
-	local function findTool(items_rev, img)
-		local res = {
-			tool = nil,
-			activated = nil
-		}
-		for i,v in pairs(items_rev) do
-			if v.toolImage and tostring(v.toolImage) == tostring(img) then 
-				res.tool = v
-			end
-			local img = findChild("1", "ImageButton", v.object)
-			if img and img.Position ~= UDim2.new(0, 0, 0, 0) then
-				res.activated = v
-			end
-		end
-		return res
-	end
-	local function deactivatify(object)
-		local img = findChild("1", "ImageButton", object)
-		if img then
-			img.Position = UDim2.new(0, 0, 0, 0)
-			img.BorderColor3 = Color3.fromRGB(114, 127, 172)
-			local text = findChild("1", "TextLabel", img)
-			text.TextColor3 = Color3.fromRGB(255, 255, 255)
-			text.BackgroundColor3 = Color3.fromRGB(114, 127, 172)
-		end
-	end
-	local function activatify(object)
-		local img = findChild("1", "ImageButton", object)
-		if img then
-			img.Position = UDim2.new(0, 0, -0.075, 0)
-			img.BorderColor3 = Color3.fromRGB(255, 255, 255)
-			local text = findChild("1", "TextLabel", img)
-			text.TextColor3 = Color3.fromRGB(0, 0, 0)
-			text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		end
-	end
-	task.spawn(function()
-		local function run(func)
-			local suc, err = pcall(function()
-				func()
-			end)
-			if err then warn("[CoreSwitch Error]: "..tostring(debug.traceback(err))) end
-		end
-		run(function()
-			if not lplr.Character then return false end
-
-			if not tool then
-				tool = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') and lplr.Character:FindFirstChild('HandInvItem').Value or nil
-			end
-			if not tool then return false end
-			tool = tostring(tool)
-
-			local hotbar_rev = resolveHotbar()
-			if not hotbar_rev then return false end
-
-			local ItemsHotbar = hotbar_rev.items
-			local items_rev = resolveItemsHotbar(ItemsHotbar)
-			if not items_rev then return false end
-
-			repeat task.wait() until (bedwars.ItemMeta ~= nil and type(bedwars.ItemMeta) == "table") or (bedwars.ItemTable ~= nil and type(bedwars.ItemTable) == "table")
-			local meta = ((bedwars.ItemMeta and bedwars.ItemMeta[tool]) or (bedwars.ItemTable and bedwars.ItemTable[tool]))
-			if ((not meta) or (meta ~= nil and (not meta.image))) then return false end
-
-			local img = meta.image
-			
-			local tool_rev = findTool(items_rev, img)
-			if ((not tool_rev) or ((tool_rev ~= nil) and (not tool_rev.tool))) then return false end
-			local rev = {
-				image = findChild("1", "ImageButton", tool_rev.tool.object)
-			}
-			if tool_rev.activated then 
-				rev.activate = findChild("1", "ImageButton", tool_rev.activated.object)
-			end
-			if (not rev.image) then return false end
-
-			if rev.activate then
-				deactivatify(tool_rev.activated.object)
-			end
-			activatify(tool_rev.tool.object)
-		end)	
-	end)
-end
 
 local function switchItem(tool, delayTime)
 	delayTime = delayTime or 0.05
-	delayTime = (delayTime == 0 and 0.05 or delayTime)
-	if tool ~= nil and type(tool) == "string" then
-		tool = getItem(tool) and getItem(tool).tool
-	end
-		local _tool = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') and lplr.Character:FindFirstChild('HandInvItem').Value or nil
-		if _tool ~= nil and _tool ~= tool then
-			coreswitch(tool, true)
-			corehotbarswitch()
+	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
+	if check and check.Value ~= tool and tool.Parent ~= nil then
+		task.spawn(function()
+			bedwars.Client:Get(remotes.EquipItem):CallServerAsync({hand = tool})
+		end)
+		check.Value = tool
+		if delayTime > 0 then
+			task.wait(delayTime)
 		end
+		return true
+	end
 end
 
 local function getSwordSlot()
@@ -1042,6 +812,9 @@ run(function()
 		EmoteType = require(replicatedStorage.TS.locker.emote['emote-type']).EmoteType,
 		GameAnimationUtil = require(replicatedStorage.TS.animation['animation-util']).GameAnimationUtil,
 		NotificationController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/notification-controller@NotificationController'),
+		TaxController = require(lplr.PlayerScripts.TS.controllers.games.bedwars.shop.tax['shop-tax-controller']),
+		BedwarsKitSkin = require(replicatedStorage.TS.games.bedwars['kit-skin']['bedwars-kit-skin']),
+		BedwarsKitSkinMeta = require(replicatedStorage.TS.games.bedwars['kit-skin']['bedwars-kit-skin-meta']),
 		getIcon = function(item, showinv)
 			local itemmeta = bedwars.ItemMeta[item.itemType]
 			return itemmeta and showinv and itemmeta.image or ''
@@ -1089,35 +862,36 @@ run(function()
 	})
 
 	local remoteNames = {
-		AfkStatus = safeGetProto(Knit.Controllers.AfkController.KnitStart, 1),
+		AfkStatus = debug.getproto(Knit.Controllers.AfkController.KnitStart, 1),
 		AttackEntity = Knit.Controllers.SwordController.sendServerRequest,
 		BeePickup = Knit.Controllers.BeeNetController.trigger,
-		CannonAim = safeGetProto(Knit.Controllers.CannonController.startAiming, 5),
+		CannonAim = debug.getproto(Knit.Controllers.CannonController.startAiming, 5),
 		CannonLaunch = Knit.Controllers.CannonHandController.launchSelf,
-		ConsumeBattery = safeGetProto(Knit.Controllers.BatteryController.onKitLocalActivated, 1),
-		ConsumeItem = safeGetProto(Knit.Controllers.ConsumeController.onEnable, 1),
+		ConsumeBattery = debug.getproto(Knit.Controllers.BatteryController.onKitLocalActivated, 1),
+		ConsumeItem = debug.getproto(Knit.Controllers.ConsumeController.onEnable, 1),
 		ConsumeSoul = Knit.Controllers.GrimReaperController.consumeSoul,
-		ConsumeTreeOrb = safeGetProto(Knit.Controllers.EldertreeController.createTreeOrbInteraction, 1),
-		DepositPinata = safeGetProto(Knit.Controllers.PiggyBankController.KnitStart, 5),
-		DragonBreath = safeGetProto(Knit.Controllers.VoidDragonController.onKitLocalActivated, 5),
-		DragonEndFly = safeGetProto(Knit.Controllers.VoidDragonController.flapWings, 1),
+		ConsumeTreeOrb = debug.getproto(Knit.Controllers.EldertreeController.createTreeOrbInteraction, 1),
+		DepositPinata = debug.getproto(debug.getproto(Knit.Controllers.PiggyBankController.KnitStart, 2), 5),
+		DragonBreath = debug.getproto(Knit.Controllers.VoidDragonController.onKitLocalActivated, 5),
+		DragonEndFly = debug.getproto(Knit.Controllers.VoidDragonController.flapWings, 1),
 		DragonFly = Knit.Controllers.VoidDragonController.flapWings,
 		DropItem = Knit.Controllers.ItemDropController.dropItemInHand,
+		EquipItem = debug.getproto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.equipItem, 3),
 		FireProjectile = debug.getupvalue(Knit.Controllers.ProjectileController.launchProjectileWithValues, 2),
 		GroundHit = Knit.Controllers.FallDamageController.KnitStart,
 		GuitarHeal = Knit.Controllers.GuitarController.performHeal,
-		HannahKill = safeGetProto(Knit.Controllers.HannahController.registerExecuteInteractions, 1),
-		HarvestCrop = safeGetProto(safeGetProto(Knit.Controllers.CropController.KnitStart, 4), 1),
-		KaliyahPunch = safeGetProto(Knit.Controllers.DragonSlayerController.onKitLocalActivated, 1),
-		MageSelect = safeGetProto(Knit.Controllers.MageController.registerTomeInteraction, 1),
-		MinerDig = safeGetProto(Knit.Controllers.MinerController.setupMinerPrompts, 1),
+		HannahKill = debug.getproto(Knit.Controllers.HannahController.registerExecuteInteractions, 1),
+		HarvestCrop = debug.getproto(debug.getproto(Knit.Controllers.CropController.KnitStart, 4), 1),
+		KaliyahPunch = debug.getproto(Knit.Controllers.DragonSlayerController.onKitLocalActivated, 1),
+		MageSelect = debug.getproto(Knit.Controllers.MageController.registerTomeInteraction, 1),
+		MinerDig = debug.getproto(Knit.Controllers.MinerController.setupMinerPrompts, 1),
 		PickupItem = Knit.Controllers.ItemDropController.checkForPickup,
-		PickupMetal = safeGetProto(Knit.Controllers.HiddenMetalController.onKitLocalActivated, 4),
+		PickupMetal = debug.getproto(Knit.Controllers.HiddenMetalController.onKitLocalActivated, 4),
 		ReportPlayer = require(lplr.PlayerScripts.TS.controllers.global.report['report-controller']).default.reportPlayer,
-		ResetCharacter = safeGetProto(Knit.Controllers.ResetController.createBindable, 1),
-		SpawnRaven = safeGetProto(Knit.Controllers.RavenController.KnitStart, 1),
+		ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
+		SpawnRaven = debug.getproto(Knit.Controllers.RavenController.KnitStart, 1),
 		SummonerClawAttack = Knit.Controllers.SummonerClawHandController.attack,
-		WarlockTarget = safeGetProto(Knit.Controllers.WarlockStaffController.KnitStart, 2),
+		WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 2)
 	}
 	local function dumpRemote(tab)
 		local ind
@@ -1261,49 +1035,19 @@ run(function()
 		end
 	end
 
-	bedwars.breakBlock = function(block, effects, anim, customHealthbar,at)
-		if lplr:GetAttribute('DenyBlockBreak') or not entitylib.isAlive or InfiniteFly.Enabled then return end
-		
-		task.spawn(function()
-				if at then
-					local event
-				
-					local function switchHotbarItem(block)
-						if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
-							local tool, slot = store.tools[bedwars.ItemMeta[block.Name].block.breakType], nil
-							if tool then
-								for i, v in store.inventory.hotbar do
-									if v.item and v.item.itemType == tool.itemType then slot = i - 1 break end
-								end
-					
-								if hotbarSwitch(slot) then
-									if inputService:IsMouseButtonPressed(0) then 
-										event:Fire() 
-									end
-									return true
-								end
-							end
-						end
-					end
-
-					event = Instance.new('BindableEvent')
-					event.Event:Connect(function()
-						contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
-					end)
-
-					if switchHotbarItem(block) then return end
-				else
-					
-				end
-		end)
-
+	bedwars.breakBlock = function(block, effects, anim, customHealthbar, autotool, wallcheck, nobreak)
+		if lplr:GetAttribute('DenyBlockBreak') or not entitylib.isAlive then return end
 		local handler = bedwars.BlockController:getHandlerRegistry():getHandler(block.Name)
 		local cost, pos, target, path = math.huge
+		local mag = 9e9
 
-		for _, v in (handler and handler:getContainedPositions(block) or {block.Position / 3}) do
+		local positions = (handler and handler:getContainedPositions(block) or {block.Position / 3})
+
+		for _, v in positions do
 			local dpos, dcost, dpath = calculatePath(block, v * 3)
-			if dpos and dcost < cost then
-				cost, pos, target, path = dcost, dpos, v * 3, dpath
+			local dmag = dpos and (entitylib.character.RootPart.Position - dpos).Magnitude
+			if dpos and dcost < cost and dmag < mag then
+				cost, pos, target, path, mag = dcost, dpos, v * 3, dpath, dmag
 			end
 		end
 
@@ -1312,11 +1056,20 @@ run(function()
 			local dblock, dpos = getPlacedBlock(pos)
 			if not dblock then return end
 
-			if (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) > 0.4 then
+			if not nobreak and (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) > 0.2 then
 				local breaktype = bedwars.ItemMeta[dblock.Name].block.breakType
 				local tool = store.tools[breaktype]
 				if tool then
-					switchItem(tool.tool)
+					if autotool then
+						for i, v in store.inventory.hotbar do
+							if v.item and v.item.tool == tool.tool and i ~= (store.inventory.hotbarSlot + 1) then 
+								hotbarSwitch(i - 1)
+								break
+							end
+						end
+					else
+						switchItem(tool.tool)
+					end
 				end
 			end
 
@@ -1325,41 +1078,46 @@ run(function()
 				blockhealthbar.breakingBlockPosition = dpos
 			end
 
-			bedwars.ClientDamageBlock:Get('DamageBlock'):CallServerAsync({
-				blockRef = {blockPosition = dpos},
-				hitPosition = pos,
-				hitNormal = Vector3.FromNormalId(Enum.NormalId.Top)
-			}):andThen(function(result)
-				if result then
-					if result == 'cancelled' then
-						store.damageBlockFail = tick() + 1
-						return
-					end
+			if not nobreak then
+				bedwars.ClientDamageBlock:Get('DamageBlock'):CallServerAsync({
+					blockRef = {blockPosition = dpos},
+					hitPosition = pos,
+					hitNormal = Vector3.FromNormalId(Enum.NormalId.Top)
+				}):andThen(function(result)
+					if result then
+						if result == 'cancelled' then
+							store.damageBlockFail = os.clock() + 1
+							table.clear(cache)
+							return
+						end
 
-					if effects then
-						local blockdmg = (blockhealthbar.blockHealth - (result == 'destroyed' and 0 or getBlockHealth(dblock, dpos)))
-						customHealthbar = customHealthbar or bedwars.BlockBreaker.updateHealthbar
-						customHealthbar(bedwars.BlockBreaker, {blockPosition = dpos}, blockhealthbar.blockHealth, dblock:GetAttribute('MaxHealth'), blockdmg, dblock)
-						blockhealthbar.blockHealth = math.max(blockhealthbar.blockHealth - blockdmg, 0)
+						if effects then
+							local blockdmg = (blockhealthbar.blockHealth - (result == 'destroyed' and 0 or getBlockHealth(dblock, dpos)))
+							customHealthbar = customHealthbar or bedwars.BlockBreaker.updateHealthbar
+							customHealthbar(bedwars.BlockBreaker, {blockPosition = dpos}, blockhealthbar.blockHealth, dblock:GetAttribute('MaxHealth'), blockdmg, dblock)
+							blockhealthbar.blockHealth = math.max(blockhealthbar.blockHealth - blockdmg, 0)
 
-						if blockhealthbar.blockHealth <= 0 then
-							bedwars.BlockBreaker.breakEffect:playBreak(dblock.Name, dpos, lplr)
-							bedwars.BlockBreaker.healthbarMaid:DoCleaning()
-							blockhealthbar.breakingBlockPosition = Vector3.zero
-						else
-							bedwars.BlockBreaker.breakEffect:playHit(dblock.Name, dpos, lplr)
+							pcall(function()
+								if blockhealthbar.blockHealth <= 0 then
+									bedwars.BlockBreaker.breakEffect:playBreak(dblock.Name, dpos, lplr)
+									bedwars.BlockBreaker.healthbarMaid:DoCleaning()
+									blockhealthbar.breakingBlockPosition = Vector3.zero
+								else
+									bedwars.BlockBreaker.breakEffect:playHit(dblock.Name, dpos, lplr)
+								end
+							end)
+						end
+
+						if anim then
+							local animation = bedwars.AnimationUtil:playAnimation(lplr, bedwars.BlockController:getAnimationController():getAssetId(1))
+							bedwars.ViewmodelController:playAnimation(15)
+							task.wait(0.3)
+							animation:Stop()
+							animation:Destroy()
 						end
 					end
-
-					if anim then
-						local animation = bedwars.AnimationUtil:playAnimation(lplr, bedwars.BlockController:getAnimationController():getAssetId(1))
-						bedwars.ViewmodelController:playAnimation(15)
-						task.wait(0.3)
-						animation:Stop()
-						animation:Destroy()
-					end
-				end
-			end)
+				end)
+			end
 
 			if effects then
 				return pos, path, target
@@ -2057,6 +1815,23 @@ run(function()
 						task.wait(0.5)
 					end
 				end)
+			
+				task.spawn(function()
+					while Reach.Enabled do
+						local MapController = bedwars.MapController
+						if not oldPlaceReach then 
+						oldPlaceReach = MapController.isOutOfBounds
+							MapController.isOutOfBounds = function(v1,v2)
+								if not v2 then
+									v2 = entitylib.character.RootPart.Position
+								end
+								if not v1 then return true end
+								return (v1 - v2).Magnitude > val
+							end
+						end
+					end
+				end)
+			
 			else
 				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = oldAttackReach or 14.4
 				
@@ -2066,8 +1841,11 @@ run(function()
 						blockBreaker:setRange(oldMineReach or 18)
 					end
 				end)
-				
-				oldAttackReach, oldMineReach = nil, nil
+				pcall(function()
+					local MapController = bedwars.MapController
+					MapController.isOutOfBounds = oldPlaceReach
+				end)
+				oldAttackReach, oldPlaceReach, oldMineReach = nil, nil, nil
 			end
 		end,
 		Tooltip = 'Extends reach for attacking and mining'
@@ -2096,9 +1874,16 @@ run(function()
 		Function = function(val)
 			if Reach.Enabled then
 				pcall(function()
-					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-					if blockBreaker then
-						blockBreaker:setRange(val)
+					local MapController = bedwars.MapController
+					if not oldPlaceReach then 
+					oldPlaceReach = MapController.isOutOfBounds
+						MapController.isOutOfBounds = function(v1,v2)
+							if not v2 then
+								v2 = entitylib.character.RootPart.Position
+							end
+							if not v1 then return true end
+							return (v1 - v2).Magnitude > val
+						end
 					end
 				end)
 			end
