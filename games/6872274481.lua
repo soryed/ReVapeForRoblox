@@ -7105,12 +7105,25 @@ run(function()
 		Name = 'Crosshair',
 		Function = function(callback)
 			if callback then
-				old = debug.getconstant(bedwars.ViewmodelController.showCrosshair, 25)
-				debug.setconstant(bedwars.ViewmodelController.showCrosshair, 25, Image.Value)
-				debug.setconstant(bedwars.ViewmodelController.showCrosshair, 37, Image.Value)
+				old = bedwars.ViewmodelController.showCrosshair
+				bedwars.ViewmodelController.showCrosshair = function(tbl)
+					tbl.crosshair = true
+					if bedwars.DeviceUtil.isMobileControls() then
+						local ui = roact.createElement("ScreenGui",{IgnoreGuiInset=true},{roact.createElement("ImageLabel",{Size=UDim2.fromScale(0.04,0.04),SizeConstraint='RelativeYY',BackgroundTransparency=1,Position=UDim2.fromScale(0.5,0.5),AnchorPoint=Vector2.new(0.5,0.5),Image=Image.Value,ResampleMode=Enum.ResamplerMode.Pixelated})})
+						local mount = roact.mount(ui, lplr:WaitForChild("PlayerGui"))
+						tbl.crosshairMaid:GiveTask(function()
+							roact.unmount(mount)
+						end)
+					else
+						cloneref(lplr:GetMouse()).Icon = Image.Value
+						tbl.crosshairMaid:GiveTask(function()
+							cloneref(lplr:GetMouse()).Icon = ''
+						end)
+					end
+					
+				end
 			else
-				debug.setconstant(bedwars.ViewmodelController.showCrosshair, 25, old)
-				debug.setconstant(bedwars.ViewmodelController.showCrosshair, 37, old)
+				bedwars.ViewmodelController.showCrosshair = old
 				old = nil
 			end
 	
@@ -7123,7 +7136,7 @@ run(function()
 	})
 	Image = Crosshair:CreateTextBox({
 		Name = 'Image',
-		Placeholder = 'image id (roblox)',
+		Placeholder = 'image id (roblox) : eg rbxasset://123456789',
 		Function = function(enter)
 			if enter and Crosshair.Enabled then
 				Crosshair:Toggle()
