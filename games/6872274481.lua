@@ -15164,17 +15164,7 @@ run(function()
                             return true
                         end
 
-                        local function climbwalls()
-                            task.spawn(function()
-                                    while task.wait() do
-                                        if entitylib.isAlive then
-                                            pcall(checkWallClimb)
-                                        else
-                                            break
-                                        end
-                                    end
-                                end
-                        end)
+
 
                         local function MapLayoutBLUE()
                             if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
@@ -16037,7 +16027,6 @@ run(function()
                                 MapLayoutORANGE()
                             end
                             vape:CreateNotification("AutoWin", "Moving to " .. oppTeamName .. "'s Bed!", 8)
-                            climbwalls()
                             task.spawn(function()
                                 lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
                             end)
@@ -33340,17 +33329,6 @@ run(function()
 					    return true
 					end
 					
-					local function climbwalls()
-					    task.spawn(function()
-					        while task.wait() do
-					            if entitylib and entitylib.isAlive then
-					                pcall(checkWallClimb)
-					            else
-					                break
-					            end
-					        end
-					    end)
-					end
                         local function MapLayoutBLUE()
                             if workspace.Map.Worlds:FindFirstChild("duels_Swamp") then
                                 vape:CreateNotification("AutoWin", "Moving back to Iron Gen!", 8)
@@ -34212,7 +34190,6 @@ run(function()
                                 MapLayoutORANGE()
                             end
                             vape:CreateNotification("AutoWin", "Moving to " .. oppTeamName .. "'s Bed!", 8)
-                            climbwalls()
                             task.spawn(function()
                                 lplr.Character.Humanoid:MoveTo(OppositeTeamBedPos)
                             end)
