@@ -16797,7 +16797,7 @@ run(function()
 			if callback then
 				old = bedwars.SwordController.isClickingTooFast
 				bedwars.SwordController.isClickingTooFast = function(self)
-					self.lastSwing = Blatant.Enabled and (45.812 / 2) or 45.8121
+					self.lastSwing = Blatant.Enabled and 3533964.738 or workspace:GetServerTimeNow() / 10
 					return false
 				end
 			else
