@@ -18841,79 +18841,77 @@ run(function()
         return Obj
     end
     local function CreateNameTag(plr)
-
         if plr.Character.Head.Nametag then
             plr.Character.Head.Nametag:SetAttribute("Holder",plr.UserId)
             plr.Character.Head.Nametag.Parent = replicatedStorage:WaitForChild('OldNameTagsEffects')
+			local OppositeTeamColor = Color3.fromRGB(255, 82, 82)
+			local SameTeamColor = Color3.fromRGB(111, 255, 101)
+			local billui = create("BillboardGui",{Name='OldNameTags',AlwaysOnTop=true,MaxDistance=150,Parent=plr.Character.Head,ResetOnSpawn=false,Size=UDim2.fromScale(5,0.65),StudsOffsetWorldSpace=Vector3.new(0,1.6,0),ZIndexBehavior='Global',Adornee=plr.Character.Head})
+			local MainContainer = create("Frame",{Parent=billui,BackgroundTransparency=1,Position=UDim2.fromScale(-0.005,0),Size=UDim2.fromScale(1,1),Name='1'})
+			local TeamCircle = create("Frame",{Name='2',Parent=MainContainer,BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=0.15,BorderSizePixel=0,Position=UDim2.fromScale(0.11,0.16),Size=UDim2.fromScale(0.09,0.7)})
+			create("UICorner",{Name='1',Parent=TeamCircle,CornerRadius=UDim.new(0, 25555)})
+			local NameBG = create("Frame",{Name='1',Parent=MainContainer,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.7,Position=UDim2.fromScale(0.25,0.1),Size=UDim2.fromScale(0.7,0.8)})
+			local stroke = create('UIStroke',{Name='1',Parent=NameBG,Color=Color3.new(1,1,1),Thickness=1.5})
+			local Txt = create("TextLabel",{Name='2',Parent=NameBG,BackgroundTransparency=1,AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(0.95,0.9),FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold),Text='',TextColor3=Color3.new(1,1,1),TextScaled=true,TextWrapped=true})
+			local NewName = ""
+			if plr.DisplayName == "" or plr.DisplayName == plr.Name then
+				NewName = plr.Name
+			else
+				NewName = plr.DisplayName
+			end
+			Txt.Text = NewName
+			if plr.Character:GetAttribute('Team') == lplr.Character:GetAttribute('Team') then
+				stroke.Color = SameTeamColor
+				Txt.TextColor3 = SameTeamColor
+			else
+				stroke.Color = OppositeTeamColor
+				Txt.TextColor3 = OppositeTeamColor
+			end
+			TeamCircle.BackgroundColor3 = Color3.new(plr.TeamColor.r,plr.TeamColor.g,plr.TeamColor.b)
+		else
+			local OppositeTeamColor = Color3.fromRGB(255, 82, 82)
+			local SameTeamColor = Color3.fromRGB(111, 255, 101)
+			local billui = create("BillboardGui",{Name='OldNameTags',AlwaysOnTop=true,MaxDistance=150,Parent=plr.Character.Head,ResetOnSpawn=false,Size=UDim2.fromScale(5,0.65),StudsOffsetWorldSpace=Vector3.new(0,1.6,0),ZIndexBehavior='Global',Adornee=plr.Character.Head})
+			local MainContainer = create("Frame",{Parent=billui,BackgroundTransparency=1,Position=UDim2.fromScale(-0.005,0),Size=UDim2.fromScale(1,1),Name='1'})
+			local TeamCircle = create("Frame",{Name='2',Parent=MainContainer,BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=0.15,BorderSizePixel=0,Position=UDim2.fromScale(0.11,0.16),Size=UDim2.fromScale(0.09,0.7)})
+			create("UICorner",{Name='1',Parent=TeamCircle,CornerRadius=UDim.new(0, 25555)})
+			local NameBG = create("Frame",{Name='1',Parent=MainContainer,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.7,Position=UDim2.fromScale(0.25,0.1),Size=UDim2.fromScale(0.7,0.8)})
+			local stroke = create('UIStroke',{Name='1',Parent=NameBG,Color=Color3.new(1,1,1),Thickness=1.5})
+			local Txt = create("TextLabel",{Name='2',Parent=NameBG,BackgroundTransparency=1,AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(0.95,0.9),FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold),Text='',TextColor3=Color3.new(1,1,1),TextScaled=true,TextWrapped=true})
+			local NewName = ""
+			if plr.DisplayName == "" or plr.DisplayName == plr.Name then
+				NewName = plr.Name
+			else
+				NewName = plr.DisplayName
+			end
+			Txt.Text = NewName
+			if plr.Character:GetAttribute('Team') == lplr.Character:GetAttribute('Team') then
+				stroke.Color = SameTeamColor
+				Txt.TextColor3 = SameTeamColor
+			else
+				stroke.Color = OppositeTeamColor
+				Txt.TextColor3 = OppositeTeamColor
+			end
+			TeamCircle.BackgroundColor3 = Color3.new(plr.TeamColor.r,plr.TeamColor.g,plr.TeamColor.b)
         end
 
-        local OppositeTeamColor = Color3.fromRGB(255, 82, 82)
-        local SameTeamColor = Color3.fromRGB(111, 255, 101)
-        local billui = create("BillboardGui",{Name='OldNameTags',AlwaysOnTop=true,MaxDistance=150,Parent=plr.Character.Head,ResetOnSpawn=false,Size=UDim2.fromScale(5,0.65),StudsOffsetWorldSpace=Vector3.new(0,1.6,0),ZIndexBehavior='Global',Adornee=plr.Character.Head})
-        local MainContainer = create("Frame",{Parent=billui,BackgroundTransparency=1,Position=UDim2.fromScale(-0.005,0),Size=UDim2.fromScale(1,1),Name='1'})
-        local TeamCircle = create("Frame",{Name='2',Parent=MainContainer,BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=0.15,BorderSizePixel=0,Position=UDim2.fromScale(0.11,0.16),Size=UDim2.fromScale(0.09,0.7)})
-        create("UICorner",{Name='1',Parent=TeamCircle,CornerRadius=UDim.new(0, 25555)})
-        local NameBG = create("Frame",{Name='1',Parent=MainContainer,BackgroundColor3=Color3.new(0,0,0),BackgroundTransparency=0.7,Position=UDim2.fromScale(0.25,0.1),Size=UDim2.fromScale(0.7,0.8)})
-        local stroke = create('UIStroke',{Name='1',Parent=NameBG,Color=Color3.new(1,1,1),Thickness=1.5})
-        local Txt = create("TextLabel",{Name='2',Parent=NameBG,BackgroundTransparency=1,AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.fromScale(.5,.5),Size=UDim2.fromScale(0.95,0.9),FontFace=Font.new('rbxasset://fonts/families/Arimo.json',Enum.FontWeight.SemiBold),Text='',TextColor3=Color3.new(1,1,1),TextScaled=true,TextWrapped=true})
-        local NewName = ""
-        if plr.DisplayName == "" or plr.DisplayName == plr.Name then
-            NewName = plr.Name
-        else
-            NewName = plr.DisplayName
-        end
-        Txt.Text = NewName
-        if plr.Character:GetAttribute('Team') == lplr.Character:GetAttribute('Team') then
-            stroke.Color = SameTeamColor
-            Txt.TextColor3 = SameTeamColor
-        else
-            stroke.Color = OppositeTeamColor
-            Txt.TextColor3 = OppositeTeamColor
-        end
-        TeamCircle.BackgroundColor3 = Color3.new(plr.TeamColor.r,plr.TeamColor.g,plr.TeamColor.b)
 
-        for i, v in playersService:GetPlayers() do
-	        if v.Character then
-	            CreateNameTag(v)
-	        end        
-            v.CharacterAdded:Connect(function(char)
-                task.wait(0.1)
-				if not char then return end
-                CreateNameTag(v)
-            end)
-        end
-
-        playersService.PlayerAdded:Connect(function(v)
-            if v.Character then
-                CreateNameTag(v)
-            end
-                    
-            v.CharacterAdded:Connect(function(char)
-                task.wait(0.1)
-				if not char then return end
-                CreateNameTag(v)
-            end)
-        end)
     end
     local function RemoveNameTag(plr)
-        plr.Character.Head:WaitForChild('OldNameTags'):Destroy()
-        for i, v in replicatedStorage:WaitForChild('OldNameTagsEffects'):GetChildren() do
-            if v then
-                if v:GetAttribute("Holder") == plr.UserId then
-                    v.Parent = plr.Character.Head
+            plr.Character.Head:WaitForChild('OldNameTags'):Destroy()
+            for i, v in replicatedStorage:WaitForChild('OldNameTagsEffects'):GetChildren() do
+                if v then
+                    if v:GetAttribute("Holder") == plr.UserId then
+                        v.Parent = plr.Character.Head
+                    end
                 end
             end
-        end
     end
     OGTags = vape.Categories.Render:CreateModule({
         Name = "OgNameTags",
-        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY',
+        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY'
         Function = function(callback)
             if callback then
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end 
                 if not replicatedStorage:FindFirstChild('OldNameTagsEffects') then
                     local fldr = Instance.new("Folder")
                     fldr.Parent = replicatedStorage
