@@ -18894,9 +18894,13 @@ run(function()
     end
     OGTags = vape.Categories.Render:CreateModule({
         Name = "OgNameTags",
-        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY'
+        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY',
         Function = function(callback)
             if callback then
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
                 if not replicatedStorage:FindFirstChild('OldNameTagsEffects') then
                     local fldr = Instance.new("Folder")
                     fldr.Parent = replicatedStorage
@@ -18919,8 +18923,12 @@ run(function()
     local RVSB
     RVSB = vape.Categories.Render:CreateModule({
         Name = "RedVsBlue",
-        Tooltip = 'changes orange to red(mainly used for 5v5s)(ty kolifyz for the idea)\nCLIENT ONLY'
+        Tooltip = 'changes orange to red(mainly used for 5v5s)(ty kolifyz for the idea)\nCLIENT ONLY',
         Function = function(callback)
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
             if callback then
 				local NewMaterial = Instance.new('MaterialVariant')
 				NewMaterial.Parent = cloneref(game:GetService('MaterialService'))
