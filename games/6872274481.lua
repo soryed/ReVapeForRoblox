@@ -13817,7 +13817,6 @@ run(function()
 	local mode
 
 	local function Elektra()
-		local old = nil
 		local rayCheck = RaycastParams.new()
 		rayCheck.RespectCanCollide = true
 		local ray = cloneref(lplr:GetMouse()).UnitRay
@@ -13831,23 +13830,15 @@ run(function()
 		end
 		
 		if bedwars.AbilityController:canUseAbility('ELECTRIC_DASH') then
-			old = bedwars.ElektraController.onKitLocalActivated
-			bedwars.ElektraController.onKitLocalActivated = function(...)
-				bedwars.Client:Get("ElectricDash"):CallServer({
-					electricDasher = lplr,
-					cameraCFrame = gameCamera.CFrame,
-					startCFrame = entitylib.character.RootPart.Position,
-					destCFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector),
-				})
-				return true
-			end
+			local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+			local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)})
+			tween:Play()
+			task.wait(0.69)
 			bedwars.AbilityController:useAbility('ELECTRIC_DASH')
-			task.wait(0.15)
-			bedwars.ElektraController.onKitLocalActivated = old
-			old = nil
 			MouseTP:Toggle(false)
 		end
 	end
+	
 	
 	local function Davey()
 		local Cannon = getItem("cannon")
