@@ -13833,8 +13833,9 @@ run(function()
 			local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
 			local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.lookAlong(position, entitylib.character.RootPart.CFrame.LookVector)})
 			tween:Play()
-			task.wait(0.69)
-			bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+			tween.Completed:Connect(function()
+				bedwars.AbilityController:useAbility('ELECTRIC_DASH')
+			end)
 			MouseTP:Toggle(false)
 		end
 	end
