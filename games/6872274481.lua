@@ -18922,5 +18922,5 @@ run(function()
 		end,
 		Tooltip = 'Automatically uses kit abilities.'
 	})
-	Legit = AutoKit:CreateToggle({Name = 'Legit Range'})
+	Legit = AutoKit:CreateToggle({Name = 'Legit'})
 end)
