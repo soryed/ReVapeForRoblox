@@ -18909,7 +18909,7 @@ run(function()
     end
     OGTags = vape.Categories.Render:CreateModule({
         Name = "OgNameTags",
-        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY'
+        Tooltip = 'changes everyones nametag to the OG(season 7 and before)(ty kolifyz for the idea)\nCLIENT ONLY',
         Function = function(callback)
             if callback then
                 if not replicatedStorage:FindFirstChild('OldNameTagsEffects') then
