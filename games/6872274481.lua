@@ -19031,9 +19031,9 @@ run(function()
 						for i, v in lplr.PlayerGui.hotbar:GetDescendants() do
 							if v:IsA("ImageLabel") then
 								if v.Name == "1" then
-									if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or = v.Image == "rbxassetid://7923578297" or = v.Image == "rbxassetid://6765309820" or = v.Image == "rbxassetid://7923579098" or = v.Image == "rbxassetid://7923577655" or = v.Image == "rbxassetid://7923579263" or = v.Image == "rbxassetid://7923579520" or = v.Image == "rbxassetid://7923578762" or = v.Image == "rbxassetid://7923578533" or = v.Image == "rbxassetid://15380238075" then
+									if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://7923578297" or  v.Image == "rbxassetid://6765309820" or  v.Image == "rbxassetid://7923579098" or v.Image == "rbxassetid://7923577655" or v.Image == "rbxassetid://7923579263" or v.Image == "rbxassetid://7923579520" or v.Image == "rbxassetid://7923578762" or v.Image == "rbxassetid://7923578533" or v.Image == "rbxassetid://15380238075" then
 										oldColorBlock = v.Image
-										oldColorBlockColor = v.ImageColor3
+										oldColorBlockColor v.ImageColor3
 										v.Image = "rbxassetid://7923579263"
 										v.ImageColor3 = Color
 									end
