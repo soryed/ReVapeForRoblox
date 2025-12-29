@@ -18833,7 +18833,6 @@ end)
 
 run(function()
     local OGTags
-    local EffectPlayersCache = {}
     local function create(Name,Values)
         local Obj = Instance.new(Name)
         for i, v in Values do
@@ -18842,9 +18841,6 @@ run(function()
         return Obj
     end
     local function CreateNameTag(plr)
-        if EffectPlayersCache[plr] then 
-            return 
-        end
 
         if plr.Character.Head.Nametag then
             plr.Character.Head.Nametag:SetAttribute("Holder",plr.UserId)
@@ -18875,21 +18871,38 @@ run(function()
             Txt.TextColor3 = OppositeTeamColor
         end
         TeamCircle.BackgroundColor3 = Color3.new(plr.TeamColor.r,plr.TeamColor.g,plr.TeamColor.b)
-        EffectPlayersCache[plr] = plr
+
+        for i, v in playersService:GetPlayers() do
+	        if v.Character then
+	            CreateNameTag(v)
+	        end        
+            v.CharacterAdded:Connect(function(char)
+                task.wait(0.1)
+				if not char then return end
+                CreateNameTag(v)
+            end)
+        end
+
+        playersService.PlayerAdded:Connect(function(v)
+            if v.Character then
+                CreateNameTag(v)
+            end
+                    
+            v.CharacterAdded:Connect(function(char)
+                task.wait(0.1)
+				if not char then return end
+                CreateNameTag(v)
+            end)
+        end)
     end
     local function RemoveNameTag(plr)
-        if not EffectPlayersCache[plr] then
-            plr.Character.Head:WaitForChild('OldNameTags'):Destroy()
-            for i, v in replicatedStorage:WaitForChild('OldNameTagsEffects'):GetChildren() do
-                if v then
-                    if v:GetAttribute("Holder") == plr.UserId then
-                        v.Parent = plr.Character.Head
-                    end
+        plr.Character.Head:WaitForChild('OldNameTags'):Destroy()
+        for i, v in replicatedStorage:WaitForChild('OldNameTagsEffects'):GetChildren() do
+            if v then
+                if v:GetAttribute("Holder") == plr.UserId then
+                    v.Parent = plr.Character.Head
                 end
             end
-            EffectPlayersCache[plr] = nil
-        else
-            return
         end
     end
     OGTags = vape.Categories.Render:CreateModule({
@@ -18930,6 +18943,16 @@ run(function()
 				return
 			end 
             if callback then
+				local function getWorldFolder()
+					local Map = workspace:WaitForChild("Map", math.huge)
+					local Worlds = Map:WaitForChild("Worlds", math.huge)
+					if not Worlds then return nil end
+
+					return Worlds:GetChildren()[1] 
+				end
+				local worldFolder = getWorldFolder()
+				if not worldFolder then return end
+				local blocks = worldFolder:WaitForChild("Blocks")
 				local NewMaterial = Instance.new('MaterialVariant')
 				NewMaterial.Parent = cloneref(game:GetService('MaterialService'))
 				NewMaterial.Name = 'rbxassetid://16991768606'
