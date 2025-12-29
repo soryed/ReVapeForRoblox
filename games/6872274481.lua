@@ -19027,11 +19027,12 @@ run(function()
 				NewMaterial.RoughnessMap = 'rbxassetid://16991768606'
 				NewMaterial.BaseMaterial = 'Fabric'
 				task.spawn(function()
+					if not GUIEdit.Enabled then return end
 					repeat 
 						for i, v in lplr.PlayerGui.hotbar:GetDescendants() do
 							if v:IsA("ImageLabel") then
 								if v.Name == "1" then
-									if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://7923578297" or  v.Image == "rbxassetid://6765309820" or  v.Image == "rbxassetid://7923579098" or v.Image == "rbxassetid://7923577655" or v.Image == "rbxassetid://7923579263" or v.Image == "rbxassetid://7923579520" or v.Image == "rbxassetid://7923578762" or v.Image == "rbxassetid://7923578533" or v.Image == "rbxassetid://15380238075" then
+									if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://6765309820" or v.Image == "rbxassetid://7923579098" or v.Image == "rbxassetid://7923577655" or v.Image == "rbxassetid://7923579263" or v.Image == "rbxassetid://7923579520" or v.Image == "rbxassetid://7923578762" or v.Image == "rbxassetid://7923578533" or v.Image == "rbxassetid://15380238075" then
 										oldColorBlock = v.Image
 										oldColorBlockColor = v.ImageColor3
 										v.Image = "rbxassetid://7923579263"
@@ -19129,6 +19130,24 @@ run(function()
 	GUIEdit = WoolChanger:CreateToggle({
 		Name = "Hotbar Edit",
 		Tooltip = 'changer effects the hotbar lol',
-		Default = false
+		Default = false,
+		Function = function(v)
+			repeat 
+				for i, v in lplr.PlayerGui.hotbar:GetDescendants() do
+					if v:IsA("ImageLabel") then
+						if v.Name == "1" then
+							if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://7923578297" or v.Image == "rbxassetid://6765309820" or v.Image == "rbxassetid://7923579098" or v.Image == "rbxassetid://7923577655" or v.Image == "rbxassetid://7923579263" or v.Image == "rbxassetid://7923579520" or v.Image == "rbxassetid://7923578762" or v.Image == "rbxassetid://7923578533" or v.Image == "rbxassetid://15380238075" then
+								oldColorBlock = v.Image
+								oldColorBlockColor v.ImageColor3
+								v.Image = "rbxassetid://7923579263"
+								v.ImageColor3 = Color
+							end
+						end
+					end
+				end
+				task.wait(0.01)
+			until not WoolChanger.Enabled or not v
+		end
 	})
 end)
+
