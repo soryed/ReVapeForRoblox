@@ -18833,7 +18833,7 @@ end)
 
 run(function()
     local OGTags
-    local EffectPlayersCache
+    local EffectPlayersCache = {}
     local function create(Name,Values)
         local Obj = Instance.new(Name)
         for i, v in Values do
