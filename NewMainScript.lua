@@ -33,7 +33,7 @@ local function TTD()
 			else
 				StarterGui:SetCore('SendNotification', {
 				    Title = 'Onyx',
-				    Text = 'Issue reinstalling Onyx! dm "41tz" on discord!',
+				    Text = 'Issue reinstalling Onyx! dm "20mop" on discord!',
 				    Duration = 20
 				})
 	        end
@@ -42,6 +42,7 @@ local function TTD()
 end
 local function RTTD()
 	delfolder('ReVape')
+	return nil
 end
 
 if ARGS.Refresh then
@@ -56,10 +57,11 @@ if ARGS.Refresh then
     else
 		StarterGui:SetCore('SendNotification', {
 			Title = 'Onyx',
-			Text = 'Issue reinstalling Onyx! dm "41tz" on discord!',
+			Text = 'Issue reinstalling Onyx! dm "20mop" on discord!',
 			Duration = 20
 		})
 	end
+	return nil
 end
 
 if ARGS.ForceRefresh then
@@ -74,10 +76,11 @@ if ARGS.ForceRefresh then
     else
 		StarterGui:SetCore('SendNotification', {
 			Title = 'Onyx',
-			Text = 'Issue force deleting Onyx! dm "41tz" on discord!',
+			Text = 'Issue force deleting Onyx! dm "20mop" on discord!',
 			Duration = 20
 		})
 	end
+	return nil
 end
 
 
