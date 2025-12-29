@@ -1622,16 +1622,16 @@ end
 local NazarController = {}
 function NazarController:request(type)
 	if type == "enabled" then
-		if bedwars.AbilityController:canUseAbility('ENABLE_LIFE_FORCE_ATTACK') then
-			bedwars.AbilityController:useAbility('ENABLE_LIFE_FORCE_ATTACK')
+		if bedwars.AbilityController:canUseAbility('enable_life_force_attack') then
+			bedwars.AbilityController:useAbility('enable_life_force_attack')
 		end
 	elseif type == "disabled" then
-		if bedwars.AbilityController:canUseAbility('DISABLE_LIFE_FORCE_ATTACK') then
-			bedwars.AbilityController:useAbility('DISABLE_LIFE_FORCE_ATTACK')
+		if bedwars.AbilityController:canUseAbility('enable_life_force_attack') then
+			bedwars.AbilityController:useAbility('disable_life_force_attack')
 		end
 	elseif type == "heal" then
-		if bedwars.AbilityController:canUseAbility('CONSUME_LIFE_FORCE') then
-			bedwars.AbilityController:useAbility('CONSUME_LIFE_FORCE')
+		if bedwars.AbilityController:canUseAbility('consume_life_force') then
+			bedwars.AbilityController:useAbility('consume_life_force')
 		end
 	end
 end
@@ -15810,7 +15810,7 @@ run(function()
 		end)
 	end
 	
-	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
+	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender" and user ~= 'synioxzz'  then
 		return 
 	end
     NewAutoWin = vape.Categories.AltFarm:CreateModule({
@@ -16562,8 +16562,9 @@ run(function()
 					end
 					local pickaxe = getObjSlot(fullstr)
 					local OgSlot = GetOriginalSlot()
+						task.spawn(bedwars.breakBlock, block, false, nil, true)
 					switchHotbar(pickaxe)
-					task.spawn(bedwars.breakBlock, block, false, nil, true)
+			
 					task.wait(0.15)
 					switchHotbar(OgSlot)
 				end
@@ -16796,7 +16797,7 @@ run(function()
 			if callback then
 				old = bedwars.SwordController.isClickingTooFast
 				bedwars.SwordController.isClickingTooFast = function(self)
-					self.lastSwing = Blatant.Enabled and 3.995 or 12.456
+					self.lastSwing = Blatant.Enabled and (45.812 / 2) or 45.8121
 					return false
 				end
 			else
@@ -17700,6 +17701,7 @@ run(function()
 			end, Legit.Enabled and 8 or 16, false)
         end,
         midnight = function()
+			local old = nil
 		    repeat
 			    if not entitylib.isAlive then task.wait(0.1); continue end
 				local root = entitylib.character.RootPart
@@ -17714,10 +17716,18 @@ run(function()
 				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
 					if bedwars.AbilityController:canUseAbility('midnight') then
 						bedwars.AbilityController:useAbility('midnight')
+						old = bedwars.SwordController.isClickingTooFast
+						bedwars.SwordController.isClickingTooFast = function(self)
+							self.lastSwing = 45.812 / 1.25
+							return false
+						end
 						local T = Legit.Enabled and 4.5 or 6.45
                         Speed:Toggle(true)
                         task.wait(T)
                         Speed:Toggle(false)
+						task.wait(11)
+						bedwars.SwordController.isClickingTooFast = old
+						old = nil
 					end																		
 		        end
 		
@@ -17797,7 +17807,7 @@ run(function()
 					Players = true,
 					Sort = sortmethods.Health
 				})
-				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+				if plr then
 					if bedwars.AbilityController:canUseAbility('cactus_fire') then
 						bedwars.AbilityController:useAbility('cactus_fire')
 					end																		
@@ -17818,7 +17828,7 @@ run(function()
 					Players = true,
 					Sort = sortmethods.Health
 				})
-				if plr and (not Legit.Enabled or (lplr.Character:GetAttribute("Health") or 0) > 0) then
+				if plr then
 		          bedwars.Client:Get("AttemptCardThrow"):SendToServer({
 		                ["targetEntityInstance"] = plr.Character
 		            })
@@ -17946,21 +17956,8 @@ run(function()
 			local empoweredMode = false
 			local lastHitTime = 0
 			local hitTimeout = 3
-				
-			local function enableEmpower()
-				if not empoweredMode and bedwars.AbilityController:canUseAbility('enable_life_force_attack') then
-					bedwars.AbilityController:useAbility('enable_life_force_attack')
-					empoweredMode = true
-				end
-			end
-				
-			local function disableEmpower()
-				if empoweredMode and bedwars.AbilityController:canUseAbility('disable_life_force_attack') then
-					bedwars.AbilityController:useAbility('disable_life_force_attack')
-					empoweredMode = false
-				end
-			end
-				
+			local LowHealthThreshold = 0
+			LowHealthThreshold = Legit.Enabled and 50 or 75
 			AutoKit:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 				if not entitylib.isAlive then return end
 					
@@ -17969,7 +17966,7 @@ run(function()
 					
 				if attacker == lplr and victim and victim ~= lplr then
 					lastHitTime = workspace:GetServerTimeNow()
-					enableEmpower()
+					NazarController:request('enabled')
 				end
 			end))
 				
@@ -17980,7 +17977,7 @@ run(function()
 				local killed = playersService:GetPlayerFromCharacter(deathTable.entityInstance)
 					
 				if killer == lplr and killed and killed ~= lplr then
-					disableEmpower()
+					NazarController:request('disabled')
 				end
 			end))
 				
@@ -17989,20 +17986,26 @@ run(function()
 					local currentTime = workspace:GetServerTimeNow()
 						
 					if empoweredMode and (currentTime - lastHitTime) >= hitTimeout then
-						disableEmpower()
+						NazarController:request('disabled')
 					end
 				else
 					if empoweredMode then
-						disableEmpower()
+						NazarController:request('disabled')
 					end
 				end
-					
+
+				if lplr.Character:GetAttribute('Health') <= LowHealthThreshold then
+					NazarController:request('heal')
+				end
+
 				task.wait(0.1)
 			until not AutoKit.Enabled
 				
-			if empoweredMode then
-				disableEmpower()
-			end
+			AutoKit:Clean(function()
+				if empoweredMode then
+					NazarController:request('disabled')
+				end
+			end)
 		end,
 		void_knight = function()
 			repeat
