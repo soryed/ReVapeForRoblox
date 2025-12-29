@@ -18996,8 +18996,11 @@ run(function()
 	local oldColor
 	local OldMaterial
 	local oldColorBlock
+	local oldColorBlockColor
+	local oldWoolHotBar
 	local color
 	local Color = Color3.new(1,1,1)
+	local GUIEdit 
 	WoolChanger = vape.Categories.Blatant:CreateModule({
 		Name = 'WoolChanger',
 		Function = function(callback)
@@ -19023,6 +19026,23 @@ run(function()
 				NewMaterial.StudsPerTile = 3
 				NewMaterial.RoughnessMap = 'rbxassetid://16991768606'
 				NewMaterial.BaseMaterial = 'Fabric'
+				task.spawn(function()
+					repeat 
+						for i, v in lplr.PlayerGui.hotbar:GetDescendants() do
+							if v:IsA("ImageLabel") then
+								if v.Name == "1" then
+									if v.Image == "rbxassetid://7923577182" or v.Image == "rbxassetid://7923577311" or v.Image == "rbxassetid://7923578297" or = v.Image == "rbxassetid://7923578297" or = v.Image == "rbxassetid://6765309820" or = v.Image == "rbxassetid://7923579098" or = v.Image == "rbxassetid://7923577655" or = v.Image == "rbxassetid://7923579263" or = v.Image == "rbxassetid://7923579520" or = v.Image == "rbxassetid://7923578762" or = v.Image == "rbxassetid://7923578533" or = v.Image == "rbxassetid://15380238075" then
+										oldColorBlock = v.Image
+										oldColorBlockColor = v.ImageColor3
+										v.Image = "rbxassetid://7923579263"
+										v.ImageColor3 = Color
+									end
+								end
+							end
+						end
+						task.wait(0.01)
+					until not WoolChanger.Enabled or not GUIEdit.Enabled
+				end)
 				WoolChanger:Clean(gameCamera:FindFirstChild("Viewmodel").ChildAdded:Connect(function(obj)
 					if string.find(obj.Name, "wool") then
 						for i, texture in obj:FindFirstChild('Handle'):GetChildren() do
@@ -19068,6 +19088,18 @@ run(function()
 					end
 				end))
             else
+				for i, v in lplr.PlayerGui.hotbar:GetDescendants() do
+					if v:IsA("ImageLabel") then
+						if v.Name == "1" then
+							if v.Image == "rbxassetid://7923579263" then
+								v.Image = oldColorBlock
+								v.ImageColor3 = oldColorBlockColor
+								oldColorBlock = nil
+								oldColorBlockColor = nil
+							end
+						end
+					end
+				end
 				for i, obj in workspace:GetDescendants() do
 					if string.find(obj.Name, "wool") then
 						if obj:GetAttribute("PlacedByUserId") == lplr.UserId then
@@ -19093,5 +19125,10 @@ run(function()
 				Color = Color3.fromRGB(R,G,B)
 			end
 		end
+	})
+	GUIEdit = WoolChanger:CreateToggle({
+		Name = "Hotbar Edit",
+		Tooltip = 'changer effects the hotbar lol',
+		Default = false
 	})
 end)
