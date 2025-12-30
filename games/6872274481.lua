@@ -789,7 +789,7 @@ run(function()
 
 	bedwars = setmetatable({
 		GamePlayer = require(replicatedStorage.TS.player['game-player']),
-		OfflinePlayerUtil = require(replicatedStorage.TS.player['offline-player=util']),
+		OfflinePlayerUtil = require(replicatedStorage.TS.player['offline-player-util']),
 		PlayerUtil = require(replicatedStorage.TS.player['player-util']),
 		KKKnitController = require(lplr.PlayerScripts.TS.lib.knit['knit-controller']),
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
