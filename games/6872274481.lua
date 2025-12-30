@@ -18918,7 +18918,7 @@ if getgenv().TestMode then
 			Name = "test",
 			Function = function(callback)
 				if not callback then return end
-				local Wool = getItem('wool_red')
+				local Wool = getItem('telepearl')
 				if Wool then
 					switchItem(Wool.tool)
 					test:Toggle(false)
