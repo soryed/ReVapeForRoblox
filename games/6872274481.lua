@@ -2594,6 +2594,7 @@ run(function()
 						if not ray then
 							local targetY = -86
 							local newY = velY + (targetY - velY) * accuracy
+							print(newY)
 							root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, newY, root.AssemblyLinearVelocity.Z)
 							root.CFrame += Vector3.new(0, extraGravity * dt, 0)
 							extraGravity -= workspace.Gravity * dt
