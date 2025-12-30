@@ -12851,20 +12851,7 @@ end)
 run(function()
 	local FastBow
 	local old
-	
-	task.spawn(function()
-		repeat task.wait() until bedwars.ProjectileMeta and vape
-		
-		for projectileName, projectileData in pairs(bedwars.ProjectileMeta) do
-			if projectileData.projectile then
-				local itemMeta = bedwars.ItemMeta[projectileData.projectile.itemType or '']
-				if itemMeta and itemMeta.projectileSource then
-					itemMeta.projectileSource.fireDelaySec = 1.15
-				end
-			end
-		end
-	end)
-	
+	local oldShootProp = {}
 	FastBow = vape.Categories.Blatant:CreateModule({
 		Name = 'FastBow',
 		Function = function(callback)
@@ -12875,15 +12862,16 @@ run(function()
 			if callback then
 				old = bedwars.CooldownController.setOnCooldown
 				bedwars.CooldownController.setOnCooldown = function(self, cooldownId, duration, options, ...)
-					if FastBow.Enabled and (tostring(cooldownId):find("proj-source") or tostring(cooldownId):find("bow") or tostring(cooldownId):find("crossbow") or tostring(cooldownId):find("headhunter")) then
-						duration = 1.15
+					if (tostring(cooldownId):find("proj-source") or tostring(cooldownId):find("bow") or tostring(cooldownId):find("crossbow") or tostring(cooldownId):find("headhunter")) then
+						duration = 0.45
 					end
 					return old(self, cooldownId, duration, options, ...)
 				end
 				
 				for _, item in pairs(bedwars.ItemMeta) do
 					if item.projectileSource then
-						item.projectileSource.fireDelaySec = 1.15
+						oldShootProp[item.projectileSource] = item.projectileSource.fireDelaySec
+						item.projectileSource.fireDelaySec = 0.75
 					end
 				end
 			else
@@ -12891,8 +12879,9 @@ run(function()
 				
 				for _, item in pairs(bedwars.ItemMeta) do
 					if item.projectileSource then
-						local originalDelay = item.projectileSource.originalFireDelaySec or 1.25
+						local originalDelay = oldShootProp[item.projectileSource]
 						item.projectileSource.fireDelaySec = originalDelay
+						oldShootProp[item.projectileSource] = nil
 					end
 				end
 				old = nil
