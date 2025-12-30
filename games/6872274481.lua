@@ -19173,7 +19173,7 @@ run(function()
     local RVSB
     RVSB = vape.Categories.Render:CreateModule({
         Name = "RedVsBlue",
-        Tooltip = 'changes orange to red(mainly used for 5v5s)(ty kolifyz for the idea)\nCLIENT ONLY'
+        Tooltip = 'changes orange to red(mainly used for 5v5s)(ty kolifyz for the idea)\nCLIENT ONLY',
         Function = function(callback)
             if callback then
 				local NewMaterial = Instance.new('MaterialVariant')
