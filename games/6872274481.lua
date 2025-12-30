@@ -16417,6 +16417,7 @@ run(function()
 	end
 	
 	
+		
 	local AutoKitFunctions = {
 		spearman = function()
 			local function fireSpear(pos, spot, item)
@@ -16659,6 +16660,7 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		styx = function()
+			local r = Legit.Enabled and 6 or 12
 			local uuid  = ""
 			bedwars.Client:Get("StyxOpenExitPortalFromServer"):Connect(function(v1)
 				uuid = v1.exitPortalData.connectedEntrancePortalUUID
@@ -16676,7 +16678,7 @@ run(function()
 						teamId = entitylib.character:GetAttribute("Team")					
 					}
 				})
-			end, Legit.Enabled and 6 or 12, false)
+			end, r, false)
 			AutoKit:Clean(workspace.ChildAdded:Connect(function(obj)
 				if obj.Name == "StyxPortal" then
 					local MaxStuds = Legit.Enabled and 8 or 16
@@ -16709,6 +16711,7 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		taliyah = function()
+			local r = Legit.Enabled and 5 or 10
 			kitCollection('entity', function(v)
 				if bedwars.Client:Get('CropHarvest'):CallServer({position = bedwars.BlockController:getBlockPosition(v.Position)}) then
 					if Legit.Enabled then
@@ -16716,12 +16719,13 @@ run(function()
 						bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
 					end
 				end
-			end, Legit.Enabled and 5 or 10, false)
+			end, r, false)
 		end,
 		black_market_trader = function()
+			local r = Legit.Enabled and 8 or 16
 			kitCollection('shadow_coin', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = 'shadow_coin'})
-			end, Legit.Enabled and 8 or 16, false)
+			end, r, false)
 		end,
 		oasis = function()
 			repeat
@@ -16978,10 +16982,11 @@ run(function()
 		    until not AutoKit.Enabled
 		end,
 		sheep_herder = function()
+			local r = Legit.Enabled and 8 or 16
 			kitCollection('sheep', function(v)
 				local args = {[1] = v}
 				replicatedStorage:WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild('@rbxts'):WaitForChild('net'):WaitForChild('out'):WaitForChild('_NetManaged'):WaitForChild('SheepHerder/TameSheep'):FireServer(unpack(args))
-			end, Legit.Enabled and 8 or 16, false)
+			end, r, false)
 		end,
 		regent = function()
 			repeat
@@ -17195,9 +17200,10 @@ run(function()
 			end))
 		end,
         alchemist = function()
+			local r= Legit.Enabled and 8 or 16
 			kitCollection('alchemist_ingedients', function(v)
 			    bedwars.Client:Get("CollectCollectableEntity"):SendToServer({id = v:GetAttribute("Id"),collectableName = v.Name})
-			end, Legit.Enabled and 8 or 16, false)
+			end, r, false)
         end,
         midnight = function()
 			local old = nil
@@ -17689,11 +17695,13 @@ run(function()
 			until not AutoKit.Enabled
 		end,
 		beekeeper = function()
+			local r =  Legit.Enabled and 8 or 16
 			kitCollection('bee', function(v)
 				bedwars.Client:Get(remotes.BeePickup):SendToServer({beeId = v:GetAttribute('BeeId')})
-			end, Legit.Enabled and 8 or 16, false)
+			end,r, false)
 		end,
 		bigman = function()
+			local r = Legit.Enabled and 8 or 12
 			kitCollection('treeOrb', function(v)
 				if Legit.Enabled then
 					if bedwars.Client:Get(remotes.ConsumeTreeOrb):CallServer({treeOrbSecret = v:GetAttribute('TreeOrbSecret')}) then
@@ -17706,7 +17714,7 @@ run(function()
 						v:Destroy()
 					end
 				end
-			end, Legit.Enabled and 8 or 12, false)
+			end, r, false)
 		end,
 		block_kicker = function()
 			local old = bedwars.BlockKickerKitController.getKickBlockProjectileOriginPosition
@@ -17786,6 +17794,7 @@ run(function()
 			end)
 		end,
 		dragon_slayer = function()
+			local r = Legit.Enabled and (18/2) or 18
 			kitCollection('KaliyahPunchInteraction', function(v)
 				if Legit.Enabled then
 					bedwars.DragonSlayerController:deleteEmblem(v)
@@ -17798,9 +17807,10 @@ run(function()
 						target = v
 					})
 				end
-			end, Legit.Enabled and (18/2) or 18, true)
+			end, r, true)
 		end,
 		farmer_cletus = function()
+			local r = Legit.Enabled and 5 or 10
 			kitCollection('HarvestableCrop', function(v)
 				bedwars.Client:Get('CropHarvest'):CallServer({position = bedwars.BlockController:getBlockPosition(v.Position)})
 				if Legit.Enabled then
@@ -17811,7 +17821,7 @@ run(function()
 						bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
 					end
 				end
-			end, Legit.Enabled and 5 or 10, false)
+			end, r, false)
 		end,
 		fisherman = function()
 			local old = bedwars.FishingMinigameController.startMinigame
@@ -17870,6 +17880,7 @@ run(function()
 			end)
 		end,
 		hannah = function()
+			local r = Legit.Enabled and 15 or 30
 			kitCollection('HannahExecuteInteraction', function(v)
 				local billboard = bedwars.Client:Get(remotes.HannahKill):CallServer({
 					user = lplr,
@@ -17879,7 +17890,7 @@ run(function()
 				if billboard then
 					billboard:Destroy()
 				end
-			end, Legit.Enabled and 15 or 30, true)
+			end, r, true)
 		end,
 		jailor = function()
 			kitCollection('jailor_soul', function(v)
@@ -17920,6 +17931,7 @@ run(function()
 			until not AutoKit.Enabled
 		end,
 		metal_detector = function()
+			local r = Legit.Enabled and 8 or 10
 			kitCollection('hidden-metal', function(v)
 				if Legit.Enabled then
 					bedwars.GameAnimationUtil:playAnimation(lplr,bedwars.AnimationType.SHOVEL_DIG)
@@ -17932,31 +17944,35 @@ run(function()
 						id = v:GetAttribute('Id')
 					})
 				end
-			end, Legit.Enabled and 8 or 10, false)
+			end, r, false)
 		end,
 		miner = function()
+			local r = Legit.Enabled and 6 or 18
 			kitCollection('petrified-player', function(v)
 				bedwars.Client:Get(remotes.MinerDig):SendToServer({
 					petrifyId = v:GetAttribute('PetrifyId')
 				})
-			end, Legit.Enabled and 6 or 18, true)
+			end, r, true)
 		end,
 		pinata = function()
+			local r = Legit.Enabled and 6 or 18
 			kitCollection(lplr.Name..':pinata', function(v)
 				if getItem('candy') then
 					bedwars.Client:Get('DepositCoins'):CallServer(v)
 				end
-			end,  Legit.Enabled and 6 or 18, true)
+			end,  r, true)
 		end,
 		spirit_assassin = function()
+			local r = Legit.Enabled and 35 or 120
 			kitCollection('EvelynnSoul', function(v)
 				bedwars.SpiritAssassinController:useSpirit(lplr, v)
-			end,  Legit.Enabled and 35 or 120, true)
+			end, r , true)
 		end,
 		star_collector = function()
+			local r =  Legit.Enabled and 10 or 20
 			kitCollection('stars', function(v)
 				bedwars.StarCollectorController:collectEntity(lplr, v, v.Name)
-			end,  Legit.Enabled and 10 or 20, false)
+			end, r, false)
 		end,
 		summoner = function()
 			local lastAttackTime = 0
