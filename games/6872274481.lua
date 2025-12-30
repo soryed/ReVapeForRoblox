@@ -390,250 +390,19 @@ local function roundPos(vec)
 	return Vector3.new(math.round(vec.X / 3) * 3, math.round(vec.Y / 3) * 3, math.round(vec.Z / 3) * 3)
 end
 
-local function coreswitch(tool, ignore)
-    local character = lplr.Character
-    if not character then return end
-
-    local humanoid = character:FindFirstChild("Humanoid")
-    if not humanoid then return end
-
-	if not ignore then
-		local currentHandItem
-		for _, acc in character:GetChildren() do
-			if acc:IsA("Accessory") and acc:GetAttribute("InvItem") == true and acc:GetAttribute("ArmorSlot") == nil and acc:GetAttribute("IsBackpack") == nil then
-				currentHandItem = acc
-				break
-			end
-		end
-		if currentHandItem then
-			currentHandItem:Destroy()
-		end
-	
-		for _, weld in pairs(character:GetDescendants()) do
-			if weld:IsA("Weld") and weld.Name == "HandItemWeld" then
-				weld:Destroy()
-			end
-		end
-	
-		local inventoryFolder = character:FindFirstChild("InventoryFolder")
-		if not inventoryFolder or not inventoryFolder.Value then return end
-		local toolInstance = inventoryFolder.Value:FindFirstChild(tool.Name)
-		if not toolInstance then return end
-		local clone = toolInstance:Clone()
-	
-		clone:SetAttribute("InvItem", true)
-	
-		humanoid:AddAccessory(clone)
-	
-		local handle = clone:FindFirstChild("Handle")
-		if handle and handle:IsA("BasePart") then
-			local attachment = handle:FindFirstChildWhichIsA("Attachment")
-			if attachment then
-				local characterAttachment = character:FindFirstChild(attachment.Name, true)
-				if characterAttachment and characterAttachment:IsA("Attachment") then
-					local weld = Instance.new("Weld")
-					weld.Name = "HandItemWeld"
-					weld.Part0 = characterAttachment.Parent 
-					weld.Part1 = handle
-					weld.C0 = characterAttachment.CFrame
-					weld.C1 = attachment.CFrame
-					weld.Parent = handle
-				end
-			end
-		end
-	
-		local handInvItem = character:FindFirstChild("HandInvItem")
-		if handInvItem then
-			handInvItem.Value = tool
-		end
-	end
-
-	pcall(function()
-		local res = bedwars.Client:Get('SetInvItem'):CallServerAsync({hand = tool})
-		if res ~= nil and res == true then
-			local handInvItem = character:FindFirstChild("HandInvItem")
-			if handInvItem then
-				handInvItem.Value = tool
-			end
-		elseif string.find(string.lower(tostring(res)), 'promise') then
-			res:andThen(function(res)
-				if res == true then
-					local handInvItem = character:FindFirstChild("HandInvItem")
-					if handInvItem then
-						handInvItem.Value = tool
-					end
-				end
-			end)
-		end
-	end)
-
-    return true
-end
-local function corehotbarswitch(tool)
-	local function findChild(name, className, children, nodebug)
-		children = children:GetChildren()
-        for i,v in pairs(children) do if v.Name == name and v.ClassName == className then return v end end
-        local args = {Name = tostring(name), ClassName == tostring(className), Children = children}
-		if not nodebug then
-			warn("[findChild]: CHILD NOT FOUND! Args: ", game:GetService("HttpService"):JSONEncode(args), name, className, children)
-		end
-        return nil
-    end
-	local function resolveHotbar()
-		local hotbar
-		hotbar = findChild("hotbar", "ScreenGui", lplr:WaitForChild("PlayerGui"))
-		if not hotbar then return false end
-
-		local _1 = findChild("1", "Frame", hotbar, true)
-		if not _1 then return false end
-
-		local ItemsHotbar = findChild("ItemsHotbar", "Frame", _1)
-		if not ItemsHotbar then return false end
-
-		return {
-			hotbar = hotbar,
-			items = ItemsHotbar
-		}
-	end
-	local function resolveItemHotbar(hotbar)
-		if tostring(hotbar) == "10" then return "blacklisted" end
-		local res = {
-			id = hotbar.Name,
-			toolImage = "",
-			toolAmount = 0,
-			object = hotbar
-		}
-		if not tonumber(res.id) then return false end
-
-		local _1 = findChild("1", "ImageButton", hotbar, true)
-		if not _1 then return false end
-
-		local __1 = findChild("1", "TextLabel", _1, true)
-		if __1 then 
-			res.toolAmount = tonumber(__1.Text) or nil
-		end
-
-		local _3 = findChild("3", "Frame", _1, true)
-		if not _3 then return false end
-
-		local ___1 = findChild("1", "ImageLabel", _3, true)
-		if not ___1 then return false end
-		res.toolImage = ___1.Image
-
-		return res
-	end
-	local function resolveItemsHotbar(hotbar)
-		local res = {}
-		for i,v in pairs(hotbar:GetChildren()) do
-			local rev = resolveItemHotbar(v)
-			local name = tostring(v.Name)
-			if rev and type(rev) == "table" then 
-				if res[name] then warn("Duplication found! Overwriting... ["..name.."]") end
-				res[name] = rev
-			else
-				if rev == "blacklisted" then continue end
-				if res[name] then warn("Duplication found! Overwriting... ["..name.."]") end
-				res[name] = {
-					object = v
-				}
-			end
-		end
-		return res
-	end
-	local function findTool(items_rev, img)
-		local res = {
-			tool = nil,
-			activated = nil
-		}
-		for i,v in pairs(items_rev) do
-			if v.toolImage and tostring(v.toolImage) == tostring(img) then 
-				res.tool = v
-			end
-			local img = findChild("1", "ImageButton", v.object)
-			if img and img.Position ~= UDim2.new(0, 0, 0, 0) then
-				res.activated = v
-			end
-		end
-		return res
-	end
-	local function deactivatify(object)
-		local img = findChild("1", "ImageButton", object)
-		if img then
-			img.Position = UDim2.new(0, 0, 0, 0)
-			img.BorderColor3 = Color3.fromRGB(114, 127, 172)
-			local text = findChild("1", "TextLabel", img)
-			text.TextColor3 = Color3.fromRGB(255, 255, 255)
-			text.BackgroundColor3 = Color3.fromRGB(114, 127, 172)
-		end
-	end
-	local function activatify(object)
-		local img = findChild("1", "ImageButton", object)
-		if img then
-			img.Position = UDim2.new(0, 0, -0.075, 0)
-			img.BorderColor3 = Color3.fromRGB(255, 255, 255)
-			local text = findChild("1", "TextLabel", img)
-			text.TextColor3 = Color3.fromRGB(0, 0, 0)
-			text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		end
-	end
-	task.spawn(function()
-		local function run(func)
-			local suc, err = pcall(function()
-				func()
-			end)
-			if err then warn("[CoreSwitch Error]: "..tostring(debug.traceback(err))) end
-		end
-		run(function()
-			if not lplr.Character then return false end
-
-			if not tool then
-				tool = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') and lplr.Character:FindFirstChild('HandInvItem').Value or nil
-			end
-			if not tool then return false end
-			tool = tostring(tool)
-
-			local hotbar_rev = resolveHotbar()
-			if not hotbar_rev then return false end
-
-			local ItemsHotbar = hotbar_rev.items
-			local items_rev = resolveItemsHotbar(ItemsHotbar)
-			if not items_rev then return false end
-
-			repeat task.wait() until (bedwars.ItemMeta ~= nil and type(bedwars.ItemMeta) == "table") or (bedwars.ItemTable ~= nil and type(bedwars.ItemTable) == "table")
-			local meta = ((bedwars.ItemMeta and bedwars.ItemMeta[tool]) or (bedwars.ItemTable and bedwars.ItemTable[tool]))
-			if ((not meta) or (meta ~= nil and (not meta.image))) then return false end
-
-			local img = meta.image
-			
-			local tool_rev = findTool(items_rev, img)
-			if ((not tool_rev) or ((tool_rev ~= nil) and (not tool_rev.tool))) then return false end
-			local rev = {
-				image = findChild("1", "ImageButton", tool_rev.tool.object)
-			}
-			if tool_rev.activated then 
-				rev.activate = findChild("1", "ImageButton", tool_rev.activated.object)
-			end
-			if (not rev.image) then return false end
-
-			if rev.activate then
-				deactivatify(tool_rev.activated.object)
-			end
-			activatify(tool_rev.tool.object)
-		end)	
-	end)
-end
-
 local function switchItem(tool, delayTime)
 	delayTime = delayTime or 0.05
-	delayTime = (delayTime == 0 and 0.05 or delayTime)
-	if tool ~= nil and type(tool) == "string" then
-		tool = getItem(tool) and getItem(tool).tool
-	end
-		local _tool = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') and lplr.Character:FindFirstChild('HandInvItem').Value or nil
-		if _tool ~= nil and _tool ~= tool then
-			coreswitch(tool, true)
-			corehotbarswitch()
+	local check = lplr.Character and lplr.Character:FindFirstChild('HandInvItem') or nil
+	if check and check.Value ~= tool and tool.Parent ~= nil then
+		task.spawn(function()
+			bedwars.Client:Get(remotes.EquipItem):CallServerAsync({hand = tool})
+		end)
+		check.Value = tool
+		if delayTime > 0 then
+			task.wait(delayTime)
 		end
+		return true
+	end
 end
 
 local function getSwordSlot()
@@ -1118,6 +887,7 @@ run(function()
 		SpawnRaven = safeGetProto(Knit.Controllers.RavenController.KnitStart, 1),
 		SummonerClawAttack = Knit.Controllers.SummonerClawHandController.attack,
 		WarlockTarget = safeGetProto(Knit.Controllers.WarlockStaffController.KnitStart, 2),
+		EquipItem = safeGetProto(require(replicatedStorage.TS.entity.entities['inventory-entity']).InventoryEntity.equipItem, 3),
 	}
 	local function dumpRemote(tab)
 		local ind
@@ -4536,7 +4306,7 @@ run(function()
     end
     
     ShopTierBypass = vape.Categories.Utility:CreateModule({
-        Name = 'ShopTierBypass',
+        Name = 'Shop Tier Bypass',
         Function = function(callback)
             if callback then
                 repeat task.wait() until store.shopLoaded or not ShopTierBypass.Enabled
@@ -4687,7 +4457,7 @@ run(function()
 		if not plr:GetAttribute('Team') and plr:GetAttribute('Spectator') and not bedwars.Store:getState().Game.customMatch then
 			connection:Disconnect()
 			local tab, pages = {}, playersService:GetFriendsAsync(plr.UserId)
-			for _ = 1, 4 do
+			for _ = 1, 12 do
 				for _, v in pages:GetCurrentPage() do
 					table.insert(tab, v.Id)
 				end
@@ -19141,3 +18911,19 @@ run(function()
 	})
 end)
 
+if getgenv().TestMode then
+	run(function()
+		local test
+		test = vape.Categories.Utility:CreateModule({
+			Name = "test",
+			Function = function(callback)
+				if not callback then return end
+				local Wool = getItem('wool_red')
+				if Wool then
+					switchItem(Wool.tool)
+					test:Toggle(false)
+				end
+			end
+		})
+	end)
+end
