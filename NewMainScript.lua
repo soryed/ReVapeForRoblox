@@ -41,7 +41,12 @@ local function TTD()
 	end
 end
 local function RTTD()
-	delfolder('ReVape')
+	delfolder('ReVape/profiles')
+	delfolder('ReVape/games')
+	delfolder('ReVape/guis')
+	delfolder('ReVape/libraries')
+	delfolder('ReVape/assets')
+	delfile('ReVape/main.lua')
 	return nil
 end
 
@@ -67,7 +72,7 @@ end
 if ARGS.ForceRefresh then
     RTTD()
 	task.wait(0.5)
-    if not isfolder('ReVape') then
+   if not isfile('ReVape/main.lua') then
 		StarterGui:SetCore('SendNotification', {
 			Title = 'Onyx',
 			Text = 'Successfully force deleted Onyx!!',
