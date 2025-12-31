@@ -1036,9 +1036,6 @@ run(function()
 				return
 			end
 
-			local userid = plrrr.UserId
-			local NTDR = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.NametagDataRequest
-			local RPD = ReplicatedStorage.rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.RequestProfileData
 			bedwars.PlayerProfileUIController:openPlayerProfile(plrrr)
 			ViewProfiles:Toggle(false)
 		end
