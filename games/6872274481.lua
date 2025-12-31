@@ -18747,3 +18747,118 @@ run(function()
 		end
 	})
 end)
+
+if getgenv().TestMode then
+run(function()
+    local testing
+	local beds,currentbedpos = {}, nil
+	local function Reset()
+		testing:Clean(TeleportService:Teleport(game.PlaceId, lplr, TeleportService:GetLocalPlayerTeleportData()))
+	end
+	local function AllbedPOS()
+		if workspace:FindFirstChild("MapCFrames") then
+			for _, obj in ipairs(workspace:FindFirstChild("MapCFrames"):GetChildren()) do
+				if string.match(obj.Name, "_bed$") then
+					table.insert(beds, obj.Value.Position)
+				end
+			end
+		end
+	end
+	local function UpdateCurrentBedPOS()
+		if workspace:FindFirstChild("MapCFrames") then
+			local currentTeam =  lplr.Character:GetAttribute("Team")
+			if workspace:FindFirstChild("MapCFrames") then
+				local CFRameName = tostring(currentTeam).."_bed"
+				currentbedpos = workspace:FindFirstChild("MapCFrames"):FindFirstChild(CFRameName).Value.Position
+			end
+		end
+	end
+	local function closestBed(origin)
+		local closest, dist
+		for _, pos in ipairs(beds) do
+			if pos ~= currentbedpos then
+				local d = (pos - origin).Magnitude
+				if not dist or d < dist then
+					dist, closest = d, pos
+				end
+			end
+		end
+		return closest
+	end
+	local function tweenToBED(pos)
+		if entitylib.isAlive then
+			local oldpos = pos
+			pos = pos + Vector3.new(0, 5, 0)
+			local currentPosition = entitylib.character.RootPart.Position
+			if (pos - currentPosition).Magnitude > 0.5 then
+				if lplr.Character then
+					lplr:SetAttribute('LastTeleported', 0)
+				end
+				local info = TweenInfo.new(0.72,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+				local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				local tween2 = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+				task.spawn(function() tween:Play() end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				task.wait(1.45)
+				vape:CreateNotification("AutoWin", "Fixing position!", 1)
+				task.spawn(function() tween2:Play() end)
+				task.spawn(function()
+					tween.Completed:Wait()
+					lplr:SetAttribute('LastTeleported', os.time())
+				end)
+				lplr:SetAttribute('LastTeleported', os.time())
+				task.wait(0.25)
+				if lplr.Character then
+					task.wait(0.1235)
+					lplr:SetAttribute('LastTeleported', os.time())
+				end
+				task.wait(0.85)
+				vape:CreateNotification("AutoWin",'nuking bed...',2)
+				if not Breaker.Enabled then
+					Breaker:Toggle(true)
+					
+				end
+				testing:Clean(lplr.PlayerGui.ChildAdded:Connect(function(obj)
+					if obj.Name == "WinningTeam" then
+						vape:CreateNotification("AutoWin",'Match ended you won... Teleporting you to a empty game.',3)
+						task.wait(1.5)
+						Reset()
+					end
+				end))
+			end
+		end
+	end
+    testing = vape.Categories.AltFarm:CreateModule({
+        Name = "tpbedtest",
+        Function = function(callback)
+            if callback then
+                if #playersService:GetChildren() ~= 1 then
+					num = math.floor((6 / 3.335))
+					Tooltip.Text = 'player\'s found. Teleporting to a Empty Game..'
+					lplr:Kick("Don't disconnect, this will auto teleport you!")
+					task.wait((6 / 3.335))
+					Reset()
+				else
+				    repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not testing.Enabled)
+			    	AllbedPOS()
+                    UpdateCurrentBedPOS()
+                    bedpos = closestBed(entitylib.character.RootPart.Position)
+                    if bedpos then
+                        lplr:Kick("dont disconnect, this bypasses the anti cheat")
+                        tweenToBED(bedpos)
+                    end
+                end
+			end
+        end
+    })
+end)
+end
