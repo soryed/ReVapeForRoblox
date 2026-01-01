@@ -8928,7 +8928,7 @@ run(function()
 	local T
 	local L
 	local C
-
+	local AJ
     local function getWorldFolder()
         local Map = workspace:WaitForChild("Map", math.huge)
         local Worlds = Map:WaitForChild("Worlds", math.huge)
@@ -8993,9 +8993,10 @@ run(function()
 
 						bedwars.breakBlock(child)
 
-					
-						if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
-							humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						if AJ.Enabled then
+							if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
+								humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+							end
 						end
 					end))
                     end
@@ -9021,7 +9022,10 @@ run(function()
             setCannonSpeeds(blocks, aim, tnt, aunchself)
 		end
 	})
-
+	AJ = BetterDavey:CreateToggle({
+		Name = "Auto-Jump",
+		Default = true
+	})
 	T = BetterDavey:CreateSlider({
 		Name = "Tnt",
 		Visible = false,
