@@ -5,6 +5,7 @@ local playersService = cloneref(game:GetService('Players'))
 local replicatedStorage = cloneref(game:GetService('ReplicatedStorage'))
 local inputService = cloneref(game:GetService('UserInputService'))
 local httpService = cloneref(game:GetService('HttpService'))
+local runService = cloneref(game:GetService('RunService'))
 
 local lplr = playersService.LocalPlayer
 local vape = shared.vape
