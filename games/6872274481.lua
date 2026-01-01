@@ -19159,7 +19159,6 @@ end)
 				end)
 			end
 		end,
-		Tooltip = 'Projectile Aimbot'
 	})
 	
 	SynPATargets = SynPA:CreateTargets({
