@@ -2209,7 +2209,7 @@ run(function()
 		if block:GetAttribute("Team"..(lplr:GetAttribute("Team") or 0).."NoBreak") then return true end
 		local name = block.Name:lower()
 		for _, v in pairs(blocks.ListEnabled) do
-			if name:find(v:lower(), 1, true) then
+			if name:find(v:lower(), 1, true) or workspace:FindFirstChild(name) then
 				return true
 			end
 		end
