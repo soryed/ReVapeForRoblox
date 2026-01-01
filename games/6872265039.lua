@@ -1807,7 +1807,72 @@ run(function()
 	})
 end)
     
-																								
+run(function()
+    local FakeLeaderboard
+	local num
+	local connection
+	local old = {
+		PlayerName = nil,
+		Thumbnail = nil
+	}
+	local function Fake(slot)
+		if connection then
+			connection:Disconnect()
+			connection = nil
+		end
+		local Thumbnail = playersService:GetUserThumbnailAsync(lplr.UserId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
+		local rlb = workspace:FindFirstChild('Lobby'):FindFirstChild('Boards'):FindFirstChild('WinsLeaderboard'):FindFirstChild('Meshes/Board'):FindFirstChild('LeaderboardApp'):FindFirstChild('1'):FindFirstChild('1'):FindFirstChild('2'):FindFirstChild('AutoCanvasScrollingFrame')
+		for i, v in rlb:GetDescendants() do
+			if v:IsA("ImageLabel") and v.Name == "PlayerAvatar" then
+				old.Thumbnail = v.Image
+				old.PlayerName = v.Parent:FindFirstChild('PlayerUsername').Text
+				connection = runService.RenderStepped:Connect(function()
+					v.Image = Thumbnail
+					v.Parent:FindFirstChild('PlayerUsername').Text = lplr.Name
+				end)
+			end
+		end
+	end
+
+	local function ReVert(slot)
+		if connection then
+			connection:Disconnect()
+			connection = nil
+			local newthumb = old.Thumbnail
+			local newName = old.PlayerName
+			local rlb = workspace:FindFirstChild('Lobby'):FindFirstChild('Boards'):FindFirstChild('WinsLeaderboard'):FindFirstChild('Meshes/Board'):FindFirstChild('LeaderboardApp'):FindFirstChild('1'):FindFirstChild('1'):FindFirstChild('2'):FindFirstChild('AutoCanvasScrollingFrame')
+			for i, v in rlb:GetDescendants() do
+				if v:IsA("ImageLabel") and v.Name == "PlayerAvatar" then
+					v.Image = newthumb
+					v.Parent:FindFirstChild('PlayerUsername').Text = newName
+					old.Thumbnail = nil
+					old.PlayerName = nil
+				end
+			end
+		end
+	end
+
+	FakeLeaderboard = vape.Categories.Exploits:CreateModule({
+        Name = "FakeLeaderboard",
+        Function = function(callback)
+            if role "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+                vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                return
+            end
+			if callback then
+				Fake(num.Value)
+			else
+				ReVert(num.Value)
+			end
+		end,
+        Tooltip = "fakes you onto the rank leaderboard\nclient only"
+	})
+	num = FakeLeaderboard:CreateTextBox({
+		Name = "Slot",
+		Tooltip = 'what placement you will be at',
+	})
+end)
+																										
 if getgenv().TestMode then	
 	warn("loaded test mode!")
 else
