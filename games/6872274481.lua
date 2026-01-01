@@ -18939,16 +18939,10 @@ end)
 
 	local function SynUpdateOutline(target)
 		if SynTargetOutline then
-			SynTargetOutline:Destroy()
-			SynTargetOutline = nil
+			return
 		end
 		if target and SynPATargetVisualiser.Enabled then
-			SynTargetOutline = Instance.new("Highlight")
-			SynTargetOutline.FillTransparency = 1
-			SynTargetOutline.OutlineColor = Color3.fromRGB(255, 0, 0)
-			SynTargetOutline.OutlineTransparency = 0
-			SynTargetOutline.Adornee = target.Character
-			SynTargetOutline.Parent = target.Character
+			return
 		end
 	end
 
@@ -18960,10 +18954,8 @@ end)
 				if plr then
 					if SynSelectedTarget == plr then
 						SynSelectedTarget = nil
-						SynUpdateOutline(nil)
 					else
 						SynSelectedTarget = plr
-						SynUpdateOutline(plr)
 					end
 				end
 			end
@@ -18972,8 +18964,7 @@ end)
 		local con
 		if isMobile then
 			con = UserInputService.TouchTapInWorld:Connect(function(touchPos)
-				if not SynHovering then SynUpdateOutline(nil); return end
-				if not SynPA.Enabled then pcall(function() con:Disconnect() end); SynUpdateOutline(nil); return end
+				if not SynPA.Enabled then pcall(function() con:Disconnect() end); return end
 				local ray = workspace.CurrentCamera:ScreenPointToRay(touchPos.X, touchPos.Y)
 				local result = workspace:Raycast(ray.Origin, ray.Direction * 1000)
 				if result and result.Instance then
@@ -19020,7 +19011,6 @@ end)
 						})
 					end
 					
-					SynUpdateOutline(plr)
 					
 					if not shouldPAWork() then
 						SynHovering = false
