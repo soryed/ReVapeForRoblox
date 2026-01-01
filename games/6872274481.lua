@@ -8984,7 +8984,7 @@ run(function()
 	local T
 	local L
 	local C
-	local AJ
+
     local function getWorldFolder()
         local Map = workspace:WaitForChild("Map", math.huge)
         local Worlds = Map:WaitForChild("Worlds", math.huge)
@@ -9049,10 +9049,9 @@ run(function()
 
 						bedwars.breakBlock(child)
 
-						if AJ.Enabled then
-							if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
-								humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-							end
+					
+						if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
+							humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 						end
 					end))
                     end
@@ -9069,19 +9068,16 @@ run(function()
 		Max = 1,
 		Default = aim,
 		Decimal = 10,
-		Function = function()
-			aim = A.Value
-			task.wait(0.035)
+		Function = function(v)
+			print(v)
+			aim = v
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
             setCannonSpeeds(blocks, aim, tnt, aunchself)
 		end
 	})
-	AJ = BetterDavey:CreateToggle({
-		Name = "Auto-Jump",
-		Default = true
-	})
+
 	T = BetterDavey:CreateSlider({
 		Name = "Tnt",
 		Visible = false,
@@ -9089,9 +9085,9 @@ run(function()
 		Max = 1,
 		Default = tnt,
 		Decimal = 10,
-		Function = function()
-			tnt = A.Value
-			task.wait(0.035)
+		Function = function(v)
+			print(v)
+			tnt = T.Value
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
@@ -9106,9 +9102,9 @@ run(function()
 		Max = 1,
 		Default = aunchself,
 		Decimal = 10,
-		Function = function()
-			aunchself = A.Value
-			task.wait(0.035)
+		Function = function(V)
+			print(V)
+			aunchself = L.Value
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
@@ -9132,7 +9128,6 @@ run(function()
 	})
 
 end)
-
 run(function() 
     local MatchHistory
     
