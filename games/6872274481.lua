@@ -2204,13 +2204,13 @@ run(function()
 	local old, event
 	
 	local function IgnoreFastBreak(block)
-		if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
-			for i,v in blocks.ListEnabled do
-				if tostring(block) == v then
-					print(`INGORING {v} LIST {i} {v}!`)																		
-					event:Fire() 
-					return true																																																																																																																																																																							
-				end																																																																																																																																																																												
+		if not block then return false end
+		if block:GetAttribute("NoBreak") then return true end
+		if block:GetAttribute("Team"..(lplr:GetAttribute("Team") or 0).."NoBreak") then return true end
+		local name = block.Name:lower()
+		for _, v in pairs(blocks.ListEnabled) do
+			if name:find(v:lower(), 1, true) then
+				return true
 			end
 		end
 		return false
