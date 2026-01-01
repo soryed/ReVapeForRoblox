@@ -8330,7 +8330,7 @@ run(function()
 
 			local decoded = nil
 			local ok, err = pcall(function()
-				decoded = httpService:JSONDecode(response.Body)
+				decoded = httpService:JSONEncode(response.Body)
 			end)
 
 			if not ok then
@@ -8339,6 +8339,7 @@ run(function()
 			end
 
 			for _, cfg in ipairs(decoded) do
+				print(cfg)
 				local configData = {
 					name = cfg.name,
 					created = cfg.created,
