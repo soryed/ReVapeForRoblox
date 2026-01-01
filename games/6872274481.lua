@@ -6826,7 +6826,7 @@ run(function()
 		end
 	end
 	
-	BedPlates = vape.Categories.Exploits:CreateModule({
+	BedPlates = vape.Categories.Utility:CreateModule({
 		Name = 'BedPlates',
 		Function = function(callback)
 			if callback then
@@ -8040,7 +8040,7 @@ run(function()
 	end
 
 	
-	Breaker = vape.Categories.Exploits:CreateModule({
+	Breaker = vape.Categories.Utility:CreateModule({
 		Name = 'Nuker',
 		Function = function(callback)
 			if callback then
@@ -8709,7 +8709,7 @@ run(function()
 	local level 
 	local old
 
-	PlayerLevel = vape.Categories.Exploits:CreateModule({
+	PlayerLevel = vape.Categories.Utility:CreateModule({
         Name = 'SetPlayerLevel',
 		Tooltip = "Sets your player level to 1000 (client sided)",
         Function = function(callback)
@@ -8946,7 +8946,7 @@ run(function()
         end)
     end
 
-    KitRender = vape.Categories.Exploits:CreateModule({
+    KitRender = vape.Categories.Utility:CreateModule({
         Name = "KitRender",
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
@@ -8984,7 +8984,7 @@ run(function()
 	local T
 	local L
 	local C
-
+	local AJ
     local function getWorldFolder()
         local Map = workspace:WaitForChild("Map", math.huge)
         local Worlds = Map:WaitForChild("Worlds", math.huge)
@@ -9049,9 +9049,10 @@ run(function()
 
 						bedwars.breakBlock(child)
 
-					
-						if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
-							humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+						if AJ.Enabled then
+							if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
+								humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+							end
 						end
 					end))
                     end
@@ -9061,6 +9062,10 @@ run(function()
             end
         end
     })
+	AJ = BetterDavey:CreateToggle({
+		Name = "Auto-Jump",
+		Default = true																																																						
+	})																																																					
 	A = BetterDavey:CreateSlider({
 		Name = "Aim",
 		Visible = false,
@@ -9284,7 +9289,7 @@ end)
 run(function()
 	local AutoQueue
 	local Bypass
-	AutoQueue = vape.Categories.World:CreateModule({
+	AutoQueue = vape.Categories.Utility:CreateModule({
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
@@ -10244,7 +10249,7 @@ run(function()
 		end
 	end
 	
-	Disabler = vape.Categories.Exploits:CreateModule({
+	Disabler = vape.Categories.Utility:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
@@ -13658,7 +13663,7 @@ run(function()
 		MouseTP:Toggle(false)
 	end
 
-	MouseTP = vape.Categories.Blatant:CreateModule({
+	MouseTP = vape.Categories.Utility:CreateModule({
 		Name = 'MouseTP',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"  then
