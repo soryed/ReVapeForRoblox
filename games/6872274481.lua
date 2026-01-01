@@ -8663,7 +8663,7 @@ run(function()
 		end
 	end
 	
-	KitESP = vape.Categories.Exploits:CreateModule({
+	KitESP = vape.Categories.Utility:CreateModule({
 		Name = 'KitESP',
 		Function = function(callback)
 			if callback then
