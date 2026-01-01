@@ -18805,3 +18805,468 @@ run(function()
 	})
 end)
 
+	run(function()
+	local SynPA
+	local SynPATargetPart
+	local SynPATargets
+	local SynPAFOV
+	local SynPARange
+	local SynPAOtherProjectiles
+	local SynPABlacklist
+	local SynPATargetVisualiser
+	local SynPAHideCursor
+	local SynPACursorViewMode
+	local SynPACursorLimitBow
+	local SynPACursorShowGUI
+	local SynPAWorkMode
+	local SynRayCheck = RaycastParams.new()
+	SynRayCheck.FilterType = Enum.RaycastFilterType.Include
+	SynRayCheck.FilterDescendantsInstances = {workspace:FindFirstChild('Map') or workspace}
+	local SynOldFunction
+	local SynSelectedTarget = nil
+	local SynTargetOutline = nil
+	local SynHovering = false
+	local SynCoreConnections = {}
+	local UserInputService = game:GetService("UserInputService")
+	local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+	local cursorRenderConnection
+	local lastGUIState = false
+	
+	local function isFirstPerson()
+		if not (lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")) then 
+			return false 
+		end
+		
+		local characterPos = lplr.Character.HumanoidRootPart.Position
+		local cameraPos = gameCamera.CFrame.Position
+		local distance = (characterPos - cameraPos).Magnitude
+		
+		return distance < 5 
+	end
+	
+	local function shouldPAWork()
+		local inFirstPerson = isFirstPerson()
+		
+		if SynPAWorkMode.Value == 'First Person' then
+			return inFirstPerson
+		elseif SynPAWorkMode.Value == 'Third Person' then
+			return not inFirstPerson
+		elseif SynPAWorkMode.Value == 'Both' then
+			return true
+		end
+		
+		return true
+	end
+	
+	local function isGUIOpen()
+		local guiLayers = {
+			bedwars.UILayers.MAIN or 'Main',
+			bedwars.UILayers.DIALOG or 'Dialog',
+			bedwars.UILayers.POPUP or 'Popup'
+		}
+		
+		for _, layerName in pairs(guiLayers) do
+			if bedwars.AppController:isLayerOpen(layerName) then
+				return true
+			end
+		end
+		
+		if bedwars.AppController:isAppOpen('BedwarsItemShopApp') then
+			return true
+		end
+		
+		if bedwars.Store:getState().Inventory and bedwars.Store:getState().Inventory.open then
+			return true
+		end
+		
+		return false
+	end
+	
+	local function hasBowEquipped()
+		if not store.hand or not store.hand.toolType then
+			return false
+		end
+		
+		local toolType = store.hand.toolType
+		return toolType == 'bow' or toolType == 'crossbow'
+	end
+	
+	local function shouldHideCursor()
+		if not SynPAHideCursor.Enabled then return false end
+		
+		if SynPACursorShowGUI.Enabled and isGUIOpen() then
+			return false
+		end
+		
+		if SynPACursorLimitBow.Enabled then
+			if not hasBowEquipped() then
+				return false
+			end
+		end
+		
+		local inFirstPerson = isFirstPerson()
+		
+		if SynPACursorViewMode.Value == 'First Person' then
+			return inFirstPerson
+		elseif SynPACursorViewMode.Value == 'Third Person' then
+			return not inFirstPerson
+		elseif SynPACursorViewMode.Value == 'Both' then
+			return true
+		end
+		
+		return false
+	end
+	
+	local function updateCursor()
+		if shouldHideCursor() then
+			pcall(function()
+				inputService.MouseIconEnabled = false
+			end)
+		else
+			pcall(function()
+				inputService.MouseIconEnabled = true
+			end)
+		end
+	end
+	
+	local function checkGUIState()
+		local currentGUIState = isGUIOpen()
+		if lastGUIState ~= currentGUIState then
+			updateCursor()
+			lastGUIState = currentGUIState
+		end
+	end
+
+	local function SynUpdateOutline(target)
+		if SynTargetOutline then
+			SynTargetOutline:Destroy()
+			SynTargetOutline = nil
+		end
+		if target and SynPATargetVisualiser.Enabled then
+			SynTargetOutline = Instance.new("Highlight")
+			SynTargetOutline.FillTransparency = 1
+			SynTargetOutline.OutlineColor = Color3.fromRGB(255, 0, 0)
+			SynTargetOutline.OutlineTransparency = 0
+			SynTargetOutline.Adornee = target.Character
+			SynTargetOutline.Parent = target.Character
+		end
+	end
+
+	local function SynHandlePlayerSelection()
+		local function selectSynTarget(target)
+			if not target then return end
+			if target and target.Parent then
+				local plr = playersService:GetPlayerFromCharacter(target.Parent)
+				if plr then
+					if SynSelectedTarget == plr then
+						SynSelectedTarget = nil
+						SynUpdateOutline(nil)
+					else
+						SynSelectedTarget = plr
+						SynUpdateOutline(plr)
+					end
+				end
+			end
+		end
+		
+		local con
+		if isMobile then
+			con = UserInputService.TouchTapInWorld:Connect(function(touchPos)
+				if not SynHovering then SynUpdateOutline(nil); return end
+				if not SynPA.Enabled then pcall(function() con:Disconnect() end); SynUpdateOutline(nil); return end
+				local ray = workspace.CurrentCamera:ScreenPointToRay(touchPos.X, touchPos.Y)
+				local result = workspace:Raycast(ray.Origin, ray.Direction * 1000)
+				if result and result.Instance then
+					selectSynTarget(result.Instance)
+				end
+			end)
+			table.insert(SynCoreConnections, con)
+		end
+	end
+	if role ~= "owner" and  role ~= "coowner" user ~= 'synioxzz'  then
+		return 
+	end
+	SynPA = vape.Categories.Combat:CreateModule({
+		Name = 'SynPA',
+		Tooltip = "Thanks for Syn for giving me this script"
+		Function = function(callback)
+			if callback then
+				if SynPAHideCursor.Enabled and not cursorRenderConnection then
+					cursorRenderConnection = runService.RenderStepped:Connect(function()
+						checkGUIState()
+						updateCursor()
+					end)
+				end
+
+				SynHandlePlayerSelection()
+				
+				SynOldFunction = bedwars.ProjectileController.calculateImportantLaunchValues
+				bedwars.ProjectileController.calculateImportantLaunchValues = function(...)
+					SynHovering = true
+					local self, projmeta, worldmeta, origin, shootpos = ...
+					local originPos = entitylib.isAlive and (shootpos or entitylib.character.RootPart.Position) or Vector3.zero
+					
+					local plr
+					if SynSelectedTarget and SynSelectedTarget.Character and SynSelectedTarget.Character.PrimaryPart and (SynSelectedTarget.Character.PrimaryPart.Position - originPos).Magnitude <= SynPARange.Value then
+						plr = SynSelectedTarget
+					else
+						plr = entitylib.EntityMouse({
+							Part = SynPATargetPart.Value,
+							Range = SynPAFOV.Value,
+							Players = SynPATargets.Players.Enabled,
+							NPCs = SynPATargets.NPCs.Enabled,
+							Wallcheck = SynPATargets.Walls.Enabled,
+							Origin = originPos
+						})
+					end
+					
+					SynUpdateOutline(plr)
+					
+					if not shouldPAWork() then
+						SynHovering = false
+						return SynOldFunction(...)
+					end
+	
+					if plr and plr.Character and plr[SynPATargetPart.Value] and (plr[SynPATargetPart.Value].Position - originPos).Magnitude <= SynPARange.Value then
+						local pos = shootpos or self:getLaunchPosition(origin)
+						if not pos then
+							SynHovering = false
+							return SynOldFunction(...)
+						end
+	
+						if (not SynPAOtherProjectiles.Enabled) and not projmeta.projectile:find('arrow') then
+							SynHovering = false
+							return SynOldFunction(...)
+						end
+
+						if table.find(SynPABlacklist.ListEnabled, projmeta.projectile) then
+							SynHovering = false
+							return SynOldFunction(...)
+						end
+	
+						local meta = projmeta:getProjectileMeta()
+						local lifetime = (worldmeta and meta.predictionLifetimeSec or meta.lifetimeSec or 3)
+						local gravity = (meta.gravitationalAcceleration or 196.2) * projmeta.gravityMultiplier
+						local projSpeed = (meta.launchVelocity or 100)
+						local offsetpos = pos + (projmeta.projectile == 'owl_projectile' and Vector3.zero or projmeta.fromPositionOffset)
+						local balloons = plr.Character:GetAttribute('InflatedBalloons')
+						local playerGravity = workspace.Gravity
+	
+						if balloons and balloons > 0 then
+							playerGravity = workspace.Gravity * (1 - (balloons * 0.05))
+						end
+	
+						if plr.Character and plr.Character.PrimaryPart and plr.Character.PrimaryPart:FindFirstChild('rbxassetid://8200754399') then
+							playerGravity = 6
+						end
+
+						if plr.Player and plr.Player:GetAttribute('IsOwlTarget') then
+							for _, owl in collectionService:GetTagged('Owl') do
+								if owl:GetAttribute('Target') == plr.Player.UserId and owl:GetAttribute('Status') == 2 then
+									playerGravity = 0
+									break
+								end
+							end
+						end
+
+						local predictedPosition = prediction.predictStrafingMovement(
+							plr.Player, 
+							plr[SynPATargetPart.Value], 
+							projSpeed, 
+							gravity,
+							offsetpos
+						)
+						
+						local distance = (plr[SynPATargetPart.Value].Position - offsetpos).Magnitude
+						local rawLook = CFrame.new(offsetpos, plr[SynPATargetPart.Value].Position)
+						
+						local smoothnessFactor = 0.85
+						if distance > 70 then
+							smoothnessFactor = 0.75
+						elseif distance > 40 then
+							smoothnessFactor = 0.80
+						elseif distance < 20 then
+							smoothnessFactor = 0.92
+						end
+						
+						local smoothLook = rawLook:Lerp(CFrame.new(rawLook.Position, predictedPosition), smoothnessFactor)
+						
+						if projmeta.projectile ~= 'owl_projectile' then
+							smoothLook = smoothLook * CFrame.new(
+								bedwars.BowConstantsTable.RelX or 0,
+								bedwars.BowConstantsTable.RelY or 0,
+								bedwars.BowConstantsTable.RelZ or 0
+							)
+						end
+
+						local targetVelocity = projmeta.projectile == 'telepearl' and Vector3.zero or plr[SynPATargetPart.Value].Velocity
+						
+						local calc = prediction.SolveTrajectory(
+							smoothLook.p, 
+							projSpeed, 
+							gravity, 
+							predictedPosition, 
+							targetVelocity, 
+							playerGravity, 
+							plr.HipHeight, 
+							plr.Jumping and 50 or nil,
+							SynRayCheck
+						)
+						
+						if calc then
+							local finalDirection = (calc - smoothLook.p).Unit
+							local angleFromHorizontal = math.acos(math.clamp(finalDirection:Dot(Vector3.new(0, 1, 0)), -1, 1))
+							
+							local minAngle = math.rad(1)
+							local maxAngle = math.rad(179)
+							
+							if angleFromHorizontal > minAngle and angleFromHorizontal < maxAngle then
+								targetinfo.Targets[plr] = tick() + 1
+								SynHovering = false
+								return {
+									initialVelocity = finalDirection * projSpeed,
+									positionFrom = offsetpos,
+									deltaT = lifetime,
+									gravitationalAcceleration = gravity,
+									drawDurationSeconds = 5
+								}
+							end
+						end
+					end
+	
+					SynHovering = false
+					return SynOldFunction(...)
+				end
+			else
+				bedwars.ProjectileController.calculateImportantLaunchValues = SynOldFunction
+				if SynTargetOutline then
+					SynTargetOutline:Destroy()
+					SynTargetOutline = nil
+				end
+				SynSelectedTarget = nil
+				for i,v in pairs(SynCoreConnections) do
+					pcall(function() v:Disconnect() end)
+				end
+				table.clear(SynCoreConnections)
+				
+				if cursorRenderConnection then
+					cursorRenderConnection:Disconnect()
+					cursorRenderConnection = nil
+				end
+				
+				pcall(function()
+					inputService.MouseIconEnabled = true
+				end)
+			end
+		end,
+		Tooltip = 'Projectile Aimbot'
+	})
+	
+	SynPATargets = SynPA:CreateTargets({
+		Players = true,
+		Walls = true
+	})
+	SynPATargetPart = SynPA:CreateDropdown({
+		Name = 'Part',
+		List = {'RootPart', 'Head'}
+	})
+	SynPAFOV = SynPA:CreateSlider({
+		Name = 'FOV',
+		Min = 1,
+		Max = 1000,
+		Default = 1000
+	})
+	SynPARange = SynPA:CreateSlider({
+		Name = 'Range',
+		Min = 10,
+		Max = 500,
+		Default = 100
+	})
+	SynPAWorkMode = SynPA:CreateDropdown({
+		Name = 'PA Work Mode',
+		List = {'First Person', 'Third Person', 'Both'},
+		Default = 'Both'
+	})
+	SynPATargetVisualiser = SynPA:CreateToggle({
+		Name = "Target Visualiser", 
+		Default = true
+	})
+	SynPAOtherProjectiles = SynPA:CreateToggle({
+		Name = 'Other Projectiles',
+		Default = true,
+		Function = function(call)
+			if SynPABlacklist then
+				SynPABlacklist.Object.Visible = call
+			end
+		end
+	})
+	SynPABlacklist = SynPA:CreateTextList({
+		Name = 'Blacklist',
+		Darker = true,
+		Default = {'telepearl'}
+	})
+	
+	SynPAHideCursor = SynPA:CreateToggle({
+		Name = 'Hide Cursor',
+		Default = false,
+		Function = function(callback)
+			if callback and SynPA.Enabled then
+				if not cursorRenderConnection then
+					cursorRenderConnection = runService.RenderStepped:Connect(function()
+						checkGUIState()
+						updateCursor()
+					end)
+				end
+				updateCursor()
+			else
+				if cursorRenderConnection then
+					cursorRenderConnection:Disconnect()
+					cursorRenderConnection = nil
+				end
+				pcall(function()
+					inputService.MouseIconEnabled = true
+				end)
+			end
+		end
+	})
+	
+	SynPACursorViewMode = SynPA:CreateDropdown({
+		Name = 'Cursor View Mode',
+		List = {'First Person', 'Third Person', 'Both'},
+		Default = 'First Person',
+		Darker = true,
+		Function = function()
+			if SynPA.Enabled and SynPAHideCursor.Enabled then
+				updateCursor()
+			end
+		end
+	})
+	
+	SynPACursorLimitBow = SynPA:CreateToggle({
+		Name = 'Limit to Bow',
+		Darker = true,
+		Function = function()
+			if SynPA.Enabled and SynPAHideCursor.Enabled then
+				updateCursor()
+			end
+		end
+	})
+	
+	SynPACursorShowGUI = SynPA:CreateToggle({
+		Name = 'Show on GUI',
+		Darker = true,
+		Function = function()
+			if SynPA.Enabled and SynPAHideCursor.Enabled then
+				updateCursor()
+			end
+		end
+	})
+	
+	vape:Clean(vapeEvents.InventoryChanged.Event:Connect(function()
+		if SynPA.Enabled and SynPAHideCursor.Enabled then
+			updateCursor()
+		end
+	end))
+end)
+
+
