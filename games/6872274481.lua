@@ -2229,9 +2229,13 @@ run(function()
 					repeat
 						bedwars.BlockBreaker.hitBlock = function(self, maid, raycastparams, ...)
 							local block = self.clientManager:getBlockSelector():getMouseInfo(1, {ray = raycastparams})
-							if IgnoreFastBreak(block and block.target and block.target.blockInstance or nil) then 
+							local NewBlock = block and block.target and block.target.blockInstance or ni																				
+							print(NewBlock)																				
+							if IgnoreFastBreak(NewBlock) then 
+								print('ignored block')																				
 								bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
 							else
+								print('set block')																									
 								bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
 							end
 							return old(self, maid, raycastparams, ...)
