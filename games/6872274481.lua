@@ -10415,7 +10415,7 @@ end)
 run(function()
 	local Desync
 	local enabled
-	Desync = vape.Categories.Exploits:CreateModule({
+	Desync = vape.Categories.World:CreateModule({
 		Name = 'Desync',
 		Function = function(callback)
 			if not enabled.Enabled then vape:CreateNotification('Onyx', "Ignored, You do not have the setting on to use this module",5,"warning"); return end
@@ -11944,7 +11944,7 @@ end)
 run(function()
 	local BackTrackIncoming = {}
 	local KPS
-	local BackTrack = vape.Categories.Exploits:CreateModule({
+	local BackTrack = vape.Categories.World:CreateModule({
 		Name = "BackTrack", 
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
@@ -12113,7 +12113,7 @@ run(function()
 	local AutoSendLength = 1
 	local oldphys, oldsend
 		
-	FakeLag = vape.Categories.Utility:CreateModule({
+	FakeLag = vape.Categories.World:CreateModule({
 		Name = 'FakeLag',
 		Function = function(callback)
 			if callback then
@@ -13404,7 +13404,7 @@ end)
 run(function()
 	local RepelLag
 	local Sync
-	RepelLag = vape.Categories.Exploits:CreateModule({
+	RepelLag = vape.Categories.World:CreateModule({
 		Name = 'RepelLag',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
