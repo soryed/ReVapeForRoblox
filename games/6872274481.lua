@@ -2226,18 +2226,22 @@ run(function()
 					end))
 
 					old = bedwars.BlockBreaker.hitBlock
-					repeat
 						bedwars.BlockBreaker.hitBlock = function(self, maid, raycastparams, ...)
 							local block = self.clientManager:getBlockSelector():getMouseInfo(1, {ray = raycastparams})
-							if IgnoreFastBreak(block and block.target and block.target.blockInstance or nil) then 
-								bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-							else
-								bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-							end
+							local NewBlock = block and block.target and block.target.blockInstance or nil
+							task.spawn(function()
+								repeat
+									if IgnoreFastBreak(NewBlock) then 
+										bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
+									else																		
+										bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
+										task.wait(0.1)
+									end																				
+								until not FastBreak.Enabled																			
+							end)
 							return old(self, maid, raycastparams, ...)
-						end
-						task.wait(0.1)
-					until not FastBreak.Enabled
+						end															
+
 				else
 					repeat
 						bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
