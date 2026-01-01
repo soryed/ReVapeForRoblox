@@ -18988,7 +18988,7 @@ end)
 	end
 	SynPA = vape.Categories.Combat:CreateModule({
 		Name = 'SynPA',
-		Tooltip = "Thanks for Syn for giving me this script"
+		Tooltip = "Thanks for Syn for giving me this script",
 		Function = function(callback)
 			if callback then
 				if SynPAHideCursor.Enabled and not cursorRenderConnection then
