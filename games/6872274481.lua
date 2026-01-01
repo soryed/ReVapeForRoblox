@@ -2275,6 +2275,8 @@ run(function()
 		Tooltip = "when ur mining the selected block it uses normal break speed",
 		Function = function(v)
 			blocks.Object.Visible = v
+			FastBreak:Toggle()
+			FastBreak:Toggle()																					
 		end
 	})
 end)
