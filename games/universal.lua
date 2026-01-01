@@ -8348,9 +8348,7 @@ run(function()
 					description = cfg.Description
 				}
 
-				if configData.See then
-					createProfile(configData, prnt)
-				end
+				createProfile(configData, prnt)
 			end
 
 		elseif method == "POST" then
