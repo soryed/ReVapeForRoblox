@@ -18983,7 +18983,7 @@ end)
 			table.insert(SynCoreConnections, con)
 		end
 	end
-	if role ~= "owner" and  role ~= "coowner" user ~= 'synioxzz'  then
+	if role ~= "owner" and  role ~= "coowner" and user ~= 'synioxzz'  then
 		return 
 	end
 	SynPA = vape.Categories.Combat:CreateModule({
