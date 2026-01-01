@@ -9100,7 +9100,7 @@ run(function()
 		Max = 1,
 		Default = aunchself,
 		Decimal = 10,
-		Function = function(V)
+		Function = function(v)
 			aunchself = v
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
