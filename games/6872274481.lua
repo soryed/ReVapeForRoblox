@@ -2207,6 +2207,7 @@ run(function()
 		if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
 			for i,v in blocks.ListEnabled do
 				if tostring(block) == v then
+					print(`INGORING {v} LIST {i} {v}!`)																		
 					event:Fire() 
 					return true																																																																																																																																																																							
 				end																																																																																																																																																																												
