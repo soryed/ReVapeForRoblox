@@ -2201,59 +2201,43 @@ run(function()
 	local Time
 	local Blacklist
 	local blocks
-	local old, event
-	
-	local function IgnoreFastBreak(block)
-		if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
-			for i,v in blocks.ListEnabled do
-				if tostring(block) == v then
-					event:Fire() 
-					return true																																																																																																																																																																							
-				end																																																																																																																																																																												
+	local old
+	local function IsBlacklisted(block)
+		if not block then return false end
+		if block:GetAttribute("NoBreak") then return true end
+		if block:GetAttribute("Team"..(lplr:GetAttribute("Team") or 0).."NoBreak") then return true end
+		for _, v in pairs(blocks.ListEnabled) do
+			if tostring(block) == v then
+				return true
 			end
 		end
 		return false
 	end
-	FastBreak = vape.Categories.Blatant:CreateModule({
-		Name = 'FastBreak',
-		Function = function(callback)
-			if callback then
-				if Blacklist.Enabled then
-					event = Instance.new('BindableEvent')
-					FastBreak:Clean(event)
-					FastBreak:Clean(event.Event:Connect(function()
-						contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
-					end))
 
-					old = bedwars.BlockBreaker.hitBlock
-					repeat
-						bedwars.BlockBreaker.hitBlock = function(self, maid, raycastparams, ...)
-							local block = self.clientManager:getBlockSelector():getMouseInfo(1, {ray = raycastparams})
-							if IgnoreFastBreak(block and block.target and block.target.blockInstance or nil) then 
-								bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-							else
-								bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-							end
-							return old(self, maid, raycastparams, ...)
-						end
-						task.wait(0.1)
-					until not FastBreak.Enabled
-				else
-					repeat
+	FastBreak = vape.Categories.Blatant:CreateModule({
+		Name = "FastBreak",
+		Tooltip = "Decreases block hit cooldown",
+		Function = function(enabled)
+			if enabled then
+				old = bedwars.BlockBreaker.hitBlock
+				bedwars.BlockBreaker.hitBlock = function(self, maid, raycastparams, ...)
+					local block = self.clientManager:getBlockSelector():getMouseInfo(1,{ray = raycastparams})
+					local blockInstance = block and block.target and block.target.blockInstance
+					if Blacklist.Enabled and IsBlacklisted(blockInstance) then
+						bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
+					else
 						bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-						task.wait(0.1)
-					until not FastBreak.Enabled
+					end
+					return oldHitBlock(self, maid, raycastparams, ...)
 				end
 			else
-				if Blacklist.Enabled then
+				if old then
 					bedwars.BlockBreaker.hitBlock = old
-					bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-				else
-					bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
+					old = nil
 				end
+				bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
 			end
-		end,
-		Tooltip = 'Decreases block hit cooldown'
+		end
 	})
 	blocks = FastBreak:CreateTextList({
 		Name = "Blacklisted Blocks",
