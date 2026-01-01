@@ -19601,8 +19601,8 @@ run(function()
 	end
 
 	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = "Killaura",
-		TTooltip = "closest killaura\nAttack players around you\nwithout aiming at them.",
+		Name = "NewKillaura",
+		Tooltip = "closest killaura\nAttack players around you\nwithout aiming at them.",
 		Function = function(enabled)
 			if not enabled then
 				Attacking = false
@@ -19838,7 +19838,7 @@ run(function()
 	end
 
 	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = "Killaura",
+		Name = "NewKillaura",
 		Tooltip = "blatant killaura\nAttack players around you\nwithout aiming at them.",
 		Function = function(enabled)
 			if not enabled then
