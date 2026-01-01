@@ -19258,4 +19258,233 @@ end)
 	end))
 end)
 
+run(function()
+	local CyanPA
+	local CyanPATargetPart
+	local CyanPATargets
+	local CyanPAFOV
+	local CyanPARange
+	local CyanPAOtherProjectiles
+	local CyanPABlacklist
+	local CyanPATargetVisualiser
+	local CyanPAWorkMode
+	local CyanRayCheck = RaycastParams.new()
+	CyanRayCheck.FilterType = Enum.RaycastFilterType.Include
+	CyanRayCheck.FilterDescendantsInstances = {workspace:FindFirstChild('Map') or workspace}
+	local CyanOldFunction
+	local CyanSelectedTarget = nil
+	local CyanTargetOutline = nil
+	local CyanHovering = false
+	local CyanCoreConnections = {}
+	local UserInputService = game:GetService("UserInputService")
+	local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+
+	local function isFirstPerson()
+		if not (lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")) then 
+			return false 
+		end
+		return (lplr.Character.HumanoidRootPart.Position - gameCamera.CFrame.Position).Magnitude < 5
+	end
+	
+	local function shouldPAWork()
+		local fp = isFirstPerson()
+		if CyanPAWorkMode.Value == 'First Person' then
+			return fp
+		elseif CyanPAWorkMode.Value == 'Third Person' then
+			return not fp
+		end
+		return true
+	end
+
+	local function CyanUpdateOutline(target)
+		if CyanTargetOutline then
+			CyanTargetOutline:Destroy()
+			CyanTargetOutline = nil
+		end
+		if target and CyanPATargetVisualiser.Enabled then
+			CyanTargetOutline = Instance.new("Highlight")
+			CyanTargetOutline.FillTransparency = 1
+			CyanTargetOutline.OutlineColor = Color3.fromRGB(255, 0, 0)
+			CyanTargetOutline.OutlineTransparency = 0
+			CyanTargetOutline.Adornee = target.Character
+			CyanTargetOutline.Parent = target.Character
+		end
+	end
+
+	local function CyanHandlePlayerSelection()
+		if not isMobile then return end
+
+		local con
+		con = UserInputService.TouchTapInWorld:Connect(function(touchPos)
+			if not CyanHovering then CyanUpdateOutline(nil); return end
+			if not CyanPA.Enabled then pcall(function() con:Disconnect() end); CyanUpdateOutline(nil); return end
+
+			local ray = workspace.CurrentCamera:ScreenPointToRay(touchPos.X, touchPos.Y)
+			local result = workspace:Raycast(ray.Origin, ray.Direction * 1000)
+			if result and result.Instance then
+				local plr = playersService:GetPlayerFromCharacter(result.Instance.Parent)
+				if plr then
+					CyanSelectedTarget = (CyanSelectedTarget == plr and nil or plr)
+					CyanUpdateOutline(CyanSelectedTarget)
+				end
+			end
+		end)
+
+		table.insert(CyanCoreConnections, con)
+	end
+
+	if role ~= "owner" and role ~= "coowner" and user ~= 'generalcyan' then
+		return 
+	end
+
+	CyanPA = vape.Categories.Combat:CreateModule({
+		Name = 'CyanPA',
+		Tooltip = "Cyan PA from syn",
+		Function = function(callback)
+			if callback then
+				CyanHandlePlayerSelection()
+
+				CyanOldFunction = bedwars.ProjectileController.calculateImportantLaunchValues
+				bedwars.ProjectileController.calculateImportantLaunchValues = function(...)
+					CyanHovering = true
+					local self, projmeta, worldmeta, origin, shootpos = ...
+					local originPos = entitylib.isAlive and (shootpos or entitylib.character.RootPart.Position) or Vector3.zero
+
+					local plr
+					if CyanSelectedTarget
+						and CyanSelectedTarget.Character
+						and CyanSelectedTarget.Character.PrimaryPart
+						and (CyanSelectedTarget.Character.PrimaryPart.Position - originPos).Magnitude <= CyanPARange.Value then
+						plr = CyanSelectedTarget
+					else
+						plr = entitylib.EntityMouse({
+							Part = CyanPATargetPart.Value,
+							Range = CyanPAFOV.Value,
+							Players = CyanPATargets.Players.Enabled,
+							NPCs = CyanPATargets.NPCs.Enabled,
+							Walls = CyanPATargets.Walls.Enabled,
+							Origin = originPos
+						})
+					end
+
+					CyanUpdateOutline(plr)
+
+					if not shouldPAWork() then
+						CyanHovering = false
+						return CyanOldFunction(...)
+					end
+
+					if plr and plr.Character and plr[CyanPATargetPart.Value]
+						and (plr[CyanPATargetPart.Value].Position - originPos).Magnitude <= CyanPARange.Value then
+
+						if not CyanPAOtherProjectiles.Enabled and not projmeta.projectile:find('arrow') then
+							CyanHovering = false
+							return CyanOldFunction(...)
+						end
+
+						if table.find(CyanPABlacklist.ListEnabled, projmeta.projectile) then
+							CyanHovering = false
+							return CyanOldFunction(...)
+						end
+
+						local meta = projmeta:getProjectileMeta()
+						local gravity = (meta.gravitationalAcceleration or 196.2) * projmeta.gravityMultiplier
+						local speed = meta.launchVelocity or 100
+						local from = shootpos or self:getLaunchPosition(origin)
+
+						local predicted = prediction.predictStrafingMovement(
+							plr.Player,
+							plr[CyanPATargetPart.Value],
+							speed,
+							gravity,
+							from
+						)
+
+						local calc = prediction.SolveTrajectory(
+							from,
+							speed,
+							gravity,
+							predicted,
+							plr[CyanPATargetPart.Value].Velocity,
+							workspace.Gravity,
+							plr.HipHeight,
+							nil,
+							CyanRayCheck
+						)
+
+						if calc then
+							local dir = (calc - from).Unit
+							CyanHovering = false
+							return {
+								initialVelocity = dir * speed,
+								positionFrom = from,
+								deltaT = meta.lifetimeSec or 3,
+								gravitationalAcceleration = gravity,
+								drawDurationSeconds = 5
+							}
+						end
+					end
+
+					CyanHovering = false
+					return CyanOldFunction(...)
+				end
+			else
+				bedwars.ProjectileController.calculateImportantLaunchValues = CyanOldFunction
+				CyanUpdateOutline(nil)
+				CyanSelectedTarget = nil
+
+				for _, v in pairs(CyanCoreConnections) do
+					pcall(function() v:Disconnect() end)
+				end
+				table.clear(CyanCoreConnections)
+			end
+		end,
+	})
+
+	CyanPATargets = CyanPA:CreateTargets({
+		Players = true,
+		Walls = true
+	})
+
+	CyanPATargetPart = CyanPA:CreateDropdown({
+		Name = 'Part',
+		List = {'RootPart', 'Head'}
+	})
+
+	CyanPAFOV = CyanPA:CreateSlider({
+		Name = 'FOV',
+		Min = 1,
+		Max = 1000,
+		Default = 1000
+	})
+
+	CyanPARange = CyanPA:CreateSlider({
+		Name = 'Range',
+		Min = 10,
+		Max = 500,
+		Default = 100
+	})
+
+	CyanPAWorkMode = CyanPA:CreateDropdown({
+		Name = 'PA Work Mode',
+		List = {'First Person', 'Third Person', 'Both'},
+		Default = 'Both'
+	})
+
+	CyanPATargetVisualiser = CyanPA:CreateToggle({
+		Name = "Target Visualiser",
+		Default = true
+	})
+
+	CyanPAOtherProjectiles = CyanPA:CreateToggle({
+		Name = 'Other Projectiles',
+		Default = true
+	})
+
+	CyanPABlacklist = CyanPA:CreateTextList({
+		Name = 'Blacklist',
+		Darker = true,
+		Default = {'telepearl'}
+	})
+end)
 
