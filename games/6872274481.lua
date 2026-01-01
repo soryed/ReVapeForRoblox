@@ -9069,7 +9069,6 @@ run(function()
 		Default = aim,
 		Decimal = 10,
 		Function = function(v)
-			print(v)
 			aim = v
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
@@ -9086,8 +9085,7 @@ run(function()
 		Default = tnt,
 		Decimal = 10,
 		Function = function(v)
-			print(v)
-			tnt = T.Value
+			tnt = v
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
@@ -9103,8 +9101,7 @@ run(function()
 		Default = aunchself,
 		Decimal = 10,
 		Function = function(V)
-			print(V)
-			aunchself = L.Value
+			aunchself = v
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
