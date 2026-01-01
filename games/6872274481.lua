@@ -2210,11 +2210,9 @@ run(function()
 		local name = block.Name:lower()
 		for _, v in pairs(blocks.ListEnabled) do
 			if name:find(v:lower(), 1, true) or workspace:FindFirstChild(name) then
-				print('founded')
 				return true
 			end
 		end
-		warn('didnt...')																		
 		return false
 	end
 	FastBreak = vape.Categories.Blatant:CreateModule({
