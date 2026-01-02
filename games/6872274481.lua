@@ -16186,9 +16186,16 @@ run(function()
 	local BetterGinger
 	local oldAttemptLaunch
 	local event
-	local function switchHotbarItem(block)
-		if block then
-print(block)
+	local function switchHotbarItem(b)
+		if b then
+			local block = nil
+			for _, v in workspace:GetDescendants() do
+				if v:IsA("BasePart") then
+					if v.Name == b then
+						block = v
+					end
+				end
+			end
 			local tool, slot = store.tools[bedwars.ItemMeta[block.Name].block.breakType], nil
 			if tool then
 				for i, v in store.inventory.hotbar do
@@ -16206,7 +16213,6 @@ else
 warn('no nigga', block,block.Parent)
 		end
 	end
-
 
 	BetterGinger = vape.Categories.Support:CreateModule({
 		Name = 'BetterGinger',
