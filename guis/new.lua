@@ -21,7 +21,6 @@ local mainapi = {
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
     ColoredNotifications = {},
-	TestPOLLS = {},
 	Version = '0.85',
 	Discord = "@20mop",
 	role = "",
@@ -6284,21 +6283,7 @@ mainapi.ColoredNotifications = notifpane:CreateToggle({
 	Default = true,
 	Darker = true
 })
-
-mainapi.TestPOLLS = notifpane:CreateToggle({
-	Name = 'test poll',
-	Tooltip = 'debugging polls',
-	Function = function()
-		local function cb1()
-			print('yes!')
-		end
-		local function cb2()
-			warn('no nigger')
-		end
-		mainapi:CreatePoll('Onyx', 'this is testing new polls ignore pls!', 23, 'alert', cb1, cb2)																		
-	end																			
-})
-																	
+															
 mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
