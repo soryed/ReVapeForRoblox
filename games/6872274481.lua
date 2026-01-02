@@ -19508,62 +19508,58 @@ run(function()
 		Name = "BetterMetal",
 		Function = function(callback)
 			if callback then
-  				repeat
-                    if not entitylib.isAlive then task.wait(0.1); continue end
-                    
-					if Legit.Enabled then
-						if store.hand and store.hand.tool then
-							if store.hand.tool.Name ~= 'metal_detector' then
-								continue
-							end
+				task.spawn(function()
+					while BetterMetal.Enabled do
+						if not entitylib.isAlive() then
+							task.wait(0.1)
+							continue
 						end
-						
-						local localPosition = entitylib.character.RootPart.Position
-						for _, obj in collectionService:GetTagged('hidden-metal') do                        
+
+						local character = entitylib.character
+						if not character or not character.RootPart then
+							task.wait(0.1)
+							continue
+						end
+
+						local tool = (store and store.hand and store.hand.tool) and store.hand.tool or nil
+						if not tool or tool.Name ~= "metal_detector" then
+							task.wait(0.5)
+							continue
+						end
+
+						local localPos = character.RootPart.Position
+						local metals = collectionService:GetTagged("hidden-metal")
+
+						for _, obj in pairs(metals) do
 							if obj:IsA("Model") and obj.PrimaryPart then
-								local tres = obj.PrimaryPart.Position
-								local dis = (localPosition - tres).Magnitude
-								
-								if dis <= 10 then
-									task.wait(0.45)
-									bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
-									bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
-									bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = obj:GetAttribute('Id')})
-									task.wait(0.1)
-								end
-							end
-						end
-					else
-						if Limits.Enabled then
-							if store.hand and store.hand.tool then
-								if store.hand.tool.Name ~= 'metal_detector' then
-									continue
-								end
-							end
-						end
-						
-						local localPosition = entitylib.character.RootPart.Position
-						for _, obj in collectionService:GetTagged('hidden-metal') do                        
-							if obj:IsA("Model") and obj.PrimaryPart then
-								local tres = obj.PrimaryPart.Position
-								local dis = (localPosition - tres).Magnitude
-								
-								if dis <= Distance.Value then
-									task.wait(1 / Delay.GetRandomValue())
-									
-									if Animation.Enabled then
-										bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
-										bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
+								local metalPos = obj.PrimaryPart.Position
+								local distance = (localPos - metalPos).Magnitude
+
+								local range = Legit.Enabled and 10 or (Distance.Value or 8)
+								if distance <= range then
+									local waitTime = Legit.Enabled and 0.45 or (1 / (Delay.GetRandomValue and Delay:GetRandomValue() or 1))
+									task.wait(waitTime)
+									if Legit.Enabled or Animation.Enabled then
+										pcall(function()
+											bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
+											bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
+										end)
 									end
-									bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = obj:GetAttribute('Id')})
+									pcall(function()
+										local id = obj:GetAttribute("Id")
+										if id then
+											bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = id})
+										end
+									end)
+
 									task.wait(0.1)
 								end
 							end
 						end
+
+						task.wait(0.1)
 					end
-                    
-                    task.wait(0.1)
-                until not BetterMetal.Enabled
+				end)
             end
 		end
 	})
