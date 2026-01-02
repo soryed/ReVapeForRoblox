@@ -6927,7 +6927,7 @@ run(function()
 				old = bedwars.ViewmodelController.showCrosshair
 				bedwars.ViewmodelController.showCrosshair = function(tbl)
 					tbl.crosshair = true
-					if bedwars.DeviceUtil.isMobileControls() then
+					if inputService.TouchEnabled then
 						local ui = roact.createElement("ScreenGui",{IgnoreGuiInset=true},{roact.createElement("ImageLabel",{Size=UDim2.fromScale(0.04,0.04),SizeConstraint='RelativeYY',BackgroundTransparency=1,Position=UDim2.fromScale(0.5,0.5),AnchorPoint=Vector2.new(0.5,0.5),Image=Image.Value,ResampleMode=Enum.ResamplerMode.Pixelated})})
 						local mount = roact.mount(ui, lplr:WaitForChild("PlayerGui"))
 						tbl.crosshairMaid:GiveTask(function()
