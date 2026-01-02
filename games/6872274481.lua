@@ -18395,71 +18395,76 @@ run(function()
 				task.wait(0.1)
 			until not AutoKit.Enabled
 		end,
-		wizard = function()
+			wizard = function()
+			math.randomseed(os.clock() * 1e6)
+			local roll = math.random(100)
 			repeat
 				local ability = lplr:GetAttribute("WizardAbility")
-		
+				if not ability then
+					task.wait(0.85)
+					continue
+				end
 				local plr = entitylib.EntityPosition({
 					Range = Legit.Enabled and 32 or 50,
 					Part = "RootPart",
 					Players = true,
 					Sort = sortmethods.Health
 				})
-		
-				if plr and ability then
-					local fullstr
-					local inv = replicatedStorage.Inventories:FindFirstChild(lplr.Name)
-		
-					if inv then
-						for _, v in ipairs(inv:GetChildren()) do
-							if string.find(v.Name, "wizard") then
-								fullstr = v.Name
-								break
-							end
-						end
-					end
-		
-					local hand = store.hand
-					local tool = hand and hand.tool
-					local itemType = tool and tool.itemType
-		
-					if fullstr and itemType == fullstr then
-						if bedwars.AbilityController:canUseAbility(ability) then
-							bedwars.AbilityController:useAbility(ability,newproxy(true),{target = plr.RootPart.Position})
-						end
-		
-						local plr2 = entitylib.EntityPosition({
-							Range = Legit.Enabled and 5 or 8,
-							Part = "RootPart",
-							Players = true,
-							Sort = sortmethods.Health
-						})
-		
-						local plr3 = entitylib.EntityPosition({
-							Range = Legit.Enabled and 12 or 18,
-							Part = "RootPart",
-							Players = true,
-							Sort = sortmethods.Health
-						})
-		
-						if (fullstr == "wizard_staff_2" or fullstr == "wizard_staff_3") and plr2 then
+				if not plr or not store.hand.tool then
+					task.wait(0.85)
+					continue
+				end
+				local itemType = store.hand.tool.Name.itemType
+				local targetPos = plr.RootPart.Position
+				if bedwars.AbilityController:canUseAbility(ability) then
+					bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
+				end
+				if itemType == "wizard_staff_2" or itemType == "wizard_staff_3" then
+					local plr2 = entitylib.EntityPosition({
+						Range = Legit.Enabled and 13 or 20,
+						Part = "RootPart",
+						Players = true,
+						Sort = sortmethods.Health
+					})
+
+					if plr2 then
+						if roll <= 50 then
 							if bedwars.AbilityController:canUseAbility("SHOCKWAVE") then
 								bedwars.AbilityController:useAbility("SHOCKWAVE",newproxy(true),{target = Vector3.zero})
 							end
-						end
-		
-						if fullstr == "wizard_staff_3" and plr3 then
-							if bedwars.AbilityController:canUseAbility("LIGHTNING_STORM") then
-								bedwars.AbilityController:useAbility("LIGHTNING_STORM",newproxy(true),{target = plr.RootPart.Position})
+						else
+							if bedwars.AbilityController:canUseAbility(ability) then
+								bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
 							end
 						end
 					end
 				end
-		
-				task.wait(0.1)
+				if itemType == "wizard_staff_3" then
+					local plr3 = entitylib.EntityPosition({
+						Range = Legit.Enabled and 12 or 18,
+						Part = "RootPart",
+						Players = true,
+						Sort = sortmethods.Health
+					})
+					if plr3 then
+						if roll <= 40 then
+							if bedwars.AbilityController:canUseAbility(ability) then
+								bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
+							end
+						elseif roll <= 70 then
+							if bedwars.AbilityController:canUseAbility("SHOCKWAVE") then
+								bedwars.AbilityController:useAbility("SHOCKWAVE",newproxy(true),{target = Vector3.zero})
+							end
+						else
+							if bedwars.AbilityController:canUseAbility("LIGHTNING_STORM") then
+								bedwars.AbilityController:useAbility("LIGHTNING_STORM",newproxy(true),{target = targetPos})
+							end
+						end
+					end
+				end
+				task.wait(0.85)
 			until not AutoKit.Enabled
-		end
-
+		end,
 		--[[wizard = function()
 			repeat
 				local ability = lplr:GetAttribute('WizardAbility')
