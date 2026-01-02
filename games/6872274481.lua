@@ -9783,7 +9783,7 @@ run(function()
 													})
 													task.wait(0.05)
 													for _, data in getCrossbows() do
-														local projectile = 'wood_crossbow'
+														local projectile = getItem('wood_crossbow')
 														if (FireDelays[item.itemType] or 0) < tick() then
 															rayCheck.FilterDescendantsInstances = {workspace.Map}
 															local meta = bedwars.ProjectileMeta[projectile]
