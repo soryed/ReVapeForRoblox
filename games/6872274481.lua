@@ -9797,7 +9797,7 @@ run(function()
 															rayCheck.FilterDescendantsInstances = {workspace.Map}
 															local meta = bedwars.ProjectileMeta[projectile]
 															local projSpeed, gravity = meta.launchVelocity, meta.gravitationalAcceleration or 196.2
-															local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, ent.RootPart.Position, ent.RootPart.Velocity, workspace.Gravity, ent.HipHeight, ent.Jumping and 42.6 or nil, rayCheck)
+															local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, actualRoot.Position, actualRoot.Velocity, workspace.Gravity, v.Character.Humanoid.HipHeight, v.Character.Humanoid.Jumping and 42.6 or nil, rayCheck)
 															if calc then
 																local slot = getObjSlot(projectile)
 																local switched = switchHotbar(slot)
@@ -10215,7 +10215,7 @@ run(function()
 		Name = 'Legit Aura',
 		Tooltip = 'Only attacks when the mouse is clicking'
 	})
-end)																																							
+end)																																						
 else
 run(function()
 
