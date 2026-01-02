@@ -10210,14 +10210,7 @@ run(function()
 		end,
 		Tooltip = 'Only attacks when the sword is held'
 	})
-	HitsDelay = KillAura:CreateSlider({
-		Name = 'Hits Delay',
-		Min = 0,
-		Max = 1000,
-		Suffix = 'ms',
-		Default = 250
-	})
-	FastHits = Killaura:CreateToggle({Name='FastHits',Function=function(v) HitsDelay.Object.Visible = v end})
+	FastHits = Killaura:CreateToggle({Name='FastHits'})
 	LegitAura = Killaura:CreateToggle({
 		Name = 'Legit Aura',
 		Tooltip = 'Only attacks when the mouse is clicking'
