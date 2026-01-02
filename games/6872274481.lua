@@ -441,7 +441,7 @@ local function getObjSlot(nme)
 	end
 	return Obj
 end
-
+getgenv().SlotGetter = getObjSlot
 local function GetOriginalSlot()
 	return store.inventory.hotbarSlot 
 end
