@@ -16182,56 +16182,68 @@ run(function()
 		Tooltip = "Corrects ur position when placing blocks"
 	})
 end)
-
 run(function()
 	local BetterGinger
 	local oldAttemptLaunch
+	local event
+	local function switchHotbarItem(block)
+		if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
+			local tool, slot = store.tools[bedwars.ItemMeta[block.Name].block.breakType], nil
+			if tool then
+				for i, v in store.inventory.hotbar do
+					if v.item and v.item.itemType == tool.itemType then slot = i - 1 break end
+				end
+				if hotbarSwitch(slot) then
+					if inputService:IsMouseButtonPressed(0) then 
+						event:Fire() 
+					end
+					return true
+				end
+			end
+		end
+	end
+
 
 	BetterGinger = vape.Categories.Support:CreateModule({
 		Name = 'BetterGinger',
-		Function = function()
+		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
-			if not oldAttemptLaunch then
+			if callback then
+				event = Instance.new('BindableEvent')
+				event.Event:Connect(function()
+					contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
+				end)
 				oldAttemptLaunch = bedwars.LaunchPadController.attemptLaunch
-			end
-			bedwars.LaunchPadController.attemptLaunch = function(...)
-				local res = {oldAttemptLaunch(...)}
-				local self, block = ...
-				if not block or not block:IsA("BasePart") then
-					return unpack(res)
-				end
-				local char = entitylib.character
-				if not char or not char.RootPart then
-					return unpack(res)
-				end
-				if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 and block:GetAttribute("PlacedByUserId") == lplr.UserId and (block.Position - char.RootPart.Position).Magnitude < 30 then
-					local str = "pickaxe"
-					local fullstr = ""
-					for i, v in replicatedStorage.Inventories[lplr.Name]:GetChildren() do
-						if string.find(v.Name, str) then
-							fullstr = v.Name
+				bedwars.LaunchPadController.attemptLaunch = function(...)
+					local res = {oldAttemptLaunch(...)}
+					local self, block = ...
+					if not block or not block:IsA("BasePart") then
+						return unpack(res)
+					end
+					local char = entitylib.character
+					if not char or not char.RootPart then
+						return unpack(res)
+					end
+					if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 and block:GetAttribute("PlacedByUserId") == lplr.UserId and (block.Position - char.RootPart.Position).Magnitude < 30 then
+						if switchHotbarItem(block) then 
+							task.spawn(bedwars.breakBlock, block, false, nil, true)
 						end
 					end
-					local pickaxe = getObjSlot(fullstr)
-					local OgSlot = GetOriginalSlot()
-						task.spawn(bedwars.breakBlock, block, false, nil, true)
-					switchHotbar(pickaxe)
-			
-					task.wait(0.15)
-					switchHotbar(OgSlot)
+					return unpack(res)
 				end
-
-				return unpack(res)
+			else
+				bedwars.LaunchPadController.attemptLaunch = oldAttemptLaunch 
+				oldAttemptLaunch = nil
+				event:Destroy()	
 			end
 		end,
 		Tooltip = 'makes you play like purvy sage lol'
 	})
 
 end)
-
 
 run(function()
 		local AutoWin
