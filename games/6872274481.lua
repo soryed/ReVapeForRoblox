@@ -16193,7 +16193,6 @@ run(function()
 				for i, v in store.inventory.hotbar do
 					if v.item and v.item.itemType == tool.itemType then slot = i - 1 break end
 				end
-				print(slot)
 				if hotbarSwitch(slot) then
 					if inputService:IsMouseButtonPressed(0) then 
 						event:Fire() 
@@ -16201,8 +16200,6 @@ run(function()
 					return true
 				end
 			end
-else
-warn('no nigga', block,block.Parent)
 		end
 	end
 
@@ -16220,23 +16217,42 @@ warn('no nigga', block,block.Parent)
 					contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
 				end))
 				oldAttemptLaunch = bedwars.LaunchPadController.attemptLaunch
-				bedwars.LaunchPadController.attemptLaunch = function(...)
-					local res = {oldAttemptLaunch(...)}
-					local self, block = ...
-					if not block or not block:IsA("BasePart") then
-						return unpack(res)
-					end
-					local char = entitylib.character
-					if not char or not char.RootPart then
-						return unpack(res)
-					end
-					if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 and block:GetAttribute("PlacedByUserId") == lplr.UserId and (block.Position - char.RootPart.Position).Magnitude < 30 then
-						if switchHotbarItem(block) then 
-							task.spawn(bedwars.breakBlock, block, false, nil, true)
-						end
-					end
+			bedwars.LaunchPadController.attemptLaunch = function(...)
+				local res = {oldAttemptLaunch(...)}
+				local self, block = ...
+				if not block or not block:IsA("BasePart") then
 					return unpack(res)
 				end
+				local char = entitylib.character
+				if not char or not char.RootPart then
+					return unpack(res)
+				end
+				if (workspace:GetServerTimeNow() - self.lastLaunch) < 0.4 and block:GetAttribute("PlacedByUserId") == lplr.UserId and (block.Position - char.RootPart.Position).Magnitude < 30 then
+					local wood = getItem("wood_pickaxe")
+					local stone = getItem("stone_pickaxe")
+					local iron = getItem("iron_pickaxe")
+					local dim = getItem("diamond_pickaxe")
+					local fullstr = ''
+					if wood then
+						fullstr = 'wood_pickaxe'
+					elseif stone then
+						fullstr = 'wood_pickaxe'
+					elseif iron then
+						fullstr = 'wood_pickaxe'
+					elseif dim then
+						fullstr = 'wood_pickaxe'
+					end
+					local pickaxe = getObjSlot(fullstr)
+					local OgSlot = GetOriginalSlot()
+						task.spawn(bedwars.breakBlock, block, false, nil, true)
+					switchHotbar(pickaxe)
+			
+					task.wait(0.15)
+					switchHotbar(OgSlot)
+				end
+
+				return unpack(res)
+			end
 			else
 				bedwars.LaunchPadController.attemptLaunch = oldAttemptLaunch 
 				oldAttemptLaunch = nil
