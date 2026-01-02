@@ -6296,7 +6296,7 @@ mainapi.TestPOLLS = notifpane:CreateToggle({
 		local function cb2()
 			warn('no nigger')
 		end
-		self:CreatePoll('Onyx', 'this is testing new polls ignore pls!', 23, 'alert', cb1, cb2)																		
+		mainapi:CreatePoll('Onyx', 'this is testing new polls ignore pls!', 23, 'alert', cb1, cb2)																		
 	end																			
 })
 																	
