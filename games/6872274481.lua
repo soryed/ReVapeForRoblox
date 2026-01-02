@@ -6780,16 +6780,16 @@ run(function()
 			table.insert(blocks, {name = name,count = count})
 		end
 		table.sort(blocks, function(a, b)
-			return (bedwars.ItemMeta[a.name].block and bedwars.ItemMeta[a.name].block.health or 0) > (bedwars.ItemMeta[b.name].block and bedwars.ItemMeta[b.name].block.health or 0)
+			return (bedwars.ItemMeta[a.name].block and bedwars.ItemMeta[a.name].block.health or 0)> (bedwars.ItemMeta[b.name].block and bedwars.ItemMeta[b.name].block.health or 0)
 		end)
 		v.Enabled = #blocks > 0
 		for _, data in blocks do
 			local blockimage = Instance.new('ImageLabel')
 			blockimage.Size = UDim2.fromOffset(32, 32)
 			blockimage.BackgroundTransparency = 1
-			blockimage.Image = bedwars.getIcon({itemType = data.name}, true)
+			blockimage.Image = bedwars.getIcon({ itemType = data.name }, true)
 			blockimage.Parent = v.Frame
-			if MutiLayerChecker.Enabled and data.count > 1 then
+			if MutiLayerChecker.Enabled then
 				local countLabel = Instance.new('TextLabel')
 				countLabel.Size = UDim2.fromScale(1, 1)
 				countLabel.BackgroundTransparency = 1
@@ -6798,11 +6798,11 @@ run(function()
 				countLabel.TextStrokeTransparency = 0
 				countLabel.TextScaled = true
 				countLabel.Font = Enum.Font.GothamBold
+				countLabel.ZIndex = blockimage.ZIndex + 1
 				countLabel.Parent = blockimage
 			end
 		end
 	end
-
 	local function Added(v)
 		local billboard = Instance.new('BillboardGui')
 		billboard.Parent = Folder
@@ -6866,7 +6866,6 @@ run(function()
 		end,
 		Tooltip = 'Displays blocks over the bed'
 	})
-
 	Background = BedPlates:CreateToggle({
 		Name = 'Background',
 		Default = true,
