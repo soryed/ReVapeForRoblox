@@ -6749,13 +6749,14 @@ run(function()
 	Folder.Parent = vape.gui
 	local SCAN_PASSES = 2
 	local function scanSide(self, start, tab, scanSides)
+		scanSides = scanSides or sides
 		for _, side in scanSides do
 			for i = 1, 15 do
 				local block = getPlacedBlock(start + (side * i))
 				if not block or block == self then break end
 				if not block:GetAttribute('NoBreak') then
 					tab[block.Name] = tab[block.Name] or {}
-					tab[block.Name][side.Y ~= 0 and ("Y"..i) or i] = true
+					tab[block.Name][tostring(side) .. i] = true
 				end
 			end
 		end
@@ -6768,10 +6769,10 @@ run(function()
 		end
 		local start = v.Adornee.Position
 		local blockLayers = {}
-	scanSide(v.Adornee, start, blockLayers, sides)
-	scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, sides)
-	scanSide(v.Adornee, start, blockLayers, verticalSides)
-	scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, verticalSides)
+		scanSide(v.Adornee, start, blockLayers, sides)
+		scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, sides)
+		scanSide(v.Adornee, start, blockLayers, verticalSides)
+		scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, verticalSides)
 		local blocks = {}
 		for name, layers in blockLayers do
 			local raw = 0
