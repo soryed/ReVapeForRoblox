@@ -9620,21 +9620,12 @@ run(function()
 		end
 	end
 	
-	local function getProjectiles()
-		local items = {}
-		for _, item in store.inventory.inventory.items do
-			local proj = bedwars.ItemMeta[item.itemType].projectileSource
-			local ammo = proj and getAmmo(proj)
-			if ammo then
-				table.insert(items, {
-					item,
-					ammo,
-					proj.projectileType(ammo),
-					proj
-				})
-			end
+	local function getCrossbows()
+		local crossbows = {}
+		for i, v in store.inventory.hotbar do
+			if v.item and v.item.itemType:find('crossbow') and i ~= (store.inventory.hotbarSlot + 1) then table.insert(crossbows, i - 1) end
 		end
-		return items
+		return crossbows
 	end
 	local RNG = math.random(0,100)
 	Killaura = vape.Categories.Blatant:CreateModule({
@@ -9791,7 +9782,7 @@ run(function()
 														}
 													})
 													task.wait(0.05)
-													for _, data in getProjectiles() do
+													for _, data in getCrossbows() do
 														local item, ammo, projectile, itemMeta = unpack(data)
 														if (FireDelays[item.itemType] or 0) < tick() then
 															rayCheck.FilterDescendantsInstances = {workspace.Map}
