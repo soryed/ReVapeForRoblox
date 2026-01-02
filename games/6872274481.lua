@@ -19510,7 +19510,7 @@ run(function()
 			if callback then
 				task.spawn(function()
 					while BetterMetal.Enabled do
-						if not entitylib.isAlive() then
+						if not entitylib.isAlive then
 							task.wait(0.1)
 							continue
 						end
