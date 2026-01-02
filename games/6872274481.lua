@@ -10643,11 +10643,11 @@ run(function()
 	})
 end)
 
-
 run(function()
     local DamageAffect = {Enabled = false}
     local connection
 	local Fonts
+	local customMSG
 	local DamageMessages = {
 		'Pow!',
 		'Pop!',
@@ -10739,8 +10739,9 @@ run(function()
 				            if v:IsA("TextLabel") then
 				                local txt = randomizer(DamageMessages)
 				                local clr = randomizer(RGBColors)
-				
-				                v.Text = txt
+								if customMSG.Enabled then
+				                	v.Text = txt
+								end
 				                v.TextColor3 = clr
 								v.FontFace = font
 				            end
@@ -10753,7 +10754,10 @@ run(function()
         end,
         Tooltip = "Customizes Damage Affects"
     })
-
+	customMSG = DamageAffect:CreateToggle({
+		Name = "Custom Messages",
+		Default = true
+	})
 	Fonts = DamageAffect:CreateFont({
 		Name = 'Font',
 		Function = function(val)
