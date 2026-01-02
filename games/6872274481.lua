@@ -16187,12 +16187,14 @@ run(function()
 	local oldAttemptLaunch
 	local event
 	local function switchHotbarItem(block)
-		if block and not block:GetAttribute('NoBreak') and not block:GetAttribute('Team'..(lplr:GetAttribute('Team') or 0)..'NoBreak') then
+		if block then
+print(block)
 			local tool, slot = store.tools[bedwars.ItemMeta[block.Name].block.breakType], nil
 			if tool then
 				for i, v in store.inventory.hotbar do
 					if v.item and v.item.itemType == tool.itemType then slot = i - 1 break end
 				end
+print(slot)
 				if hotbarSwitch(slot) then
 					if inputService:IsMouseButtonPressed(0) then 
 						event:Fire() 
@@ -16215,9 +16217,10 @@ warn('no nigga', block,block.Parent)
 			end
 			if callback then
 				event = Instance.new('BindableEvent')
-				event.Event:Connect(function()
+				BetterGinger:Clean(event)
+				BetterGinger:Clean(event.Event:Connect(function()
 					contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
-				end)
+				end))
 				oldAttemptLaunch = bedwars.LaunchPadController.attemptLaunch
 				bedwars.LaunchPadController.attemptLaunch = function(...)
 					local res = {oldAttemptLaunch(...)}
@@ -16239,7 +16242,6 @@ warn('no nigga', block,block.Parent)
 			else
 				bedwars.LaunchPadController.attemptLaunch = oldAttemptLaunch 
 				oldAttemptLaunch = nil
-				event:Destroy()	
 			end
 		end,
 		Tooltip = 'makes you play like purvy sage lol'
