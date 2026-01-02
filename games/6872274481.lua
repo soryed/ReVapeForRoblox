@@ -19548,7 +19548,7 @@ run(function()
 									pcall(function()
 										local id = obj:GetAttribute("Id")
 										if id then
-											bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = id})
+											bedwars.Client:Get('CollectCollectableEntity'):SendToServer({id = id})
 										end
 									end)
 
