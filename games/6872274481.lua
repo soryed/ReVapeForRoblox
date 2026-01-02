@@ -9783,18 +9783,14 @@ run(function()
 													})
 													task.wait(0.05)
 													for _, data in getCrossbows() do
-														local item, ammo, projectile, itemMeta = unpack(data)
+														local projectile = 'wood_crossbow'
 														if (FireDelays[item.itemType] or 0) < tick() then
 															rayCheck.FilterDescendantsInstances = {workspace.Map}
 															local meta = bedwars.ProjectileMeta[projectile]
 															local projSpeed, gravity = meta.launchVelocity, meta.gravitationalAcceleration or 196.2
 															local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, actualRoot.Position, actualRoot.Velocity, workspace.Gravity, v.Character.Humanoid.HipHeight, v.Character.Humanoid.Jumping and 42.6 or nil, rayCheck)
 															if calc then
-																local s = getObjSlot(projectile)
-																local ss = s[1]
-																local slot = s
-																print(s,ss,httpService:JSONEncode(s))
-																local switched = switchHotbar(slot)
+																local switched = switchHotbar(data)
 																task.spawn(function()
 																	local dir, id = CFrame.lookAt(pos, calc).LookVector, httpService:GenerateGUID(true)
 																	local shootPosition = (CFrame.new(pos, calc) * CFrame.new(Vector3.new(-bedwars.BowConstantsTable.RelX, -bedwars.BowConstantsTable.RelY, -bedwars.BowConstantsTable.RelZ))).Position
