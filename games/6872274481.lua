@@ -9800,6 +9800,7 @@ run(function()
 															local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, actualRoot.Position, actualRoot.Velocity, workspace.Gravity, v.Character.Humanoid.HipHeight, v.Character.Humanoid.Jumping and 42.6 or nil, rayCheck)
 															if calc then
 																local slot = getObjSlot(projectile)
+																print(slot,projectile)																																																																																																																																					
 																local switched = switchHotbar(slot)
 																task.spawn(function()
 																	local dir, id = CFrame.lookAt(pos, calc).LookVector, httpService:GenerateGUID(true)
