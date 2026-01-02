@@ -16186,22 +16186,14 @@ run(function()
 	local BetterGinger
 	local oldAttemptLaunch
 	local event
-	local function switchHotbarItem(b)
-		if b then
-			local block = nil
-			for _, v in workspace:GetDescendants() do
-				if v:IsA("BasePart") then
-					if v.Name == b then
-						block = v
-					end
-				end
-			end
-			local tool, slot = store.tools[bedwars.ItemMeta[block.Name].block.breakType], nil
+	local function switchHotbarItem(block)
+		if block then
+			local tool, slot = store.tools[bedwars.ItemMeta[tostring(block)].block.breakType], nil
 			if tool then
 				for i, v in store.inventory.hotbar do
 					if v.item and v.item.itemType == tool.itemType then slot = i - 1 break end
 				end
-print(slot)
+				print(slot)
 				if hotbarSwitch(slot) then
 					if inputService:IsMouseButtonPressed(0) then 
 						event:Fire() 
