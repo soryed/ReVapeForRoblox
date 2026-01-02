@@ -5442,7 +5442,7 @@ function mainapi:CreatePoll(title, text, duration, type, callback1, callback2)
 		btn1.Size = UDim2.fromOffset(101,20)
 		btn1.FontFace = uipallet.Font
 		btn1.Text = "YES"
-		btn.TextSize = 18
+		btn1.TextSize = 18
 		local c1 = Instance.new("UICorner")
 		c1.CornerRadius = UDim.new(0,4)
 		c1.Parent = btn1
@@ -5450,10 +5450,9 @@ function mainapi:CreatePoll(title, text, duration, type, callback1, callback2)
 		btn2.BackgroundColor3 = Color3.fromRGB(255, 97, 69)
 		btn2.Parent = notification
 		btn2.Position = UDim2.fromScale(0.6,0.547)
-		btn2.Size = UDim2.fromOffset(101,20)
 		btn2.FontFace = uipallet.Font
 		btn2.Text = "NO"
-		btn.TextSize = 18
+		btn2.TextSize = 18
 		local c2 = Instance.new("UICorner")
 		c2.CornerRadius = UDim.new(0,4)
 		c2.Parent = btn2
