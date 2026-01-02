@@ -16244,11 +16244,8 @@ run(function()
 					end
 					local pickaxe = getObjSlot(fullstr)
 					local OgSlot = GetOriginalSlot()
-						task.spawn(bedwars.breakBlock, block, false, nil, true)
-					switchHotbar(pickaxe)
-			
-					task.wait(0.15)
-					switchHotbar(OgSlot)
+					switchHotbar(fullstr)
+					task.spawn(bedwars.breakBlock, block, false, nil, true)
 				end
 
 				return unpack(res)
