@@ -9801,8 +9801,8 @@ run(function()
 															if calc then
 																local s = getObjSlot(projectile)
 																local ss = s[1]
-																local slot = (ss + 1)
-																print(s,ss,slot)
+																local slot = s
+																print(s,ss,httpService:JSONEncode(s))
 																local switched = switchHotbar(slot)
 																task.spawn(function()
 																	local dir, id = CFrame.lookAt(pos, calc).LookVector, httpService:GenerateGUID(true)
