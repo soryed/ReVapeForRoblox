@@ -19495,3 +19495,101 @@ run(function()
 	})
 end)
 
+if getgenv().TestMode then
+run(function()
+	local BetterMetal
+	local Delay
+	local Animation
+	local Distance
+	local Limits
+	local Legit
+
+	BetterMetal = vape.Categories.Support:CreateModule({
+		Name = "BetterMetal",
+		Function = function(callback)
+			if callback then
+  				repeat
+                    if not entitylib.isAlive then task.wait(0.1); continue end
+                    
+					if Legit.Enabled then
+						if store.hand and store.hand.tool then
+							if store.hand.tool.Name ~= 'metal_detector' then
+								continue
+							end
+						end
+						
+						local localPosition = entitylib.character.RootPart.Position
+						for _, obj in collectionService:GetTagged('hidden-metal') do                        
+							if obj:IsA("Model") and obj.PrimaryPart then
+								local tres = obj.PrimaryPart.Position
+								local dis = (localPosition - tres).Magnitude
+								
+								if dis <= 10 then
+									task.wait(0.45)
+									bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
+									bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
+									bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = obj:GetAttribute('Id')})
+									task.wait(0.1)
+								end
+							end
+						end
+					else
+						if Limits.Enabled then
+							if store.hand and store.hand.tool then
+								if store.hand.tool.Name ~= 'metal_detector' then
+									continue
+								end
+							end
+						end
+						
+						local localPosition = entitylib.character.RootPart.Position
+						for _, obj in collectionService:GetTagged('hidden-metal') do                        
+							if obj:IsA("Model") and obj.PrimaryPart then
+								local tres = obj.PrimaryPart.Position
+								local dis = (localPosition - tres).Magnitude
+								
+								if dis <= Distance.Value then
+									task.wait(1 / Delay.GetRandomValue())
+									
+									if Animation.Enabled then
+										bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
+										bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
+									end
+									bedwars.Client:Get(remotes.PickupMetal):SendToServer({id = obj:GetAttribute('Id')})
+									task.wait(0.1)
+								end
+							end
+						end
+					end
+                    
+                    task.wait(0.1)
+                until not BetterMetal.Enabled
+            end
+		end
+	})
+	Limits = BetterMetal:CreateToggle({Name='Limit To Item',Default=false})
+	Distance = BetterMetal:CreateSlider({Name='Range',Min=6,Max=12,Default=8})
+	Delay = BetterMetal:CreateTwoSlider({
+		Name = "Delay",
+		Min = 0,
+		Max = 2,
+		DefaultMin = 0.4,
+		DefaultMax = 1,
+		Suffix = 's',
+        Decimal = 10,	
+	})
+	Animation = BetterMetal:CreateToggle({Name='Animations',Default=true})
+	Legit = BetterMetal:CreateToggle({
+		Name='Legit',
+		Default=true,
+		Darker=true,
+		Function = function(v)
+			Animation.Object.Visible = (not v)
+			Delay.Object.Visible = (not v)
+			Distance.Object.Visible = (not v)
+			Limits.Object.Visible = (not v)
+		end
+	})
+
+end)
+end
