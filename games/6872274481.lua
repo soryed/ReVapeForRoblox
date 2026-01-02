@@ -6753,7 +6753,7 @@ run(function()
 				local block = getPlacedBlock(start + (side * i))
 				if not block or block == self then break end
 				if not block:GetAttribute('NoBreak') then
-					tab[block.Name] = (tab[block.Name] or 0) + 1
+					tab[block.Name] = math.max(tab[block.Name] or 0, i)
 				end
 			end
 		end
