@@ -6780,7 +6780,7 @@ run(function()
 			for _ in layers do
 				raw += 1
 			end
-			local count = math.max(1, math.floor(raw / SCAN_PASSES))
+			local count = raw
 			table.insert(blocks, {name = name,count = count})
 		end
 		table.sort(blocks, function(a, b)
