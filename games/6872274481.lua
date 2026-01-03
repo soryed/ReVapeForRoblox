@@ -13405,7 +13405,7 @@ run(function()
 					bedwars.ShopTaxController.getTaxedItems = function(...)
 						return nil
 					end
-					bedwars.ShopTaxController.getAddedTax(...)
+					bedwars.ShopTaxController.getAddedTax = function(...)
 						return 0
 					end
 				end)
