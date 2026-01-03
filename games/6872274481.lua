@@ -761,7 +761,7 @@ local function safeGetProto(func, index)
     if success then
         return proto
     else
-        warn("function:", func, "index:", index,", WM - proto") 
+        --warn("function:", func, "index:", index,", WM - proto") 
         return nil
     end
 end
@@ -19620,4 +19620,66 @@ run(function()
 	})
 end)
 
-
+if getgenv().TestMode then
+run(function()
+	local ClientEffects
+	local Victorious
+	local old
+	local old2
+	ClientEffects = vape.Categories.Render:CreateModule({
+		Name = "ClientEffects",
+		Tooltip = "allows you to use victorious sound sfx for some kits",
+		Function = function(callback)
+			if callback then
+				if store.equippedKit == "davey" then
+					task.spawn(function()
+						if Victorious.Value == "Gold" then
+							Sound = 'CANNON_FIRE_VICTORIOUS_GOLD'
+						end
+						if Victorious.Value == "Platinum" then
+							Sound = 'CANNON_FIRE_VICTORIOUS_PLATINUM'
+						end
+						if Victorious.Value == "Diamond" then
+							Sound = 'CANNON_FIRE_VICTORIOUS_DIAMOND'
+						end
+						if Victorious.Value == "Emerald" then
+							Sound = 'CANNON_FIRE_VICTORIOUS_EMERALD'
+						end
+						if Victorious.Value == "Nightmare" then
+							Sound = 'CANNON_FIRE_VICTORIOUS_NIGHTMARE'
+						end
+						old = bedwars.CannonHandController.launchSelf
+						old2 = bedwars.CannonHandController.fireCannon
+					end)
+					bedwars.CannonHandController.fireCannon = function(...)
+						for _, v in workspace:FindFirstChild('SoundPool'):GetChildren() do
+							if v:IsA('Sound') then
+								if v.SoundId == "rbxassetid://7121064180" then
+									v:Destroy()
+								end
+							end
+						end
+						bedwars.SoundManager:playSound(bedwars.SoundList[Sound])
+						return old2(...)
+					end
+					bedwars.CannonHandController.launchSelf = function(...)
+						for _, v in workspace:FindFirstChild('SoundPool'):GetChildren() do
+							if v:IsA('Sound') then
+								if v.SoundId == "rbxassetid://7121064180" then
+									v:Destroy()
+								end
+							end
+						end
+						bedwars.SoundManager:playSound(bedwars.SoundList[Sound])
+						return old(...)
+					end
+				end
+			end
+		end
+	})
+	Victorious = ClientEffects:CreateDropdown({
+		Name = "Victorious",
+		List = {'Nightmare','Emerald','Diamond','Platinum','Gold'}
+	})
+end)
+end
