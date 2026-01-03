@@ -10170,7 +10170,7 @@ end)
 		local AutoWin
 		local empty
 		local Dashes = {Value = 2}
-		if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender"  then
+		if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "yorender" and user ~= 'black'  then
 			return 
 		end
 		AutoWin = vape.Categories.AltFarm:CreateModule({
@@ -15441,7 +15441,7 @@ run(function()
 		end)
 	end
 	
-	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "kev" and user ~= "yorender" and user ~= 'synioxzz'  then
+	if role ~= "owner" and  role ~= "coowner" and user ~= "generalcyan" and user ~= "kev" and user ~= "yorender" and user ~= 'synioxzz' and user ~= 'black'    then
 		return 
 	end
     NewAutoWin = vape.Categories.AltFarm:CreateModule({
