@@ -9185,13 +9185,6 @@ run(function()
 			if callback then
 				if not setfflag then vape:CreateNotification("FFlagEditor", "Your current executor '"..identifyexecutor().."' does not support setfflag", 6, "warning"); return end
 				local s, e = pcall(function()
-					if Value.Value == "true" then
-						Value.Value = true
-					elseif Value.Value == 'false' then
-						Value.Value = false
-					else
-						Value.Value = Value.Value
-					end
 					setfflag(FFlag.Value,Value.Value)
 				end)
 				if not s then
