@@ -6760,7 +6760,7 @@ run(function()
 				if not block or block == self then break end
 				if not block:GetAttribute('NoBreak') then
 					tab[block.Name] = tab[block.Name] or {}
-					tab[block.Name][block.Position.Y] = true
+					tab[block.Name][math.floor(block.Position.Y + 0.5)] = true
 				end
 			end
 		end
@@ -6776,7 +6776,6 @@ run(function()
 		scanSide(v.Adornee, start, blockLayers, sides)
 		scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, sides)
 		scanSide(v.Adornee, start, blockLayers, verticalSides)
-		scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, verticalSides)
 		local blocks = {}
 		for name, layers in blockLayers do
 			local count = 0
