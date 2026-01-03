@@ -19620,7 +19620,6 @@ run(function()
 	})
 end)
 
-if getgenv().TestMode then
 run(function()
 	local ClientEffects
 	local Victorious
@@ -19690,4 +19689,4 @@ run(function()
 		List = {'Nightmare','Emerald','Diamond','Platinum','Gold'}
 	})
 end)
-end
+
