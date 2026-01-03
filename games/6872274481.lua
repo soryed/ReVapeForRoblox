@@ -6756,7 +6756,8 @@ run(function()
 				if not block or block == self then break end
 				if not block:GetAttribute('NoBreak') then
 					tab[block.Name] = tab[block.Name] or {}
-					tab[block.Name][tostring(side) .. i] = true
+					local posKey = tostring(block.Position)
+					tab[block.Name][posKey] = true
 				end
 			end
 		end
