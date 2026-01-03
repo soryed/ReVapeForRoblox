@@ -9200,4 +9200,11 @@ run(function()
 			end
 		end
 	})
+	FFlag = FFlagEditor:CreateTextBox({
+		Name = "FFlag",
+		Tooltip = 'FFlag MUST EXIST to use',
+	})
+	Value = FFlagEditor:CreateTextBox({
+		Name = "Value"
+	})
 end)
