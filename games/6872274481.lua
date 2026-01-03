@@ -12182,7 +12182,7 @@ run(function()
 				return
 			end 
 			if callback then
-				repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not AutoKit.Enabled)
+				repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not BetterKaida.Enabled)
 				repeat
 		            local plrs = entitylib.AllPosition({
 		                Range = AttackRange.Value,
