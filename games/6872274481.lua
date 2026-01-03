@@ -6747,17 +6747,20 @@ run(function()
 	local Reference = {}
 	local Folder = Instance.new('Folder')
 	Folder.Parent = vape.gui
-	local SCAN_PASSES = 2
+	local SCAN_DISTANCE = 15
+	local verticalSides = {
+		Vector3.new(0, 3, 0),
+		Vector3.new(0, -3, 0)
+	}
 	local function scanSide(self, start, tab, scanSides)
 		scanSides = scanSides or sides
 		for _, side in scanSides do
-			for i = 1, 15 do
+			for i = 1, SCAN_DISTANCE do
 				local block = getPlacedBlock(start + (side * i))
 				if not block or block == self then break end
 				if not block:GetAttribute('NoBreak') then
 					tab[block.Name] = tab[block.Name] or {}
-					local posKey = tostring(block.Position)
-					tab[block.Name][posKey] = true
+					tab[block.Name][block.Position.Y] = true
 				end
 			end
 		end
@@ -6776,15 +6779,16 @@ run(function()
 		scanSide(v.Adornee, start + Vector3.new(0, 0, 3), blockLayers, verticalSides)
 		local blocks = {}
 		for name, layers in blockLayers do
-			local raw = 0
+			local count = 0
 			for _ in layers do
-				raw += 1
+				count += 1
 			end
-			local count = raw
-			table.insert(blocks, {name = name,count = count})
+			if count > 0 then
+				table.insert(blocks, {name = name,count = count})
+			end
 		end
 		table.sort(blocks, function(a, b)
-			return (bedwars.ItemMeta[a.name].block and bedwars.ItemMeta[a.name].block.health or 0)> (bedwars.ItemMeta[b.name].block and bedwars.ItemMeta[b.name].block.health or 0)
+			return (bedwars.ItemMeta[a.name].block and bedwars.ItemMeta[a.name].block.health or 0) > (bedwars.ItemMeta[b.name].block and bedwars.ItemMeta[b.name].block.health or 0)
 		end)
 		v.Enabled = #blocks > 0
 		for _, data in blocks do
@@ -6841,9 +6845,9 @@ run(function()
 	end
 	local function refreshNear(data)
 		data = data.blockRef.blockPosition * 3
-		for i, v in Reference do
-			if (data - i.Position).Magnitude <= 30 then
-				refreshAdornee(v)
+		for bed, gui in Reference do
+			if (data - bed.Position).Magnitude <= 30 then
+				refreshAdornee(gui)
 			end
 		end
 	end
@@ -6854,6 +6858,7 @@ run(function()
 				for _, v in collectionService:GetTagged('bed') do
 					task.spawn(Added, v)
 				end
+
 				BedPlates:Clean(vapeEvents.PlaceBlockEvent.Event:Connect(refreshNear))
 				BedPlates:Clean(vapeEvents.BreakBlockEvent.Event:Connect(refreshNear))
 				BedPlates:Clean(collectionService:GetInstanceAddedSignal('bed'):Connect(Added))
@@ -6868,7 +6873,7 @@ run(function()
 				Folder:ClearAllChildren()
 			end
 		end,
-		Tooltip = 'Displays blocks over the bed'
+		Tooltip = 'Displays true bed defense layers'
 	})
 	Background = BedPlates:CreateToggle({
 		Name = 'Background',
