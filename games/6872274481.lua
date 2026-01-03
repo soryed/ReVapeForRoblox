@@ -12411,7 +12411,7 @@ run(function()
         Min = 1,
         Max = 10,
         Default = 5,
-		Visible = false
+		Visible = false,
         Suffix = 'studs'
     })
 	CastChecks = BetterKaida:CreateToggle({
