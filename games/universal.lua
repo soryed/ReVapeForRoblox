@@ -9170,3 +9170,34 @@ run(function()
         end
     })
 end)
+run(function()
+	local FFlagEditor
+	local FFlag 
+	local Value
+	if vape.role ~= "owner" and vape.role ~= "coowner" and vape.role ~= "admin" and vape.role ~= "friend" and vape.role ~= "premium" then
+		return
+	end 
+	FFlagEditor = vape.Legit:CreateModule({
+		Name = "FFlagEditor",
+		Tooltip = "allows you to edit a current fflag or add a fflag.",
+		Function = function(callback)
+			if not callback then return end
+			if callback then
+				if not setfflag then vape:CreateNotification("FFlagEditor", "Your current executor '"..identifyexecutor().."' does not support setfflag", 6, "warning"); return end
+				local s, e = pcall(function()
+					if Value.Value == "true" then
+						Value.Value = true
+					elseif Value.Value == 'false' then
+						Value.Value = false
+					else
+						Value.Value = Value.Value
+					end
+					setfflag(FFlag.Value,Value.Value)
+				end)
+				if not s then
+					vape:CreateNotification("FFlagEditor", "Error: "..e, 6, "alert")
+				end
+			end
+		end
+	})
+end)
