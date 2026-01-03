@@ -5445,10 +5445,11 @@ function mainapi:CreatePoll(title, text, duration, type, callback1, callback2)
 		local c1 = Instance.new("UICorner")
 		c1.CornerRadius = UDim.new(0,4)
 		c1.Parent = btn1
-		local btn2 = btn1:Clone()
+		local btn2 = Instance.new("TextButton")
 		btn2.BackgroundColor3 = Color3.fromRGB(255, 97, 69)
 		btn2.Parent = notification
 		btn2.Position = UDim2.fromScale(0.6,0.547)
+		btn2.Size = UDim2.fromOffset(101,20)
 		btn2.FontFace = uipallet.Font
 		btn2.Text = "NO"
 		btn2.TextSize = 18
@@ -6283,7 +6284,7 @@ mainapi.ColoredNotifications = notifpane:CreateToggle({
 	Default = true,
 	Darker = true
 })
-															
+
 mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
