@@ -13403,7 +13403,7 @@ run(function()
 						return false
 					end
 					bedwars.ShopTaxController.getTaxedItems = function(...)
-						return {}
+						return nil
 					end
 					bedwars.ShopTaxController.getAddedTax(...)
 						return 0
