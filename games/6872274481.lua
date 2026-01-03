@@ -19674,6 +19674,14 @@ run(function()
 						return old(...)
 					end
 				end
+			else
+				if store.equippedKit == "davey" then
+					bedwars.CannonHandController.launchSelf = old
+					bedwars.CannonHandController.fireCannon = old2
+					old = nil
+					old2 = nil
+				end
+
 			end
 		end
 	})
