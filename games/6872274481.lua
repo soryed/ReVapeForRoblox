@@ -20507,7 +20507,6 @@ run(function()
 		Function = function(v)
 			local V = (not v)
 			Range.Object.Visible = V
-			Anim.Object.Visible = V
 			Delay.Object.Visible = V
 			Angle.Object.Visible = V
 		end
