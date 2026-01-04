@@ -20242,7 +20242,7 @@ run(function()
 							end
 							if BowCheck.Enabled then
 								if store.hand.toolType == 'bow' or store.hand.toolType == 'crossbow' or store.hand.toolType == 'head_hunter' then
-									mouse1click()
+									print('found')
 								end
 							end
 						end
