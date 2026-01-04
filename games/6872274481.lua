@@ -13205,49 +13205,6 @@ run(function()
 	})
 end)
 
-run(function()
-	local TaxRemover
-	local old
-	local old2
-	local old3
-	TaxRemover = vape.Categories.Exploits:CreateModule({
-		Name = 'Tax Remover',
-		Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end 
-			if callback then
-				old = bedwars.ShopTaxController.isTaxed
-				old2 = bedwars.ShopTaxController.getAddedTax
-				old3 = bedwars.ShopTaxController.getTaxedItems
-				task.spawn(function()
-					bedwars.ShopTaxController.isTaxed = function(...)
-						return false
-					end
-					bedwars.ShopTaxController.getTaxedItems = function(...)
-						return {}
-					end
-					bedwars.ShopTaxController.getAddedTax(...)
-						return 0
-					end
-				end)
-				TaxRemover:Clean(bedwars.Client:Get("UpdateShopTaxState"):Connect(function(v1)
-					return
-				end))
-			else
-				bedwars.ShopTaxController.isTaxed = old
-				bedwars.ShopTaxController.getAddedTax = old2
-				bedwars.ShopTaxController.getTaxedItems = old3
-				old = nil
-				old2 = nil
-				old3 = nil
-			end
-		end,
-		Tooltip = 'Removes tax within the shop'
-	})
-
-end)
 
 run(function()
 	local MouseTP
