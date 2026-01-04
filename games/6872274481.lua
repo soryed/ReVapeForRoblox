@@ -361,7 +361,7 @@ local function hotbarSwitch(slot)
 	end
 	return false
 end
-
+getgenv().HBS = hotbarSwitch
 local function isFriend(plr, recolor)
 	if vape.Categories.Friends.Options['Use friends'].Enabled then
 		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
@@ -441,6 +441,7 @@ local function getObjSlot(nme)
 	end
 	return Obj
 end
+getgenv().GOS = getObjSlot
 
 local function GetOriginalSlot()
 	return store.inventory.hotbarSlot 
