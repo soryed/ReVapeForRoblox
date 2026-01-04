@@ -19993,3 +19993,16 @@ run(function()
 		List = {'Nightmare','Emerald','Diamond','Platinum','Gold'}
 	})
 end)
+
+run(function()
+	local test
+	test = vape.Categories.Render:CreateModule({
+		Name = "Test",
+		Function = function(callback)
+			if not callback then return end
+			for i, item in store.inventory.inventory.items do
+				print(i,item)
+			end
+		end
+	})
+end)
