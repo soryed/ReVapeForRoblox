@@ -446,6 +446,19 @@ local function GetOriginalSlot()
 	return store.inventory.hotbarSlot 
 end
 
+local function currentitem(type)
+	if type == "tool" then
+		return store.hand.tool
+	elseif type == "tt" then
+		return store.hand.toolType
+	elseif type == "amount" then
+		return store.hand.amount
+	else
+		return nil
+	end
+end
+getgenv().current = currentitem
+
 local function switchItemV2(tool, delayTime)
 	delayTime = delayTime or 0.05
 	delayTime = (delayTime == 0 and 0.05 or delayTime)
