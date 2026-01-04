@@ -20571,7 +20571,8 @@ run(function()
 					if FastBreak.Enabled then
 						FastBreak:Toggle(false)
 					end
-					local blockPlacer = bedwars.BlockPlacementController.blockPlacer.clientManager
+					local blockBreaker = bedwars.BlockBreakController.blockBreaker
+					local blockSelector = blockBreaker.clientManager:getBlockSelector()
 					old = bedwars.BlockBreakController.hitBlock
 					bedwars.BlockBreakController.hitBlock = function(self, maid, customRay)
 						if not canBreakBlocks() then
@@ -20636,7 +20637,8 @@ run(function()
 					if FastBreak.Enabled then
 						FastBreak:Toggle(false)
 					end
-					local blockPlacer = bedwars.BlockPlacementController.blockPlacer.clientManager
+					local blockBreaker = bedwars.BlockBreakController.blockBreaker
+					local blockSelector = blockBreaker.clientManager:getBlockSelector()
 					old = bedwars.BlockBreakController.hitBlock
 					bedwars.BlockBreakController.hitBlock = function(self, maid, customRay)
 						if not canBreakBlocks() then
