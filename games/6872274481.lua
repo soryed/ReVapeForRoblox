@@ -12235,7 +12235,6 @@ run(function()
         Max = 10,
         Default = 5,
 		Visible = false
-        Suffix = function(val) return val == 1 and "stud" or "studs" end
     })
 	CastChecks = BetterKaida:CreateToggle({
 		Name = "Check Checks",
