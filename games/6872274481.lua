@@ -20254,8 +20254,8 @@ run(function()
 								bedwars.SwordController:swingSwordAtMouse()
 							end
 							if BowCheck.Enabled then
-								if store.hand.toolType == 'bow' or store.hand.toolType == 'crossbow' or store.hand.toolType == 'head_hunter' then
-									print('found')
+								if store.hand.tool == 'wood_bow' or store.hand.tool == 'wood_crossbow' or store.hand.tool == 'headhunter' then
+									mouse1click()
 								end
 							end
 						end
