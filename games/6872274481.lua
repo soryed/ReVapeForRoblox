@@ -16417,7 +16417,7 @@ run(function()
 				task.wait(0.025)
 			until not AutoKit.Enabled
 			Dr = nil
-		end
+		end,
 		spearman = function()
 			local function fireSpear(pos, spot, item)
 				local projectileRemote = {InvokeServer = function() end}
