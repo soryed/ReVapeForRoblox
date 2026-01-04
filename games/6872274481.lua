@@ -20697,6 +20697,7 @@ run(function()
 						print('fired!')
 						return
 					end
+				end
 			else
 				if Blacklist.Enabled then
 					bedwars.BlockBreaker.hitBlock = old
