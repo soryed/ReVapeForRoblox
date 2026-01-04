@@ -20642,6 +20642,7 @@ run(function()
 					old = bedwars.BlockBreakController.hitBlock
 					bedwars.BlockBreakController.hitBlock = function(self, maid, customRay)
 						if not canBreakBlocks() then
+							print('cant break blocks')
 							return old(self, maid, customRay)
 						end
 						local normalResult = blockPlacer:getMouseInfo(bedwars.BlockSelectorMode.SELECT, {
@@ -20649,6 +20650,7 @@ run(function()
 							range = self.range
 						})
 						if normalResult and normalResult.target then
+							print('found normal result and a target')
 							return old(self, maid, customRay)
 						end
 						local mouse = self.clientManager:getBlockSelector().mouse
@@ -20692,9 +20694,9 @@ run(function()
 							end
 						end)
 						self.onBreak:Fire()
+						print('fired!')
 						return
 					end
-				end
 			else
 				if Blacklist.Enabled then
 					bedwars.BlockBreaker.hitBlock = old
