@@ -9465,44 +9465,12 @@ run(function()
 		end
 
 		if LegitAura.Enabled then
-			if (tick() - bedwars.SwordController.lastSwing) > 0.2 then return false end
+			if (tick() - bedwars.SwordController.lastSwing) > 0.15 then return false end
 		end
 
 		return sword, meta
 	end
-	local rayCheck = RaycastParams.new()
-	rayCheck.FilterType = Enum.RaycastFilterType.Include
-	local projectileRemote = {InvokeServer = function() end}
-	local FireDelays = {}
-	task.spawn(function()
-		projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
-	end)
-	
-	local function getAmmo(check)
-		for _, item in store.inventory.inventory.items do
-			if check.ammoItemTypes and table.find(check.ammoItemTypes, item.itemType) then
-				return item.itemType
-			end
-		end
-	end
-	
-	local function getProjectiles()
-		local items = {}
-		for _, item in store.inventory.inventory.items do
-			local proj = bedwars.ItemMeta[item.itemType].projectileSource
-			local ammo = proj and getAmmo(proj)
-			if ammo then
-				table.insert(items, {
-					item,
-					ammo,
-					proj.projectileType(ammo),
-					proj
-				})
-			end
-		end
-		return items
-	end
-	local RNG = math.random(0,100)
+
 	Killaura = vape.Categories.Blatant:CreateModule({
 		Name = 'Killaura',
 		Function = function(callback)
@@ -9643,9 +9611,6 @@ run(function()
 										if isClaw then
 											KaidaController:request(v.Character)
 										else
-											if FastHits.Enabled then
-												
-												if RNG >= 45 then
 													AttackRemote:FireServer({
 														weapon = sword.tool,
 														chargedAttack = {chargeRatio = 0},
@@ -9656,65 +9621,6 @@ run(function()
 															selfPosition = {value = pos}
 														}
 													})
-													task.wait(0.05)
-													for _, data in getProjectiles() do
-														local item, ammo, projectile, itemMeta = unpack(data)
-														if (FireDelays[item.itemType] or 0) < tick() then
-															rayCheck.FilterDescendantsInstances = {workspace.Map}
-															local meta = bedwars.ProjectileMeta[projectile]
-															local projSpeed, gravity = meta.launchVelocity, meta.gravitationalAcceleration or 196.2
-															local calc = prediction.SolveTrajectory(pos, projSpeed, gravity, ent.RootPart.Position, ent.RootPart.Velocity, workspace.Gravity, ent.HipHeight, ent.Jumping and 42.6 or nil, rayCheck)
-															if calc then
-																local slot = getObjSlot(projectile)
-																local switched = switchHotbar(slot)
-																task.spawn(function()
-																	local dir, id = CFrame.lookAt(pos, calc).LookVector, httpService:GenerateGUID(true)
-																	local shootPosition = (CFrame.new(pos, calc) * CFrame.new(Vector3.new(-bedwars.BowConstantsTable.RelX, -bedwars.BowConstantsTable.RelY, -bedwars.BowConstantsTable.RelZ))).Position
-																	bedwars.ProjectileController:createLocalProjectile(meta, ammo, projectile, shootPosition, id, dir * projSpeed, {drawDurationSeconds = 1})
-																	local res = projectileRemote:InvokeServer(item.tool, ammo, projectile, shootPosition, pos, dir * projSpeed, id, {drawDurationSeconds = 1, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)
-																	if not res then
-																		FireDelays[item.itemType] = tick()
-																	else
-																		local shoot = itemMeta.launchSound
-																		shoot = shoot and shoot[math.random(1, #shoot)] or nil
-																		if shoot then
-																			bedwars.SoundManager:playSound(shoot)
-																		end
-																	end
-																end)
-																FireDelays[item.itemType] = tick() + itemMeta.fireDelaySec
-																if switched then
-																	task.wait(0.05)
-																end
-															end
-														end
-													end
-													RNG = math.random(0,100)
-												else
-													AttackRemote:FireServer({
-														weapon = sword.tool,
-														chargedAttack = {chargeRatio = 0},
-														entityInstance = v.Character,
-														validate = {
-															raycast = {},
-															targetPosition = {value = actualRoot.Position},
-															selfPosition = {value = pos}
-														}
-													})
-													RNG = math.random(0,100)
-												end
-											else
-												AttackRemote:FireServer({
-													weapon = sword.tool,
-													chargedAttack = {chargeRatio = 0},
-													entityInstance = v.Character,
-													validate = {
-														raycast = {},
-														targetPosition = {value = actualRoot.Position},
-														selfPosition = {value = pos}
-													}
-												})
-											end
 										if not v.Character then
 											print("player is dead")
 										end
