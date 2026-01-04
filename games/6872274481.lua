@@ -20001,7 +20001,7 @@ run(function()
 		Function = function(callback)
 			if not callback then return end
 			for i, item in store.inventory.inventory.items do
-				print(i,item)
+				print(i,httpService:JSONEncode(item))
 			end
 		end
 	})
