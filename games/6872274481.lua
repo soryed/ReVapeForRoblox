@@ -12171,7 +12171,7 @@ run(function()
 		                                if clawModel:FindFirstChild("AnimationController") then
 		                                    local animator = clawModel.AnimationController:FindFirstChildOfClass("Animator")
 		                                    if animator then
-		                                        bedwars.AnimationUtil:playAnimation(animator,.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK),{looped = false, speed = 1})
+		                                        bedwars.AnimationUtil:playAnimation(animator,bedwars.GameAnimationUtil:getAssetId(bedwars.AnimationType.SUMMONER_CLAW_ATTACK),{looped = false, speed = 1})
 		                                    end
 		                                end
 										KaidaController:requestBetter(localPosition,shootDir)
