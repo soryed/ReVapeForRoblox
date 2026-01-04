@@ -20709,7 +20709,8 @@ run(function()
 	})
 																				
 	Time = MineBypass:CreateSlider({
-		Name = 'Break speed (normal speed is 0.3)',
+		Name = 'Break speed',
+		Tooltip = 'normal speed is 0.3 if you dont need fastbreak',
 		Min = 0,
 		Max = 0.25,
 		Default = 0.3,
