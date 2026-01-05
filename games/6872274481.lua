@@ -19845,7 +19845,7 @@ run(function()
 	local T
 	local old
 	local old2
-	local inf = math.huge or 9e9
+	local inf = 9e9
 	task.spawn(function()
 		math.randomseed(os.time() * 1e9)
 		local num = math.floor(math.random(0,50) - math.random(1,5) - math.random())
@@ -19884,7 +19884,7 @@ run(function()
 	local T
 	local old
 	local old2
-	local inf = math.huge or 9e9
+	local inf = 9e9
 	task.spawn(function()
 		math.randomseed(os.time() * 1e6)
 		local num = math.floor(math.random(0,15) - math.random(1,2) - math.random())
