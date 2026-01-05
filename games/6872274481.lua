@@ -20258,7 +20258,7 @@ run(function()
 							end
 						end
 						if BowCheck.Enabled then
-							if store.hand.toolType == 'wood_bow' or store.hand.toolType == 'wood_crossbow' or store.hand.toolType == 'headhunter' then
+							if store.hand.toolType == 'bow'  then
 								local attackRange = 23
 								rayParams.FilterDescendantsInstances = {lplr.Character}
 		
@@ -20297,8 +20297,9 @@ run(function()
 		DefaultMin = 7,
 		DefaultMax = 7
 	})
-	BowCheck = TriggerBot:CreateToggle({Name='BowCheck'})
+	BowCheck = TriggerBot:CreateToggle({Name='Bow Check'})
 end)
+	
 
 run(function()
 	local RemoveHitHighlight
