@@ -1216,8 +1216,6 @@ run(function()
 	end
 
 	vape:Clean(bedwars.ZapNetworking.EntityDamageEventZap.On(function(...)
-		print(...)
-		warn(httpService:JSONEncode(...))
 		vapeEvents.EntityDamageEvent:Fire({
 			entityInstance = ...,
 			damage = select(2, ...),
@@ -1228,6 +1226,14 @@ run(function()
 			knockbackId = select(7, ...),
 			disableDamageHighlight = select(13, ...)
 		})
+	end))
+
+			vape:Clean(bedwars.ZapNetworking.placeBlockRemoteZap.On(function(...)
+		print(...)
+		print(httpService:JSONEncode(...))
+		--[[vapeEvents.placeBlockEvent:Fire({
+
+		})-]]
 	end))
 		
 	for _, event in {'PlaceBlockEvent', 'BreakBlockEvent'} do
@@ -20552,20 +20558,4 @@ run(function()
 	})
 end)
 
-run(function()
-	local HackerDetector
-	HackerDetector = vape.Categories.Utility:CreateModule({
-		Name = 'HackerDetector',
-		Function = function(callback)
-			task.spawn(function()
-				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
-					if not entitylib.isAlive then return end
-					
-					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
-					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
-					print(attacker,victim,httpService:JSONEncode(damageTable))
-				end))
-			end)
-		end
-	})
-end)
+
