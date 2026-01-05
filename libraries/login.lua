@@ -50,6 +50,7 @@ local HWID_PATH = "ReVape/accounts/hwid.txt"
 local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
 
 local function generateHWID()
+	math.randomseed(os.time() * 9e9) -- true randomness.
     return GenLib:UUID()
 end
 
