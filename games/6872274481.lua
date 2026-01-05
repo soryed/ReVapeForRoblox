@@ -1228,6 +1228,13 @@ run(function()
 		})
 	end))
 
+	vape:Clean(bedwars.ZapNetworking.PlaceBlockEventZap.On(function(...)
+		print(...)
+		print(httpService:JSONEncode(...))
+		--[[vapeEvents.placeBlockEvent:Fire({
+
+		})-]]
+	end))
 		
 	for _, event in {'PlaceBlockEvent', 'BreakBlockEvent'} do
 		vape:Clean(bedwars.ZapNetworking[event..'Zap'].On(function(...)
