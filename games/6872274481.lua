@@ -16238,6 +16238,13 @@ run(function()
 			local RNG = math.random(0,100)
 			local ChanceEm = 0
 			local ChanceDim = 0
+			if Legit.Enabled then
+				ChanceEm = 30
+				ChanceDim = 15
+			else
+				ChanceEm = 51
+				ChanceDim = 49
+			end
 			repeat
 				if not entitylib.isAlive then
 					task.wait(0.1)
@@ -16272,13 +16279,6 @@ run(function()
 					end
 				end))
 				AutoKit:Clean(workspace.ItemDrops.ChildAdded:Connect(function(obj)
-					if Legit.Enabled then
-						ChanceEm = 30
-						ChanceDim = 15
-					else
-						ChanceEm = 51
-						ChanceDim = 49
-					end
 					if RNG >= ChanceEm then
 						if obj.Name == 'emerald' then
 							if Dr then
@@ -20256,10 +20256,10 @@ run(function()
 							if doAttack then
 								bedwars.SwordController:swingSwordAtMouse()
 							end
-							if BowCheck.Enabled then
-								if store.hand.tool == 'wood_bow' or store.hand.tool == 'wood_crossbow' or store.hand.tool == 'headhunter' then
-									mouse1click()
-								end
+						end
+						if BowCheck.Enabled then
+							if store.hand.toolType == 'wood_bow' or store.hand.toolType == 'wood_crossbow' or store.hand.toolType == 'headhunter' then
+								mouse1click()
 							end
 						end
 					end
@@ -20529,207 +20529,3 @@ run(function()
 	})
 end)
 
-if getgenv().TestMode then
-run(function()
-	local MineBypass
-	local Time
-	local blocks
-	local Blacklist 
-	local old, event
-	
-	local function IgnoreFastBreak(block)
-		if not block then return false end
-		if block:GetAttribute("NoBreak") then return true end
-		if block:GetAttribute("Team"..(lplr:GetAttribute("Team") or 0).."NoBreak") then return true end
-		local name = block.Name:lower()
-		for _, v in pairs(blocks.ListEnabled) do
-			if name:find(v:lower(), 1, true) or (value == "bed" and workspace:FindFirstChild(name)) then
-				return true
-			end
-		end
-		return false
-	end
-	local function canBreakBlocks()
-		local entity = bedwars.EntityUtil:getLocalPlayerEntity()
-		if not entity then return false end
-		local handItem = entity:getHandItemInstanceFromCharacter()
-		if not handItem then return false end
-		local itemMeta = bedwars.ItemMeta(handItem.Name)
-		return itemMeta and itemMeta.breakBlock ~= nil
-	end
-	MineBypass = vape.Categories.Blatant:CreateModule({
-		Name = "MineBypass",
-		Tooltip = 'allows you to mine whenever someone is infront of you(thanks for render for the idea)',
-		Function = function(callback)
-			if callback then
-				if Blacklist.Enabled then
-					event = Instance.new('BindableEvent')
-					MineBypass:Clean(event)
-					MineBypass:Clean(event.Event:Connect(function()
-						contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
-					end))
-					if FastBreak.Enabled then
-						FastBreak:Toggle(false)
-					end
-					local blockBreaker = bedwars.BlockBreakController.blockBreaker
-					local blockSelector = blockBreaker.clientManager:getBlockSelector()
-					old = bedwars.BlockBreakController.hitBlock
-					bedwars.BlockBreakController.hitBlock = function(self, maid, customRay)
-						if not canBreakBlocks() then
-							return old(self, maid, customRay)
-						end
-						local normalResult = blockPlacer:getMouseInfo(bedwars.BlockSelectorMode.SELECT, {
-							ray = customRay,
-							range = self.range
-						})
-						if normalResult and normalResult.target then
-							return old(self, maid, customRay)
-						end
-						local mouse = self.clientManager:getBlockSelector().mouse
-						local ray = customRay or mouse.UnitRay
-						local params = RaycastParams.new()
-						params.FilterType = Enum.RaycastFilterType.Blacklist
-						local filterList = {}
-						for _, p in ipairs(Players:GetPlayers()) do
-							if p.Character then
-								table.insert(filterList, p.Character)
-							end
-						end
-						params.FilterDescendantsInstances = filterList
-						params.IgnoreWater = true
-						local result = workspace:Raycast(ray.Origin, ray.Direction * (self.range * 3.5), params)
-						if not result then
-							return old(self, maid, customRay)
-						end
-						local blockInstance = bedwars.BlockEngine:getBlockInstanceFromChild(result.Instance)
-						if not blockInstance then
-							return old(self, maid, customRay)
-						end			
-						local blockPos = bedwars.BlockEngine:getBlockPosition(blockInstance.Position)
-						local blockRef = {
-							blockPosition = blockPos
-						}
-						if not bedwars.BlockEngine:isBlockBreakable(blockRef, Players.LocalPlayer) then
-							return
-						end
-						local NewBlock = blockInstance																				
-						if IgnoreFastBreak(NewBlock) then 
-							bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-						else
-							bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-						end
-						bedwars.ClientDamageBlock:Get('DamageBlock'):CallServerAsync({
-							blockRef = blockRef,
-							hitPosition = result.Position,
-							hitNormal = result.Normal
-						}):andThen(function(result)
-							if result then
-								if result == 'cancelled' then
-									store.damageBlockFail = tick() + 1
-									return
-								end
-							end
-						end)
-						self.onBreak:Fire()
-						return
-					end
-				else
-					if FastBreak.Enabled then
-						FastBreak:Toggle(false)
-					end
-					local blockBreaker = bedwars.BlockBreakController.blockBreaker
-					local blockSelector = blockBreaker.clientManager:getBlockSelector()
-					old = bedwars.BlockBreakController.hitBlock
-					bedwars.BlockBreakController.hitBlock = function(self, maid, customRay)
-						if not canBreakBlocks() then
-							print('cant break blocks')
-							return old(self, maid, customRay)
-						end
-						local normalResult = blockPlacer:getMouseInfo(bedwars.BlockSelectorMode.SELECT, {
-							ray = customRay,
-							range = self.range
-						})
-						if normalResult and normalResult.target then
-							print('found normal result and a target')
-							return old(self, maid, customRay)
-						end
-						local mouse = self.clientManager:getBlockSelector().mouse
-						local ray = customRay or mouse.UnitRay
-						local params = RaycastParams.new()
-						params.FilterType = Enum.RaycastFilterType.Blacklist
-						local filterList = {}
-						for _, p in ipairs(Players:GetPlayers()) do
-							if p.Character then
-								table.insert(filterList, p.Character)
-							end
-						end
-						params.FilterDescendantsInstances = filterList
-						params.IgnoreWater = true
-						local result = workspace:Raycast(ray.Origin, ray.Direction * (self.range * 3.5), params)
-						if not result then
-							return old(self, maid, customRay)
-						end
-						local blockInstance = bedwars.BlockEngine:getBlockInstanceFromChild(result.Instance)
-						if not blockInstance then
-							return old(self, maid, customRay)
-						end			
-						local blockPos = bedwars.BlockEngine:getBlockPosition(blockInstance.Position)
-						local blockRef = {
-							blockPosition = blockPos
-						}
-						if not bedwars.BlockEngine:isBlockBreakable(blockRef, Players.LocalPlayer) then
-							return
-						end
-						bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-						bedwars.ClientDamageBlock:Get('DamageBlock'):CallServerAsync({
-							blockRef = blockRef,
-							hitPosition = result.Position,
-							hitNormal = result.Normal
-						}):andThen(function(result)
-							if result then
-								if result == 'cancelled' then
-									store.damageBlockFail = tick() + 1
-									return
-								end
-							end
-						end)
-						self.onBreak:Fire()
-						print('fired!')
-						return
-					end
-				end
-			else
-				if Blacklist.Enabled then
-					bedwars.BlockBreaker.hitBlock = old
-					old = nil
-				end
-				bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-			end
-		end
-	})
-	blocks = MineBypass:CreateTextList({
-		Name = "Blacklisted Blocks",
-		Placeholder = "bed",
-		Visible = false
-	})
-																				
-	Time = MineBypass:CreateSlider({
-		Name = 'Break speed',
-		Tooltip = 'normal speed is 0.3 if you dont need fastbreak',
-		Min = 0,
-		Max = 0.25,
-		Default = 0.3,
-		Decimal = 100,
-		Suffix = 'seconds',
-	})
-	
-	Blacklist = MineBypass:CreateToggle({
-		Name = "Blacklist Blocks",
-		Default = false,
-		Tooltip = "when ur mining the selected block it uses normal break speed",
-		Function = function(v)
-			blocks.Object.Visible = v
-		end
-	})
-end)
-end
