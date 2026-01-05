@@ -1216,6 +1216,8 @@ run(function()
 	end
 
 	vape:Clean(bedwars.ZapNetworking.EntityDamageEventZap.On(function(...)
+		print(...)
+		warn(httpService:JSONEncode(...))
 		vapeEvents.EntityDamageEvent:Fire({
 			entityInstance = ...,
 			damage = select(2, ...),
@@ -1227,7 +1229,7 @@ run(function()
 			disableDamageHighlight = select(13, ...)
 		})
 	end))
-
+		
 	for _, event in {'PlaceBlockEvent', 'BreakBlockEvent'} do
 		vape:Clean(bedwars.ZapNetworking[event..'Zap'].On(function(...)
 			local data = {
