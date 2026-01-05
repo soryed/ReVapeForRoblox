@@ -20391,8 +20391,8 @@ run(function()
 							end
 							if itemType == "wizard_staff_3" then
 								if roll >= math.min(100, ShockWaveChance.Value + ShockWaveChance.Value)then
-									if bedwars.AbilityController:canUseAbility(ability) then
-										bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
+									if bedwars.AbilityController:canUseAbility("LIGHTNING_STORM") then
+										bedwars.AbilityController:useAbility("LIGHTNING_STORM",newproxy(true),{target = targetPos})
 										 roll = math.random(0,100)
 									end
 								elseif roll >= ShockWaveChance.Value then
@@ -20401,8 +20401,8 @@ run(function()
 										 roll = math.random(0,100)
 									end
 								else
-									if bedwars.AbilityController:canUseAbility("LIGHTNING_STORM") then
-										bedwars.AbilityController:useAbility("LIGHTNING_STORM",newproxy(true),{target = targetPos})
+									if bedwars.AbilityController:canUseAbility(ability) then
+										bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
 										 roll = math.random(0,100)
 									end
 								end
@@ -20550,3 +20550,20 @@ run(function()
 	})
 end)
 
+run(function()
+	local HackerDetector
+	HackerDetector = vape.Categories.Utility:CreateModule({
+		Name = 'HackerDetector',
+		Function = function(callback)
+			task.spawn(function()
+				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if not entitylib.isAlive then return end
+					
+					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
+					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
+					print(attacker,victim,httpService:JSONEncode(damageTable))
+				end))
+			end)
+		end
+	})
+end)
