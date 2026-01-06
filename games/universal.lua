@@ -245,6 +245,8 @@ run(function()
 	vape.user = U
 	R = S
 	UR = U
+	vape.role = S 
+	vape.user = U
 end)
 
 local whitelist = {
