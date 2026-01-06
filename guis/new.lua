@@ -6285,6 +6285,16 @@ mainapi.ColoredNotifications = notifpane:CreateToggle({
 	Darker = true
 })
 
+mainapi.Test = notifpane:CreateToggle({
+	Name = 'Test roles',
+	Darker = true,
+	Function = function(v)
+		if v then
+			print(getgenv().role,mainapi.role)
+		end
+	end
+})
+																	
 mainapi.GUIColor = mainapi.Categories.Main:CreateGUISlider({
 	Name = 'GUI Theme',
 	Function = function(h, s, v)
