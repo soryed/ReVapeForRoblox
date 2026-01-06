@@ -1,6 +1,9 @@
 local login = {}
-
-
+local OldRequestFunc = (syn and syn.request) or http_requestor request
+task.spawn(function()
+	assert(requestFunc, "No HTTP request function available")
+	return
+end)
 
 if not shared.vape then repeat task.wait() until shared.vape end
 local cloneref = cloneref or function(obj) return obj end
@@ -67,7 +70,7 @@ local function decodeSafe(body)
 end
 
 local function postRequest(url, bodyTable)
-    local req = request or http_request or syn.request
+    local req = OldRequestFunc
     if not req then return nil, "No HTTP request function available" end
     return req({
         Url = url,
