@@ -1228,13 +1228,7 @@ run(function()
 		})
 	end))
 
-	vape:Clean(bedwars.ZapNetworking.PlaceBlockEventZap.On(function(...)
-		print(...)
-		vapeEvents.PlaceBlockEvent:Fire({
-			everything = ...
-		})
-	end))
-		
+
 	for _, event in {'PlaceBlockEvent', 'BreakBlockEvent'} do
 		vape:Clean(bedwars.ZapNetworking[event..'Zap'].On(function(...)
 			local data = {
@@ -20411,7 +20405,7 @@ run(function()
 									if bedwars.AbilityController:canUseAbility(ability) then
 										bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
 										 roll = math.random(0,100)
-									end
+									end								
 								end
 							end
 		                end
@@ -20557,4 +20551,272 @@ run(function()
 	})
 end)
 
+run(function()
+	local HD
+	local HDKillAura
+	local HDReach
+	local HDSpeed
+	HD = vape.Categories.Utility:CreateModule({
+		Name = 'HackerDetector',
+		Function = function(callback)
+			task.spawn(function()
+				if not HDKillAura.Enabled then
+					return
+				end
+				local lastHit = {}
+				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if not entitylib.isAlive then return end
+					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
+					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
+					if attacker and victim and victim == lplr then
+						local now = tick()
+						local last = lastHit[attacker]
+						if last then
+							local delta = (now - last)
+							if delta <= 0.15 then
+								vape:CreateNotification("HackerDetector",attacker.Name .. " is likely using killaura",6,"alert")
+							end
+						end
+						lastHit[attacker] = now
+					end
+				end))
+			end)
+			task.spawn(function()
+				if not HDReach.Enabled then
+					return
+				end
+				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if not entitylib.isAlive then return end
+					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
+					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
+					if attacker and victim and victim == lplr then
+						local NormalRange = 14.4
+						local NewDis = (attacker.Character.HumanoidRootPart.Position - entitylib.character.rootPart.Position).Magnitude
+						if NewDis > NormalRange then
+							vape:CreateNotification("HackerDetector",attacker.Name .. ` is likely using reach, distance was ({math.floor(NewDis)}) studs`,6,"alert")
+						end
+					end
+				end))
+			end)
+			task.spawn(function()
+				if not HDSpeed.Enabled then
+					return
+				end
+				local trackLastTP = {}
+				local flagged = {}
+				while task.wait(0.05) do
+					for _, plr in ipairs(playersService:GetPlayers()) do
+						local char = plr.Character
+						local root = char and char:FindFirstChild("HumanoidRootPart")
+						if not root then
+							continue
+						end
+						local lastTP = plr:GetAttribute("LastTeleport")
+						if trackLastTP[plr] ~= lastTP then
+							trackLastTP[plr] = lastTP
+							flagged[plr] = nil
+							continue
+						end
+						local vel = root.AssemblyLinearVelocity
+						local horizontalSpeed = Vector3.new(vel.X, 0, vel.Z).Magnitude
+						if horizontalSpeed > 50 then
+							if not flagged[plr] then
+								flagged[plr] = true
+								vape:CreateNotification("HackerDetector",plr.Name .. " is likely using speed (" .. math.floor(horizontalSpeed) .. ")",6,"alert")
+							end
+						else
+							flagged[plr] = nil
+						end
+					end
+				end
+			end)
+		end
+	})
+	HDKillAura = HD:CreateToggle({Name="KillAura",Default=true,Darker=true})
+	HDReach = HD:CreateToggle({Name="Reach",Default=true,Darker=true})
+	HDSpeed = HD:CreateToggle({Name="Speed",Default=false,Darker=true})
+end)
 
+if getgenv().TestMode then
+run(function()
+	local MineBypass
+	local old
+	local getItemMeta = require(game:GetService("ReplicatedStorage").TS.item["item-meta"]).getItemMeta
+	local EntityUtil = require(game:GetService("ReplicatedStorage").TS.entity["entity-util"]).EntityUtil
+	local BlockEngine = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out).BlockEngine
+	local BlockSelectorMode = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out.client.select["block-selector"]).BlockSelectorMode
+	local BlockEngineRemotes = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out).BlockEngineRemotes
+	local BLOCK_SIZE = 3
+	local function canBreakBlocks()
+		local entity = EntityUtil:getLocalPlayerEntity()
+		if not entity then return false end
+		local handItem = entity:getHandItemInstanceFromCharacter()
+		if not handItem then return false end
+		local itemMeta = getItemMeta(handItem.Name)
+		return itemMeta and itemMeta.breakBlock ~= nil
+	end
+	local Time
+	local blocks
+	local Blacklist
+	local event
+	
+	local function IgnoreFastBreak(block)
+		if not block then return false end
+		if block:GetAttribute("NoBreak") then return true end
+		if block:GetAttribute("Team"..(lplr:GetAttribute("Team") or 0).."NoBreak") then return true end
+		local name = block.Name:lower()
+		for _, v in pairs(blocks.ListEnabled) do
+			if name:find(v:lower(), 1, true) or (value == "bed" and workspace:FindFirstChild(name)) then
+				return true
+			end
+		end
+		return false
+	end
+	MineBypass = vape.Categories.Blatant:CreateModule({
+		Name = "MineBypass",
+		Tooltip = 'allows you to mine whenever someone is infront of you(thanks to render for giving me this script!)',
+		Function = function(callback)
+			if callback then
+				if FastBreak.Enabled then
+					FastBreak:Toggle(false)
+				end
+				local blockBreaker = bedwars.BlockBreakController.blockBreaker
+				local blockSelector = blockBreaker.clientManager:getBlockSelector()
+				old = blockBreaker.hitBlock
+				if Blacklist.Enabled then
+					event = Instance.new('BindableEvent')
+					MineBypass:Clean(event)
+					MineBypass:Clean(event.Event:Connect(function()
+						contextActionService:CallFunction('block-break', Enum.UserInputState.Begin, newproxy(true))
+					end))
+				end
+				blockBreaker.hitBlock = function(self, maid, customRay)
+					if not canBreakBlocks() then
+						return originalHitBlock(self, maid, customRay)
+					end
+					local normalResult = blockSelector:getMouseInfo(BlockSelectorMode.SELECT, {
+						ray = customRay,
+						range = self.range
+					})
+					if normalResult and normalResult.target then
+						return originalHitBlock(self, maid, customRay)
+					end
+					local mouse = self.clientManager:getBlockSelector().mouse
+					local ray = customRay or mouse.UnitRay
+					local params = RaycastParams.new()
+					params.FilterType = Enum.RaycastFilterType.Blacklist
+					local filterList = {}
+					for _, p in ipairs(Players:GetPlayers()) do
+						if p.Character then
+							table.insert(filterList, p.Character)
+						end
+					end
+					params.FilterDescendantsInstances = filterList
+					params.IgnoreWater = true
+					local result = workspace:Raycast(ray.Origin, ray.Direction * (self.range * 3.5), params)
+					if not result then
+						return originalHitBlock(self, maid, customRay)
+					end
+					local blockInstance = BlockEngine:getBlockInstanceFromChild(result.Instance)
+					if not blockInstance then
+						return originalHitBlock(self, maid, customRay)
+					end
+					if Blacklist.Enabled then
+						if IgnoreFastBreak(blockInstance) then 
+							bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
+						else
+							bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
+						end
+					else
+						bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
+					end
+					local blockPos = BlockEngine:getBlockPosition(blockInstance.Position)
+					local blockRef = {blockPosition = blockPos}
+					if not BlockEngine:isBlockBreakable(blockRef, Players.LocalPlayer) then
+						return
+					end  
+					BlockEngineRemotes.Client:Get("DamageBlock"):CallServerAsync({
+						blockRef = blockRef,
+						hitPosition = result.Position,
+						hitNormal = result.Normal
+					}):andThen(function(response)
+						print(response)
+					end):catch(function(err)
+						warn("Server rejected:", err)
+					end)
+					self.onBreak:Fire()
+					return
+				end
+			else
+				bedwars.BlockBreaker.hitBlock = old
+				bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
+				old = nil
+			end
+		end
+	})
+	blocks = MineBypass:CreateTextList({
+		Name = "Blacklisted Blocks",
+		Placeholder = "bed",
+		Visible = false
+	})																		
+	Time = MineBypass:CreateSlider({
+		Name = 'Break speed',
+		Min = 0,
+		Max = 1,
+		Default = 0.3,
+		Decimal = 100,
+		Suffix = 'seconds',
+		Tooltip = "0.3 is normal break speed if you dont want fastbreak"
+	})
+	Blacklist = MineBypass:CreateToggle({
+		Name = "Blacklist Blocks",
+		Default = false,
+		Tooltip = "when ur mining the selected block it uses normal break speed",
+		Function = function(v)
+			blocks.Object.Visible = v
+		end
+	})
+end)
+end
+
+run(function()
+	local KrystalDisabler
+	KrystalDisabler = vape.Categories.Exploits:CreateModule({
+		Name = "KrystalDisabler",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end  
+			if callback then
+				repeat
+					bedwars.Client:Get("MomentumUpdate"):SendToServer({momentumValue = 1/0})
+					task.wait(0.01)
+				until not KrystalDisabler.Enabled
+			else
+				warn('disabled')
+			end
+		end
+	})
+end)
+run(function()
+	local DinoTamerExploit
+	DinoTamerExploit = vape.Categories.Exploits:CreateModule({
+		Name = "DinoTamerExploit",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end    	
+			if callback then
+				repeat
+					bedwars.Client:Get("ConsumeItem"):SendToServer({item=replicatedStorage.Inventories[lplr].dino_deploy})
+					replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.Dismount:FireServer()
+					task.wait()
+				until not DinoTamerExploit.Enabled
+			else
+				warn('disabled')
+			end
+		end
+	})
+end)
