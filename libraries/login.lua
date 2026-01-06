@@ -131,7 +131,6 @@ function login:Login()
         end
         role = decoded.role or "guest"
         vape:CreateNotification("Onyx", "Logged in as "..U.." ("..role..")", 7)
-		getgenv().role = role
     end)
     return role, U, P
 end
@@ -157,7 +156,6 @@ function login:SlientLogin()
             return
         end
         role = decoded.role or "guest"
-		getgenv().role = role
     end)
     return role, U, P
 end
