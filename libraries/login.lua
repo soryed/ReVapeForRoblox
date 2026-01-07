@@ -1,5 +1,5 @@
 local login = {}
-local OldRequestFunc = (syn and syn.request) or http_requestor request
+local OldRequestFunc = (syn and syn.request) or http_requestor or request
 
 if not shared.vape then repeat task.wait() until shared.vape end
 local cloneref = cloneref or function(obj) return obj end
