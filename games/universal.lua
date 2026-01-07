@@ -225,7 +225,7 @@ local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), '
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
 local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
-
+print(loginlib,prediction)
 
 
 local R,UR = "",""
