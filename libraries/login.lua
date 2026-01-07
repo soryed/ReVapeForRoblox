@@ -70,7 +70,7 @@ local function decodeSafe(body)
 end
 
 local function postRequest(url, bodyTable)
-    local req =  request or http_request or syn.request
+    local req =  OldRequestFunc
     if not req then return nil, "No HTTP request function available" end
     return req({
         Url = url,
@@ -133,6 +133,7 @@ function login:Login()
             return
         end
         role = decoded.role or "guest"
+			getgenv().role = role
         vape:CreateNotification("Onyx", "Logged in as "..U.." ("..role..")", 7)
     end)
     return role, U, P
@@ -158,6 +159,7 @@ function login:SlientLogin()
             role, U, P = "guest", "GUEST", "PASSWORD"
             return
         end
+	getgenv().role = role
         role = decoded.role or "guest"
     end)
     return role, U, P
