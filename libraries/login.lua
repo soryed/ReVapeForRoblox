@@ -70,7 +70,7 @@ local function decodeSafe(body)
 end
 
 local function postRequest(url, bodyTable)
-    local req = OldRequestFunc
+    local req =  request or http_request or syn.request
     if not req then return nil, "No HTTP request function available" end
     return req({
         Url = url,
