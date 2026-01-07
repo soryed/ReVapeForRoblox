@@ -224,8 +224,6 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-print(loginlib,prediction)
-
 --local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
 
 
@@ -246,8 +244,6 @@ run(function()
 	vape.user = U
 	R = S
 	UR = U
-	vape.role = S 
-	vape.user = U
 end)
 
 local whitelist = {
