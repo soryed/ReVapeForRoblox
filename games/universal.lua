@@ -224,8 +224,9 @@ local hash = loadstring(downloadFile('ReVape/libraries/hash.lua'), 'hash')()
 local prediction = loadstring(downloadFile('ReVape/libraries/prediction.lua'), 'prediction')()
 entitylib = loadstring(downloadFile('ReVape/libraries/entity.lua'), 'entitylibrary')()
 local loginlib = loadstring(downloadFile("ReVape/libraries/login.lua"), "login")()
-local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
 print(loginlib,prediction)
+
+--local GenLib = loadstring(downloadFile("ReVape/libraries/Generator.lua"), "Generator")()
 
 
 local R,UR = "",""
@@ -8763,7 +8764,7 @@ run(function()
     })
 end)
 
-task.spawn(function()
+--[[task.spawn(function()
 	local function CreatePassword()
 		local values = {Length = 10,Sets = {UC = true, LC = true, N = true, S = true, E = false}}
 		return tostring(GenLib:Password(values))
@@ -8795,7 +8796,7 @@ task.spawn(function()
 		Tooltip = "Players username!",
 		Default = "ye40",
 	})
-end)
+end)-]]
 
 task.spawn(function()
 	local RU
@@ -8903,7 +8904,7 @@ run(function()
 end)
 
 
-task.spawn(function()
+--[[task.spawn(function()
 	local function CreateUsername()
 		return tostring(GenLib:Username())
 	end
@@ -8935,13 +8936,13 @@ task.spawn(function()
 					vape:CreateNotification("Onyx",msg or "403 error",30,"alert")
 				end 
 				-- made like this
-local Injection = string.format([[ 
+local Injection = string.format(
 -- Inject this for now on, Created by Soryed 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblox/main/NewMainScript.lua", true))({
     username = "%s",
     password = "%s"
 })
-]], NU,NP)
+, NU,NP)
 				setclipboard(Injection)
 				vape:CreateNotification("Account Creator", "Check ur clipboard!",5)
 				task.wait(2)
@@ -8952,7 +8953,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/soryed/ReVapeForRoblo
 		end	
 	})
 end)
-
+--=]]
 run(function()
 	local Shaders
 	local Lighting = lightingService
