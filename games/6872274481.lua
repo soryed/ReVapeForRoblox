@@ -19851,14 +19851,6 @@ run(function()
 		DefaultMin = 0.5,
 		DefaultMax = 2
 	})
-	AutoSummon = BetterUma:CreateToggle({
-		Name='Auto Summon',
-		Default=true,
-		Function=function(v)
-			UHS.Object.Visible=v
-			UAS.Object.Visible=v
-		end
-	})
 	UHS = BetterUma:CreateToggle({
 		Name = "Use heal spirit",
 		Default = true,
@@ -19871,12 +19863,12 @@ run(function()
 		Visible = false,
 		Darker=true
 	})
-	Target = BetterUma:CreateToggle({
-		Name='Target item drops',
+	AutoSummon = BetterUma:CreateToggle({
+		Name='Auto Summon',
 		Default=true,
 		Function=function(v)
-			Em.Object.Visible=v
-			Dim.Object.Visible=v
+			UHS.Object.Visible=v
+			UAS.Object.Visible=v
 		end
 	})
 	Em = BetterUma:CreateToggle({
@@ -19891,4 +19883,13 @@ run(function()
 		Visible = false,
 		Darker=true
 	})
+	Target = BetterUma:CreateToggle({
+		Name='Target item drops',
+		Default=true,
+		Function=function(v)
+			Em.Object.Visible=v
+			Dim.Object.Visible=v
+		end
+	})
+
 end)
