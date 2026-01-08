@@ -12031,6 +12031,7 @@ run(function()
 			Min = 35,
 			Max = 85,
 			Default = 75,
+			Suffix = "%"
 		})
 end)
 
