@@ -1682,6 +1682,7 @@ run(function()
 	})
 				
 end)
+	
 run(function()
 	local AutoClicker
 	local CPS
@@ -8792,7 +8793,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 3 do
+            for _ = 1, 9 do
                 if container and container.Parent then
                     container = container.Parent
                 end
@@ -8821,7 +8822,7 @@ run(function()
                     if playerFound and icon then
                         refreshicon(icon, playerFound)
                     end
-                    task.wait(0.95)
+                    task.wait(1)
                 end
             end)
         end)
@@ -8889,18 +8890,17 @@ run(function()
         end
     end
 
-    BetterDavey = vape.Categories.Support:CreateModule({
+    BetterDavey = vape.Categories.Blatant:CreateModule({
         Name = "BetterDavey",
         Tooltip = "makes u look better with davey",
-        Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
+        Function = function(callback)       
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
-
+			if store.equippedKit ~= "davey" then
+				vape:CreateNotification("BetterKaida","Kit required only!",8,"warning")
+				return
+			end
             if callback then
                 setCannonSpeeds(blocks, aim, tnt, aunchself)
 
@@ -9207,122 +9207,6 @@ run(function()
 		Name = "Bypass",
 		Default = true
 	})
-end)
-			
-run(function()
-    local QueueDisplayConfig = {
-        ActiveState = false,
-        GradientControl = {Enabled = true},
-        ColorSettings = {
-            Gradient1 = {Hue = 0, Saturation = 0, Brightness = 1},
-            Gradient2 = {Hue = 0, Saturation = 0, Brightness = 0.8}
-        },
-        Animation = {Speed = 0.5, Progress = 0}
-    }
-
-    local DisplayUtils = {
-        createGradient = function(parent)
-            local gradient = parent:FindFirstChildOfClass("UIGradient") or Instance.new("UIGradient")
-            gradient.Parent = parent
-            return gradient
-        end,
-        updateColor = function(gradient, config)
-            local time = tick() * config.Animation.Speed
-            local interp = (math.sin(time) + 1) / 2
-            local h = config.ColorSettings.Gradient1.Hue + (config.ColorSettings.Gradient2.Hue - config.ColorSettings.Gradient1.Hue) * interp
-            local s = config.ColorSettings.Gradient1.Saturation + (config.ColorSettings.Gradient2.Saturation - config.ColorSettings.Gradient1.Saturation) * interp
-            local b = config.ColorSettings.Gradient1.Brightness + (config.ColorSettings.Gradient2.Brightness - config.ColorSettings.Gradient1.Brightness) * interp
-            gradient.Color = ColorSequence.new(Color3.fromHSV(h, s, b))
-        end
-    }
-
-	local CoreConnection
-
-    local function enhanceQueueDisplay()
-		pcall(function() 
-			CoreConnection:Disconnect()
-		end)
-        local success, err = pcall(function()
-            if not lplr.PlayerGui:FindFirstChild('QueueApp') then return end
-            
-            for attempt = 1, 3 do
-                if QueueDisplayConfig.GradientControl.Enabled then
-                    local queueFrame = lplr.PlayerGui.QueueApp['1']
-                    queueFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    
-                    local gradient = DisplayUtils.createGradient(queueFrame)
-                    gradient.Rotation = 180
-                    
-                    local displayInterface = {
-                        module = vape.watermark,
-                        gradient = gradient,
-                        GetEnabled = function()
-                            return QueueDisplayConfig.ActiveState
-                        end,
-                        SetGradientEnabled = function(state)
-                            QueueDisplayConfig.GradientControl.Enabled = state
-                            gradient.Enabled = state
-                        end
-                    }
-                    CoreConnection = game:GetService("RunService").RenderStepped:Connect(function()
-                        if QueueDisplayConfig.ActiveState and QueueDisplayConfig.GradientControl.Enabled then
-                            DisplayUtils.updateColor(gradient, QueueDisplayConfig)
-                        end
-                    end)
-                end
-                task.wait(0.1)
-            end
-        end)
-        
-        if not success then
-            warn("Queue display enhancement failed: " .. tostring(err))
-        end
-    end
-
-    local QueueDisplayEnhancer
-    QueueDisplayEnhancer = vape.Categories.Utility:CreateModule({
-        Name = 'QueueMods',
-        Tooltip = 'Enhances the Queues display with dynamic gradients!! very cool lel xd nigger',
-        Function = function(enabled)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-																								vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end       
-            QueueDisplayConfig.ActiveState = enabled
-            if enabled then
-                enhanceQueueDisplay()
-                QueueDisplayEnhancer:Clean(lplr.PlayerGui.ChildAdded:Connect(enhanceQueueDisplay))
-			else
-				pcall(function() 
-					CoreConnection:Disconnect()
-				end)
-			end
-        end
-    })
-
-   	QueueDisplayEnhancer:CreateSlider({
-        Name = "Animation Speed",
-        Function = function(speed)
-            QueueDisplayConfig.Animation.Speed = math.clamp(speed, 0.1, 5)
-        end,
-        Min = 1,
-        Max = 8,
-        Default = 5
-    })
-
-    QueueDisplayEnhancer:CreateColorSlider({
-        Name = "Color 1",
-        Function = function(h, s, v)
-            QueueDisplayConfig.ColorSettings.Gradient1 = {Hue = h, Saturation = s, Brightness = v}
-        end
-    })
-
-    QueueDisplayEnhancer:CreateColorSlider({
-        Name = "Color 2",
-        Function = function(h, s, v)
-            QueueDisplayConfig.ColorSettings.Gradient2 = {Hue = h, Saturation = s, Brightness = v}
-        end
-    })
 end)
 
 run(function()
@@ -9739,7 +9623,7 @@ run(function()
 		CE = false
 		SyncHit = {Enabled = false}
 	elseif role == "user" then
-		MaxRange = 18
+		MaxRange = 20
 		CE = false
 		SyncHit = Killaura:CreateToggle({
 			Name = 'Sync Hit-Time',
@@ -10616,6 +10500,10 @@ run(function()
 				return
 			end	
             if callback then
+			if store.equippedKit ~= "owl" then
+				vape:CreateNotification("BetterWhisper","Kit required only!",8,"warning")
+				return
+			end
 				BetterWhisper:Clean(bedwars.Client:Get("OwlSummoned"):Connect(function(data)
 					if data.user == lplr then
 						local target = data.target
@@ -11792,6 +11680,10 @@ run(function()
 	BetterCait = vape.Categories.Support:CreateModule({
 		Name = 'BetterCaitlyn',
 		Function = function(callback)
+			if store.equippedKit ~= "blood_assassin" then
+				vape:CreateNotification("BetterCaitlyn","Kit required only!",8,"warning")
+				return
+			end
 			local hitPlayers = {} 
 				
 			BetterCait:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
@@ -11907,6 +11799,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end 
+			if store.equippedKit ~= "summoner" then
+				vape:CreateNotification("BetterKaida","Kit required only!",8,"warning")
+				return
+			end
 			if callback then
 				repeat
 		            local plrs = entitylib.AllPosition({
@@ -12072,6 +11968,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end 
+			if store.equippedKit ~= "nazar" then
+				vape:CreateNotification("BetterNazar","Kit required only!",8,"warning")
+				return
+			end
 				if callback then
 					local lastHitTime = 0
 					local hitTimeout = 3
@@ -14688,6 +14588,8 @@ run(function()
 	})
 
 end)
+
+
 
 run(function()
 	local AutoShoot
@@ -17485,11 +17387,6 @@ run(function()
 					CreateNameTag(v)
 				end
 				bedwars.NametagController.addGameNametag = function(v1,plr)
-				for _, v in bedwars.AppController:getOpenApps() do
-					if tostring(v):find('Nametag') then
-						bedwars.AppController:closeApp(tostring(v))
-					end
-				end
 					CreateNameTag(plr)
 				end
 				bedwars.NametagController.removeGameNametag = function(v1,plr)
@@ -18480,6 +18377,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end 
+			if store.equippedKit ~= "metal_detector" then
+				vape:CreateNotification("BetterMetal","Kit required only!",8,"warning")
+				return
+			end
 			task.spawn(function()
 				while BetterMetal.Enabled do
 					if not entitylib.isAlive then task.wait(0.1); continue end
@@ -18554,6 +18455,10 @@ run(function()
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end
+			if store.equippedKit ~= "airbender" then
+				vape:CreateNotification("BetterRamil","Kit required only!",8,"warning")
 				return
 			end
 			if callback then
@@ -18987,6 +18892,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
+			if store.equippedKit ~= "paladin" then
+				vape:CreateNotification("BetterLani","Kit required only!",8,"warning")
+				return
+			end
 			if callback then
 				if Legit.Enabled then
 					t = 1.33
@@ -19210,6 +19119,27 @@ run(function()
 	local CPS
 	local rayParams = RaycastParams.new()
 	local BowCheck
+    local function isHoldingProjectile()
+        if not store.hand or not store.hand.tool then return false end
+        local toolName = store.hand.tool.Name
+        if toolName == "headhunter" then
+            return true
+        end
+        if toolName:lower():find("headhunter") then
+            return true
+        end
+        if toolName:lower():find("bow") then
+            return true
+        end
+        if toolName:lower():find("crossbow") then
+            return true
+        end
+        local toolMeta = bedwars.ItemMeta[toolName]
+        if toolMeta and toolMeta.projectileSource then
+            return true
+        end
+        return false
+    end
 	TriggerBot = vape.Categories.Combat:CreateModule({
 		Name = 'TriggerBot',
 		Function = function(callback)
@@ -19241,7 +19171,7 @@ run(function()
 							end
 						end
 						if BowCheck.Enabled then
-							if store.hand.toolType == 'bow'  then
+							if isHoldingProjectile() do
 								local attackRange = 23
 								rayParams.FilterDescendantsInstances = {lplr.Character}
 		
@@ -19322,6 +19252,10 @@ run(function()
 		Function = function(callback)
 	   		if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end
+			if store.equippedKit ~= "wizard" then
+				vape:CreateNotification("BetterZeno","Kit required only!",8,"warning")
 				return
 			end
 			if callback then
@@ -19477,6 +19411,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
 				return
 			end
+			if store.equippedKit ~= "jailor" then
+				vape:CreateNotification("BetterWarden","Kit required only!",8,"warning")
+				return
+			end
 			if callback then
 				local range = 0
 				local angle = 0
@@ -19619,7 +19557,6 @@ run(function()
 	HDSpeed = HD:CreateToggle({Name="Speed",Default=false,Darker=true})
 end)
 
-if getgenv().TestMode then
 run(function()
 	local MineBypass
 	local old
@@ -19703,15 +19640,7 @@ run(function()
 					if not blockInstance then
 						return old(self, maid, customRay)
 					end
-					if Blacklist.Enabled then
-						if IgnoreFastBreak(blockInstance) then 
-							bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
-						else
-							bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-						end
-					else
-						bedwars.BlockBreakController.blockBreaker:setCooldown(Time.Value)
-					end
+
 					local blockPos = BlockEngine:getBlockPosition(blockInstance.Position)
 					local blockRef = {blockPosition = blockPos}
 					if not BlockEngine:isBlockBreakable(blockRef, Players.LocalPlayer) then
@@ -19739,12 +19668,13 @@ run(function()
 	blocks = MineBypass:CreateTextList({
 		Name = "Blacklisted Blocks",
 		Placeholder = "bed",
-		Visible = false
+		Visible = false,
 	})																		
 	Time = MineBypass:CreateSlider({
 		Name = 'Break speed',
 		Min = 0,
 		Max = 1,
+		Visible = false,
 		Default = 0.3,
 		Decimal = 100,
 		Suffix = 'seconds',
@@ -19753,34 +19683,14 @@ run(function()
 	Blacklist = MineBypass:CreateToggle({
 		Name = "Blacklist Blocks",
 		Default = false,
+		Visible = false,
 		Tooltip = "when ur mining the selected block it uses normal break speed",
 		Function = function(v)
 			blocks.Object.Visible = v
 		end
 	})
 end)
-end
 
-run(function()
-	local KrystalDisabler
-	KrystalDisabler = vape.Categories.Exploits:CreateModule({
-		Name = "KrystalDisabler",
-		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end  
-			if callback then
-				repeat
-					bedwars.Client:Get("MomentumUpdate"):SendToServer({momentumValue = 1/0})
-					task.wait(0.01)
-				until not KrystalDisabler.Enabled
-			else
-				warn('disabled')
-			end
-		end
-	})
-end)
 run(function()
 	local DinoTamerExploit
 	DinoTamerExploit = vape.Categories.Exploits:CreateModule({
@@ -19800,5 +19710,188 @@ run(function()
 				warn('disabled')
 			end
 		end
+	})
+end)
+
+run(function()
+	local BetterUma
+	local Range
+	local AutoSummon
+	local UHS
+	local UAS 
+	local Target
+	local Em
+	local Dim
+	local Delay
+	local projectileRemote = nil
+	task.spawn(function()
+		local s, err = pcall(function()
+			projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+		end)
+		if not s or err then
+			projectileRemote = {InvokeServer = function() end}
+			warn(err)
+		end
+	end)
+	local function FindDimGen(origin)
+		local obj
+		for i, dims in workspace.ItemDrops:GetChildren() do
+			if dims:IsA("BasePart") then
+				if dims.Name == "diamond" then
+					local d = (dims.Position - origin).Magnitude
+					if Range.Value <= d then
+						obj = dims
+					end
+				end
+			end
+		end
+		return obj
+	end
+	local function FindEmGen(origin)
+		local obj
+		for i, ems in workspace.ItemDrops:GetChildren() do
+			if ems:IsA("BasePart") then
+				if ems.Name == "emerald" then
+					local d = (ems.Position - origin).Magnitude
+					if Range.Value <= d then
+						obj = ems
+					end
+				end
+			end
+		end
+		return obj	
+	end
+	BetterUma = vape.Categories.Support:CreateModule({
+		Name = "BetterUma",
+		Tooltip = 'real catvapes autouma!?',
+		Function = function(callback)
+			if callback then
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end
+				if store.equippedKit ~= "spirit_summoner" then
+					vape:CreateNotification("BetterUma","Kit required only!",8,"warning")
+					return
+				end
+				repeat
+					task.spawn(function()
+						if AutoSummon.Enabled then
+							if UHS.Enabled then
+								local stone = getItem("summon_stone")
+								if not stone then task.wait(0.1) continue end
+								if bedwars.AbilityController:canUseAbility("summon_heal_spirit") then
+									bedwars.AbilityController:useAbility("summon_heal_spirit")
+								end
+							end
+							if UAS.Enabled then
+								local stone = getItem("summon_stone")
+								if not stone then task.wait(0.1) continue end
+								if bedwars.AbilityController:canUseAbility("summon_attack_spirit") then
+									bedwars.AbilityController:useAbility("summon_attack_spirit")
+								end
+							end
+						end
+					end)
+					task.spawn(function()
+						if Target.Enabled then
+							if Em.Enabled then
+								local pos = FindEmGen(entitylib.character.RootPart.Position)
+								if pos then
+									local staff = getItem("spirit_staff")
+									if  not staff then task.wait(0.1) continue end
+									local meta = bedwars.ProjectileMeta.spirit_staff
+									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
+									if calc then
+										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
+										bedwars.ProjectileController:createLocalProjectile(meta, 'spirit_staff', 'spirit_staff', pos, nil, dir, {drawDurationSeconds = 0})
+										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+									end
+								else
+									continue
+								end
+							end
+							if Dim.Enabled then
+								local pos = FindDimGen(entitylib.character.RootPart.Position)
+								if pos then
+									local staff = getItem("spirit_staff")
+									if not staff then task.wait(0.1) continue end
+									local meta = bedwars.ProjectileMeta.spirit_staff
+									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
+									if calc then
+										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
+										bedwars.ProjectileController:createLocalProjectile(meta, 'spirit_staff', 'spirit_staff', pos, nil, dir, {drawDurationSeconds = 0})
+										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+									end
+								else
+									continue
+								end
+							end
+						end
+					end)
+					task.wait(1 / Delay.GetRandomValue())
+				until not BetterUma.Enabled
+			end
+		end
+	})
+	Range = BetterUma:CreateSlider({
+		Name = "Range",
+		Min = 1,
+		Max = 80,
+		Default = 45,
+		Suffix = function(val)
+			if val >= 1 then
+				return "studs"
+			else
+				return "stud"
+			end
+		end
+	})
+	Delay = BetterUma:CreateTwoSlider({
+		Name = "Delay",
+		Min = 0.1,
+		Max = 2,
+		DefaultMin = 0.5,
+		DefaultMax = 2
+	})
+	AutoSummon = BetterUma:CreateToggle({
+		Name='Auto Summon',
+		Default=true,
+		Function=function(v)
+			UHS.Object.Visible=v
+			UAS.Object.Visible=v
+		end
+	})
+	UHS = BetterUma:CreateToggle({
+		Name = "Use heal spirit",
+		Default = true,
+		Visible = false,
+		Darker=true
+	})
+	UAS = BetterUma:CreateToggle({
+		Name = "Use attack spirit",
+		Default = true,
+		Visible = false,
+		Darker=true
+	})
+	Target = BetterUma:CreateToggle({
+		Name='Target item drops',
+		Default=true,
+		Function=function(v)
+			Em.Object.Visible=v
+			Dim.Object.Visible=v
+		end
+	})
+	Em = BetterUma:CreateToggle({
+		Name = "Emerald",
+		Default = true,
+		Visible = false,
+		Darker=true
+	})
+	Dim = BetterUma:CreateToggle({
+		Name = "Diamond",
+		Default = true,
+		Visible = false,
+		Darker=true
 	})
 end)
