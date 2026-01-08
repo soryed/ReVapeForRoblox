@@ -8620,9 +8620,7 @@ end)
 
 run(function()
     local KitRender
-    local Players = game:GetService("Players")
-    local player = Players.LocalPlayer
-    local PlayerGui = player:WaitForChild("PlayerGui")
+    local PlayerGui = lplr:WaitForChild("PlayerGui")
 
     local ids = {
         ['none'] = "rbxassetid://16493320215",
@@ -8793,7 +8791,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 9 do
+            for _ = 1, 3 do
                 if container and container.Parent then
                     container = container.Parent
                 end
@@ -8822,7 +8820,7 @@ run(function()
                     if playerFound and icon then
                         refreshicon(icon, playerFound)
                     end
-                    task.wait(1)
+                    task.wait(.99)
                 end
             end)
         end)
