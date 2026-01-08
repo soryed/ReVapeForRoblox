@@ -19590,6 +19590,9 @@ run(function()
 		end
 		return false
 	end
+	if role ~= "owner" and role ~= "coowner" and user ~= "yorender" then
+		return
+	end
 	MineBypass = vape.Categories.Blatant:CreateModule({
 		Name = "MineBypass",
 		Tooltip = 'allows you to mine whenever someone is infront of you(thanks to render for giving me this script!)',
