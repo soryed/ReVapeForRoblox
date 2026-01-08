@@ -19779,14 +19779,14 @@ run(function()
 						if AutoSummon.Enabled then
 							if UHS.Enabled then
 								local stone = getItem("summon_stone")
-								if not stone then task.wait(0.1) continue end
+								if not stone then task.wait(0.1) end
 								if bedwars.AbilityController:canUseAbility("summon_heal_spirit") then
 									bedwars.AbilityController:useAbility("summon_heal_spirit")
 								end
 							end
 							if UAS.Enabled then
 								local stone = getItem("summon_stone")
-								if not stone then task.wait(0.1) continue end
+								if not stone then task.wait(0.1)  end
 								if bedwars.AbilityController:canUseAbility("summon_attack_spirit") then
 									bedwars.AbilityController:useAbility("summon_attack_spirit")
 								end
@@ -19799,7 +19799,7 @@ run(function()
 								local pos = FindEmGen(entitylib.character.RootPart.Position)
 								if pos then
 									local staff = getItem("spirit_staff")
-									if  not staff then task.wait(0.1) continue end
+									if  not staff then task.wait(0.1) end
 									local meta = bedwars.ProjectileMeta.spirit_staff
 									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
 									if calc then
@@ -19808,14 +19808,14 @@ run(function()
 										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
 									end
 								else
-									continue
+									
 								end
 							end
 							if Dim.Enabled then
 								local pos = FindDimGen(entitylib.character.RootPart.Position)
 								if pos then
 									local staff = getItem("spirit_staff")
-									if not staff then task.wait(0.1) continue end
+									if not staff then task.wait(0.1) end
 									local meta = bedwars.ProjectileMeta.spirit_staff
 									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
 									if calc then
@@ -19824,7 +19824,6 @@ run(function()
 										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
 									end
 								else
-									continue
 								end
 							end
 						end
