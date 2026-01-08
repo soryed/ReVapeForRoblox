@@ -19675,14 +19675,14 @@ run(function()
 				end
 				blockBreaker.hitBlock = function(self, maid, customRay)
 					if not canBreakBlocks() then
-						return originalHitBlock(self, maid, customRay)
+						return old(self, maid, customRay)
 					end
 					local normalResult = blockSelector:getMouseInfo(BlockSelectorMode.SELECT, {
 						ray = customRay,
 						range = self.range
 					})
 					if normalResult and normalResult.target then
-						return originalHitBlock(self, maid, customRay)
+						return old(self, maid, customRay)
 					end
 					local mouse = self.clientManager:getBlockSelector().mouse
 					local ray = customRay or mouse.UnitRay
@@ -19698,11 +19698,11 @@ run(function()
 					params.IgnoreWater = true
 					local result = workspace:Raycast(ray.Origin, ray.Direction * (self.range * 3.5), params)
 					if not result then
-						return originalHitBlock(self, maid, customRay)
+						return old(self, maid, customRay)
 					end
 					local blockInstance = BlockEngine:getBlockInstanceFromChild(result.Instance)
 					if not blockInstance then
-						return originalHitBlock(self, maid, customRay)
+						return old(self, maid, customRay)
 					end
 					if Blacklist.Enabled then
 						if IgnoreFastBreak(blockInstance) then 
