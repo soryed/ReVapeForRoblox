@@ -19762,6 +19762,7 @@ run(function()
 		end
 		return obj	
 	end
+	local Meta = ""
 	BetterUma = vape.Categories.Support:CreateModule({
 		Name = "BetterUma",
 		Tooltip = 'real catvapes autouma!?',
@@ -19782,6 +19783,11 @@ run(function()
 								if not stone then task.wait(0.1) continue end
 								if bedwars.AbilityController:canUseAbility("summon_heal_spirit") then
 									bedwars.AbilityController:useAbility("summon_heal_spirit")
+									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
+										if bedwars.AbilityController:canUseAbility("change_spirit_affinity") then
+											bedwars.AbilityController:useAbility("change_spirit_affinity")
+										end
+									end
 								end
 							end
 							if UAS.Enabled then
@@ -19789,6 +19795,11 @@ run(function()
 								if not stone then task.wait(0.1) continue end
 								if bedwars.AbilityController:canUseAbility("summon_attack_spirit") then
 									bedwars.AbilityController:useAbility("summon_attack_spirit")
+									if lplr:GetAttribute("ReadySummonedAttackSpirits") > lplr:GetAttribute("ReadySummonedHealSpirits") then
+										if bedwars.AbilityController:canUseAbility("change_spirit_affinity") then
+											bedwars.AbilityController:useAbility("change_spirit_affinity")
+										end
+									end
 								end
 							end
 						end
@@ -19798,12 +19809,17 @@ run(function()
 								if pos then
 									local staff = getItem("spirit_staff")
 									if  not staff then task.wait(0.1) continue end
-									local meta = bedwars.ProjectileMeta.spirit_staff
+									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
+										Meta = "heal_spirit"
+									else
+										Meta = "attack_spirit"
+									end
+									local meta = bedwars.ProjectileMeta[Meta]
 									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
 									if calc then
 										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
-										bedwars.ProjectileController:createLocalProjectile(meta, 'spirit_staff', 'spirit_staff', pos, nil, dir, {drawDurationSeconds = 0})
-										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+										bedwars.ProjectileController:createLocalProjectile(meta, Meta, Meta, pos, nil, dir, {drawDurationSeconds = 0})
+										projectileRemote:InvokeServer(staff.tool, Meta, Meta, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
 									end
 								else
 									continue
@@ -19813,13 +19829,18 @@ run(function()
 								local pos = FindDimGen(entitylib.character.RootPart.Position)
 								if pos then
 									local staff = getItem("spirit_staff")
-									if not staff then task.wait(0.1) continue end
-									local meta = bedwars.ProjectileMeta.spirit_staff
+									if  not staff then task.wait(0.1) continue end
+									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
+										Meta = "heal_spirit"
+									else
+										Meta = "attack_spirit"
+									end
+									local meta = bedwars.ProjectileMeta[Meta]
 									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
 									if calc then
 										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
-										bedwars.ProjectileController:createLocalProjectile(meta, 'spirit_staff', 'spirit_staff', pos, nil, dir, {drawDurationSeconds = 0})
-										projectileRemote:InvokeServer(staff.tool, 'spirit_staff', 'spirit_staff', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+										bedwars.ProjectileController:createLocalProjectile(meta, Meta, Meta, pos, nil, dir, {drawDurationSeconds = 0})
+										projectileRemote:InvokeServer(staff.tool, Meta, Meta, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
 									end
 								else
 									continue
@@ -19891,5 +19912,4 @@ run(function()
 			Dim.Object.Visible=v
 		end
 	})
-
 end)
