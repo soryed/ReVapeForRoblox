@@ -9213,8 +9213,8 @@ run(function()
 					if v:IsA("Texture") or v:IsA("Decal") then
 						local CurrentTexture = v.ColorMapContent
 						old[v.Name] = CurrentTexture
-						if v.ColorMapContent or v.Texture then
-							v.ColorMapContent = getcustomasset("ReVape/assets/new/jews.png")
+						if v.Content or v.Texture then
+							v.Content = getcustomasset("ReVape/assets/new/jews.png")
 						end
 					end
 					if v:IsA("ShirtGraphic") then
@@ -9242,8 +9242,8 @@ run(function()
 			else
 				for i, v in workspace:GetDescendants() do
 					if v:IsA("Texture") or v:IsA("Decal") then
-						if v.ColorMapContent or v.Texture then
-							v.ColorMapContent = old[v.Name]
+						if v.Content or v.Texture then
+							v.Content = old[v.Name]
 							old[v.Name] = nil
 						end
 					end
