@@ -9200,3 +9200,73 @@ run(function()
 		Name = "Value"
 	})
 end)
+
+run(function()
+	local Jews
+	local old = {}
+	Jews = vape.Categories.Exploits:CreateModule({
+		Name = "JEWS",
+		Tooltip = 'every texture is jewish',
+		Function = function(callback)
+			if callback then
+				for i, v in workspace:GetDescendants() do
+					if v:IsA("Texture") or v:IsA("Decal") then
+						local CurrentTexture = v.ColorMapContent
+						old[v.Name] = CurrentTexture
+						if v.ColorMapContent or v.Texture then
+							v.ColorMapContent = getcustomasset("ReVape/assets/new/jews.png")
+						end
+					end
+					if v:IsA("ShirtGraphic") then
+						local CurrentTexture = v.Graphic
+						old[v.Name] = CurrentTexture
+						if v.Graphic or v.Texture then
+							v.Graphic = getcustomasset("ReVape/assets/new/jews.png")
+						end
+					end
+					if v:IsA("Pants") then
+						local CurrentTexture = v.PantsTemplate
+						old[v.Name] = CurrentTexture
+						if v.PantsTemplate or v.Texture then
+							v.PantsTemplate = getcustomasset("ReVape/assets/new/jews.png")
+						end
+					end
+					if v:IsA("Shirt") then
+						local CurrentTexture = v.ShirtTemplate
+						old[v.Name] = CurrentTexture
+						if v.ShirtTemplate or v.Texture then
+							v.ShirtTemplate = getcustomasset("ReVape/assets/new/jews.png")
+						end
+					end
+				end
+			else
+				for i, v in workspace:GetDescendants() do
+					if v:IsA("Texture") or v:IsA("Decal") then
+						if v.ColorMapContent or v.Texture then
+							v.ColorMapContent = old[v.Name]
+							old[v.Name] = nil
+						end
+					end
+					if v:IsA("ShirtGraphic") then
+						if v.Graphic or v.Texture then
+							v.Graphic = old[v.Name]
+							old[v.Name] = nil
+						end
+					end
+					if v:IsA("Pants") then
+						if v.PantsTemplate or v.Texture then
+							v.PantsTemplate = old[v.Name]
+							old[v.Name] = nil
+						end
+					end
+					if v:IsA("Shirt") then
+						if v.ShirtTemplate or v.Texture then
+							v.ShirtTemplate = old[v.Name]
+							old[v.Name] = nil
+						end
+					end
+				end
+			end
+		end
+	})
+end)
