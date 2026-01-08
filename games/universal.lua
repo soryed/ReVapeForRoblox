@@ -9210,11 +9210,18 @@ run(function()
 		Function = function(callback)
 			if callback then
 				for i, v in workspace:GetDescendants() do
-					if v:IsA("Texture") or v:IsA("Decal") then
+					if v:IsA("Texture") then
 						local CurrentTexture = v.ColorMapContent
 						old[v.Name] = CurrentTexture
 						if v.Content or v.Texture then
 							v.Content = getcustomasset("ReVape/assets/new/jews.png")
+						end
+					end
+					if v:IsA("Decal") then
+						local CurrentTexture = v.ColorMap
+						old[v.Name] = CurrentTexture
+						if v.ColorMap or v.Texture then
+							v.ColorMap = getcustomasset("ReVape/assets/new/jews.png")
 						end
 					end
 					if v:IsA("ShirtGraphic") then
