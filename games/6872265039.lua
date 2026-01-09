@@ -88,6 +88,7 @@ run(function()
 	end
 
 	bedwars = setmetatable({
+	 	MatchHistroyApp = require(LocalPlayer.PlayerScripts.TS.controllers.global["match-history"].ui["match-history-moderation-app"]).MatchHistoryModerationApp,
 	 	MatchHistroyController = Knit.Controllers.MatchHistoryController,
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
 		AnimationType = require(replicatedStorage.TS.animation['animation-type']).AnimationType,
@@ -1886,10 +1887,10 @@ if getgenv().TestMode then
                 return
             end
 			if callback then
- 				bedwars.MatchHistroyController:requestMatchHistory(LocalPlayer.Name):andThen(function(Data)
+ 				bedwars.MatchHistroyController:requestMatchHistory(lplr.Name):andThen(function(Data)
                     if Data then
                         bedwars.AppController:openApp({
-                            app = GameData.Utils.MatchHistroyApp,
+                            app = bedwars.MatchHistroyApp,
                             appId = "MatchHistoryApp",
                         }, Data)
                     end
