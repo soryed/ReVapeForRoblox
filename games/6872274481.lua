@@ -8889,7 +8889,7 @@ run(function()
         end
     end
 
-    BetterDavey = vape.Categories.Blatant:CreateModule({
+    BetterDavey = vape.Categories.Support:CreateModule({
         Name = "BetterDavey",
         Tooltip = "makes u look better with davey",
         Function = function(callback)       
