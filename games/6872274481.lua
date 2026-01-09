@@ -8799,7 +8799,7 @@ run(function()
             if not container or not container:IsA("Frame") then return end
             local playerFound = findPlayer(label, container)
             if not playerFound then
-				warn('didnt find")
+				warn('didnt find')
                 task.wait(0.5)
                 playerFound = findPlayer(label, container)
             end
