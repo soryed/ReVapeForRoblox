@@ -8775,12 +8775,12 @@ run(function()
         if render and render:IsA("ImageLabel") and render.Image then
             local userId = string.match(render.Image, "id=(%d+)")
             if userId then
-                local plr = Players:GetPlayerByUserId(tonumber(userId))
+                local plr = playersService:GetPlayerByUserId(tonumber(userId))
                 if plr then return plr end
             end
         end
         local text = label.Text
-        for _, plr in ipairs(Players:GetPlayers()) do
+        for _, plr in ipairs(playersService:GetPlayers()) do
             if plr.Name == text or plr.DisplayName == text or plr:GetAttribute("DisguiseDisplayName") == text then
                 return plr
             end
@@ -8791,7 +8791,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 3 do
+            for _ = 1, 9 do
                 if container and container.Parent then
                     container = container.Parent
                 end
@@ -8820,7 +8820,7 @@ run(function()
                     if playerFound and icon then
                         refreshicon(icon, playerFound)
                     end
-                    task.wait(.99)
+                    task.wait(1)
                 end
             end)
         end)
