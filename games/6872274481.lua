@@ -19484,7 +19484,7 @@ run(function()
 					return
 				end
 				local lastHit = {}
-				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+				HD:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 					if not entitylib.isAlive then return end
 					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
 					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
@@ -19505,7 +19505,7 @@ run(function()
 				if not HDReach.Enabled then
 					return
 				end
-				HackerDetector:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+				HD:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 					if not entitylib.isAlive then return end
 					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
 					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
