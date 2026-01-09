@@ -14861,10 +14861,116 @@ end)
 
 
 
+run(function()
+		local AutoWin
+		local empty
+		local Dashes = {Value = 2}
+		local function Reset(db)
+			if db then
+				vape:CreateNotification("AutoWin", "Teleporting to empty game!", 4)
+				local TeleportService = game:GetService("TeleportService")
+				local data = TeleportService:GetLocalPlayerTeleportData()
+				AutoWin:Clean(TeleportService:Teleport(game.PlaceId, lplr, data))
+			else
+				return
+			end
+		end
+		AutoWin = vape.Categories.AltFarm:CreateModule({
+			Name = 'YuziAutoWin',
+			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end 
+				if not callback then
+					return  
+				end
+				if store.equippedKit == "dasher" then
+					Reset(false)
+					local beds = {}
+					local currentbedpos 
+					local function AllbedPOS()
+						if workspace:FindFirstChild("MapCFrames") then
+							for _, obj in ipairs(workspace:FindFirstChild("MapCFrames"):GetChildren()) do
+								if string.match(obj.Name, "_bed$") then
+									table.insert(beds, obj.Value.Position)
+								end
+							end
+						end
+					end
+					local function UpdateCurrentBedPOS()
+						if workspace:FindFirstChild("MapCFrames") then
+							local currentTeam =  lplr.Character:GetAttribute("Team")
+							if workspace:FindFirstChild("MapCFrames") then
+								local CFRameName = tostring(currentTeam).."_bed"
+								currentbedpos = workspace:FindFirstChild("MapCFrames"):FindFirstChild(CFRameName).Value.Position
+							end
+						end
+					end
+					local function closestBed(origin)
+						local closest, dist
+						for _, pos in ipairs(beds) do
+							if pos ~= currentbedpos then
+								local d = (pos - origin).Magnitude
+								if not dist or d < dist then
+									dist, closest = d, pos
+								end
+							end
+						end
+						return closest
+					end
+					local function tweenToBED(pos)
+						if entitylib.isAlive then
+							pos = pos + Vector3.new(0, 5, 0)
+							local currentPosition = entitylib.character.RootPart.Position
+							if (pos - currentPosition).Magnitude > 0.5 then
+								if lplr.Character then
+									lplr:SetAttribute('LastTeleported', 0)
+								end
+								local info = TweenInfo.new(1.34,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+								local tween = tweenService:Create(entitylib.character.RootPart,info,{CFrame = CFrame.new(pos)})
+								task.spawn(function()
+									
+									if bedwars.AbilityController:canUseAbility("dash") then
+										vape:CreateNotification("AutoWin", "Dashing to bypass anti cheat!", 1)
+										bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
+										bedwars.AbilityController:useAbility('dash',newproxy(true),{
+											direction = gameCamera.CFrame,
+											origin = entitylib.character.RootPart.Position,
+											weapon = store.hand.tool.Name.itemType
+										})
+									end
+									task.wait(0.0025)
+									tween:Play()
+								end)
+								task.spawn(function()
+									tween.Completed:Wait()
+								end)
+								lplr:SetAttribute('LastTeleported', os.time())
+								task.wait(0.25)
+								if lplr.Character then
+									task.wait(0.1235)
+									lplr:SetAttribute('LastTeleported', os.time())
+								end
+							end
+						end
+					end
+					AllbedPOS()
+					UpdateCurrentBedPOS()
+					bedpos = closestBed(entitylib.character.RootPart.Position)
+					tweenToBED(bedpos)
+				else
+					vape:CreateNotification("AutoWin", "You need yuzi for this method", 8,"warning")
+				end
+			end,
+			Tooltip = 'new method for autowin! longjump but different'
+		})
+		empty = AutoWin:CreateToggle({
+			Name = "EmptyGame",
+			Default = false
+		})
+end)
 
-
-
-bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 
 run(function()
     local HitFix
