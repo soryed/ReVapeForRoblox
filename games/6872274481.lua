@@ -8791,7 +8791,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 9 do
+            for _ = 1, 3 do
                 if container and container.Parent then
                     container = container.Parent
                 end
@@ -8799,6 +8799,7 @@ run(function()
             if not container or not container:IsA("Frame") then return end
             local playerFound = findPlayer(label, container)
             if not playerFound then
+				warn('didnt find")
                 task.wait(0.5)
                 playerFound = findPlayer(label, container)
             end
@@ -8820,7 +8821,7 @@ run(function()
                     if playerFound and icon then
                         refreshicon(icon, playerFound)
                     end
-                    task.wait(1)
+                    task.wait(0.91)
                 end
             end)
         end)
