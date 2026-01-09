@@ -155,8 +155,8 @@ function login:SlientLogin()
             role, U, P = "guest", "GUEST", "PASSWORD"
             return
         end
-	getgenv().role = role
         role = decoded.role or "guest"
+		getgenv().role = role
     end)
     return role, U, P
 end
