@@ -18361,6 +18361,98 @@ run(function()
     })
     
 end)
+if getgenv().TestMode then
+run(function()
+	local BetterMetal
+	local StreamerMode
+	local Delay
+	local Animation
+	local Distance
+	local Limits
+	local Legit
+	BetterMetal = vape.Categories.Support:CreateModule({
+		Name = "BetterMetal",
+		Tooltip = 'makes you play like bobcat at metal or any1 whos good(js naming sm1 i know who mains metal)',
+		Function = function(callback)
+   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				return
+			end 
+			if store.equippedKit ~= "metal_detector" then
+				vape:CreateNotification("BetterMetal","Kit required only!",8,"warning")
+				return
+			end
+			task.spawn(function()
+				while BetterMetal.Enabled do
+					if not entitylib.isAlive then task.wait(0.1); continue end
+					local character = entitylib.character
+					if not character or not character.RootPart then task.wait(0.1); continue end
+					local tool = (store and store.hand and store.hand.tool) and store.hand.tool or nil
+					if not tool or tool.Name ~= "metal_detector" then task.wait(0.5); continue end
+					local localPos = character.RootPart.Position
+					local metals = collectionService:GetTagged("hidden-metal")
+					for _, obj in pairs(metals) do
+						if obj:IsA("Model") and obj.PrimaryPart then
+							local metalPos = obj.PrimaryPart.Position
+							local distance = (localPos - metalPos).Magnitude
+							local range = Legit.Enabled and 10 or (Distance.Value or 8)
+							if distance <= range then
+								if StreamerMode.Enabled then
+									local waitTime = Legit.Enabled and .854 or (1 / (Delay.GetRandomValue and Delay:GetRandomValue() or 1))
+									task.wait(waitTime)
+									local Key = (obj:FindFirstChild('hidden-metal-prompt').KeyboardKeyCode)
+									vim:SendKeyEvent(true, Key, false, game)
+									task.wait(obj:FindFirstChild('hidden-metal-prompt').HoldDuration + math.random())
+									vim:SendKeyEvent(false, Key, false, game)
+								else
+								local waitTime = Legit.Enabled and .854 or (1 / (Delay.GetRandomValue and Delay:GetRandomValue() or 1))
+								task.wait(waitTime)
+								if Legit.Enabled or Animation.Enabled then
+									bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
+									bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
+								end
+								pcall(function()
+									bedwars.Client:Get('CollectCollectableEntity'):SendToServer({id = obj:GetAttribute("Id")})
+								end)
+								task.wait(0.1)
+								end
+
+							end
+						end
+					end
+					task.wait(0.1)
+				end
+			end)
+		end
+	})
+	Limits = BetterMetal:CreateToggle({Name='Limit To Item',Default=false})
+	StreamerMode = BetterMetal:CreateToggle({Name='Streamer Mode',Default=false})
+	Distance = BetterMetal:CreateSlider({Name='Range',Min=6,Max=12,Default=8})
+	Delay = BetterMetal:CreateTwoSlider({
+		Name = "Delay",
+		Min = 0,
+		Max = 2,
+		DefaultMin = 0.4,
+		DefaultMax = 1,
+		Suffix = 's',
+        Decimal = 10,	
+	})
+	Animation = BetterMetal:CreateToggle({Name='Animations',Default=true})
+	Legit = BetterMetal:CreateToggle({
+		Name='Legit',
+		Default=true,
+		Darker=true,
+		Function = function(v)
+			Animation.Object.Visible = (not v)
+			Delay.Object.Visible = (not v)
+			Distance.Object.Visible = (not v)
+			Limits.Object.Visible = (not v)
+			StreamerMode.Object.Visible = (not v)
+		end
+	})
+
+end)
+	else
 
 run(function()
 	local BetterMetal
@@ -18439,7 +18531,8 @@ run(function()
 	})
 
 end)
-
+end
+			
 run(function()
 	local BetterRamil
 	local Distance
