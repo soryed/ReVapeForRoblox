@@ -88,6 +88,7 @@ run(function()
 	end
 
 	bedwars = setmetatable({
+	 	MatchHistroyController = Knit.Controllers.MatchHistoryController,
 		AbilityController = Flamework.resolveDependency('@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController'),
 		AnimationType = require(replicatedStorage.TS.animation['animation-type']).AnimationType,
 		AnimationUtil = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out['shared'].util['animation-util']).AnimationUtil,
@@ -1874,7 +1875,32 @@ run(function()
 	})
 end)
 																										
-if getgenv().TestMode then	
+if getgenv().TestMode then
+	run(function()
+		local MHA
+	MHA = vape.Categories.Exploits:CreateModule({
+        Name = "MHA",
+        Function = function(callback)
+            if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+                vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                return
+            end
+			if callback then
+ 				bedwars.MatchHistroyController:requestMatchHistory(LocalPlayer.Name):andThen(function(Data)
+                    if Data then
+                        bedwars.AppController:openApp({
+                            app = GameData.Utils.MatchHistroyApp,
+                            appId = "MatchHistoryApp",
+                        }, Data)
+                    end
+                end)
+			else
+				return
+			end
+		end,
+        Tooltip = "only"
+	})																								
+	end)
 	warn("loaded test mode!")
 else
 end
