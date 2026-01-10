@@ -40003,6 +40003,7 @@ run(function()
     local lagback = false
 	local rng = math.random(3,8)
 	local old = nil
+	local new = math.floor(rng - math.random()
 	LagbackDetector = vape.Categories.Utility:CreateModule({
 		Name = "LagbackDetector",
 		Function = function(callback)
@@ -40020,8 +40021,10 @@ run(function()
 									if Speed.Enabled then
 										Speed:Toggle(false)
 									end
+														
 									if Notify.Enabled then
-										vape:CreateNotification("LagbackDetector",`Lag detected! waiting ({math.floor(rng - math.random()})s`)
+										
+										vape:CreateNotification("LagbackDetector",`Lag detected! waiting ({new})s`)
 									end
 									task.delay(rng, function()
 										if Speed.Enabled then
