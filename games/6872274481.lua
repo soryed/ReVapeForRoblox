@@ -28,7 +28,6 @@ local starterGui = cloneref(game:GetService('StarterGui'))
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local lightingService = cloneref(game:GetService("Lighting"))
 local vim = cloneref(game:GetService("VirtualInputManager"))
-
 local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
@@ -78,7 +77,6 @@ local store = {
 local Reach = {}
 local HitBoxes = {}
 local InfiniteFly
-local TrapDisabler
 local AntiFallPart
 local Speed
 local Fly
@@ -100,6 +98,32 @@ local function addBlur(parent)
 	return blur
 end
 
+local function GetBestItemToBreakBlock(Type: string)
+    local Inventory = GetInventory()
+    local Data = {
+        Item = nil,
+        Damage = 0
+    }
+
+    if Inventory and Inventory.items then
+        for i,v in Inventory.items do
+            local Meta = GameData.Utils.ItemMeta[v.itemType]
+            if Meta and Meta.breakBlock then
+                for i2: string, v2: number in Meta.breakBlock do
+                    if Type:lower():find(i2:lower()) and v2 > Data.Damage then
+                        Data = {
+                            Item = v.tool,
+                            Damage = v2
+                        }
+                    end
+                end
+
+            end
+        end
+    end
+
+    return Data
+end
 
 local function collection(tags, module, customadd, customremove)
 	tags = typeof(tags) ~= 'table' and {tags} or tags
@@ -802,6 +826,8 @@ run(function()
 	local OldGet, OldBreak = Client.Get
 
 	bedwars = setmetatable({
+	 	MatchHistroyApp = require(lplr.PlayerScripts.TS.controllers.global["match-history"].ui["match-history-moderation-app"]).MatchHistoryModerationApp,
+	 	MatchHistroyController = Knit.Controllers.MatchHistoryController,
 		BlockEngine = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out).BlockEngine,
 		BlockSelectorMode = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out.client.select["block-selector"]).BlockSelectorMode,
 		EntityUtil = require(game:GetService("ReplicatedStorage").TS.entity["entity-util"]).EntityUtil,
@@ -958,8 +984,6 @@ run(function()
 					return call:SendToServer(attackTable, ...)
 				end
 			}
-		elseif remoteName == 'StepOnSnapTrap' and TrapDisabler.Enabled then
-			return {SendToServer = function() end}
 		end
 
 		return call
@@ -1491,6 +1515,7 @@ end
 
 run(function()
 	local AimAssist
+	local Priorty
 	local MaxTargets
 	local Targets
 	local Shake
@@ -1502,17 +1527,28 @@ run(function()
 	local StrafeIncrease
 	local KillauraTarget
 	local ClickAim
-	
+	local priorityTarget = nil
 	local shakeTime = 0
-
 	AimAssist = vape.Categories.Combat:CreateModule({
 		Name = 'AimAssist',
 		Function = function(callback)
 			if callback then
 				AimAssist:Clean(runService.Heartbeat:Connect(function(dt)
 					shakeTime += dt
-					if entitylib.isAlive and ((not ClickAim.Enabled) or (tick() - bedwars.SwordController.lastSwing) < 0.4) then
-						local ent = not KillauraTarget.Enabled and entitylib.EntityPosition({
+					if not entitylib.isAlive then return end
+					if ClickAim.Enabled and (tick() - bedwars.SwordController.lastSwing) >= 0.4 then return end
+					local ent
+					if Priorty.Enabled and priorityTarget then
+						local root = entitylib.character.RootPart
+						local delta = priorityTarget.RootPart.Position - root.Position
+						if priorityTarget.RootPart and priorityTarget.Character	and priorityTarget.Character:FindFirstChild("Humanoid") and priorityTarget.Character.Humanoid.Health > 0 and delta.Magnitude <= Distance.Value then
+							ent = priorityTarget
+						else
+							priorityTarget = nil
+						end
+					end
+					if not ent then
+						ent = not KillauraTarget.Enabled and entitylib.EntityPosition({
 							Range = Distance.Value,
 							Part = 'RootPart',
 							Wallcheck = Targets.Walls.Enabled,
@@ -1521,65 +1557,61 @@ run(function()
 							Limit = MaxTargets.Value,
 							Sort = sortmethods[Sort.Value]
 						}) or store.KillauraTarget
-
-						if ent then
-							local root = entitylib.character.RootPart
-							local delta = ent.RootPart.Position - root.Position
-							local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
-							local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
-							if angle >= (math.rad(AngleSlider.Value) / 2) then return end
-
-							targetinfo.Targets[ent] = tick() + 1
-
-							local shakeOffset = Vector3.zero
-							if Shake.Enabled then
-								local freq = (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 16 or 10
-								local x = math.sin(shakeTime * freq) * ShakeV.Value
-								shakeOffset = gameCamera.CFrame.RightVector * x * 0.05
-							end
-
-							local speed = (AimSpeed.Value + (StrafeIncrease.Enabled and (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 10 or 0)) * dt
-
-							gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position, ent.RootPart.Position + shakeOffset), speed)
+						if Priorty.Enabled and ent then
+							priorityTarget = ent
 						end
 					end
+					if not ent then return end
+					local root = entitylib.character.RootPart
+					local delta = ent.RootPart.Position - root.Position
+					local localfacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+					local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+					if angle >= (math.rad(AngleSlider.Value) / 2) then return end
+					local shakeOffset = Vector3.zero
+					if Shake.Enabled then
+						local freq = (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 16 or 10
+						local x = math.sin(shakeTime * freq) * ShakeV.Value
+						shakeOffset = gameCamera.CFrame.RightVector * x * 0.05 * 500
+					end
+					local speed = (AimSpeed.Value + (StrafeIncrease.Enabled and (inputService:IsKeyDown(Enum.KeyCode.A) or inputService:IsKeyDown(Enum.KeyCode.D)) and 10 or 0)) * dt
+					gameCamera.CFrame = gameCamera.CFrame:Lerp(CFrame.lookAt(gameCamera.CFrame.Position,ent.RootPart.Position + shakeOffset),speed)
 				end))
+			else
+				priorityTarget = nil
 			end
 		end,
 		Tooltip = 'Smoothly aims to closest valid target'
 	})
-
+	Priorty = AimAssist:CreateToggle({
+		Name = 'Priorty',
+		Tooltip = 'Locks onto the first target until invalid'
+	})
 	MaxTargets = AimAssist:CreateSlider({
 		Name = "Max Targets",
 		Min = 1,
 		Max = 8,
-		Default = 5,
+		Default = 5
 	})
-
 	Targets = AimAssist:CreateTargets({
 		Players = true,
 		Walls = true
 	})
-
 	local methods = {'Damage', 'Distance'}
 	for i in sortmethods do
 		if not table.find(methods, i) then
 			table.insert(methods, i)
 		end
 	end
-
 	Sort = AimAssist:CreateDropdown({
 		Name = 'Target Mode',
 		List = methods
 	})
-
 	AimSpeed = AimAssist:CreateSlider({
 		Name = 'Aim Speed',
 		Min = 1,
 		Max = 20,
 		Default = getgenv().Closet and 4 or 6
 	})
-
 	Distance = AimAssist:CreateSlider({
 		Name = 'Distance',
 		Min = 1,
@@ -1589,19 +1621,16 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-
 	AngleSlider = AimAssist:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
 		Default = 70
 	})
-
 	ClickAim = AimAssist:CreateToggle({
 		Name = 'Click Aim',
 		Default = true
 	})
-
 	Shake = AimAssist:CreateToggle({
 		Name = 'Shake',
 		Default = false,
@@ -1609,23 +1638,21 @@ run(function()
 			ShakeV.Object.Visible = callback
 		end
 	})
-
 	ShakeV = AimAssist:CreateSlider({
 		Name = "Shake Power",
 		Min = 0,
 		Max = 1,
-		Default = .5,
+		Default = 0.5,
 		Visible = false,
-		Decimal = 100,
+		Decimal = 100
 	})
-
 	KillauraTarget = AimAssist:CreateToggle({
-		Name = 'Use killaura target',
+		Name = 'Use killaura target'
 	})
-
-	StrafeIncrease = AimAssist:CreateToggle({Name = 'Strafe increase'})
+	StrafeIncrease = AimAssist:CreateToggle({
+		Name = 'Strafe increase'
+	})
 end)
-
 
 
 	
@@ -3537,6 +3564,7 @@ end)
 	
 run(function()
 	local StorageESP
+	local Notify
 	local List
 	local Background
 	local Color = {}
@@ -3582,6 +3610,7 @@ run(function()
 	end
 	
 	local function Added(v)
+
 		local chest = v:WaitForChild('ChestFolderValue', 3)
 		if not (chest and StorageESP.Enabled) then return end
 		chest = chest.Value
@@ -3614,6 +3643,9 @@ run(function()
 		corner.Parent = frame
 		Reference[v] = billboard
 		StorageESP:Clean(chest.ChildAdded:Connect(function(item)
+			if Notify.Enabled then
+				vape:CreateNotification("StorageESP",`New object is added {item.Name}`,6)
+			end
 			if table.find(List.ListEnabled, item.Name) or nearStorageItem(item.Name) then
 				refreshAdornee(billboard)
 			end
@@ -3640,6 +3672,10 @@ run(function()
 			end
 		end,
 		Tooltip = 'Displays items in chests'
+	})
+	Notify = StorageESP:CreateToggle({
+		Name = "Notify",
+		Default = false
 	})
 	List = StorageESP:CreateTextList({
 		Name = 'Item',
@@ -4481,7 +4517,7 @@ run(function()
 		if not plr:GetAttribute('Team') and plr:GetAttribute('Spectator') and not bedwars.Store:getState().Game.customMatch then
 			connection:Disconnect()
 			local tab, pages = {}, playersService:GetFriendsAsync(plr.UserId)
-			for _ = 1, 4 do
+			for _ = 1, 12 do
 				for _, v in pages:GetCurrentPage() do
 					table.insert(tab, v.Id)
 				end
@@ -4572,12 +4608,6 @@ run(function()
 
 end)
 	
-run(function()
-	TrapDisabler = vape.Categories.Utility:CreateModule({
-		Name = 'TrapDisabler',
-		Tooltip = 'Disables Snap Traps'
-	})
-end)
 	
 run(function()
 	local afk
@@ -5154,7 +5184,6 @@ run(function()
 		end
 	})
 end)
-	
 run(function()
 	local ChestSteal
 	local Range
@@ -5163,6 +5192,57 @@ run(function()
 	local Delay
 	local Delays = {}
 	local AnimPlayer
+	local BoxColor
+	local currentBox
+	local currentStroke
+	local currentChest
+	local boxPart
+	local Visualiser
+	local function createBox(chest)
+		if not boxPart then
+			boxPart = Instance.new('Part')
+			boxPart.Anchored = true
+			boxPart.CanCollide = false
+			boxPart.Transparency = 1
+			boxPart.Size = chest.Size
+			boxPart.CFrame = chest.CFrame
+			boxPart.Parent = workspace
+			local box = Instance.new('BoxHandleAdornment')
+			box.Adornee = boxPart
+			box.AlwaysOnTop = true
+			box.Size = chest.Size + Vector3.new(0.1, 0.1, 0.1)
+			box.Color3 = Color3.fromHSV(BoxColor.Hue, BoxColor.Sat, BoxColor.Value)
+			box.Transparency = 1 - BoxColor.Opacity
+			box.ZIndex = 10
+			box.Parent = vape.gui
+			local stroke = Instance.new('BoxHandleAdornment')
+			stroke.Adornee = boxPart
+			stroke.AlwaysOnTop = true
+			stroke.Size = chest.Size + Vector3.new(0.3, 0.3, 0.3)
+			stroke.Color3 = Color3.fromRGB(255, 255, 255)
+			stroke.Transparency = 0.3
+			stroke.ZIndex = 9
+			stroke.Parent = vape.gui
+			currentBox = box
+			currentStroke = stroke
+		else
+			local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+			local tween = tweenService:Create(boxPart, tweenInfo, {
+				CFrame = chest.CFrame,
+				Size = chest.Size
+			})
+			tween:Play()
+			task.delay(0.3, function()
+				if currentBox then
+					currentBox.Size = chest.Size + Vector3.new(0.1, 0.1, 0.1)
+				end
+				if currentStroke then
+					currentStroke.Size = chest.Size + Vector3.new(0.3, 0.3, 0.3)
+				end
+			end)
+		end
+	end
+	
 	local function lootChest(chest)
 		chest = chest and chest.Value or nil
 		local chestitems = chest and chest:GetChildren() or {}
@@ -5170,7 +5250,6 @@ run(function()
 			Delays[chest] = tick() + (Delay.Value)
 			if AnimPlayer.Enabled then bedwars.ChestController.playChestOpenAnimation(chest) end
 			bedwars.Client:GetNamespace('Inventory'):Get('SetObservedChest'):SendToServer(chest)
-	
 			for _, v in chestitems do
 				if v:IsA('Accessory') then
 					task.spawn(function()
@@ -5180,7 +5259,6 @@ run(function()
 					end)
 				end
 			end
-	
 			bedwars.Client:GetNamespace('Inventory'):Get('SetObservedChest'):SendToServer(nil)
 		end
 	end
@@ -5200,16 +5278,55 @@ run(function()
 								end
 							else
 								local localPosition = entitylib.character.RootPart.Position
+								local nearestChest = nil
+								local nearestDistance = math.huge
 								for _, v in chests do
-									if (localPosition - v.Position).Magnitude <= Range.Value then
-										lootChest(v:FindFirstChild('ChestFolderValue'))
+									local distance = (localPosition - v.Position).Magnitude
+									if distance <= Range.Value and distance < nearestDistance then
+										nearestChest = v
+										nearestDistance = distance
 									end
+								end
+								if nearestChest then
+									if nearestChest ~= currentChest then
+										currentChest = nearestChest
+										if Visualiser.Enabled then
+											createBox(nearestChest)
+										end
+										lootChest(nearestChest:FindFirstChild('ChestFolderValue'))
+									end
+								elseif currentBox then
+									currentBox:Destroy()
+									if currentStroke then
+										currentStroke:Destroy()
+									end
+									if boxPart then
+										boxPart:Destroy()
+									end
+									currentBox = nil
+									currentStroke = nil
+									boxPart = nil
+									currentChest = nil
 								end
 							end
 						end
 						task.wait(0.1)
 					until not ChestSteal.Enabled
 				end
+			else
+				if currentBox then
+					currentBox:Destroy()
+					currentBox = nil
+				end
+				if currentStroke then
+					currentStroke:Destroy()
+					currentStroke = nil
+				end
+				if boxPart then
+					boxPart:Destroy()
+					boxPart = nil
+				end
+				currentChest = nil
 			end
 		end,
 		Tooltip = 'Grabs items from near chests.'
@@ -5230,6 +5347,14 @@ run(function()
 		Default = 0.2,
 		Decimal = 100,
 		Suffix = 's'
+	})
+	Visualiser = ChestSteal:CreateToggle({Name='Visualisers'})
+	BoxColor = ChestSteal:CreateColorSlider({
+		Name = 'Box Color',
+		DefaultHue = 0.8,
+		DefaultSat = 0.8,
+		DefaultValue = 1,
+		DefaultOpacity = 0.5
 	})
 	AnimPlayer = ChestSteal:CreateToggle({Name = 'Animation Player'})
 	Open = ChestSteal:CreateToggle({Name = 'GUI Check'})
@@ -8181,7 +8306,7 @@ run(function()
 		Name = 'Speed',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end    																																																							
 			frictionTable.Speed = callback or nil
@@ -8262,7 +8387,7 @@ run(function()
 		Name = 'Fly',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end    																																																							
 			frictionTable.Fly = callback or nil
@@ -8488,6 +8613,7 @@ end)
 
 run(function()
 	local KitESP
+	local Notify
 	local Background
 	local Color = {}
 	local Reference = {}
@@ -8507,6 +8633,9 @@ run(function()
 	}
 	
 	local function Added(v, icon)
+		if Notify.Enabled then
+			vape:CreateNotification("KitESP",`New object is added {v.Name}`,6)
+		end
 		local billboard = Instance.new('BillboardGui')
 		billboard.Parent = Folder
 		billboard.Name = icon
@@ -8562,6 +8691,10 @@ run(function()
 			end
 		end,
 		Tooltip = 'ESP for certain kit related objects'
+	})
+	Notify = KitESP:CreateToggle({
+		Name = "Notify",
+		Default = false
 	})
 	Background = KitESP:CreateToggle({
 		Name = 'Background',
@@ -8793,7 +8926,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 3 do
+            for _ = 1, 9 do
                 if container and container.Parent then
                     container = container.Parent
                 end
@@ -8801,7 +8934,6 @@ run(function()
             if not container or not container:IsA("Frame") then return end
             local playerFound = findPlayer(label, container)
             if not playerFound then
-				warn('didnt find')
                 task.wait(0.5)
                 playerFound = findPlayer(label, container)
             end
@@ -8823,7 +8955,7 @@ run(function()
                     if playerFound and icon then
                         refreshicon(icon, playerFound)
                     end
-                    task.wait(0.91)
+                    task.wait(1)
                 end
             end)
         end)
@@ -8834,7 +8966,7 @@ run(function()
         Tooltip = "Allows you to see everyone's kit during kit phase (5v5, Ranked)",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end       
             if callback then
@@ -8894,7 +9026,11 @@ run(function()
     BetterDavey = vape.Categories.Support:CreateModule({
         Name = "BetterDavey",
         Tooltip = "makes u look better with davey",
-        Function = function(callback)       
+        Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+					return
+				end       
             local worldFolder = getWorldFolder()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
@@ -8902,6 +9038,7 @@ run(function()
 				vape:CreateNotification("BetterKaida","Kit required only!",8,"warning")
 				return
 			end
+
             if callback then
                 setCannonSpeeds(blocks, aim, tnt, aunchself)
 
@@ -8930,7 +9067,7 @@ run(function()
 						end
 
 						bedwars.breakBlock(child)
-
+						bedwars.breakBlock(child)
 						if AJ.Enabled then
 							if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
 								humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
@@ -9020,7 +9157,7 @@ run(function()
         Tooltip = "Resets your match history",
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end      
             if callback then 
@@ -9099,7 +9236,7 @@ run(function()
 		Tooltip = 'Automatically bans a kit for you(5v5, ranked only)',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end      
 			MainBranch(callback, Mode.Value,(Delay.Value / 1000))
@@ -9133,7 +9270,7 @@ run(function()
 		Name = "ItemlessLongjump",
 		Function = function(call)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			ItemlessLongjump.Enabled = call
@@ -9175,7 +9312,7 @@ run(function()
 		Name = 'AutoQueue',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end       
 			if callback then
@@ -9894,7 +10031,8 @@ end)
 
 run(function()
 	local Disabler
-	
+	local Type
+	local OldGet = nil
 	local function characterAdded(char)
 		for _, v in getconnections(char.RootPart:GetPropertyChangedSignal('CFrame')) do
 			hookfunction(v.Function, function() end)
@@ -9903,18 +10041,86 @@ run(function()
 			hookfunction(v.Function, function() end)
 		end
 	end
-	
+	local function traps()
+		OldGet = bedwars.Client.Get
+		bedwars.Client.Get = function(self, remoteName)
+			local call = OldGet(self, remoteName)
+				if remoteName == remotes.AttackEntity then
+					return {
+						instance = call.instance,
+						SendToServer = function(_, attackTable, ...)
+							local suc, plr = pcall(function()
+								return playersService:GetPlayerFromCharacter(attackTable.entityInstance)
+							end)
+							local selfpos = attackTable.validate.selfPosition.value
+							local targetpos = attackTable.validate.targetPosition.value
+							store.attackReach = ((selfpos - targetpos).Magnitude * 100) // 1 / 100
+							store.attackReachUpdate = tick() + 1
+							if Reach.Enabled or HitBoxes.Enabled then
+								attackTable.validate.raycast = attackTable.validate.raycast or {}
+								attackTable.validate.selfPosition.value += CFrame.lookAt(selfpos, targetpos).LookVector * math.max((selfpos - targetpos).Magnitude - 14.399, 0)
+							end
+							if suc and plr then
+								if not select(2, whitelist:get(plr)) then return end
+							end
+							return call:SendToServer(attackTable, ...)
+						end
+						}
+				end
+				if remoteName == 'StepOnSnapTrap' then
+					return {SendToServer = function() end}			
+				end
+				return call
+			end
+		end
+	end
+	local function KB()
+		local SlamRemote = replicatedStorage.rbxts_include.node_modules['@rbxts'].net.out._NetManaged.JadeHammerSlam
+        task.spawn(function()
+            repeat
+                SlamRemote:FireServer({
+                    slamIndex = 9e9
+                })
+                task.wait(0.1)
+            until not Disabler.Enabled
+        end)
+	end
+	local function Jade()
+ 		task.spawn(function()
+			repeat
+				bedwars.AbilityController:useAbility('jade_hammer_jump')
+				task.wait(1)
+			until not Disabler.Enabled
+        end)
+	end
 	Disabler = vape.Categories.Utility:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
-				Disabler:Clean(entitylib.Events.LocalAdded:Connect(characterAdded))
-				if entitylib.isAlive then
-					characterAdded(entitylib.character)
+				if Type.Value == "Movement" then
+					Disabler:Clean(entitylib.Events.LocalAdded:Connect(characterAdded))
+					if entitylib.isAlive then
+						characterAdded(entitylib.character)
+					end
+				elseif Type.Value == "Trapper" then
+					traps()
+				elseif Type.Value == "Knockback" then
+					KB()
+				elseif Type.Value == "Jade" then
+					Jade()
+				end
+			else
+				if OldGet then
+					bedwars.Client.Get = OldGet
+					oldGet = nil
 				end
 			end
 		end,
-		Tooltip = 'Disables GetPropertyChangedSignal detections for anti cheat'
+		Tooltip = 'Disables detections for anti cheat\nspecfic types needed'
+	})
+	Type = Disabler:CreateDropdown({
+		Name = "Type",
+		List = {"Movement","Trapper","Knockback","Jade"}
 	})
 end)
 
@@ -9928,7 +10134,7 @@ run(function()
         Name = "PlayerData",
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 	    	if not callback then return end
@@ -9953,8 +10159,8 @@ run(function()
                         local wins = data.wins or 0																
                         local losses = data.losses or 0
 						local ties = data.ties or 0
-                        local matches = data.matches or (wins + losses)
-                        local winrate = (wins + losses > 0) and ((wins / (wins + losses)) * 100) or 0
+                        local matches = data.matches or (wins + losses + tie)
+                        local winrate = (wins + losses + ties > 0) and ((wins / (wins + losses + ties)) * 100) or 0
 						local earlyleaves = data.earlyLeaves or 0
                         local bedBreaks = data.bedBreaks or 0
                         local finalKills = data.finalKills or 0
@@ -9965,7 +10171,7 @@ run(function()
                         totals.TotalBedBreaks += bedBreaks
                         totals.TotalFinalKills += finalKills
 
-                        if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0) then
+                        if includeEmptyMatches.Value or (wins > 0 or losses > 0 or matches > 0 ) then
                             stats[mode] = {
                                 Winrate = string.format("%.2f%%", winrate),
                                 Wins = wins,
@@ -10055,7 +10261,7 @@ run(function()
 		Name = "LeaveParty",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end   																															
 			if callback then
@@ -10069,31 +10275,44 @@ end)
 
 run(function()
 	local Desync
-	local enabled
+	local New
 	Desync = vape.Categories.World:CreateModule({
 		Name = 'Desync',
 		Function = function(callback)
 			local function cb1()
 
 				if not setfflag then vape:CreateNotification("Onyx", "Your current executor '"..identifyexecutor().."' does not support setfflag", 6, "warning"); return end     
-				if callback then
-					setfflag('NextGenReplicatorEnabledWrite4', 'true')
+				if New.Enabled then
+					repeat
+						setfflag('DFIntDebugDefaultTargetWorldStepsPerFrame', '-2147483648')
+						setfflag('DFIntMaxMissedWorldStepsRemembered', '-2147483648')
+						setfflag('DFIntWorldStepsOffsetAdjustRate', '2147483648')
+						setfflag('DFIntDebugSendDistInSteps', '-2147483648')
+						setfflag('DFIntWorldStepMax', '-2147483648')
+						setfflag('DFIntWarpFactor', '2147483648')
+						task.wait()
+					until not Desync.Enabled
 				else
-					setfflag('NextGenReplicatorEnabledWrite4', 'false')
+					if callback then
+						setfflag('NextGenReplicatorEnabledWrite4', 'true')
+					else
+						setfflag('NextGenReplicatorEnabledWrite4', 'false')
+					end
 				end
+
 			end
 			local function cb2()
 				vape:CreateNotification("Desync","Disabled...",8,'warning')
 			end
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			vape:CreatePoll("Desync","Are you sure you want to use this?",8,"warning",cb1,cb2)
 		end,
 		Tooltip = 'Note this will ban you for client modifications.'
 	})
-
+	New = Desync:CreateToggle({Name="New",Tooltip='this uses the new method(u can hit people)',Default=false})
 end)
 
 
@@ -10106,7 +10325,7 @@ run(function()
         Name = "AntiHit",
         Function = function(call)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
             if call then
@@ -10219,7 +10438,7 @@ run(function()
         Tooltip = "Automatically places strong blocks around the me.",
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			local number = 0
@@ -10387,7 +10606,7 @@ run(function()
         Name = "DamageAffects",
         Function = function(call)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if call then
@@ -10433,7 +10652,7 @@ run(function()
         Name = 'AutoChargeBow',
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
             if callback then
@@ -10497,7 +10716,7 @@ run(function()
         Name = 'BetterWhisper',
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end	
             if callback then
@@ -10677,7 +10896,7 @@ run(function()
 	        Name = "AutoBuyUpgrades",
 	        Function = function(callback)
 	   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"and role ~= "user"then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 					return
 				end																																																																															
 	            if callback then
@@ -10729,7 +10948,7 @@ run(function()
 		Name = "BlockCPSRemover",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if callback then
@@ -10762,17 +10981,190 @@ run(function()
 end)
 
 run(function()
+	local FlySpeed
+	local VerticalSpeed
+	local SafeMode
+	local rayCheck = RaycastParams.new()
+	local oldroot
+	local clone
+	local FlyLandTick = tick()
+	local performanceStats = game:GetService('Stats'):FindFirstChild('PerformanceStats')
+	local hip = 2.6
+
+	local function createClone()
+		if entitylib.isAlive and entitylib.character.Humanoid.Health > 0 and (not oldroot or not oldroot.Parent) then
+			hip = entitylib.character.Humanoid.HipHeight
+			oldroot = entitylib.character.HumanoidRootPart
+			if not lplr.Character.Parent then return false end
+			lplr.Character.Parent = game
+			clone = oldroot:Clone()
+			clone.Parent = lplr.Character
+			--oldroot.CanCollide = false
+			oldroot.Transparency = 0
+			Instance.new('Highlight', oldroot)
+			oldroot.Parent = gameCamera
+			store.rootpart = clone
+			bedwars.QueryUtil:setQueryIgnored(oldroot, true)
+			lplr.Character.PrimaryPart = clone
+			lplr.Character.Parent = workspace
+			for _, v in lplr.Character:GetDescendants() do
+				if v:IsA('Weld') or v:IsA('Motor6D') then
+					if v.Part0 == oldroot then v.Part0 = clone end
+					if v.Part1 == oldroot then v.Part1 = clone end
+				end
+			end
+			return true
+		end
+		return false
+	end
+	local function destroyClone()
+		if not oldroot or not oldroot.Parent or not entitylib.isAlive then return false end
+		lplr.Character.Parent = game
+		oldroot.Parent = lplr.Character
+		lplr.Character.PrimaryPart = oldroot
+		lplr.Character.Parent = workspace
+		for _, v in lplr.Character:GetDescendants() do
+			if v:IsA('Weld') or v:IsA('Motor6D') then
+				if v.Part0 == clone then v.Part0 = oldroot end
+				if v.Part1 == clone then v.Part1 = oldroot end
+			end
+		end
+		oldroot.CanCollide = true
+		if clone then
+			clone:Destroy()
+			clone = nil
+		end
+		entitylib.character.Humanoid.HipHeight = hip or 2.6
+		oldroot.Transparency = 1
+		oldroot = nil
+		store.rootpart = nil
+		FlyLandTick = tick() + 0.01
+	end
+	local up = 0
+	local down = 0
+	local startTick = tick()
+	InfiniteFly = vape.Categories.Blatant:CreateModule({
+		Name = 'InfiniteFly',
+		Tooltip = 'Makes you go zoom.',
+		Function = function(callback)
+			if callback then
+				task.wait()
+				startTick = tick()
+				if not entitylib.isAlive or FlyLandTick > tick() or not isnetworkowner(entitylib.character.RootPart) then
+					return InfiniteFly:Toggle(false)
+				end
+				local a, b = pcall(createClone)
+				if not a then
+					return InfiniteFly:Toggle(false)
+				end
+				rayCheck.FilterDescendantsInstances = {lplr.Character, oldroot, clone, gameCamera}
+				InfiniteFly:Clean(inputService.InputBegan:Connect(function(input)
+					if not inputService:GetFocusedTextBox() then
+						if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
+							up = 1
+						elseif input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonL2 then
+							down = -1
+						end
+					end
+				end))
+				InfiniteFly:Clean(inputService.InputEnded:Connect(function(input)
+					if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
+						up = 0
+					elseif input.KeyCode == Enum.KeyCode.LeftShift or input.KeyCode == Enum.KeyCode.ButtonL2 then
+						down = 0
+					end
+				end))
+				local lastY = entitylib.character.RootPart.Position.Y
+				local lastVelo = 0
+				local cancelThread = false
+				InfiniteFly:Clean(runService.PreSimulation:Connect(function(delta)
+					if not entitylib.isAlive or not clone or not clone.Parent or not isnetworkowner(oldroot) or (workspace:GetServerTimeNow() - lplr:GetAttribute('LastTeleported')) < 2 then
+						if not isnetworkowner(oldroot) then
+							notif('InfiniteFly', 'Flag detected, Landing', 1.1, 'alert')
+						end
+						return InfiniteFly:Toggle(false)
+					end
+					FlyLandTick = tick() + 0.1
+					local mass = 1.3 + ((up + down) * VerticalSpeed.Value)
+					local moveDir = entitylib.character.Humanoid.MoveDirection
+					local velo = getSpeed()
+					local destination = (moveDir * math.max(FlySpeed.Value - velo, 0) * delta)
+					clone.CFrame = clone.CFrame + destination
+					clone.AssemblyLinearVelocity = (moveDir * velo) + Vector3.new(0, mass, 0)
+					rayCheck.FilterDescendantsInstances = {lplr.Character, oldroot, clone, gameCamera}
+					local raycast = workspace:Blockcast(oldroot.CFrame + Vector3.new(0, 250, 0), Vector3.new(3, 3, 3), Vector3.new(0, -500, 0), rayCheck)
+					local groundcast = workspace:Blockcast(clone.CFrame, Vector3.new(3, 3, 3), Vector3.new(0, -3, 0), rayCheck)
+					local upperRay = not workspace:Blockcast(oldroot.CFrame + (oldroot.CFrame.LookVector * 17), Vector3.new(3, 3, 3), Vector3.new(0, -150, 0), rayCheck) and workspace:Blockcast(oldroot.CFrame + (oldroot.CFrame.LookVector * 17), Vector3.new(3, 3, 3), Vector3.new(0, 150, 0), rayCheck)
+					local changeYLevel = 300
+					local yLevel = 0
+					if lastVelo - oldroot.AssemblyLinearVelocity.Y > 1200 then
+						oldroot.CFrame = oldroot.CFrame + Vector3.new(0, 200, 0)
+					end
+					for i,v in {50, 1000, 2000, 3000, 4000, 5000, 6000, 7000} do
+						if oldroot.AssemblyLinearVelocity.Y < -v then
+							changeYLevel = changeYLevel + 100
+							yLevel = yLevel - 15
+						end
+					end
+					lastVelo = oldroot.AssemblyLinearVelocity.Y
+					if raycast then
+						oldroot.AssemblyLinearVelocity = Vector3.zero
+						oldroot.CFrame = groundcast and clone.CFrame or CFrame.lookAlong(Vector3.new(clone.Position.X, raycast.Position.Y + hip, clone.Position.Z), clone.CFrame.LookVector)
+					elseif (oldroot.Position.Y < (lastY - (200 + yLevel))) and not cancelThread and (oldroot.AssemblyLinearVelocity.Y < -200 or not upperRay) then
+						if upperRay then
+							oldroot.CFrame = CFrame.lookAlong(Vector3.new(oldroot.CFrame.X, upperRay.Position.Y, oldroot.CFrame.Z), clone.CFrame.LookVector)
+						else
+							oldroot.CFrame = oldroot.CFrame + Vector3.new(0, changeYLevel, 0)
+						end
+						if oldroot.AssemblyLinearVelocity.Y < -800 then
+							oldroot.AssemblyLinearVelocity = oldroot.AssemblyLinearVelocity + Vector3.new(0, 1, 0)
+						end
+					end
+					oldroot.CFrame = CFrame.lookAlong(Vector3.new(clone.Position.X, oldroot.Position.Y, clone.Position.Z), clone.CFrame.LookVector)
+				end))
+			else
+				notif('InfiniteFly', tostring(tick() - startTick):sub(1, 4).. 's', 4, 'alert')
+				if (SafeMode.Enabled and (tick() - startTick) > 3) or performanceStats.Ping:GetValue() > 180 then
+					oldroot.CFrame = CFrame.new(-9e9, 0, -9e9)
+					clone.CFrame = CFrame.new(-9e9, 0, -9e9)
+				end
+				destroyClone()
+			end
+		end,
+		ExtraText = function()
+			return 'Heatseeker'
+		end
+	})
+	FlySpeed = InfiniteFly:CreateSlider({
+		Name = 'Speed',
+		Min = 1,
+		Max = 23,
+		Default = 23
+	})
+	VerticalSpeed = InfiniteFly:CreateSlider({
+		Name = 'Vertical Speed',
+		Min = 1,
+		Max = 150,
+		Default = 70
+	})
+	SafeMode = InfiniteFly:CreateToggle({
+		Name = 'Safe Mode'
+	})
+end)
+
+run(function()
+	local InfiniteJump
 	local Mode
 	local jumps = 0
 	local TP
 	local rayCheck = RaycastParams.new()
 	rayCheck.RespectCanCollide = true
-	InfiniteFly = vape.Categories.Blatant:CreateModule({
+	InfiniteJump = vape.Categories.Blatant:CreateModule({
 		Name = "Infinite Jump",
 		Tooltip = "Allows you to jump infinitely.",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if callback then
@@ -10918,7 +11310,7 @@ run(function()
 			Name = 'BetterPA',
 			Function = function(callback)
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 					return
 				end  
 				if callback then
@@ -11097,7 +11489,7 @@ run(function()
 		Name = "BackTrack", 
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if callback then
@@ -11206,7 +11598,7 @@ run(function()
 		Name = 'Piston Effect',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if callback then
@@ -11406,7 +11798,7 @@ run(function()
         Name = 'FakeLag',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
             if callback then
@@ -11508,7 +11900,7 @@ run(function()
 		Name = 'Staff Fetcher',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if not callback then return
@@ -11548,7 +11940,7 @@ run(function()
 		Name = 'Deflect',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -11731,7 +12123,7 @@ run(function()
         Function = function(callback)
             if not callback then return end
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
             AutoDodge:Clean(workspace.DescendantAdded:Connect(function(arrow)
@@ -11785,6 +12177,7 @@ end)
 
 run(function()
     local BetterKaida
+	local UpdateRate
     local CastDistance
     local AttackRange
     local Angle
@@ -11797,7 +12190,7 @@ run(function()
         Tooltip = "Killaura-style Kaida",
         Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if store.equippedKit ~= "summoner" then
@@ -11891,7 +12284,7 @@ run(function()
 		                    end
 		            end
 					if castplrs then
-		                local ent = plrs[1]
+		                local ent = castplrs[1]
 		                if ent and ent.RootPart then
 							if CastChecks.Enabled then
 								if bedwars.AbilityController:canUseAbility('summoner_start_charging') then
@@ -11907,7 +12300,7 @@ run(function()
 							end
 						end
 					end
-					task.wait(0.05)
+					task.wait(1 /UpdateRate.Value)
 				until not BetterKaida.Enabled
 			end
         end
@@ -11935,7 +12328,7 @@ run(function()
 		Visible = false
     })
 	CastChecks = BetterKaida:CreateToggle({
-		Name = "Check Checks",
+		Name = "Cast Checks",
 		Tooltip = 'this allows you to use the cast ability',
 		Default = false,
 		Function = function(v)
@@ -11955,6 +12348,13 @@ run(function()
         Default = 18,
         Suffix = function(val) return val == 1 and "stud" or "studs" end
     })
+	UpdateRate = BetterKaida:CreateSlider({
+		Name = 'Update rate',
+		Min = 1,
+		Max = 360,
+		Default = 60,
+		Suffix = 'hz'
+	})
 end)
 
 run(function()
@@ -11966,7 +12366,7 @@ run(function()
 			Tooltip = "makes you look good with nazar lmfao",
 			Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if store.equippedKit ~= "nazar" then
@@ -12095,7 +12495,7 @@ run(function()
         Name = 'BetterAdetunde',
         Function = function(calling)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
             if calling then 
@@ -12197,7 +12597,7 @@ run(function()
 		Name = 'FastBow',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -12352,7 +12752,7 @@ run(function()
 		Tooltip = "Client-Sided visual custom clan tag on-chat",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"  then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -12472,7 +12872,7 @@ run(function()
 		Tooltip = "Impressive game plays tactics",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -12579,7 +12979,7 @@ run(function()
 		Name = 'FullBright',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -12821,7 +13221,7 @@ run(function()
         Name = 'RepelLag',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"  then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
             if callback then
@@ -12876,7 +13276,7 @@ run(function()
 		Name = 'AutoEmptyGameTP',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -13143,7 +13543,6 @@ run(function()
 						end
 					end
 				end
-bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 				bedwars.AbilityController:useAbility('dash',nil,{
 					direction = gameCamera.CFrame.LookVector,
 					origin = entitylib.character.RootPart.Position,
@@ -13242,7 +13641,7 @@ bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 		Name = 'MouseTP',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"  then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if not callback then return end
@@ -13431,7 +13830,7 @@ run(function()
 		Name = 'FalseBan',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			MainTree(callback, Type.Value)
@@ -14536,7 +14935,7 @@ run(function()
         Tooltip = "makes you go into a empty game and win for you!",
         Function = function(callback)
             if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium"then
-                vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
                 return
             end
             if not callback then
@@ -14564,7 +14963,7 @@ run(function()
 		Name = 'ZephyrExploit',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -14607,13 +15006,6 @@ run(function()
 		projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
 	end)
 	
-	local function getAmmo(check)
-		for _, item in store.inventory.inventory.items do
-			if check.ammoItemTypes and table.find(check.ammoItemTypes, item.itemType) then
-				return item.itemType
-			end
-		end
-	end
 	
 	local function getProjectiles()
 		local items = {}
@@ -14636,7 +15028,7 @@ run(function()
 		Name = 'AutoShoot',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if callback then				
@@ -14760,7 +15152,7 @@ run(function()
 		Name = 'Clutch',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if callback then
@@ -14861,6 +15253,9 @@ end)
 
 
 
+
+
+
 run(function()
 		local AutoWin
 		local empty
@@ -14879,7 +15274,7 @@ run(function()
 			Name = 'YuziAutoWin',
 			Function = function(callback)
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 					return
 				end 
 				if not callback then
@@ -14971,7 +15366,6 @@ run(function()
 		})
 end)
 
-
 run(function()
     local HitFix
 	local PingBased
@@ -14980,7 +15374,7 @@ run(function()
         Name = 'HitFix',
         Function = function(callback)
             if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-                vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+                vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
                 return
             end  
 
@@ -15119,108 +15513,6 @@ run(function()
 				end
 			end))
 		end,
-		cyber = function()
-			local notified = false
-			local Dr = nil
-			math.randomseed(os.time() * 1e9)
-			local RNG = math.random(0,100)
-			local ChanceEm = 0
-			local ChanceDim = 0
-			if Legit.Enabled then
-				ChanceEm = 30
-				ChanceDim = 15
-			else
-				ChanceEm = 51
-				ChanceDim = 49
-			end
-			repeat
-				if not entitylib.isAlive then
-					task.wait(0.1)
-					continue
-				end
-				local droneItem = getItem("drone")
-				if not droneItem then
-					notified = false
-					task.wait(0.1)
-					continue
-				end
-				if not workspace:FindFirstChild("drone") then
-					if not notified then
-						vape:CreateNotification("AutoKit", "Spawning drone...", 4)
-						local DroneSlot = getObjSlot('drone')[1]
-						local OGSlot = store.inventory.hotbarSlot
-						local switched = hotbarSwitch(DroneSlot)
-						if switched then
-							task.wait(0.5)
-							swithced = hotbarSwitch(OGSlot)
-						end
-						notified = true
-					end
-				else
-					notified = false
-				end
-				AutoKit:Clean(workspace.ChildAdded:Connect(function(obj)
-					if obj.Name == 'drone' then
-						if obj:GetAttribute("PlayerUserId") == lplr.UserId then
-							Dr = obj
-						end
-					end
-				end))
-				AutoKit:Clean(workspace.ItemDrops.ChildAdded:Connect(function(obj)
-					if RNG >= ChanceEm then
-						if obj.Name == 'emerald' then
-							if Dr then
-								RNG = math.random(0,100)
-								Dr.HumanoidRootPart.CFrame = obj.CFrame + Vector3.new(0,5,0)
-								task.wait(0.95)
-								Dr.HumanoidRootPart.CFrame = entitylib.character.RootPart.CFrame + Vector3.new(2,3,0)
-								bedwars.Client:Get("DropDroneItem"):SendToServer({
-									position = entitylib.character.RootPart.CFrame + Vector3.new(0,5,0),
-									direction = gameCamera.CFrame.LookVector
-								})
-							end
-						end
-					elseif RNG <= ChanceDim then
-						if obj.Name == 'diamond' then
-							if Dr then
-								RNG = math.random(0,100)
-								Dr.HumanoidRootPart.CFrame = obj.CFrame + Vector3.new(0,5,0)
-								task.wait(0.95)
-								Dr.HumanoidRootPart.CFrame = entitylib.character.RootPart.CFrame + Vector3.new(2,3,0)
-								bedwars.Client:Get("DropDroneItem"):SendToServer({
-									position = entitylib.character.RootPart.CFrame + Vector3.new(0,5,0),
-									direction = gameCamera.CFrame.LookVector
-								})
-							end
-						end
-					else
-						if obj.Name == 'emerald' then
-							if Dr then
-								RNG = math.random(0,100)
-								Dr.HumanoidRootPart.CFrame = obj.CFrame + Vector3.new(0,5,0)
-								task.wait(0.95)
-								Dr.HumanoidRootPart.CFrame = entitylib.character.RootPart.CFrame + Vector3.new(2,3,0)
-								bedwars.Client:Get("DropDroneItem"):SendToServer({
-									position = entitylib.character.RootPart.CFrame + Vector3.new(0,5,0),
-									direction = gameCamera.CFrame.LookVector
-								})
-							end
-						end
-					end
-				end))
-				AutoKit:Clean(workspace.ChildRemoved:Connect(function(obj)
-					if obj.Name == 'drone' then
-						if obj:GetAttribute("PlayerUserId") == lplr.UserId then
-							if Dr then
-								Dr = nil
-							end
-						end
-					end
-				end))
-				task.wait(0.025)
-			until not AutoKit.Enabled
-			Dr = nil
-		end,
 		spearman = function()
 			local function fireSpear(pos, spot, item)
 				local projectileRemote = {InvokeServer = function() end}
@@ -15306,103 +15598,6 @@ run(function()
 					isWhispering = false
 				end
 			end))
-		end,
-		winter_lady = function()
-			local projectileRemote = {InvokeServer = function() end}
-			task.spawn(function()
-				projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
-			end)
-			local function fireStaff(pos, spot, item,staff)
-				if item then
-					local meta = bedwars.ProjectileMeta[staff]
-					local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
-					if calc then
-						local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
-						bedwars.ProjectileController:createLocalProjectile(meta, staff, staff, pos, nil, dir, {drawDurationSeconds = 1})
-						projectileRemote:InvokeServer(item.tool, staff, staff, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 1, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)
-					end
-				end
-			end
-
-			local function Shoot(plr)
-				if plr == nil then return end
-				local str = "frost_staff"
-				local fireStaffStr = ""
-				local fullstr = ""
-				for i, v in replicatedStorage.Inventories[lplr.Name]:GetChildren() do
-					if string.find(v.Name, str) then
-						fullstr = v.Name
-					end
-				end
-				if fullstr == "frost_staff_1" then
-					FireStaffStr = "frosty_snowball_1"
-				elseif fullstr == "frost_staff_2" then
-					FireStaffStr = "frosty_snowball_2"
-				elseif fullstr == "frost_staff_3" then
-					FireStaffStr = "frosty_snowball_3"
-				else
-					FireStaffStr = "frosty_snowball_1" -- fallback if im retarded
-				end
-				fireStaff(plr.RootPart.Position,plr.RootPart.Velocity,getItem(fullstr),fireStaffStr)
-			end
-			local holding = false
-			local function Hold(plr)
-				if plr == nil then
-					if holding then
-						holding = false
-						bedwars.Client:Get("FrostyGunFireActionRequest"):SendToServer({ keyHold = false })
-					end
-					return
-				end
-
-				if holding then return end
-
-				holding = true
-				bedwars.Client:Get("FrostyGunFireActionRequest"):SendToServer({ keyHold = true })
-				task.wait(0.00456) -- math fucking sucks istg
-				bedwars.Client:Get("FrostyGunFire"):SendToServer({
-					userPosition = entitylib.character.RootPart.Position,
-					direction = gameCamera.CFrame
-				})
-			end                      
-			repeat
-				if not entitylib.isAlive then task.wait(0.1); continue end
-
-				local plr = entitylib.EntityPosition({
-					Range = Legit.Enabled and (23/1.18) or 32,
-					Part = "RootPart",
-					Players = true,
-					Sort = sortmethods.Health
-				})
-				local gui = lplr.PlayerGui:FindFirstChild("FrostyGunGUI")
-				if not gui then continue end
-
-				for _, v in gui:GetChildren() do
-					if v:IsA("ImageLabel") and v.Name == "AbilityIcon" then
-						if v.Image == "rbxassetid://11611911951" then
-							if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-								Hold(plr)
-							else
-								Hold(nil)
-							end
-						elseif v.Image == "rbxassetid://139613766654382" then
-							if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-								Shoot(plr)
-							else
-								Shoot(nil)
-							end
-						else
-							if plr and (lplr.Character:GetAttribute("Health") or 0) > 0 then
-								Hold(plr) -- another fallback if im retarded
-							else
-								Hold(nil)
-							end
-						end
-					end
-				end
-
-				task.wait(.4533)
-		    until not AutoKit.Enabled
 		end,
 		void_walker = function()
 			repeat
@@ -15580,47 +15775,6 @@ run(function()
 				end
 				
 				task.wait(.223)
-		    until not AutoKit.Enabled
-		end,
-		spirit_summoner = function()
-			local projectileRemote = {InvokeServer = function() end}
-			task.spawn(function()
-				projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
-			end)
-			local function fireStaff(pos, spot, item,slot)
-				if item then
-					local staff = 'spirit_staff'	
-					local originalSlot = store.inventory.hotbarSlot
-					switchHotbar(slot)
-					local meta = bedwars.ProjectileMeta[staff]
-					local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
-					if calc then
-						local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
-						bedwars.ProjectileController:createLocalProjectile(meta, staff, staff, pos, nil, dir, {drawDurationSeconds = 1})
-						projectileRemote:InvokeServer(item.tool, staff, staff, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 1, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)
-					end
-				end
-			end
-			repeat
-				if not entitylib.isAlive then task.wait(0.1); continue end
-				local stone = getItem("summon_stone")
-				local staff = getItem("spirit_staff")
-				if not stone or not staff then task.wait(0.1) continue end
-				local gen = GetNearGen(Legit.Enabled,entitylib.character.RootPart.Position)
-				local pos = gen
-				if gen then
-					if bedwars.AbilityController:canUseAbility('summon_attack_spirit') then
-						bedwars.AbilityController:useAbility('summon_attack_spirit')
-					end
-					task.wait(0.1)
-					fireStaff(pos,entitylib.character.RootPart.Velocity,staff,getObjSlot('spirit_staff'))
-				end
-				if lplr.Character:GetAttribute('Health') <= Legit.Enabled and 40 or 56 then
-					if bedwars.AbilityController:canUseAbility('summon_heal_spirit') then
-						bedwars.AbilityController:useAbility('summon_heal_spirit')
-					end
-				end
-				task.wait(.45)
 		    until not AutoKit.Enabled
 		end,
 		rebellion_leader = function()
@@ -16103,11 +16257,8 @@ run(function()
 										if bedwars.AbilityController:canUseAbility('berserker_rage') then
 											bedwars.AbilityController:useAbility('berserker_rage')
 											if not Legit.Enabled and not FastBreak.Enabled then
-												repeat
-													bedwars.BlockBreakController.blockBreaker:setCooldown(0.185)
-													task.wait(0.1)
-												until not bedwars.AbilityController:canUseAbility('berserker_rage')
-												task.wait(0.0125)
+												bedwars.BlockBreakController.blockBreaker:setCooldown(0.185)
+												task.wait(5)
 												bedwars.BlockBreakController.blockBreaker:setCooldown(0.3)
 											end
 										end																																
@@ -16420,12 +16571,15 @@ run(function()
 				until not AutoKit.Enabled
 		end,
 		hatter = function()
+			local Delay = 0
+			Delay = Legit.Enabled and 0.8 or 0.2
 			repeat
 				for _, text in pairs(lplr.PlayerGui.NotificationApp:GetDescendants()) do
 					if text:IsA("TextLabel") then
 						local txt = string.lower(text.Text)
 						if string.find(txt, "teleport") then
 							if bedwars.AbilityController:canUseAbility('HATTER_TELEPORT') then
+								task.wait(Delay)
 								bedwars.AbilityController:useAbility('HATTER_TELEPORT')
 							end																																		
 						end
@@ -16490,7 +16644,7 @@ run(function()
 					for i, v in bedwars.BatteryEffectsController.liveBatteries do
 						if (v.position - localPosition).Magnitude <= Legit.Enabled and 4 or 10 then
 							local BatteryInfo = bedwars.BatteryEffectsController:getBatteryInfo(i)
-							if not BatteryInfo or BatteryInfo.activateTime >= workspace:GetServerTimeNow() or BatteryInfo.consumeTime + 0.1 >= workspace:GetServerTimeNow() then continue end
+							if not BatteryInfo or BatteryInfo.activateTime >= workspace:GetServerTimeNow() or BatteryInfo.consumeTime + 1 >= workspace:GetServerTimeNow() then continue end
 							BatteryInfo.consumeTime = workspace:GetServerTimeNow()
 							bedwars.Client:Get(remotes.ConsumeBattery):SendToServer({batteryId = i})
 						end
@@ -16517,15 +16671,38 @@ run(function()
 			else
 				r = 12
 			end
+			local kitskin = bedwars.KitController:getKitSkin(lplr.Character)
+			local sond = bedwars.SoundList.CROP_HARVEST
+
 			kitCollection('treeOrb', function(v)
 				if Legit.Enabled then
-					if bedwars.Client:Get(remotes.ConsumeTreeOrb):CallServer({treeOrbSecret = v:GetAttribute('TreeOrbSecret')}) then
-						bedwars.GameAnimationUtil:playAnimation(lplr.Character, bedwars.AnimationType.PUNCH)
-						bedwars.SoundManager:playSound(bedwars.SoundList.CROP_HARVEST)
+					if bedwars.Client:Get('ConsumeTreeOrb'):CallServer({treeOrbSecret = v:GetAttribute('TreeOrbSecret')}) then
+						bedwars.GameAnimationUtil:playAnimation(lplr.Character, bedwars.AnimationType.FP_USE_ITEM)
+						if kitskin and entitylib.isAlive then
+							if kitskin == bedwars.BedwarsKitSkin.BIGMAN_CHRISTMAS then
+								local tbl = {
+									bedwars.SoundList.CHRISTMAS_ELDERTREE_PICKUP,
+									bedwars.SoundList.CHRISTMAS_ELDERTREE_PICKUP_2,
+									bedwars.SoundList.CHRISTMAS_ELDERTREE_PICKUP_3,
+									bedwars.SoundList.CHRISTMAS_ELDERTREE_PICKUP_4,
+									bedwars.SoundList.CHRISTMAS_ELDERTREE_PICKUP_5,
+								}
+								local rng = math.random(1,#tbl)
+								local index = tbl[rng]
+								sond = index
+							elseif kitskin == bedwars.BedwarsKitSkin.BIGMAN_WITHERED then
+								sond = bedwars.SoundList.WITHERED_ELDERTREE_PICKUP
+							elseif kitskin == bedwars.BedwarsKitSkin.BIGMAN_REEF then
+								sond = bedwars.SoundList.ELDERREEF_PICKUP
+							else
+								sond = bedwars.SoundList.CROP_HARVEST
+							end
+						end
+						bedwars.SoundManager:playSound(sond)
 						v:Destroy()
 					end
 				else
-					if bedwars.Client:Get(remotes.ConsumeTreeOrb):CallServer({treeOrbSecret = v:GetAttribute('TreeOrbSecret')}) then
+					if bedwars.Client:Get('ConsumeTreeOrb'):CallServer({treeOrbSecret = v:GetAttribute('TreeOrbSecret')}) then
 						v:Destroy()
 					end
 				end
@@ -16654,8 +16831,8 @@ run(function()
 				if Legit.Enabled then
 					local Chance = 50
 					local rng = (math.random((Chance/3),(Chance/2))) - math.random()
-					if rng >= 20 then
-						task.wait(math.random(4,6) - math.random())
+					if rng >= 12 then
+						task.wait(math.random(1,2) - math.random())
 						result({win = true})
 					else
 						result({win = false})
@@ -17160,6 +17337,8 @@ run(function()
 								task.wait(0.5)
 							end
 						end
+					else
+						table.clear(hitPlayers)
 					end
 					task.wait(1)
 				until not AutoKit.Enabled
@@ -17192,6 +17371,9 @@ run(function()
 				until not AutoKit.Enabled
 		end,
 		gun_blade = function()
+			local use = 0
+			local rng = math.random(0,100)
+			use = Legit.Enabled and 35 or 50
 			repeat
 				if bedwars.AbilityController:canUseAbility('hand_gun') then
 					local plr = entitylib.EntityPosition({
@@ -17201,8 +17383,11 @@ run(function()
 						Sort = sortmethods.Health
 					})
 			
-					if plr then
+					if plr and rng >= use then
 						bedwars.AbilityController:useAbility('hand_gun')
+						rng = math.random(0,100)
+					else
+						rng = math.random(0,100)
 					end
 				end
 			
@@ -17228,7 +17413,7 @@ run(function()
 					task.wait(0.85)
 					continue
 				end
-				local itemType = store.hand.tool.Name.itemType
+				local itemType = store.hand.tooltype
 				local targetPos = plr.RootPart.Position
 				if bedwars.AbilityController:canUseAbility(ability) then
 					bedwars.AbilityController:useAbility(ability,newproxy(true),{target = targetPos})
@@ -17309,14 +17494,14 @@ run(function()
 		Name = 'AutoKit',
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user"then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end  
 			if callback then
 				repeat task.wait(0.1) until store.equippedKit ~= '' and store.matchState ~= 0 or (not AutoKit.Enabled)
 				if AutoKit.Enabled and AutoKitFunctions[store.equippedKit] then
 					AutoKitFunctions[store.equippedKit]()
-				else
+				else 
 					vape:CreateNotification("AutoKit", "Your current kit is not supported yet!", 4, "warning")
 					return
 				end
@@ -17462,7 +17647,7 @@ run(function()
 		Name = 'WoolChanger',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -17615,7 +17800,7 @@ run(function()
 		Tooltip = 'this is client only, disables everyones streamer mode',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if callback then
@@ -18170,7 +18355,7 @@ run(function()
 		table.insert(CyanCoreConnections, con)
 	end
 
-	if role ~= "owner" and role ~= "coowner" and user ~= 'generalcyan' and user ~= 'shamefr' then
+	if role ~= "owner" and role ~= "coowner" and user ~= 'generalcyan' then
 		return 
 	end
 
@@ -18335,10 +18520,11 @@ run(function()
         Name = 'VanessaCharger',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
             if callback then
+				local currentTime = tick()
                 old = bedwars.TripleShotProjectileController.getChargeTime
                 bedwars.TripleShotProjectileController.getChargeTime = function(self)
                 	local OldNow = tick()
@@ -18364,7 +18550,7 @@ run(function()
     })
     
 end)
-if getgenv().TestMode then
+
 run(function()
 	local BetterMetal
 	local StreamerMode
@@ -18378,7 +18564,7 @@ run(function()
 		Tooltip = 'makes you play like bobcat at metal or any1 whos good(js naming sm1 i know who mains metal)',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end 
 			if store.equippedKit ~= "metal_detector" then
@@ -18401,9 +18587,7 @@ run(function()
 							local range = Legit.Enabled and 10 or (Distance.Value or 8)
 							if distance <= range then
 								if StreamerMode.Enabled then
-									local waitTime = Legit.Enabled and .854 or (1 / (Delay.GetRandomValue and Delay:GetRandomValue() or 1))
-									task.wait(waitTime)
-									local Key = (obj:FindFirstChild('hidden-metal-prompt').KeyboardKeyCode)
+									local Key = obj:FindFirstChild('hidden-metal-prompt').KeyboardKeyCode
 									vim:SendKeyEvent(true, Key, false, game)
 									task.wait(obj:FindFirstChild('hidden-metal-prompt').HoldDuration + math.random())
 									vim:SendKeyEvent(false, Key, false, game)
@@ -18450,92 +18634,11 @@ run(function()
 			Delay.Object.Visible = (not v)
 			Distance.Object.Visible = (not v)
 			Limits.Object.Visible = (not v)
-			StreamerMode.Object.Visible = (not v)
 		end
 	})
 
 end)
-	else
 
-run(function()
-	local BetterMetal
-	local Delay
-	local Animation
-	local Distance
-	local Limits
-	local Legit
-	BetterMetal = vape.Categories.Support:CreateModule({
-		Name = "BetterMetal",
-		Tooltip = 'makes you play like bobcat at metal or any1 whos good(js naming sm1 i know who mains metal)',
-		Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end 
-			if store.equippedKit ~= "metal_detector" then
-				vape:CreateNotification("BetterMetal","Kit required only!",8,"warning")
-				return
-			end
-			task.spawn(function()
-				while BetterMetal.Enabled do
-					if not entitylib.isAlive then task.wait(0.1); continue end
-					local character = entitylib.character
-					if not character or not character.RootPart then task.wait(0.1); continue end
-					local tool = (store and store.hand and store.hand.tool) and store.hand.tool or nil
-					if not tool or tool.Name ~= "metal_detector" then task.wait(0.5); continue end
-					local localPos = character.RootPart.Position
-					local metals = collectionService:GetTagged("hidden-metal")
-					for _, obj in pairs(metals) do
-						if obj:IsA("Model") and obj.PrimaryPart then
-							local metalPos = obj.PrimaryPart.Position
-							local distance = (localPos - metalPos).Magnitude
-							local range = Legit.Enabled and 10 or (Distance.Value or 8)
-							if distance <= range then
-								local waitTime = Legit.Enabled and .854 or (1 / (Delay.GetRandomValue and Delay:GetRandomValue() or 1))
-								task.wait(waitTime)
-								if Legit.Enabled or Animation.Enabled then
-									bedwars.GameAnimationUtil:playAnimation(lplr, bedwars.AnimationType.SHOVEL_DIG)
-									bedwars.SoundManager:playSound(bedwars.SoundList.SNAP_TRAP_CONSUME_MARK)
-								end
-								pcall(function()
-									bedwars.Client:Get('CollectCollectableEntity'):SendToServer({id = obj:GetAttribute("Id")})
-								end)
-								task.wait(0.1)
-							end
-						end
-					end
-					task.wait(0.1)
-				end
-			end)
-		end
-	})
-	Limits = BetterMetal:CreateToggle({Name='Limit To Item',Default=false})
-	Distance = BetterMetal:CreateSlider({Name='Range',Min=6,Max=12,Default=8})
-	Delay = BetterMetal:CreateTwoSlider({
-		Name = "Delay",
-		Min = 0,
-		Max = 2,
-		DefaultMin = 0.4,
-		DefaultMax = 1,
-		Suffix = 's',
-        Decimal = 10,	
-	})
-	Animation = BetterMetal:CreateToggle({Name='Animations',Default=true})
-	Legit = BetterMetal:CreateToggle({
-		Name='Legit',
-		Default=true,
-		Darker=true,
-		Function = function(v)
-			Animation.Object.Visible = (not v)
-			Delay.Object.Visible = (not v)
-			Distance.Object.Visible = (not v)
-			Limits.Object.Visible = (not v)
-		end
-	})
-
-end)
-end
-			
 run(function()
 	local BetterRamil
 	local Distance
@@ -18550,7 +18653,7 @@ run(function()
 		Tooltip = 'makes you play like me at ramil(i like ramil)',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if store.equippedKit ~= "airbender" then
@@ -18598,7 +18701,7 @@ run(function()
 		                end
 		            end
 					if castplrs then
-		                local ent = plrs[1]
+		                local ent = castplrs[1]
 		                if ent and ent.RootPart then
 							if UseTornandos.Enabled then
 								if bedwars.AbilityController:canUseAbility('airbender_moving_tornado') then
@@ -18797,7 +18900,7 @@ run(function()
         Name = 'PositionRaper',
         Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
             if callback then
@@ -18825,82 +18928,6 @@ run(function()
 end)
 
 run(function()
-	local LLPinger
-	local T
-	local old
-	local old2
-	local inf = 9e9
-	task.spawn(function()
-		math.randomseed(os.time() * 1e9)
-		local num = math.floor(math.random(0,50) - math.random(1,5) - math.random())
-		if num < 0 then
-			num = 0
-		end
-	end)
-	LLPinger = vape.Categories.Exploits:CreateModule({
-		Name = "LifelessPinger",
-		Tooltip = 'changes how long a ping will be',
-		Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end
-			if callback then
-				old = bedwars.SharedConstants.PingConstants.PING_LIFETIME
-				bedwars.SharedConstants.PingConstants.PING_LIFETIME = T.Value == 0 and inf or T.Value
-			else
-				bedwars.SharedConstants.PingConstants.PING_LIFETIME = old
-				old = nil
-			end
-		end
-	})
-	T = LLPinger:CreateSlider({
-		Name = "Time",
-		Tooltip = "0 = infinity, this changes how long a ping should last",
-		Min = 0,
-		Max = 50,
-		Default = num
-	})
-end)
-
-run(function()
-	local PingCDRemover
-	local T
-	local old
-	local old2
-	local inf = 9e9
-	task.spawn(function()
-		math.randomseed(os.time() * 1e6)
-		local num = math.floor(math.random(0,15) - math.random(1,2) - math.random())
-		if num < 0 then
-			num = 0
-		end
-	end)
-	PingCDRemover = vape.Categories.Exploits:CreateModule({
-		Name = "PingCDRemover",
-		Tooltip = 'changes the cooldown of a ping',
-		Function = function(callback)
-   			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
-				return
-			end
-			if callback then
-				old = bedwars.SharedConstants.PingConstants.PING_COOLDOWN
-				bedwars.SharedConstants.PingConstants.PING_COOLDOWN = T.Value == 0 and inf or T.Value
-			else
-				bedwars.SharedConstants.PingConstants.PING_COOLDOWN = old
-				old = nil
-			end
-		end
-	})
-	T = PingCDRemover:CreateSlider({
-		Name = "CD",
-		Min = 0,
-		Max = 15,
-		Default = num
-	})
-end)
-run(function()
 	local ClientEffects
 	local Victorious
 	local old
@@ -18910,7 +18937,7 @@ run(function()
 		Tooltip = "allows you to use victorious sound sfx for some kits",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium'  then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if callback then
@@ -18985,7 +19012,7 @@ run(function()
 		Tooltip = 'allows you to tp to a targetted player no matter what!',
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if store.equippedKit ~= "paladin" then
@@ -19267,7 +19294,7 @@ run(function()
 							end
 						end
 						if BowCheck.Enabled then
-							if isHoldingProjectile() then
+							if isHoldingProjectile() do
 								local attackRange = 23
 								rayParams.FilterDescendantsInstances = {lplr.Character}
 		
@@ -19316,7 +19343,7 @@ run(function()
 		Name = "RemoveHitHighlight",
 		Function = function(callback)
    			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			repeat
@@ -19347,7 +19374,7 @@ run(function()
 		Tooltip = 'makes you play like yuta(demon at zeno for those who know ☠️☠️)',
 		Function = function(callback)
 	   		if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if store.equippedKit ~= "wizard" then
@@ -19422,7 +19449,7 @@ run(function()
 							end
 		                end
 		            end
-					task.wait(1 / Delay.GetRandomValue())
+					task.wait(1 / Delay.GetRandomValue() + 3)
 				until not BetterZeno.Enabled
 			end
 		end
@@ -19504,7 +19531,7 @@ run(function()
 		Tooltip = tip,
 		Function = function(callback)
 	   		if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= 'premium' and role ~= 'user' then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
 			if store.equippedKit ~= "jailor" then
@@ -19581,6 +19608,7 @@ run(function()
 				end
 				local lastHit = {}
 				HD:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if not HD.Enabled then return end
 					if not entitylib.isAlive then return end
 					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
 					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
@@ -19589,7 +19617,7 @@ run(function()
 						local last = lastHit[attacker]
 						if last then
 							local delta = (now - last)
-							if delta <= 0.15 then
+							if delta <= 0.18 then
 								vape:CreateNotification("HackerDetector",attacker.Name .. " is likely using killaura",6,"alert")
 							end
 						end
@@ -19602,6 +19630,7 @@ run(function()
 					return
 				end
 				HD:Clean(vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if not HD.Enabled then return end
 					if not entitylib.isAlive then return end
 					local attacker = playersService:GetPlayerFromCharacter(damageTable.fromEntity)
 					local victim = playersService:GetPlayerFromCharacter(damageTable.entityInstance)
@@ -19620,7 +19649,7 @@ run(function()
 				end
 				local trackLastTP = {}
 				local flagged = {}
-				while task.wait(0.05) do
+				while HD.Enabled  do
 					for _, plr in ipairs(playersService:GetPlayers()) do
 						local char = plr.Character
 						local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -19644,6 +19673,7 @@ run(function()
 							flagged[plr] = nil
 						end
 					end
+					task.wait(0.05)
 				end
 			end)
 		end
@@ -19796,12 +19826,12 @@ run(function()
 		Name = "DinoTamerExploit",
 		Function = function(callback)
 			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
-				vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end    	
 			if callback then
 				repeat
-					bedwars.Client:Get("ConsumeItem"):SendToServer({item=replicatedStorage.Inventories[lplr].dino_deploy})
+					bedwars.Client:Get("ConsumeItem"):SendToServer({item=replicatedStorage.Inventories[lplr.Name].dino_deploy})
 					replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.Dismount:FireServer()
 					task.wait()
 				until not DinoTamerExploit.Enabled
@@ -19833,41 +19863,44 @@ run(function()
 		end
 	end)
 	local function FindDimGen(origin)
-		local obj
+		local obj, velo
 		for i, dims in workspace.ItemDrops:GetChildren() do
 			if dims:IsA("BasePart") then
 				if dims.Name == "diamond" then
 					local d = (dims.Position - origin).Magnitude
 					if Range.Value <= d then
 						obj = dims
+						velo = obj.AssemblyLinearVelocity.Magnitude
 					end
 				end
 			end
 		end
-		return obj
+		return obj, velo
 	end
 	local function FindEmGen(origin)
-		local obj
+		local obj, velo
 		for i, ems in workspace.ItemDrops:GetChildren() do
 			if ems:IsA("BasePart") then
 				if ems.Name == "emerald" then
 					local d = (ems.Position - origin).Magnitude
 					if Range.Value <= d then
 						obj = ems
+						velo = obj.AssemblyLinearVelocity.Magnitude
 					end
 				end
 			end
 		end
-		return obj	
+		return obj,velo
 	end
 	local Meta = ""
+	local CanShoot = true
 	BetterUma = vape.Categories.Support:CreateModule({
 		Name = "BetterUma",
 		Tooltip = 'real catvapes autouma!?',
 		Function = function(callback)
 			if callback then
 				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 					return
 				end
 				if store.equippedKit ~= "spirit_summoner" then
@@ -19876,35 +19909,32 @@ run(function()
 				end
 				repeat
 						if AutoSummon.Enabled then
-							if UHS.Enabled then
-								local stone = getItem("summon_stone")
-								if not stone then task.wait(0.1) continue end
-								if bedwars.AbilityController:canUseAbility("summon_heal_spirit") then
+							local stone = getItem("summon_stone")
+							if stone then
+								if UHS.Enabled and bedwars.AbilityController:canUseAbility("summon_heal_spirit") then
 									bedwars.AbilityController:useAbility("summon_heal_spirit")
-									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
-										if bedwars.AbilityController:canUseAbility("change_spirit_affinity") then
-											bedwars.AbilityController:useAbility("change_spirit_affinity")
-										end
-									end
 								end
-							end
-							if UAS.Enabled then
-								local stone = getItem("summon_stone")
-								if not stone then task.wait(0.1) continue end
-								if bedwars.AbilityController:canUseAbility("summon_attack_spirit") then
+								if UAS.Enabled and bedwars.AbilityController:canUseAbility("summon_attack_spirit") then
 									bedwars.AbilityController:useAbility("summon_attack_spirit")
-									if lplr:GetAttribute("ReadySummonedAttackSpirits") > lplr:GetAttribute("ReadySummonedHealSpirits") then
-										if bedwars.AbilityController:canUseAbility("change_spirit_affinity") then
-											bedwars.AbilityController:useAbility("change_spirit_affinity")
-										end
+								end
+								if UHS.Enabled and UAS.Enabled then
+									local heal = lplr:GetAttribute("ReadySummonedHealSpirits") or 0
+									local atk  = lplr:GetAttribute("ReadySummonedAttackSpirits") or 0
+
+									if heal ~= atk and bedwars.AbilityController:canUseAbility("change_spirit_affinity") then
+										bedwars.AbilityController:useAbility("change_spirit_affinity")
 									end
 								end
+							else
+								task.wait(0.1)
+								continue
 							end
 						end
 						if Target.Enabled then
 							if Em.Enabled then
-								local pos = FindEmGen(entitylib.character.RootPart.Position)
-								if pos then
+								local pos,spot = FindEmGen(entitylib.character.RootPart.Position)
+								if pos and CanShoot then
+									CanShoot = false
 									local staff = getItem("spirit_staff")
 									if  not staff then task.wait(0.1) continue end
 									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
@@ -19918,14 +19948,18 @@ run(function()
 										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
 										bedwars.ProjectileController:createLocalProjectile(meta, Meta, Meta, pos, nil, dir, {drawDurationSeconds = 0})
 										projectileRemote:InvokeServer(staff.tool, Meta, Meta, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+										task.wait(1 / Delay.GetRandomValue() + math.random())
+										CanShoot = true
 									end
 								else
+									task.wait(0.1)
 									continue
 								end
 							end
 							if Dim.Enabled then
-								local pos = FindDimGen(entitylib.character.RootPart.Position)
-								if pos then
+								local pos,spot = FindDimGen(entitylib.character.RootPart.Position)
+								if pos and CanShoot then
+									CanShoot = false
 									local staff = getItem("spirit_staff")
 									if  not staff then task.wait(0.1) continue end
 									if lplr:GetAttribute("ReadySummonedHealSpirits") > lplr:GetAttribute("ReadySummonedAttackSpirits") then
@@ -19936,11 +19970,15 @@ run(function()
 									local meta = bedwars.ProjectileMeta[Meta]
 									local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, spot, Vector3.zero, workspace.Gravity, 0, 0)
 									if calc then
+										
 										local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
 										bedwars.ProjectileController:createLocalProjectile(meta, Meta, Meta, pos, nil, dir, {drawDurationSeconds = 0})
 										projectileRemote:InvokeServer(staff.tool, Meta, Meta, pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 0, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+										task.wait(1 / Delay.GetRandomValue() + math.random())
+										CanShoot = true
 									end
 								else
+									task.wait(0.1)
 									continue
 								end
 							end
@@ -20009,5 +20047,619 @@ run(function()
 			Em.Object.Visible=v
 			Dim.Object.Visible=v
 		end
+	})
+end)
+
+run(function()
+	local LagbackDetector
+	local Notify
+    local lagback = false
+	local rng = math.random(3,8)
+	local old = nil
+	LagbackDetector = vape.Categories.Utility:CreateModule({
+		Name = "LagbackDetector",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+			if callback then
+				task.spawn(function()
+					repeat
+						if entitylib.isAlive then
+							if isnetworkowner(lplr.Character.PrimaryPart) then
+								lagback = true
+								if lagback then
+									if Speed.Enabled then
+										Speed:Toggle(false)
+									end
+									if Notify.Enabled then
+										vape:CreateNotification("LagbackDetector",`Lag detected! waiting ({math.floor(rng - math.random()})s`)
+									end
+									task.delay(rng, function()
+										if Speed.Enabled then
+											Speed:Toggle(false)
+										end
+										old = isnetworkowner
+										setfpscap(1)
+										isnetworkowner = function(...)
+											return false
+										end
+										task.wait(math.random(1,2) - math.random())
+										setfpscap(240)
+										isnetworkowner = old
+										old = nil
+										lagback = false
+									end)
+								end
+						end
+						task.wait()
+					until not LagbackDetector.Enabled
+				end)
+			end
+		end
+	})
+end)
+
+run(function()
+	local BetterLassy
+	local WallCheck
+	local Distance
+	local Angle
+	local Delay
+	local Limits
+	local Sorts
+	local CanLasso = true
+	local projectileRemote = {InvokeServer = function() end}
+	task.spawn(function()
+		projectileRemote = bedwars.Client:Get(remotes.FireProjectile).instance
+	end)
+	BetterLassy = vape.Categories.Support:CreateModule({
+		Name = 'BetterLassy',
+		Tooltip = 'makes you be semi-blatant at lassy',
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+			if store.equippedKit ~= "cowgirl" then
+				vape:CreateNotification("BetterLassy","Kit required only!",8,"warning")
+				return
+			end
+			if callback then
+				repeat
+					local item = getItem("lasso")
+					if not item then task.wait(0.1) continue end
+					local plrs = entitylib.AllPosition({
+						Range = Distance.Value,
+						Wallcheck = WallCheck.Enabled,
+						Part = "RootPart",
+						Players = true,
+						NPCs = false,
+						Limit = 1,
+						Sort = sortmethods[Sorts.Value]
+					})
+					local char = entitylib.character
+					local root = char.RootPart
+					if plrs then
+						local ent = plrs[1]
+						if ent and ent.RootPart then
+							local delta = ent.RootPart.Position - root.Position
+							local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+							local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+							if angle > (math.rad(Angle.Value) / 2) then continue end
+							if Limits.Enabled then
+								if store.hand.toolType ~= "lasso" then
+									continue
+								end
+							end
+							if item and CanLasso then
+								task.wait(1 / Delay.GetRandomValue())		
+								local meta = bedwars.ProjectileMeta.lasso
+								local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, ent.RootPart.Velocity, Vector3.zero, workspace.Gravity, 0, 0)
+								if calc then
+									local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
+									bedwars.ProjectileController:createLocalProjectile(meta, 'lasso', 'lasso', pos, nil, dir, {drawDurationSeconds = 1})
+									projectileRemote:InvokeServer(item.tool, 'lasso', 'lasso', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 1, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+									CanLasso = false
+									task.wait(1 / Delay.GetRandomValue() - math.random())
+									CanLasso = true
+								end
+							end
+						end
+					end
+					task.wait(0.05)
+				until not BetterLassy.Enabled
+			end
+		end	
+	})
+	Distance = BetterLassy:CreateSlider({
+		Name = "Range",
+		Min = 1,
+		Max = 24,
+		Default = 12,
+		Suffix = "Studs"
+	})
+	Delay = BetterLassy:CreateTwoSlider({
+		Name = 'Delay',
+		Min = 0,
+		Max = 2,
+		Decimal = 10,
+		Suffix = "s",
+		DefaultMin = 0.2,
+		DefaultMax = 1
+	})
+	Angle = BetterLassy:CreateSlider({
+		Name = "Angle",
+		Min = 1,
+		Max = 360,
+		Default = 120
+	})
+	WallCheck = BetterLassy:CreateToggle({Name='Wall Check',Default=true})
+	Limits = BetterLassy:CreateToggle({Name='Limit to items',Default=true})
+	Sorts = BetterLassy:CreateDropdown({
+		Name = "Sorts",
+		List = {'Damage','Threat','Kit','Health','Angle'}
+	})
+end)
+
+run(function()
+	local BetterFrosty
+	local Angle
+	local Sorts
+	local Distance 
+	local Targets
+	local Limits
+	local Delay
+	local CanShoot = true
+	BetterFrosty = vape.Categories.Support:CreateModule({
+		Name = "BetterFrosty",
+		Tooltip = 'makes you good at frosty like lumpy(he frostied for me when i was ranking with him lol)',
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+			if callback then
+				repeat
+					local item = getItem("frosty_snowball")
+					if not item then task.wait(0.1); continue end
+					local plrs = entitylib.AllPosition({
+						Range = Distance.Value,
+						Wallcheck = Targets.Walls.Enabled,
+						Part = "RootPart",
+						Players = Targets.Players.Enabled,
+						NPCs = Targets.NPCs.Enabled,
+						Limit = 1,
+						Sort = sortmethods[Sorts.Value]
+					})
+					local char = entitylib.character
+					local root = char.RootPart
+					if plrs then
+						local ent = plrs[1]
+						if ent and ent.RootPart then
+							local delta = ent.RootPart.Position - root.Position
+							local localFacing = root.CFrame.LookVector * Vector3.new(1, 0, 1)
+							local angle = math.acos(localFacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+							if angle > (math.rad(Angle.Value) / 2) then continue end
+							if Limits.Enabled then
+								if store.hand.toolType ~= "frosty_snowball" then
+									continue
+								end
+							end
+							if item and CanShoot then
+								task.wait(1 / Delay.GetRandomValue())		
+								local meta = bedwars.ProjectileMeta.frosty_snowball_1
+								local calc = prediction.SolveTrajectory(pos, meta.launchVelocity, meta.gravitationalAcceleration, ent.RootPart.Velocity, Vector3.zero, workspace.Gravity, 0, 0)
+								if calc then
+									local dir = CFrame.lookAt(pos, calc).LookVector * meta.launchVelocity
+									bedwars.ProjectileController:createLocalProjectile(meta, 'frosty_snowball', 'frosty_snowball', pos, nil, dir, {drawDurationSeconds = 1})
+									projectileRemote:InvokeServer(item.tool, 'frosty_snowball', 'frosty_snowball', pos, pos, dir, httpService:GenerateGUID(true), {drawDurationSeconds = 1, shotId = httpService:GenerateGUID(false)}, workspace:GetServerTimeNow() - 0.045)     
+									CanShoot = false
+									task.wait(1 / Delay.GetRandomValue() - math.random())
+									CanShoot = true
+								end
+							end
+						end
+					end
+					task.wait(0.05)
+				until not BetterFrosty.Enabled
+			end
+		end
+	})
+	Targets = BetterFrosty:CreateTargets({Players = true,NPCs = true,Walls = true})
+	Distance = BetterFrosty:CreateSlider({
+		Name = "Range",
+		Min = 1,
+		Max = 42,
+		Default = 18,
+		Suffix = "Studs"
+	})
+	Delay = BetterFrosty:CreateTwoSlider({
+		Name = 'Delay',
+		Min = 0,
+		Max = 2,
+		Decimal = 10,
+		Suffix = "s",
+		DefaultMin = 0.2,
+		DefaultMax = 1
+	})
+	Angle = BetterFrosty:CreateSlider({
+		Name = "Angle",
+		Min = 1,
+		Max = 360,
+		Default = 120
+	})
+	Limits = BetterFrosty:CreateToggle({Name='Limit to items',Default=true})
+	Sorts = BetterFrosty:CreateDropdown({
+		Name = "Sorts",
+		List = {'Damage','Threat','Kit','Health','Angle'}
+	})
+end)
+
+
+run(function()
+		local MHA
+		MHA = vape.Categories.Exploits:CreateModule({
+			Name = "ViewHistory",
+			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+					vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+					return
+				end
+				if callback then
+					bedwars.MatchHistroyController:requestMatchHistory(lplr.Name):andThen(function(Data)
+						if Data then
+							bedwars.AppController:openApp({app = bedwars.MatchHistroyApp,appId = "MatchHistoryApp",},Data)
+						end
+					end)
+					MHA:Toggle(false)
+				else
+					return
+				end
+			end,
+			Tooltip = "allows you to see peoples history without being in the same game with you"
+		})																								
+end)
+
+run(function()
+	local AntiDetection
+	local hook 
+	local old 
+	AntiDetection = vape.Categories.Blatant:CreateModule({
+		Name = "Anti Detection",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+			if callback then
+				if not hook then
+					hook = hookmetamethod(game, "__namecall", function(self, ...)
+							if (self.Name == "reportPerformanceMetrics" or self.Name == "AnalyticsReportEvent") and AntiDetection.Enabled then
+								return
+							end
+							return hook(self, ...)
+						end)
+					end
+
+					old = bedwars.Client.Get
+					bedwars.Client.Get = function(se, Item: string, ...)
+						if string.find(Item, "[dD][eE][tT][eE][cC][tT][iI][oO][nN]") then
+							return {SendToServer = function() end}
+						end
+						return old(se, Item, ...)
+					end
+				end
+			else
+            if old then
+                bedwars.Client.Get = old
+                old = nil
+            end
+		end
+	})
+end)
+
+
+run(function()
+    local Boost
+	local AntiSuffocation
+    AntiSuffocation = vape.Categories.World:CreateModule({
+        Name = "Anti Suffocation",
+        Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+            if callback then
+                repeat
+					if entitylib.isAlive and lplr.Character.Humanoid.FloorMaterial ~= Enum.Material.Air then
+						local BlockMid = getPlacedBlock(lplr.Character.HumanoidRootPart.Position)
+                        local BlockDown = getPlacedBlock(lplr.Character.HumanoidRootPart.Position - Vector3.new(0, 2, 0))
+                        local BlockUp = getPlacedBlock(lplr.Character.HumanoidRootPart.Position + Vector3.new(0, 2, 0))
+						if BlockMid and BlockDown and BlockUp then
+							lplr.Character.HumanoidRootPart.CFrame += Vector3.new(0, Boost.Value, 0)
+						end
+					end
+                    task.wait()
+				until not AntiSuffocate.Enabled
+            end
+        end
+    })
+
+    Boost = AntiSuffocation:CreateSlider({
+        Name = "Boost",
+        Min = 10,
+        Max = 100,
+        Default = 50,
+    })
+end)
+
+run(function()
+	local TaxRemover
+	local old = {
+		getAddedTax = nil,
+		getTaxedItems = nil,
+		isTaxed = nil
+	}
+	TaxRemover = vape.Categories.Blatant:CreateModule({
+		Name = "TaxRemover",
+		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end
+			if callback then
+				old.getAddedTax = bedwars.ShopTaxController.getAddedTax
+				bedwars.ShopTaxController.getAddedTax = function(...)
+					return 0
+				end
+				old.getTaxedItems = bedwars.ShopTaxController.getTaxedItems
+				bedwars.ShopTaxController.getTaxedItems = function(...)
+					return {}
+				end
+				old.isTaxed = bedwars.ShopTaxController.isTaxed
+				bedwars.ShopTaxController.isTaxed = function(...)
+					return false
+				end
+			else
+				bedwars.ShopTaxController.getAddedTax = old.getAddedTax 
+				bedwars.ShopTaxController.getTaxedItems = old.getTaxedItems 
+				bedwars.ShopTaxController.isTaxed = old.isTaxed
+				old.isTaxed = nil
+				old.getAddedTax = nil
+				old.getTaxedItems = nil
+			end
+		end
+	})
+end)
+
+run(function()
+	local ZikoPA
+	local ZikoPATargetPart
+	local ZikoPATargets
+	local ZikoPAFOV
+	local ZikoPARange
+	local ZikoPAOtherProjectiles
+	local ZikoPABlacklist
+	local ZikoPATargetVisualiser
+	local ZikoPAWorkMode
+	local ZikoRayCheck = RaycastParams.new()
+	ZikoRayCheck.FilterType = Enum.RaycastFilterType.Include
+	ZikoRayCheck.FilterDescendantsInstances = {workspace:FindFirstChild('Map') or workspace}
+	local ZikoOldFunction
+	local ZikoSelectedTarget = nil
+	local ZikoTargetOutline = nil
+	local ZikoHovering = false
+	local ZikoCoreConnections = {}
+	local UserInputService = game:GetService("UserInputService")
+	local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+
+	local function isFirstPerson()
+		if not (lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")) then 
+			return false 
+		end
+		return (lplr.Character.HumanoidRootPart.Position - gameCamera.CFrame.Position).Magnitude < 5
+	end
+	
+	local function shouldPAWork()
+		local fp = isFirstPerson()
+		if ZikoPAWorkMode.Value == 'First Person' then
+			return fp
+		elseif ZikoPAWorkMode.Value == 'Third Person' then
+			return not fp
+		end
+		return true
+	end
+
+	local function ZikoUpdateOutline(target)
+		if ZikoTargetOutline then
+			ZikoTargetOutline:Destroy()
+			ZikoTargetOutline = nil
+		end
+		if target and ZikoPATargetVisualiser.Enabled then
+			ZikoTargetOutline = Instance.new("Highlight")
+			ZikoTargetOutline.FillTransparency = 1
+			ZikoTargetOutline.OutlineColor = Color3.fromRGB(255, 0, 0)
+			ZikoTargetOutline.OutlineTransparency = 0
+			ZikoTargetOutline.Adornee = target.Character
+			ZikoTargetOutline.Parent = target.Character
+		end
+	end
+
+	local function ZikoHandlePlayerSelection()
+		if not isMobile then return end
+
+		local con
+		con = UserInputService.TouchTapInWorld:Connect(function(touchPos)
+			if not ZikoHovering then ZikoUpdateOutline(nil); return end
+			if not ZikoPA.Enabled then pcall(function() con:Disconnect() end); ZikoUpdateOutline(nil); return end
+
+			local ray = workspace.CurrentCamera:ScreenPointToRay(touchPos.X, touchPos.Y)
+			local result = workspace:Raycast(ray.Origin, ray.Direction * 1000)
+			if result and result.Instance then
+				local plr = playersService:GetPlayerFromCharacter(result.Instance.Parent)
+				if plr then
+					ZikoSelectedTarget = (ZikoSelectedTarget == plr and nil or plr)
+					ZikoUpdateOutline(ZikoSelectedTarget)
+				end
+			end
+		end)
+
+		table.insert(ZikoCoreConnections, con)
+	end
+
+	if role ~= "owner" and role ~= "coowner" and user ~= 'zikomnontop' then
+		return 
+	end
+
+	ZikoPA = vape.Categories.Combat:CreateModule({
+		Name = 'ZikoPA',
+		Tooltip = "Ziko PA",
+		Function = function(callback)
+			if callback then
+				ZikoHandlePlayerSelection()
+
+				ZikoOldFunction = bedwars.ProjectileController.calculateImportantLaunchValues
+				bedwars.ProjectileController.calculateImportantLaunchValues = function(...)
+					ZikoHovering = true
+					local self, projmeta, worldmeta, origin, shootpos = ...
+					local originPos = entitylib.isAlive and (shootpos or entitylib.character.RootPart.Position) or Vector3.zero
+
+					local plr
+					if ZikoSelectedTarget
+						and ZikoSelectedTarget.Character
+						and ZikoSelectedTarget.Character.PrimaryPart
+						and (ZikoSelectedTarget.Character.PrimaryPart.Position - originPos).Magnitude <= ZikoPARange.Value then
+						plr = ZikoSelectedTarget
+					else
+						plr = entitylib.EntityMouse({
+							Part = ZikoPATargetPart.Value,
+							Range = ZikoPAFOV.Value,
+							Players = ZikoPATargets.NPCs.Enabled,
+							NPCs = ZikoPATargets.NPCs.Enabled,
+							Walls = ZikoPATargets.Walls.Enabled,
+							Origin = originPos
+						})
+					end
+
+					ZikoUpdateOutline(plr)
+
+					if not shouldPAWork() then
+						ZikoHovering = false
+						return ZikoOldFunction(...)
+					end
+
+					if plr and plr.Character and plr[ZikoPATargetPart.Value]
+						and (plr[ZikoPATargetPart.Value].Position - originPos).Magnitude <= ZikoPARange.Value then
+
+						if not ZikoPAOtherProjectiles.Enabled and not projmeta.projectile:find('arrow') then
+							ZikoHovering = false
+							return ZikoOldFunction(...)
+						end
+
+						if table.find(ZikoPABlacklist.ListEnabled, projmeta.projectile) then
+							ZikoHovering = false
+							return ZikoOldFunction(...)
+						end
+
+						local meta = projmeta:getProjectileMeta()
+						local gravity = (meta.gravitationalAcceleration or 196.2) * projmeta.gravityMultiplier
+						local speed = meta.launchVelocity or 100
+						local from = shootpos or self:getLaunchPosition(origin)
+
+						local predicted = prediction.predictStrafingMovement(
+							plr.Player,
+							plr[ZikoPATargetPart.Value],
+							speed,
+							gravity,
+							from
+						)
+
+						local calc = prediction.SolveTrajectory(
+							from,
+							speed - 0.0045,
+							gravity,
+							predicted,
+							plr[ZikoPATargetPart.Value].Velocity,
+							workspace.Gravity,
+							plr.HipHeight,
+							nil,
+							ZikoRayCheck
+						)
+
+						if calc then
+							local dir = (calc - from).Unit
+							ZikoHovering = false
+							return {
+								initialVelocity = dir * speed,
+								positionFrom = from,
+								deltaT = meta.lifetimeSec or 3,
+								gravitationalAcceleration = gravity,
+								drawDurationSeconds = 5
+							}
+						end
+					end
+
+					ZikoHovering = false
+					return ZikoOldFunction(...)
+				end
+			else
+				bedwars.ProjectileController.calculateImportantLaunchValues = ZikoOldFunction
+				ZikoUpdateOutline(nil)
+				ZikoSelectedTarget = nil
+
+				for _, v in pairs(ZikoCoreConnections) do
+					pcall(function() v:Disconnect() end)
+				end
+				table.clear(ZikoCoreConnections)
+			end
+		end,
+	})
+
+	ZikoPATargets = ZikoPA:CreateTargets({
+		Players = true,
+		Walls = true
+	})
+
+	ZikoPATargetPart = ZikoPA:CreateDropdown({
+		Name = 'Part',
+		List = {'RootPart', 'Head'}
+	})
+
+	ZikoPAFOV = ZikoPA:CreateSlider({
+		Name = 'FOV',
+		Min = 1,
+		Max = 1000,
+		Default = 1000
+	})
+
+	ZikoPARange = ZikoPA:CreateSlider({
+		Name = 'Range',
+		Min = 10,
+		Max = 500,
+		Default = 100
+	})
+
+	ZikoPAWorkMode = ZikoPA:CreateDropdown({
+		Name = 'PA Work Mode',
+		List = {'First Person', 'Third Person', 'Both'},
+		Default = 'Both'
+	})
+
+	ZikoPATargetVisualiser = ZikoPA:CreateToggle({
+		Name = "Target Visualiser",
+		Default = true
+	})
+
+	ZikoPAOtherProjectiles = ZikoPA:CreateToggle({
+		Name = 'Other Projectiles',
+		Default = true
+	})
+
+	ZikoPABlacklist = ZikoPA:CreateTextList({
+		Name = 'Blacklist',
+		Darker = true,
+		Default = {'telepearl'}
 	})
 end)
