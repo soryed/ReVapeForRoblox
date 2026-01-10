@@ -18287,7 +18287,7 @@ run(function()
 		table.insert(CyanCoreConnections, con)
 	end
 
-	if role ~= "owner" and role ~= "coowner" and user ~= 'generalcyan' then
+	if role ~= "owner" and role ~= "coowner" and user ~= 'generalcyan' and user ~= 'shamefr' then
 		return 
 	end
 
