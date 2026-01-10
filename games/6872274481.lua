@@ -28,7 +28,7 @@ local starterGui = cloneref(game:GetService('StarterGui'))
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local lightingService = cloneref(game:GetService("Lighting"))
 local vim = cloneref(game:GetService("VirtualInputManager"))
-local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt','Seliware'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 
@@ -826,6 +826,8 @@ run(function()
 	local OldGet, OldBreak = Client.Get
 
 	bedwars = setmetatable({
+		FishermanUtil = require(replicatedStorage.TS.games.bedwars.kit.kits.fisherman['fisherman-util']).FishermanUtil,
+		FishMeta = require(replicatedStorage.TS.games.bedwars.kit.kits.fisherman['fish-meta']),
 	 	MatchHistroyApp = require(lplr.PlayerScripts.TS.controllers.global["match-history"].ui["match-history-moderation-app"]).MatchHistoryModerationApp,
 	 	MatchHistroyController = Knit.Controllers.MatchHistoryController,
 		BlockEngine = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out).BlockEngine,
@@ -9035,7 +9037,7 @@ run(function()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
 			if store.equippedKit ~= "davey" then
-				vape:CreateNotification("BetterDavey","Kit required only!",8,"warning")
+				vape:CreateNotification("BetterKaida","Kit required only!",8,"warning")
 				return
 			end
 
@@ -9649,7 +9651,6 @@ run(function()
 										if isClaw then
 											KaidaController:request(v.Character)
 										else
-											
 													AttackRemote:FireServer({
 														weapon = sword.tool,
 														chargedAttack = {chargeRatio = 0},
@@ -19550,7 +19551,7 @@ run(function()
 						local last = lastHit[attacker]
 						if last then
 							local delta = (now - last)
-							if delta <= 0.10 then
+							if delta <= 0.18 then
 								vape:CreateNotification("HackerDetector",attacker.Name .. " is likely using killaura",6,"alert")
 							end
 						end
@@ -20524,19 +20525,13 @@ run(function()
 		Speed = nil,
 		Gold = nil
 	}
-	local FishermanUtil = bedwars.FishermanUtil	
+	local FishermanUtil = bedwars.FishermanUtil
+	local FishType = bedwars.FishMeta.FishType
+	local FishMeta = bedwars.FishMeta.FishMeta
 	BetterFisher = vape.Categories.Support:CreateModule({
 		Name = "BetterFisher",
 		Tooltip = 'thanks to render for making this script',
 		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
-				return
-			end											
-			if store.equippedKit ~= "fisherman" then
-				vape:CreateNotification("BetterFisher","Kit required only!",8,"warning")
-				return
-			end										
 			if callback then
 				old.Dur = FishermanUtil.minigameDuration
 				old.Marker = FishermanUtil.markerSize
@@ -20544,14 +20539,14 @@ run(function()
 				old.Drain = FishermanUtil.drainAmount
 				old.ZoneSize = FishermanUtil.fishZoneSize
 				old.Speed = FishermanUtil.fishZoneSpeedMultiplier
-				old.Gold = bedwars.FishMeta[bedwars.FishMeta.FishType.GOLD].color
+				old.Gold = FishMeta[FishType.GOLD].color
 				FishermanUtil.minigameDuration = 10 
 				FishermanUtil.markerSize = UDim2.fromScale(0.5, 1.5) 
 				FishermanUtil.fillAmount = 0.02 
 				FishermanUtil.drainAmount = 0.001 
 				FishermanUtil.fishZoneSize = UDim2.fromScale(0.1, 1.4) 
 				FishermanUtil.fishZoneSpeedMultiplier = 1
-				bedwars.FishMeta[bedwars.FishMeta.FishType.GOLD].color = Color3.fromRGB(255, 0, 0)
+				FishMeta[FishType.GOLD].color = Color3.fromRGB(255, 0, 0)
 			else
 				FishermanUtil.minigameDuration = old.Dur 
 				FishermanUtil.markerSize = old.Marker 
@@ -20559,7 +20554,7 @@ run(function()
 				FishermanUtil.drainAmount = old.Drain 
 				FishermanUtil.fishZoneSize = old.ZoneSize 
 				FishermanUtil.fishZoneSpeedMultiplier = old.Speed 
-				bedwars.FishMeta[bedwars.FishMeta.FishType.GOLD].color = old.Gold 
+				FishMeta[FishType.GOLD].color = old.Gold 
 				old.Dur = nil
 				old.Marker = nil
 				old.Fill = nil
