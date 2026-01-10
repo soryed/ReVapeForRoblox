@@ -9035,7 +9035,7 @@ run(function()
             if not worldFolder then return end
             local blocks = worldFolder:WaitForChild("Blocks")
 			if store.equippedKit ~= "davey" then
-				vape:CreateNotification("BetterKaida","Kit required only!",8,"warning")
+				vape:CreateNotification("BetterDavey","Kit required only!",8,"warning")
 				return
 			end
 
@@ -9631,13 +9631,14 @@ run(function()
 								if delta.Magnitude < 14.4 and (tick() - swingCooldown) < math.max(ChargeTime.Value, 0.02) then continue end
 
 								local actualRoot = v.Character.PrimaryPart
+																local actualRoot = v.Character.PrimaryPart
 								if actualRoot then
 									local dir = CFrame.lookAt(selfpos, actualRoot.Position).LookVector
 									local pos = selfpos + dir * math.max(delta.Magnitude - 14.399, 0)
 									swingCooldown = SyncHit.Enabled and (tick() - HRTR[1]) or tick()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
-									store.attackReach = SyncHit.Enabled and ((delta.Magnitude * 100) // 1 / 100 - HRTR[1] - 0.055) or (delta.Magnitude * 100) // 1 / 100 - 0.055
-									store.attackReachUpdate = SyncHit.Enabled and (tick() + 1 - HRTR[2]) or tick() + 1
+									store.attackReach = SyncHit.Enabled and ((delta.Magnitude * 100) / 1 / 100 - HRTR[1] - 0.055) or (delta.Magnitude * 100) / 1 / 100
+									store.attackReachUpdate = SyncHit.Enabled and (tick() + 1 - HRTR[2]) or tick() 
 
 
 									if delta.Magnitude < 14.4 and ChargeTime.Value > 0.11 then
@@ -9649,6 +9650,22 @@ run(function()
 										if isClaw then
 											KaidaController:request(v.Character)
 										else
+											if getgenv().TestMode then 
+													local mouse = cloneref(lplr:GetMouse())
+													local unitRay = camera:ScreenPointToRay(mouse.X, mouse.Y)
+													AttackRemote:FireServer({
+														weapon = sword.tool,
+														chargedAttack = {chargeRatio = 0},
+														entityInstance = v.Character,
+														validate = {
+															raycast = {cameraPosition = {value = gameCamera.CFrame.Position},cursorDirection = {value = unitRay.Direction}},
+															targetPosition = {value = actualRoot.Position},
+															selfPosition = {value = pos}
+														}
+													})
+												else
+													local mouse = cloneref(lplr:GetMouse())
+													local unitRay = camera:ScreenPointToRay(mouse.X, mouse.Y)
 													AttackRemote:FireServer({
 														weapon = sword.tool,
 														chargedAttack = {chargeRatio = 0},
@@ -9659,6 +9676,7 @@ run(function()
 															selfPosition = {value = pos}
 														}
 													})
+											end
 										if not v.Character then
 											print("player is dead")
 										end
