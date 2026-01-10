@@ -20101,6 +20101,10 @@ run(function()
 				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
 				return
 			end
+			if store.equippedKit ~= "frosty" then
+				vape:CreateNotification("BetterLassy","Kit required only!",8,"warning")
+				return
+			end
 			if callback then
 				repeat
 					local item = getItem("frosty_snowball")
