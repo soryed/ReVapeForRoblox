@@ -19550,7 +19550,7 @@ run(function()
 						local last = lastHit[attacker]
 						if last then
 							local delta = (now - last)
-							if delta <= 0.8 then
+							if delta <= 0.10 then
 								vape:CreateNotification("HackerDetector",attacker.Name .. " is likely using killaura",6,"alert")
 							end
 						end
@@ -20529,6 +20529,14 @@ run(function()
 		Name = "BetterFisher",
 		Tooltip = 'thanks to render for making this script',
 		Function = function(callback)
+			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
+				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
+				return
+			end											
+			if store.equippedKit ~= "fisherman" then
+				vape:CreateNotification("BetterFisher","Kit required only!",8,"warning")
+				return
+			end										
 			if callback then
 				old.Dur = FishermanUtil.FishermanUtil.minigameDuration
 				old.Marker = FishermanUtil.FishermanUtil.markerSize
