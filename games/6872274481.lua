@@ -28,7 +28,7 @@ local starterGui = cloneref(game:GetService('StarterGui'))
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local lightingService = cloneref(game:GetService("Lighting"))
 local vim = cloneref(game:GetService("VirtualInputManager"))
-local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'Nihon','Volt','Seliware'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
 
@@ -9631,7 +9631,6 @@ run(function()
 								if delta.Magnitude < 14.4 and (tick() - swingCooldown) < math.max(ChargeTime.Value, 0.02) then continue end
 
 								local actualRoot = v.Character.PrimaryPart
-																local actualRoot = v.Character.PrimaryPart
 								if actualRoot then
 									local dir = CFrame.lookAt(selfpos, actualRoot.Position).LookVector
 									local pos = selfpos + dir * math.max(delta.Magnitude - 14.399, 0)
@@ -9650,22 +9649,7 @@ run(function()
 										if isClaw then
 											KaidaController:request(v.Character)
 										else
-											if getgenv().TestMode then 
-													local mouse = cloneref(lplr:GetMouse())
-													local unitRay = camera:ScreenPointToRay(mouse.X, mouse.Y)
-													AttackRemote:FireServer({
-														weapon = sword.tool,
-														chargedAttack = {chargeRatio = 0},
-														entityInstance = v.Character,
-														validate = {
-															raycast = {cameraPosition = {value = gameCamera.CFrame.Position},cursorDirection = {value = unitRay.Direction}},
-															targetPosition = {value = actualRoot.Position},
-															selfPosition = {value = pos}
-														}
-													})
-												else
-													local mouse = cloneref(lplr:GetMouse())
-													local unitRay = camera:ScreenPointToRay(mouse.X, mouse.Y)
+											
 													AttackRemote:FireServer({
 														weapon = sword.tool,
 														chargedAttack = {chargeRatio = 0},
@@ -9676,7 +9660,6 @@ run(function()
 															selfPosition = {value = pos}
 														}
 													})
-											end
 										if not v.Character then
 											print("player is dead")
 										end
