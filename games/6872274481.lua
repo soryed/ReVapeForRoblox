@@ -20233,9 +20233,10 @@ run(function()
 					end
 				end
 			else
-            if old then
-                bedwars.Client.Get = old
-                old = nil
+	            if old then
+	                bedwars.Client.Get = old
+	                old = nil
+				end
             end
 		end
 	})
