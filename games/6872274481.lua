@@ -20511,3 +20511,54 @@ run(function()
 		Default = {'telepearl'}
 	})
 end)
+
+run(function()
+	local BetterFisher
+	local old = {
+		Dur = nil,
+		Marker = nil,
+		Fill = nil,
+		Drain = nil,
+		ZoneSize = nil,
+		Speed = nil,
+		Gold = nil
+	}
+	local FishermanUtil = bedwars.FishermanUtil	
+	BetterFisher = vape.Categories.Support:CreateModule({
+		Name = "BetterFisher",
+		Tooltip = 'thanks to render for making this script',
+		Function = function(callback)
+			if callback then
+				old.Dur = FishermanUtil.FishermanUtil.minigameDuration
+				old.Marker = FishermanUtil.FishermanUtil.markerSize
+				old.Fill = FishermanUtil.FishermanUtil.fillAmount
+				old.Drain = FishermanUtil.FishermanUtil.drainAmount
+				old.ZoneSize = FishermanUtil.FishermanUtil.fishZoneSize
+				old.Speed = FishermanUtil.FishermanUtil.fishZoneSpeedMultiplier
+				old.Gold = bedwars.FishMeta.FishMeta[bedwars.FishMeta.FishType.GOLD].color
+				FishermanUtil.FishermanUtil.minigameDuration = 10 
+				FishermanUtil.FishermanUtil.markerSize = UDim2.fromScale(0.5, 1.5) 
+				FishermanUtil.FishermanUtil.fillAmount = 0.02 
+				FishermanUtil.FishermanUtil.drainAmount = 0.001 
+				FishermanUtil.FishermanUtil.fishZoneSize = UDim2.fromScale(0.1, 1.4) 
+				FishermanUtil.FishermanUtil.fishZoneSpeedMultiplier = 1
+				bedwars.FishMeta.FishMeta[bedwars.FishMeta.FishType.GOLD].color = Color3.fromRGB(255, 0, 0)
+			else
+				FishermanUtil.FishermanUtil.minigameDuration = old.Dur 
+				FishermanUtil.FishermanUtil.markerSize = old.Marker 
+				FishermanUtil.FishermanUtil.fillAmount = old.Fill 
+				FishermanUtil.FishermanUtil.drainAmount = old.Drain 
+				FishermanUtil.FishermanUtil.fishZoneSize = old.ZoneSize 
+				FishermanUtil.FishermanUtil.fishZoneSpeedMultiplier = old.Speed 
+				bedwars.FishMeta.FishMeta[bedwars.FishMeta.FishType.GOLD].color = old.Gold 
+				old.Dur = nil
+				old.Marker = nil
+				old.Fill = nil
+				old.Drain = nil
+				old.ZoneSize = nil
+				old.Speed = nil
+				old.Gold = nil
+			end
+		end
+	})
+end)
