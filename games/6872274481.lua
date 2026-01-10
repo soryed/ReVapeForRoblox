@@ -8926,7 +8926,7 @@ run(function()
         if not (label:IsA("TextLabel") and label.Name == "PlayerName") then return end
         task.spawn(function()
             local container = label.Parent
-            for _ = 1, 9 do
+            for _ = 1, 3 do
                 if container and container.Parent then
                     container = container.Parent
                 end
