@@ -20203,44 +20203,6 @@ run(function()
 		})																								
 end)
 
-run(function()
-	local AntiDetection
-	local hook 
-	local old 
-	AntiDetection = vape.Categories.Blatant:CreateModule({
-		Name = "Anti Detection",
-		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
-				return
-			end
-			if callback then
-				if not hook then
-					hook = hookmetamethod(game, "__namecall", function(self, ...)
-							if (self.Name == "reportPerformanceMetrics" or self.Name == "AnalyticsReportEvent") and AntiDetection.Enabled then
-								return
-							end
-							return hook(self, ...)
-						end)
-					end
-
-					old = bedwars.Client.Get
-					bedwars.Client.Get = function(se, Item: string, ...)
-						if string.find(Item, "[dD][eE][tT][eE][cC][tT][iI][oO][nN]") then
-							return {SendToServer = function() end}
-						end
-						return old(se, Item, ...)
-					end
-				end
-			else
-	            if old then
-	                bedwars.Client.Get = old
-	                old = nil
-				end
-            end
-		end
-	})
-end)
 
 
 run(function()
