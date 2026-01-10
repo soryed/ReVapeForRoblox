@@ -20507,4 +20507,3 @@ run(function()
 		Default = {'telepearl'}
 	})
 end)
-end
