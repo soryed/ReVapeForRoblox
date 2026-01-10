@@ -19983,60 +19983,6 @@ run(function()
 end)
 
 run(function()
-	local LagbackDetector
-	local Notify
-    local lagback = false
-	local rng = math.random(3,8)
-	local old = nil
-	local new = math.floor(rng - math.random()
-	LagbackDetector = vape.Categories.Utility:CreateModule({
-		Name = "LagbackDetector",
-		Function = function(callback)
-			if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" and role ~= "premium" and role ~= "user" then
-				vape:CreateNotification("Onyx", "You don’t have access to this.", 10, "alert")
-				return
-			end
-			if callback then
-				task.spawn(function()
-					repeat
-						if entitylib.isAlive then
-							if isnetworkowner(lplr.Character.PrimaryPart) then
-								lagback = true
-								if lagback then
-									if Speed.Enabled then
-										Speed:Toggle(false)
-									end
-														
-									if Notify.Enabled then
-										
-										vape:CreateNotification("LagbackDetector",`Lag detected! waiting ({new})s`)
-									end
-									task.delay(rng, function()
-										if Speed.Enabled then
-											Speed:Toggle(false)
-										end
-										old = isnetworkowner
-										setfpscap(1)
-										isnetworkowner = function(...)
-											return false
-										end
-										task.wait(math.random(1,2) - math.random())
-										setfpscap(240)
-										isnetworkowner = old
-										old = nil
-										lagback = false
-									end)
-								end
-						end
-						task.wait()
-					until not LagbackDetector.Enabled
-				end)
-			end
-		end
-	})
-end)
-
-run(function()
 	local BetterLassy
 	local WallCheck
 	local Distance
