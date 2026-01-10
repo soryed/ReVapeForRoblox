@@ -30044,10 +30044,10 @@ end)
 
 
 
+
 run(function()
 	local Disabler
-	local Type
-	local OldGet = nil
+	
 	local function characterAdded(char)
 		for _, v in getconnections(char.RootPart:GetPropertyChangedSignal('CFrame')) do
 			hookfunction(v.Function, function() end)
@@ -30056,73 +30056,18 @@ run(function()
 			hookfunction(v.Function, function() end)
 		end
 	end
-	local function traps()
-		OldGet = bedwars.Client.Get
-		bedwars.Client.Get = function(self, remoteName)
-			local call = OldGet(self, remoteName)
-				if remoteName == remotes.AttackEntity then
-					return {
-						instance = call.instance,
-						SendToServer = function(_, attackTable, ...)
-							local suc, plr = pcall(function()
-								return playersService:GetPlayerFromCharacter(attackTable.entityInstance)
-							end)
-							local selfpos = attackTable.validate.selfPosition.value
-							local targetpos = attackTable.validate.targetPosition.value
-							store.attackReach = ((selfpos - targetpos).Magnitude * 100) // 1 / 100
-							store.attackReachUpdate = tick() + 1
-							if Reach.Enabled or HitBoxes.Enabled then
-								attackTable.validate.raycast = attackTable.validate.raycast or {}
-								attackTable.validate.selfPosition.value += CFrame.lookAt(selfpos, targetpos).LookVector * math.max((selfpos - targetpos).Magnitude - 14.399, 0)
-							end
-							if suc and plr then
-								if not select(2, whitelist:get(plr)) then return end
-							end
-							return call:SendToServer(attackTable, ...)
-						end
-						}
-				end
-				if remoteName == 'StepOnSnapTrap' then
-					return {SendToServer = function() end}			
-				end
-				return call
-			end
-		end
-	end
-	local function Jade()
- 		task.spawn(function()
-			repeat
-				bedwars.AbilityController:useAbility('jade_hammer_jump')
-				task.wait(1)
-			until not Disabler.Enabled
-        end)
-	end
+	
 	Disabler = vape.Categories.Utility:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
-				if Type.Value == "Movement" then
-					Disabler:Clean(entitylib.Events.LocalAdded:Connect(characterAdded))
-					if entitylib.isAlive then
-						characterAdded(entitylib.character)
-					end
-				elseif Type.Value == "Trapper" then
-					traps()
-				elseif Type.Value == "Jade" then
-					Jade()
-				end
-			else
-				if OldGet then
-					bedwars.Client.Get = OldGet
-					oldGet = nil
+				Disabler:Clean(entitylib.Events.LocalAdded:Connect(characterAdded))
+				if entitylib.isAlive then
+					characterAdded(entitylib.character)
 				end
 			end
 		end,
-		Tooltip = 'Disables detections for anti cheat\nspecfic types needed'
-	})
-	Type = Disabler:CreateDropdown({
-		Name = "Type",
-		List = {"Movement","Trapper","Jade"}
+		Tooltip = 'Disables GetPropertyChangedSignal detections for anti cheat'
 	})
 end)
 
