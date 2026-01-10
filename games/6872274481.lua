@@ -39241,7 +39241,7 @@ run(function()
 							end
 						end
 						if BowCheck.Enabled then
-							if isHoldingProjectile() do
+							if isHoldingProjectile() then
 								local attackRange = 23
 								rayParams.FilterDescendantsInstances = {lplr.Character}
 		
