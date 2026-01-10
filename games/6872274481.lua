@@ -20102,7 +20102,7 @@ run(function()
 				return
 			end
 			if store.equippedKit ~= "frosty" then
-				vape:CreateNotification("BetterLassy","Kit required only!",8,"warning")
+				vape:CreateNotification("BetterFrosty","Kit required only!",8,"warning")
 				return
 			end
 			if callback then
