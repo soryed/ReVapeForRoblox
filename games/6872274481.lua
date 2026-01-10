@@ -19649,7 +19649,7 @@ run(function()
 		end
 		return false
 	end
-	if role ~= "owner" and role ~= "coowner" and user ~= "yorender" then
+	if role ~= "owner" and role ~= "coowner" and user ~= "yorender" and user ~= "4t1p" then
 		return
 	end
 	MineBypass = vape.Categories.Blatant:CreateModule({
