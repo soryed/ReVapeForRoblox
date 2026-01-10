@@ -1876,8 +1876,29 @@ run(function()
 	})
 end)
 																										
-if getgenv().TestMode then
-
-	warn("loaded test mode!")
-else
-end
+	run(function()
+		local MHA
+		MHA = vape.Categories.Exploits:CreateModule({
+			Name = "ViewHistory",
+			Function = function(callback)
+				if role ~= "owner" and role ~= "coowner" and role ~= "admin" and role ~= "friend" then
+					vape:CreateNotification("Onyx", "You do not have permission to use this", 10, "alert")
+					return
+				end
+				if callback then
+					bedwars.MatchHistroyController:requestMatchHistory(lplr.Name):andThen(function(Data)
+						if Data then
+							bedwars.AppController:openApp({
+								app = bedwars.MatchHistroyApp,
+								appId = "MatchHistoryApp",
+							}, Data)
+						end
+					end)
+					MHA:Toggle(false)
+				else
+					return
+				end
+			end,
+			Tooltip = "allows you to see peoples history without being in the same game with you"
+		})																								
+	end)
