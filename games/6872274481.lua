@@ -19550,7 +19550,7 @@ run(function()
 						local last = lastHit[attacker]
 						if last then
 							local delta = (now - last)
-							if delta <= 0.18 then
+							if delta <= 0.8 then
 								vape:CreateNotification("HackerDetector",attacker.Name .. " is likely using killaura",6,"alert")
 							end
 						end
