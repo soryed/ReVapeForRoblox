@@ -832,6 +832,7 @@ run(function()
 	 	MatchHistroyController = Knit.Controllers.MatchHistoryController,
 		BlockEngine = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out).BlockEngine,
 		BlockSelectorMode = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out.client.select["block-selector"]).BlockSelectorMode,
+        BlockSelector = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["block-engine"].out.client.select["block-selector"]).BlockSelector,
 		EntityUtil = require(game:GetService("ReplicatedStorage").TS.entity["entity-util"]).EntityUtil,
 		GamePlayer = require(replicatedStorage.TS.player['game-player']),
 		OfflinePlayerUtil = require(replicatedStorage.TS.player['offline-player-util']),
@@ -1843,66 +1844,85 @@ run(function()
 end)
 	
 run(function()
-	local Attack
-	local Mine
-	local Place
+	local Attack, Mine, Place
 	local oldAttackReach, oldMineReach, oldPlaceReach
+	local oldGetMouseInfo
 
 	Reach = vape.Categories.Combat:CreateModule({
-		Name = 'Reach',
+		Name = "Reach",
+		Tooltip = "Extends reach for attacking, mining, and placing",
 		Function = function(callback)
 			if callback then
 				oldAttackReach = bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE
-				
+
+				pcall(function()
+					local breaker = bedwars.BlockBreakController:getBlockBreaker()
+					if breaker then
+						oldMineReach = breaker:getRange()
+					end
+				end)
+
+				oldGetMouseInfo = oldGetMouseInfo or BlockSelector.getMouseInfo
+
 				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = Attack.Value + 2
-				
+
+				BlockSelector.getMouseInfo = function(self, mode, options)
+					options = options or {}
+					options.range = Place.Value * 3
+					return oldGetMouseInfo(self, mode, options)
+				end
+
 				task.spawn(function()
-					repeat task.wait(0.1) until bedwars.BlockBreakController or not Reach.Enabled
+					repeat task.wait() until bedwars.BlockBreakController or not Reach.Enabled
 					if not Reach.Enabled then return end
-					
+
 					pcall(function()
-						local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-						if blockBreaker then
-							oldMineReach = oldMineReach or blockBreaker:getRange()
-							blockBreaker:setRange(Mine.Value)
+						local breaker = bedwars.BlockBreakController:getBlockBreaker()
+						if breaker then
+							breaker:setRange(Mine.Value)
 						end
 					end)
 				end)
-				
+
 				task.spawn(function()
 					while Reach.Enabled do
 						if bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE ~= Attack.Value + 2 then
 							bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = Attack.Value + 2
 						end
-						
+
 						pcall(function()
-							local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-							if blockBreaker and blockBreaker:getRange() ~= Mine.Value then
-								blockBreaker:setRange(Mine.Value)
+							local breaker = bedwars.BlockBreakController:getBlockBreaker()
+							if breaker and breaker:getRange() ~= Mine.Value then
+								breaker:setRange(Mine.Value)
 							end
 						end)
-						
-						task.wait(0.5)
+
+						task.wait(0.4)
 					end
 				end)
+
 			else
 				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = oldAttackReach or 14.4
-				
+
 				pcall(function()
-					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-					if blockBreaker then
-						blockBreaker:setRange(oldMineReach or 18)
+					local breaker = bedwars.BlockBreakController:getBlockBreaker()
+					if breaker then
+						breaker:setRange(oldMineReach or 18)
 					end
 				end)
-				
-				oldAttackReach, oldMineReach = nil, nil
+
+				if oldGetMouseInfo then
+					BlockSelector.getMouseInfo = oldGetMouseInfo
+				end
+
+				oldAttackReach = nil
+				oldMineReach = nil
 			end
-		end,
-		Tooltip = 'Extends reach for attacking and mining'
+		end
 	})
-	
+
 	Attack = Reach:CreateSlider({
-		Name = 'Attack Range',
+		Name = "Attack Range",
 		Min = 0,
 		Max = 30,
 		Default = 18,
@@ -1911,48 +1931,47 @@ run(function()
 				bedwars.CombatConstant.RAYCAST_SWORD_CHARACTER_DISTANCE = val + 2
 			end
 		end,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
+		Suffix = function(v)
+			return v == 1 and "stud" or "studs"
 		end
 	})
-	
+
 	Place = Reach:CreateSlider({
-		Name = 'Place Range',
+		Name = "Place Range",
 		Min = 0,
-		Max = 30,
+		Max = 39,
 		Default = 18,
 		Function = function(val)
 			if Reach.Enabled then
-				pcall(function()
-					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-					if blockBreaker then
-						blockBreaker:setRange(val)
-					end
-				end)
+				BlockSelector.getMouseInfo = function(self, mode, options)
+					options = options or {}
+					options.range = val * 3
+					return oldGetMouseInfo(self, mode, options)
+				end
 			end
 		end,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
+		Suffix = function(v)
+			return v == 1 and "stud" or "studs"
 		end
 	})
 
 	Mine = Reach:CreateSlider({
-		Name = 'Mine Range',
+		Name = "Mine Range",
 		Min = 0,
 		Max = 30,
 		Default = 18,
 		Function = function(val)
 			if Reach.Enabled then
 				pcall(function()
-					local blockBreaker = bedwars.BlockBreakController:getBlockBreaker()
-					if blockBreaker then
-						blockBreaker:setRange(val)
+					local breaker = bedwars.BlockBreakController:getBlockBreaker()
+					if breaker then
+						breaker:setRange(val)
 					end
 				end)
 			end
 		end,
-		Suffix = function(val)
-			return val == 1 and 'stud' or 'studs'
+		Suffix = function(v)
+			return v == 1 and "stud" or "studs"
 		end
 	})
 end)
